@@ -1,0 +1,132 @@
+{
+  "assets": [
+    {
+      "contentType": "",
+      "id": "a56ff5f569ecdf49",
+      "kind": "stylesheet",
+      "name": "ainfield.webflow.shared.5c0f55512.min.css",
+      "path": "media/ainfield.webflow.shared.5c0f55512.min.css",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/css/ainfield.webflow.shared.5c0f55512.min.css"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "285e6c8f36447526",
+      "kind": "image",
+      "name": "67b7e8c2a408546fe61055f6_hero%20hand.jpg",
+      "path": "media/67b7e8c2a408546fe61055f6_hero-hand.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/67b7e8c2a408546fe61055f6_hero%20hand.jpg"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "3fcf921a43e926be",
+      "kind": "image",
+      "name": "68cc87ee027f56988fed41fe_hero.webp",
+      "path": "media/68cc87ee027f56988fed41fe_hero.webp",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/68cc87ee027f56988fed41fe_hero.webp"
+    },
+    {
+      "contentType": "text/css",
+      "id": "a6bc729f7449d4ba",
+      "kind": "stylesheet",
+      "name": "css",
+      "path": "media/google-fonts.css",
+      "url": "https://fonts.googleapis.com/css?family=Oswald:200,300,400,500,600,700%7CMontserrat:100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic%7CInter:100,200,300,regular,500,600,700,800,900"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "f30abefdac6ba363",
+      "kind": "image",
+      "name": "692fb99b7ff154a13bde26f2_251202%20Hero%20Hand.webp",
+      "path": "media/692fb99b7ff154a13bde26f2_251202-Hero-Hand.webp",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/692fb99b7ff154a13bde26f2_251202%20Hero%20Hand.webp"
+    },
+    {
+      "contentType": "image/avif",
+      "id": "717392c1210817db",
+      "kind": "image",
+      "name": "665fb92ad4fed8da46bf0271_DSC_5550.avif",
+      "path": "media/665fb92ad4fed8da46bf0271_DSC_5550.avif",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/665fb92ad4fed8da46bf0271_DSC_5550.avif"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "86253f809e9b9a58",
+      "kind": "image",
+      "name": "689b274b032bfbc9129efc47_homePage.webp",
+      "path": "media/689b274b032bfbc9129efc47_homePage.webp",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/689b274b032bfbc9129efc47_homePage.webp"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "fc06440e8c683ae1",
+      "kind": "image",
+      "name": "673e50477b24902040693b05_15%20hero.jpg",
+      "path": "media/673e50477b24902040693b05_15-hero.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/673e50477b24902040693b05_15%20hero.jpg"
+    },
+    {
+      "contentType": "font/woff2",
+      "id": "recovered-9",
+      "name": "6709e471672707c0cf4e6fa4_FunktionalGrotesk-Light.woff2",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/6709e471672707c0cf4e6fa4_FunktionalGrotesk-Light.woff2",
+      "kind": "font",
+      "path": "media/6709e471672707c0cf4e6fa4_FunktionalGrotesk-Light.woff2",
+      "recovered": true
+    },
+    {
+      "contentType": "font/woff2",
+      "id": "recovered-10",
+      "name": "6709e4711141238c6075e88b_FunktionalGrotesk-Regular.woff2",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/6709e4711141238c6075e88b_FunktionalGrotesk-Regular.woff2",
+      "kind": "font",
+      "path": "media/6709e4711141238c6075e88b_FunktionalGrotesk-Regular.woff2",
+      "recovered": true
+    },
+    {
+      "contentType": "font/woff2",
+      "id": "recovered-11",
+      "name": "6709e4713af7da131946bb76_FunktionalGrotesk-Medium.woff2",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/6709e4713af7da131946bb76_FunktionalGrotesk-Medium.woff2",
+      "kind": "font",
+      "path": "media/6709e4713af7da131946bb76_FunktionalGrotesk-Medium.woff2",
+      "recovered": true
+    },
+    {
+      "contentType": "font/woff2",
+      "id": "recovered-12",
+      "name": "UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2",
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2",
+      "kind": "font",
+      "path": "media/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2",
+      "recovered": true
+    },
+    {
+      "contentType": "font/woff2",
+      "id": "recovered-13",
+      "name": "JTUQjIg1_i6t8kCHKm459WxRyS7m0dR9pA.woff2",
+      "url": "https://fonts.gstatic.com/s/montserrat/v31/JTUQjIg1_i6t8kCHKm459WxRyS7m0dR9pA.woff2",
+      "kind": "font",
+      "path": "media/JTUQjIg1_i6t8kCHKm459WxRyS7m0dR9pA.woff2",
+      "recovered": true
+    },
+    {
+      "contentType": "font/woff2",
+      "id": "recovered-14",
+      "name": "JTUSjIg1_i6t8kCHKm459WlhyyTh89Y.woff2",
+      "url": "https://fonts.gstatic.com/s/montserrat/v31/JTUSjIg1_i6t8kCHKm459WlhyyTh89Y.woff2",
+      "kind": "font",
+      "path": "media/JTUSjIg1_i6t8kCHKm459WlhyyTh89Y.woff2",
+      "recovered": true
+    },
+    {
+      "contentType": "font/woff2",
+      "id": "recovered-15",
+      "name": "TK3iWkUHHAIjg752GT8Gl-1PKw.woff2",
+      "url": "https://fonts.gstatic.com/s/oswald/v57/TK3iWkUHHAIjg752GT8Gl-1PKw.woff2",
+      "kind": "font",
+      "path": "media/TK3iWkUHHAIjg752GT8Gl-1PKw.woff2",
+      "recovered": true
+    }
+  ],
+  "failures": []
+}

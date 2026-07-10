@@ -1,0 +1,230 @@
+{
+  "assets": [
+    {
+      "contentType": "image/jpeg",
+      "id": "980c692e9e438617",
+      "kind": "image",
+      "name": "65e38724ba420d8b733d16eb%2F673e99ecf734e9a1b53d585c_growth%20sim-poster-00001.jpg",
+      "path": "media/673e99ecf734e9a1b53d585c_growth-sim-poster-00001.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb%2F673e99ecf734e9a1b53d585c_growth%20sim-poster-00001.jpg"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "affd5a37fabfeb03",
+      "kind": "image",
+      "name": "65e38724ba420d8b733d16eb%2F673e9d3ff35335eb252fe856_IMG_0469-poster-00001.jpg",
+      "path": "media/673e9d3ff35335eb252fe856_IMG_0469-poster-00001.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb%2F673e9d3ff35335eb252fe856_IMG_0469-poster-00001.jpg"
+    },
+    {
+      "contentType": "image/jpg",
+      "id": "8fbcfddd30ed0c42",
+      "kind": "image",
+      "name": "673e4f7f2dc2eca0c692e386_1%20open%20image-p-2600.jpg",
+      "path": "media/673e4f7f2dc2eca0c692e386_1-open-image-p-2600.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/673e4f7f2dc2eca0c692e386_1%20open%20image-p-2600.jpg"
+    },
+    {
+      "contentType": "image/jpg",
+      "id": "1205341efbbb09f5",
+      "kind": "image",
+      "name": "673e4f850b570f838bba7897_2%20title-p-2600.jpg",
+      "path": "media/673e4f850b570f838bba7897_2-title-p-2600.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/673e4f850b570f838bba7897_2%20title-p-2600.jpg"
+    },
+    {
+      "contentType": "image/jpg",
+      "id": "c2d525d0a42b63dc",
+      "kind": "image",
+      "name": "673e4f93ee762c2a8500493e_4%20definiion-p-2600.jpg",
+      "path": "media/673e4f93ee762c2a8500493e_4-definiion-p-2600.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/673e4f93ee762c2a8500493e_4%20definiion-p-2600.jpg"
+    },
+    {
+      "contentType": "image/jpg",
+      "id": "2ce670bffc1f298f",
+      "kind": "image",
+      "name": "673e4f9654bb8a139f91357e_5%20background-p-2600.jpg",
+      "path": "media/673e4f9654bb8a139f91357e_5-background-p-2600.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/673e4f9654bb8a139f91357e_5%20background-p-2600.jpg"
+    },
+    {
+      "contentType": "image/jpg",
+      "id": "42cd6f3c405ea649",
+      "kind": "image",
+      "name": "673e513347aa5fac6f38bffb_6.5%20what-p-2600.jpg",
+      "path": "media/673e513347aa5fac6f38bffb_6.5-what-p-2600.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/673e513347aa5fac6f38bffb_6.5%20what-p-2600.jpg"
+    },
+    {
+      "contentType": "image/jpg",
+      "id": "acb5163002f5057f",
+      "kind": "image",
+      "name": "673e515a8fcf893cc96aa730_7.5%20hyphae-p-2600.jpg",
+      "path": "media/673e515a8fcf893cc96aa730_7.5-hyphae-p-2600.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/673e515a8fcf893cc96aa730_7.5%20hyphae-p-2600.jpg"
+    },
+    {
+      "contentType": "image/jpg",
+      "id": "97fe214c2267c727",
+      "kind": "image",
+      "name": "673e513af96d2b462c9266f0_7%20hyphae-p-2600.jpg",
+      "path": "media/673e513af96d2b462c9266f0_7-hyphae-p-2600.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/673e513af96d2b462c9266f0_7%20hyphae-p-2600.jpg"
+    },
+    {
+      "contentType": "image/jpg",
+      "id": "1d35a33f19f45313",
+      "kind": "image",
+      "name": "673e512c86494b2b0d5699d7_6%20what-p-2600.jpg",
+      "path": "media/673e512c86494b2b0d5699d7_6-what-p-2600.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/673e512c86494b2b0d5699d7_6%20what-p-2600.jpg"
+    },
+    {
+      "contentType": "image/jpg",
+      "id": "3a56ec2c25db8710",
+      "kind": "image",
+      "name": "673e500be3c5a74e0039b328_8%20process-p-2600.jpg",
+      "path": "media/673e500be3c5a74e0039b328_8-process-p-2600.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/673e500be3c5a74e0039b328_8%20process-p-2600.jpg"
+    },
+    {
+      "contentType": "image/svg+xml",
+      "id": "528a980a46fe8f7a",
+      "kind": "image",
+      "name": "628299f8aa233b83918e24fd_Pause.svg",
+      "path": "media/628299f8aa233b83918e24fd_Pause.svg",
+      "url": "https://cdn.prod.website-files.com/6022af993a6b2191db3ed10c/628299f8aa233b83918e24fd_Pause.svg"
+    },
+    {
+      "contentType": "image/jpg",
+      "id": "5ef3be09a5dbcc92",
+      "kind": "image",
+      "name": "673e516f3a016af805e51aca_9.5%20form-p-2600.jpg",
+      "path": "media/673e516f3a016af805e51aca_9.5-form-p-2600.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/673e516f3a016af805e51aca_9.5%20form-p-2600.jpg"
+    },
+    {
+      "contentType": "image/jpg",
+      "id": "bc2d5ed7a506e33a",
+      "kind": "image",
+      "name": "673e5029c3c827bc01c9da8d_10%20prototype-p-2600.jpg",
+      "path": "media/673e5029c3c827bc01c9da8d_10-prototype-p-2600.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/673e5029c3c827bc01c9da8d_10%20prototype-p-2600.jpg"
+    },
+    {
+      "contentType": "image/jpg",
+      "id": "7e44a2148f23dcbc",
+      "kind": "image",
+      "name": "673e517ae81166914e850b65_11%20making-p-2600.jpg",
+      "path": "media/673e517ae81166914e850b65_11-making-p-2600.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/673e517ae81166914e850b65_11%20making-p-2600.jpg"
+    },
+    {
+      "contentType": "image/jpg",
+      "id": "34644d45b0b99f5f",
+      "kind": "image",
+      "name": "673e51809aa0efa0f07455e7_11.5%20making-p-2600.jpg",
+      "path": "media/673e51809aa0efa0f07455e7_11.5-making-p-2600.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/673e51809aa0efa0f07455e7_11.5%20making-p-2600.jpg"
+    },
+    {
+      "contentType": "image/jpg",
+      "id": "3db526cb2cd7523f",
+      "kind": "image",
+      "name": "673e5191244aba7f345aff9a_12.5%20growing-p-2600.jpg",
+      "path": "media/673e5191244aba7f345aff9a_12.5-growing-p-2600.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/673e5191244aba7f345aff9a_12.5%20growing-p-2600.jpg"
+    },
+    {
+      "contentType": "image/jpg",
+      "id": "82b7664535dc7f14",
+      "kind": "image",
+      "name": "673e5189dca399c9dc40dc3c_12%20growing-p-2600.jpg",
+      "path": "media/673e5189dca399c9dc40dc3c_12-growing-p-2600.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/673e5189dca399c9dc40dc3c_12%20growing-p-2600.jpg"
+    },
+    {
+      "contentType": "image/jpg",
+      "id": "c9e57480eb28e689",
+      "kind": "image",
+      "name": "673e51cfdca399c9dc4112c8_13%20finish-p-2600.jpg",
+      "path": "media/673e51cfdca399c9dc4112c8_13-finish-p-2600.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/673e51cfdca399c9dc4112c8_13%20finish-p-2600.jpg"
+    },
+    {
+      "contentType": "image/jpg",
+      "id": "744e94f15f63e432",
+      "kind": "image",
+      "name": "673e51e8e92987487fc8e375_13.5%20finish-p-2600.jpg",
+      "path": "media/673e51e8e92987487fc8e375_13.5-finish-p-2600.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/673e51e8e92987487fc8e375_13.5%20finish-p-2600.jpg"
+    },
+    {
+      "contentType": "image/jpg",
+      "id": "e1e4a5abf422dd8f",
+      "kind": "image",
+      "name": "673e5168c069cb0e98aa237e_9%20form-p-2600.jpg",
+      "path": "media/673e5168c069cb0e98aa237e_9-form-p-2600.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/673e5168c069cb0e98aa237e_9%20form-p-2600.jpg"
+    },
+    {
+      "contentType": "image/jpg",
+      "id": "c4ff7e7bd392692d",
+      "kind": "image",
+      "name": "673e50438fcf893cc9697a11_14%20title-p-2600.jpg",
+      "path": "media/673e50438fcf893cc9697a11_14-title-p-2600.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/673e50438fcf893cc9697a11_14%20title-p-2600.jpg"
+    },
+    {
+      "contentType": "image/jpg",
+      "id": "0752ec01112dfed0",
+      "kind": "image",
+      "name": "673e50477b24902040693b05_15%20hero-p-2600.jpg",
+      "path": "media/673e50477b24902040693b05_15-hero-p-2600.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/673e50477b24902040693b05_15%20hero-p-2600.jpg"
+    },
+    {
+      "contentType": "image/jpg",
+      "id": "3be8dd7a43c39301",
+      "kind": "image",
+      "name": "673e504a8fcf893cc9697f19_16%20img-p-2600.jpg",
+      "path": "media/673e504a8fcf893cc9697f19_16-img-p-2600.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/673e504a8fcf893cc9697f19_16%20img-p-2600.jpg"
+    },
+    {
+      "contentType": "image/jpg",
+      "id": "963d64d37537b6ae",
+      "kind": "image",
+      "name": "673e51f3611038a168b5be5b_16.5%20img-p-2600.jpg",
+      "path": "media/673e51f3611038a168b5be5b_16.5-img-p-2600.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/673e51f3611038a168b5be5b_16.5%20img-p-2600.jpg"
+    },
+    {
+      "contentType": "image/jpg",
+      "id": "7f607883229498e9",
+      "kind": "image",
+      "name": "673e50578756f4b61e9dcbff_18%20img-p-2600.jpg",
+      "path": "media/673e50578756f4b61e9dcbff_18-img-p-2600.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/673e50578756f4b61e9dcbff_18%20img-p-2600.jpg"
+    },
+    {
+      "contentType": "image/jpg",
+      "id": "019836ac2f1900d3",
+      "kind": "image",
+      "name": "673e51f924ce4848d128ef17_19%20next-p-2600.jpg",
+      "path": "media/673e51f924ce4848d128ef17_19-next-p-2600.jpg",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/673e51f924ce4848d128ef17_19%20next-p-2600.jpg"
+    },
+    {
+      "contentType": "video/mp4",
+      "id": "recovered-28",
+      "name": "65e38724ba420d8b733d16eb%2F673e99ecf734e9a1b53d585c_growth%20sim-transcode.mp4",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb%2F673e99ecf734e9a1b53d585c_growth%20sim-transcode.mp4",
+      "kind": "video",
+      "path": "media/growth-sim-transcode.mp4",
+      "recovered": true
+    }
+  ],
+  "failures": []
+}
