@@ -10,6 +10,12 @@ const projects = [
 const page = document.body.dataset.page;
 const pageRoot = page === "project" ? "../../" : page === "info" ? "../" : "./";
 
+function assetKey(asset) {
+  const sourceName = decodeURIComponent(asset.name).split("/").pop();
+  const sourceId = sourceName.match(/[a-f\d]{24}/i)?.[0] ?? asset.id;
+  return `${asset.kind}:${sourceId}`;
+}
+
 function header() {
   return `
     <header class="site-header">
@@ -42,12 +48,24 @@ async function renderProject() {
   const project = projects.find(([, projectSlug]) => projectSlug === slug);
   if (!project) return;
   const [title] = project;
-  const response = await fetch(`${pageRoot}assets/${slug}/manifest.json`);
-  const manifest = await response.json();
-  const media = manifest.assets.map((asset) => {
+  const [manifestResponse, sequenceResponse] = await Promise.all([
+    fetch(`${pageRoot}assets/${slug}/manifest.json`),
+    fetch(`${pageRoot}gallery-sequences.json`),
+  ]);
+  const [manifest, sequences] = await Promise.all([
+    manifestResponse.json(),
+    sequenceResponse.json(),
+  ]);
+  const sequence = sequences[slug];
+  const assetsByKey = new Map(manifest.assets.map((asset) => [assetKey(asset), asset]));
+  const media = sequence.order.map((key) => {
+    const asset = assetsByKey.get(key);
+    if (!asset) throw new Error(`Missing gallery asset: ${key}`);
     const source = `${pageRoot}assets/${slug}/${asset.path}`;
+    const poster = sequence.posters[key] && assetsByKey.get(sequence.posters[key]);
+    const posterSource = poster ? ` poster="${pageRoot}assets/${slug}/${poster.path}"` : "";
     return asset.kind === "video"
-      ? `<video autoplay loop muted playsinline controls><source src="${source}" type="${asset.contentType || "video/mp4"}"></video>`
+      ? `<video autoplay loop muted playsinline controls${posterSource}><source src="${source}" type="${asset.contentType || "video/mp4"}"></video>`
       : `<img src="${source}" alt="">`;
   }).join("");
   document.querySelector("#app").innerHTML = `${header()}<main class="project-detail"><h1>${title}</h1><section class="project-gallery" aria-label="${title} gallery">${media}</section></main>`;

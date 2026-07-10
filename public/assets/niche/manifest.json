@@ -178,6 +178,14 @@
       "kind": "video",
       "path": "media/19-transcode.mp4",
       "recovered": true
+    },
+    {
+      "contentType": "image/webp",
+      "id": "689b243882784f75",
+      "kind": "image",
+      "name": "689b243882784f752f3dff73_20.webp",
+      "path": "media/689b243882784f752f3dff73_20.webp",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/689b243882784f752f3dff73_20.webp"
     }
   ],
   "failures": []

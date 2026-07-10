@@ -5,6 +5,35 @@ import mode from "@/public/assets/mode/manifest.json";
 import molekuleGo from "@/public/assets/molekule-go/manifest.json";
 import niche from "@/public/assets/niche/manifest.json";
 import ping from "@/public/assets/ping/manifest.json";
+import gallerySequences from "@/public/gallery-sequences.json";
+
+type Asset = {
+  id: string;
+  kind: string;
+  name: string;
+  path: string;
+  url: string;
+  contentType?: string;
+};
+
+function assetKey(asset: Asset) {
+  const sourceName = decodeURIComponent(asset.name).split("/").pop();
+  const sourceId = sourceName.match(/[a-f\d]{24}/i)?.[0] ?? asset.id;
+  return `${asset.kind}:${sourceId}`;
+}
+
+function orderedAssets(assets: readonly Asset[], slug: keyof typeof gallerySequences) {
+  const assetsByKey = new Map(assets.map((asset) => [assetKey(asset), asset]));
+  const sequence = gallerySequences[slug];
+
+  return sequence.order.map((key) => {
+    const asset = assetsByKey.get(key);
+    if (!asset) throw new Error(`Missing gallery asset: ${key}`);
+
+    const posterKey = sequence.posters[key as keyof typeof sequence.posters];
+    return { asset, poster: posterKey ? assetsByKey.get(posterKey) : undefined };
+  });
+}
 
 const projects = {
   ping: { title: "Ping", assets: ping.assets },
@@ -29,6 +58,8 @@ export default async function ProjectPage({
 
   if (!project) notFound();
 
+  const media = orderedAssets(project.assets, slug as keyof typeof gallerySequences);
+
   return (
     <main className="detail-page">
       <header className="site-header">
@@ -44,11 +75,12 @@ export default async function ProjectPage({
       <section className="project-detail" aria-label={project.title}>
         <h1>{project.title}</h1>
         <div className="project-gallery">
-          {project.assets.map((asset) => {
+          {media.map(({ asset, poster }) => {
             const source = `/assets/${slug}/${asset.path}`;
+            const posterSource = poster ? `/assets/${slug}/${poster.path}` : undefined;
 
             return asset.kind === "video" ? (
-              <video key={asset.url} autoPlay loop muted playsInline controls>
+              <video key={asset.url} autoPlay loop muted playsInline controls poster={posterSource}>
                 <source src={source} type={asset.contentType ?? "video/mp4"} />
               </video>
             ) : (

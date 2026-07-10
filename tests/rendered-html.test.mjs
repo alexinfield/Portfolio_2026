@@ -1,8 +1,14 @@
 import assert from "node:assert/strict";
-import { readFile, readdir } from "node:fs/promises";
+import { access, readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 
 const projectRoot = new URL("../", import.meta.url);
+
+function assetKey(asset) {
+  const sourceName = decodeURIComponent(asset.name).split("/").pop();
+  const sourceId = sourceName.match(/[a-f\d]{24}/i)?.[0] ?? asset.id;
+  return `${asset.kind}:${sourceId}`;
+}
 
 async function render() {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
@@ -71,4 +77,42 @@ test("keeps complete source assets and a GitHub Pages publish copy", async () =>
   assert.match(workflow, /actions\/deploy-pages@v4/);
   assert.match(workflow, /path: \.\/public/);
   assert.match(source, /\/assets\/home\/media\//);
+});
+
+test("keeps each project gallery in its verified live-site sequence", async () => {
+  const sequences = JSON.parse(
+    await readFile(new URL("../public/gallery-sequences.json", import.meta.url), "utf8"),
+  );
+  const expectedSlideCounts = {
+    ping: 17,
+    "molekule-go": 17,
+    luma: 22,
+    niche: 20,
+    hyphae: 26,
+    mode: 17,
+  };
+
+  for (const [slug, expectedCount] of Object.entries(expectedSlideCounts)) {
+    const manifest = JSON.parse(
+      await readFile(new URL(`../public/assets/${slug}/manifest.json`, import.meta.url), "utf8"),
+    );
+    const assetsByKey = new Map(manifest.assets.map((asset) => [assetKey(asset), asset]));
+    const sequence = sequences[slug];
+
+    assert.equal(sequence.order.length, expectedCount, `${slug} slide count`);
+    assert.equal(new Set(sequence.order).size, sequence.order.length, `${slug} has no duplicate slides`);
+
+    for (const key of sequence.order) {
+      const asset = assetsByKey.get(key);
+      assert.ok(asset, `${slug} includes ${key}`);
+      await access(new URL(`../public/assets/${slug}/${asset.path}`, import.meta.url));
+    }
+
+    for (const [videoKey, posterKey] of Object.entries(sequence.posters)) {
+      assert.match(videoKey, /^video:/);
+      assert.match(posterKey, /^image:/);
+      assert.ok(assetsByKey.get(videoKey), `${slug} includes ${videoKey}`);
+      assert.ok(assetsByKey.get(posterKey), `${slug} includes ${posterKey}`);
+    }
+  }
 });

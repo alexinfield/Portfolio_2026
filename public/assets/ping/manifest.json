@@ -130,6 +130,38 @@
       "kind": "video",
       "path": "media/app-functions.mp4",
       "recovered": true
+    },
+    {
+      "contentType": "image/webp",
+      "id": "695ed81af0021571",
+      "kind": "image",
+      "name": "695ed81af0021571e85519a6_14..webp",
+      "path": "media/695ed81af0021571e85519a6_14.webp",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/695ed81af0021571e85519a6_14..webp"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "6954e6331c6dfbcf",
+      "kind": "image",
+      "name": "6954e6331c6dfbcf4f706bee_15.webp",
+      "path": "media/6954e6331c6dfbcf4f706bee_15.webp",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/6954e6331c6dfbcf4f706bee_15.webp"
+    },
+    {
+      "contentType": "image/webp",
+      "id": "6965569371cb40fc",
+      "kind": "image",
+      "name": "6965569371cb40fc554eb46b_Slide%2016_9%20-%208.webp",
+      "path": "media/6965569371cb40fc554eb46b_slide-16-9-8.webp",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/6965569371cb40fc554eb46b_Slide%2016_9%20-%208.webp"
+    },
+    {
+      "contentType": "image/png",
+      "id": "6954e810fe5a48b",
+      "kind": "image",
+      "name": "6954e810fe5a48b43139cca2_tmp.png",
+      "path": "media/6954e810fe5a48b43139cca2_tmp.png",
+      "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb/6954e810fe5a48b43139cca2_tmp.png"
     }
   ],
   "failures": []
