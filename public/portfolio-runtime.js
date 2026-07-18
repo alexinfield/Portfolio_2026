@@ -28,7 +28,6 @@
     document.querySelectorAll("video[data-hover-video]").forEach(function (video) {
       const card = video.closest(".project-card");
       if (!card) return;
-      card.dataset.hoverReady = "true";
 
       function start() {
         card.classList.add("is-playing");

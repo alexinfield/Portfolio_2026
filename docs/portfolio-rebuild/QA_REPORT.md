@@ -37,7 +37,7 @@ The suite verifies:
 
 - Five cards have verified project-specific hover videos.
 - Mode has no video overlay.
-- The browser connection confirmed all five cards were initialized for hover/focus playback. Its test cursor does not expose a CSS hover state, so final pointer-event behavior is also covered by the runtime wiring and markup tests.
+- The browser connection confirmed all five project-specific hover videos and the fine-pointer media-query path. Its test cursor does not expose a CSS hover state, so final pointer-event behavior is also covered by the runtime wiring and markup tests.
 - On the phone breakpoint, hover video opacity remains zero and taps remain normal project links.
 
 ## Known source limitation
