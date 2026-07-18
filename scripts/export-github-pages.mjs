@@ -1,4 +1,4 @@
-import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -12,6 +12,17 @@ const { default: worker } = await import(workerUrl.href);
 
 await rm(output, { recursive: true, force: true });
 await cp(join(root, "dist/client"), output, { recursive: true });
+
+// Vite emits imported fonts beside the generated stylesheet but keeps a
+// root-relative /assets URL. Make those generated URLs stylesheet-relative so
+// the same build works on both the custom domain and GitHub's repository path.
+const generatedAssets = join(output, "assets");
+for (const entry of await readdir(generatedAssets, { withFileTypes: true })) {
+  if (!entry.isFile() || !entry.name.endsWith(".css")) continue;
+  const cssPath = join(generatedAssets, entry.name);
+  const css = await readFile(cssPath, "utf8");
+  await writeFile(cssPath, css.replaceAll("url(/assets/", "url(./"));
+}
 
 function relativeRoot(route) {
   if (route === "/") return "./";

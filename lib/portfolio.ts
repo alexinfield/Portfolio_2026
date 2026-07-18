@@ -19,36 +19,42 @@ export const projectDefinitions = [
   {
     title: "Molekule Go",
     slug: "molekule-go",
+    description: "Portable air purification designed for life in motion.",
     cover: "/assets/home/media/67b7e8c2a408546fe61055f6_hero-hand.jpg",
     figmaPage: { id: "4576:675", name: "molekule portable air purifier" },
   },
   {
     title: "Luma",
     slug: "luma",
+    description: "A lighting system shaped around atmosphere and control.",
     cover: "/assets/home/media/68cc87ee027f56988fed41fe_hero.webp",
     figmaPage: { id: "5352:397", name: "luma" },
   },
   {
     title: "Niche",
     slug: "niche",
+    description: "A private phone booth for focused work and conversation.",
     cover: "/assets/home/media/689b274b032bfbc9129efc47_homePage.webp",
     figmaPage: { id: "3691:453", name: "phone booth" },
   },
   {
     title: "Hyphae Light",
     slug: "hyphae",
+    description: "A bio-inspired lighting study grown from an adaptive structure.",
     cover: "/assets/home/media/673e50477b24902040693b05_15-hero.jpg",
     figmaPage: { id: "3408:453", name: "hyphae light" },
   },
   {
     title: "Ping",
     slug: "ping",
+    description: "A connected product and interface for clearer coordination.",
     cover: "/assets/home/media/692fb99b7ff154a13bde26f2_251202-Hero-Hand.webp",
     figmaPage: { id: "8095:319", name: "Ping" },
   },
   {
     title: "Mode",
     slug: "mode",
+    description: "A restrained side table shaped around simple utility.",
     cover: "/assets/home/media/665fb92ad4fed8da46bf0271_DSC_5550.avif",
     figmaPage: { id: "4859:659", name: "side table" },
   },
@@ -87,7 +93,6 @@ function sourceFor(slug: ProjectSlug, asset: Asset) {
 }
 
 export type Project = (typeof projectDefinitions)[number] & {
-  description: string;
   hoverVideo?: string;
 };
 
@@ -98,7 +103,6 @@ export const projects: Project[] = projectDefinitions.map((project) => {
 
   return {
     ...project,
-    description: "Industrial design by Alex Infield.",
     hoverVideo: hoverAsset ? sourceFor(project.slug, hoverAsset) : undefined,
   };
 });

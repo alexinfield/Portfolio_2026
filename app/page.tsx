@@ -1,77 +1,58 @@
-import { projects, type Project } from "@/lib/portfolio";
+import { projects } from "@/lib/portfolio";
+import ProjectRail from "./project-rail";
 import SiteHeader from "./site-header";
 
-function FeatureMedia({ project, motion = false }: { project: Project; motion?: boolean }) {
-  if (motion && project.hoverVideo) {
-    return (
-      <video
-        data-autoplay-video
-        loop
-        muted
-        playsInline
-        preload="metadata"
-        poster={project.cover}
-        aria-hidden="true"
-      >
-        <source src={project.hoverVideo} type="video/mp4" />
-      </video>
-    );
-  }
-
-  return <img src={project.cover} alt={`${project.title} project`} />;
-}
-
 export default function Home() {
-  const [molekule, luma] = projects;
-
   return (
-    <main className="home-page">
-      <SiteHeader />
+    <main className="home-workspace">
+      <SiteHeader variant="home" />
+      <ProjectRail activeSlug={projects[0].slug} interactive />
 
-      <section className="home-hero" aria-label="Featured projects">
-        <a className="home-hero-feature home-hero-feature-primary" href={`/projects/${molekule.slug}`}>
-          <FeatureMedia project={molekule} />
-          <span>{molekule.title}</span>
-        </a>
-        <a className="home-hero-feature home-hero-feature-secondary" href={`/projects/${luma.slug}`}>
-          <FeatureMedia project={luma} motion />
-          <span>{luma.title}</span>
-        </a>
-      </section>
+      <section className="home-stage" aria-label="Selected project preview">
+        {projects.map((project, index) => (
+          <article
+            className={`home-stage-panel${index === 0 ? " is-active" : ""}`}
+            data-home-project-panel={project.slug}
+            aria-hidden={index === 0 ? undefined : "true"}
+            key={project.slug}
+          >
+            <a className="home-stage-media" href={`/projects/${project.slug}`}>
+              {project.hoverVideo ? (
+                <video
+                  data-home-preview-video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload={index === 0 ? "metadata" : "none"}
+                  poster={project.cover}
+                  aria-hidden="true"
+                >
+                  <source src={project.hoverVideo} type="video/mp4" />
+                </video>
+              ) : (
+                <img src={project.cover} alt={`${project.title} project`} />
+              )}
+            </a>
 
-      <section className="home-statement" aria-labelledby="home-statement-title">
-        <h1 id="home-statement-title">
-          Alex Infield is an industrial designer working across physical products,
-          digital interfaces, and the systems that connect them.
-        </h1>
-      </section>
-
-      <section className="selected-work" aria-labelledby="selected-work-title">
-        <div className="section-heading">
-          <h2 id="selected-work-title">Selected<br />Work</h2>
-          <a href="/all">View all projects</a>
-        </div>
-
-        <div className="selected-work-grid">
-          {projects.map((project, index) => (
-            <a className="selected-work-card" href={`/projects/${project.slug}`} key={project.slug}>
-              <div className="selected-work-media">
-                <FeatureMedia project={project} motion={index % 2 === 1 || project.slug === "ping"} />
-              </div>
-              <div className="selected-work-caption">
-                <h3>{project.title}</h3>
+            <div className="home-stage-notes">
+              <div>
+                <span>Selected work</span>
+                <h1>{project.title}</h1>
                 <p>{project.description}</p>
               </div>
-            </a>
-          ))}
-        </div>
+              <div>
+                <span>Practice</span>
+                <p>Industrial design, product systems, and digital interfaces.</p>
+              </div>
+              <a href={`/projects/${project.slug}`}>
+                <span>Case study</span>
+                <strong>Open project</strong>
+              </a>
+            </div>
+          </article>
+        ))}
       </section>
-
-      <footer className="site-footer">
-        <a href="mailto:alex@infield.net">Contact</a>
-        <span>Alex Infield</span>
-        <span>2026</span>
-      </footer>
     </main>
   );
 }

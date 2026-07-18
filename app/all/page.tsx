@@ -4,7 +4,7 @@ import SiteHeader from "../site-header";
 export default function AllProjectsPage() {
   return (
     <main className="all-page">
-      <SiteHeader variant="page" title="All projects" closeHref="/" />
+      <SiteHeader variant="index" title="All projects" />
       <section className="project-index" aria-label="All projects">
         {projects.map((project) => (
           <a className="project-card" href={`/projects/${project.slug}`} key={project.slug}>

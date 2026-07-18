@@ -1,37 +1,35 @@
 import Link from "next/link";
 
 type SiteHeaderProps =
-  | { variant?: "home"; title?: never; closeHref?: never }
-  | { variant: "page"; title: string; closeHref: string };
+  | { variant: "home" }
+  | { variant: "index"; title?: string }
+  | { variant: "detail"; title: string; closeHref?: string };
 
 export default function SiteHeader(props: SiteHeaderProps) {
-  const isPage = props.variant === "page";
+  const isHome = props.variant === "home";
+  const isIndex = props.variant === "index";
+  const label = isIndex ? "Alex Infield" : "All projects";
+  const labelHref = isIndex ? "/" : "/all";
+  const closeHref = isHome ? "/info" : props.variant === "detail" ? props.closeHref ?? "/all" : "/";
+  const closeLabel = isHome
+    ? "About Alex Infield"
+    : isIndex
+      ? "Close all projects"
+      : `Close ${props.title}`;
 
   return (
-    <header className={`site-header${isPage ? " site-header-page" : ""}`}>
-      <div className="site-header-inner">
-        <Link className="site-name" href="/" aria-label="Alex Infield home">
-          Alex Infield
-        </Link>
+    <header className={`site-header site-header-${props.variant}`}>
+      <Link className="nav-pill" href={labelHref}>
+        {label}
+      </Link>
 
-        {isPage ? (
-          <p className="site-header-title">{props.title}</p>
-        ) : (
-          <nav className="site-header-nav site-header-nav-primary" aria-label="Portfolio">
-            <Link href="/all">Work</Link><span>,</span><Link href="/">Etc.</Link>
-          </nav>
-        )}
+      {props.variant === "detail" ? (
+        <p className="site-header-title">{props.title}</p>
+      ) : null}
 
-        {isPage ? (
-          <Link className="close-control" href={props.closeHref} aria-label={`Close ${props.title}`}>
-            <img src="/icons/x.svg" alt="" aria-hidden="true" />
-          </Link>
-        ) : (
-          <nav className="site-header-nav site-header-nav-secondary" aria-label="About and contact">
-            <Link href="/info">Info</Link><span>,</span><a href="mailto:alex@infield.net">Contact</a>
-          </nav>
-        )}
-      </div>
+      <Link className="close-control" href={closeHref} aria-label={closeLabel}>
+        <img src="/icons/x.svg" alt="" aria-hidden="true" />
+      </Link>
     </header>
   );
 }

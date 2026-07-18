@@ -2,6 +2,17 @@
 
 Date: 2026-07-18
 
+## Porto Rocha restoration
+
+- PASS — Replaced the later oversized editorial draft with the reference's compact split-rail/card system.
+- PASS — Homepage uses Alex's real video previews and restored cover stills.
+- PASS — All Projects uses the requested two desktop columns, one mobile column, still defaults, and five verified hover videos.
+- PASS — Project pages retain verified galleries and use the reference's rail/canvas responsive structure.
+- PASS — 1440 × 1000 and 390 × 844 browser checks found no horizontal overflow.
+- PASS — Molekule Go card navigation and project close navigation work; a fresh browser tab reported no console errors.
+- PASS — GitHub Pages export keeps nested links, media, and the bundled font relative to the repository path.
+- PASS — `npm test` (5 tests) and lint (warnings only for deliberate static `<img>` use).
+
 ## Automated checks
 
 Command: `npm test`

@@ -3,8 +3,9 @@
 ## Header
 
 - Use “Alex Infield” as the permanent left anchor.
-- Home navigation uses `Work, Etc.` and `Info, Contact` in the Figma language.
-- Internal pages keep the requested circular `×` close control.
+- Replace Porto Rocha's “I want to see” field with the requested “Alex Infield” label on the project index.
+- Use a compact `All projects` pill on the home and project workspaces.
+- Home, index, info, and project routes keep the requested circular `×` close control.
 
 ## Project index
 
@@ -16,7 +17,9 @@
 
 ## Homepage
 
-- Use the immersive two-column project opening from Figma, then a Mouthwash-inspired statement and staggered selected-work flow.
+- Use Porto Rocha's split workspace: a fixed project rail and a large active project stage.
+- Hovering or focusing a rail card changes the active project preview; mobile prioritizes the scrollable project rail.
+- Keep project information compact and card-based instead of the previous oversized editorial hero.
 - Use only Alex’s real project assets; no generated or placeholder artwork.
 
 ## Code organization

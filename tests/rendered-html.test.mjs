@@ -27,7 +27,7 @@ async function render(pathname = "/") {
   );
 }
 
-test("server-renders the editorial Alex Infield portfolio", async () => {
+test("server-renders the Porto Rocha-style Alex Infield workspace", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
@@ -35,8 +35,12 @@ test("server-renders the editorial Alex Infield portfolio", async () => {
   const html = await response.text();
   assert.match(html, /<title>Alex Infield/i);
   assert.match(html, />Alex Infield</);
-  assert.match(html, /Selected[\s\S]*Work/);
-  assert.match(html, /physical products/);
+  assert.match(html, /home-workspace/);
+  assert.match(html, /data-home-project-trigger="molekule-go"/);
+  assert.match(html, /data-home-project-panel="molekule-go"/);
+  assert.match(html, /data-home-preview-video/);
+  assert.match(html, /Industrial design, product systems, and digital interfaces/);
+  assert.match(html, /href="\/all"[^>]*>All projects</);
   assert.doesNotMatch(html, /I want to see/i);
 });
 
@@ -59,18 +63,23 @@ test("all-projects page uses verified order, original covers, and hover motion",
   assert.match(html, /673e50477b24902040693b05_15-hero\.jpg/);
   assert.match(html, /692fb99b7ff154a13bde26f2_251202-Hero-Hand\.webp/);
   assert.match(html, /data-hover-video/);
+  assert.match(html, /site-header-index/);
+  assert.match(html, /href="\/"[^>]*>Alex Infield</);
 
   const modeCard = html.slice(html.indexOf('/projects/mode"'));
   assert.doesNotMatch(modeCard.slice(0, modeCard.indexOf("</a>")), /data-hover-video/);
 });
 
-test("project and info pages keep the close control", async () => {
+test("project and info pages keep the close control and split workspace", async () => {
   const [projectResponse, infoResponse] = await Promise.all([render("/projects/ping"), render("/info")]);
   const [project, info] = await Promise.all([projectResponse.text(), infoResponse.text()]);
 
   assert.match(project, /aria-label="Close Ping"/);
   assert.match(project, /project-gallery/);
+  assert.match(project, /project-workspace/);
+  assert.match(project, /rail-project-card is-current/);
   assert.match(info, /aria-label="Close Info"/);
+  assert.match(info, /info-workspace/);
   assert.match(info, /alex@infield\.net/);
 });
 
@@ -117,6 +126,16 @@ test("keeps complete source assets and exports one GitHub Pages presentation", a
   assert.match(workflow, /actions\/deploy-pages@v4/);
   assert.match(workflow, /npm run build:github/);
   assert.match(workflow, /path: \.\/gh-pages/);
+
+  const generatedCssName = (await readdir(new URL("../gh-pages/assets/", import.meta.url)))
+    .find((name) => /^index-.*\.css$/.test(name));
+  assert.ok(generatedCssName, "generated stylesheet exists");
+  const generatedCss = await readFile(
+    new URL(`../gh-pages/assets/${generatedCssName}`, import.meta.url),
+    "utf8",
+  );
+  assert.doesNotMatch(generatedCss, /url\(\/assets\//);
+  assert.match(generatedCss, /url\(\.\/home\/media\/.*FunktionalGrotesk-Regular/);
 });
 
 test("keeps each project gallery in its verified live-site sequence", async () => {
