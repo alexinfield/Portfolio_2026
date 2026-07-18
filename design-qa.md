@@ -13,7 +13,7 @@
 - Fonts and typography: the reference uses SF Pro Text; the implementation uses Alex's bundled Funktional Grotesk at the same 14 px desktop and 13.5 px mobile scale with the same 1.25 line height. The family change is intentional to keep the site self-contained and retain Alex's existing typographic asset.
 - Spacing and layout rhythm: desktop uses four independently flowing columns with 8 px outer margins and gaps; mobile collapses to one 359 px column. Control heights, card radii, title spacing, muted copy, and 24 px card rhythm match the reference.
 - Colors and visual tokens: black background, `#e2e6e3` foreground, 50% muted text, and 10% translucent controls match the observed source values.
-- Image quality and asset fidelity: every visible project preview uses Alex's locally bundled source media. Five muted videos autoplay and loop; Mode uses its original local image. Nothing is hotlinked or generated.
+- Image quality and asset fidelity: every visible project preview uses the original homepage still image from Alex's existing portfolio. Nothing is hotlinked or generated.
 - Icons: the arrow and close controls use bundled Lucide static SVG assets with the package's ISC license included; no text-glyph, CSS-art, or handwritten icon substitute remains.
 - Copy and content: project names preserve the verified order. The source portfolio did not expose separate project descriptions, so the cards use one restrained factual line and avoid invented case-study claims.
 - Responsive behavior: no clipping, overlap, or broken controls was observed at desktop or mobile. Project detail pages switch from a two-column sidebar/gallery layout to one column on mobile.
@@ -27,7 +27,7 @@
 - Project cards navigate to the correct detail route.
 - Ping loads 17 gallery items in the stored verified sequence.
 - `Show all projects`, Info, and email navigation work.
-- All five homepage videos were playing, muted, and looping during the browser check.
+- Homepage cards use the six restored original still images; project-page videos remain available inside their verified galleries.
 - Browser console errors checked: none.
 
 **Comparison History**

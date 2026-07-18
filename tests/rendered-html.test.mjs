@@ -37,8 +37,8 @@ test("server-renders the Alex Infield portfolio", async () => {
   assert.match(html, /Molekule Go/);
   assert.match(html, /Hyphae Light/);
   assert.match(html, /placeholder="I want to see\.\.\."/);
-  assert.match(html, /assets\/ping\/media\/ping-functions\.mp4/);
-  assert.match(html, /assets\/molekule-go\/media\/UV-animation-transcode\.mp4/);
+  assert.match(html, /assets\/home\/media\/67b7e8c2a408546fe61055f6_hero-hand\.jpg/);
+  assert.match(html, /assets\/home\/media\/68cc87ee027f56988fed41fe_hero\.webp/);
 });
 
 test("keeps complete source assets and a GitHub Pages publish copy", async () => {
@@ -78,7 +78,7 @@ test("keeps complete source assets and a GitHub Pages publish copy", async () =>
   assert.match(info, /data-page="info"/);
   assert.match(workflow, /actions\/deploy-pages@v4/);
   assert.match(workflow, /path: \.\/public/);
-  assert.match(source, /\/assets\/ping\/media\/ping-functions\.mp4/);
+  assert.match(source, /\/assets\/home\/media\/67b7e8c2a408546fe61055f6_hero-hand\.jpg/);
   assert.match(source, /\/assets\/home\/media\//);
 });
 
