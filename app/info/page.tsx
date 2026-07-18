@@ -1,17 +1,17 @@
 export default function InfoPage() {
   return (
-    <main className="detail-page">
-      <header className="site-header">
-        <a className="wordmark" href="/" aria-label="Alex Infield home">
-          Alex Infield
-        </a>
-        <nav aria-label="Primary navigation">
-          <a href="/">Work</a>
-          <a href="/info">Info</a>
-          <a href="mailto:alex@infield.net">Contact</a>
-        </nav>
-      </header>
-      <section className="info-page" aria-label="Alex Infield information">
+    <main className="info-shell">
+      <a className="detail-return" href="/">Show all projects</a>
+      <section className="info-page" aria-label="About Alex Infield">
+        <div className="info-copy">
+          <h1>Alex<br />Infield</h1>
+          <div>
+            <p>Industrial designer.</p>
+            <nav className="project-links" aria-label="Contact links">
+              <a className="detail-link" href="mailto:alex@infield.net">Email</a>
+            </nav>
+          </div>
+        </div>
         <img
           src="/assets/info/media/67aca18a869f9276f4c0ef01_IMG_0019.png"
           alt=""

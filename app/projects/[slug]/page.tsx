@@ -62,18 +62,19 @@ export default async function ProjectPage({
 
   return (
     <main className="detail-page">
-      <header className="site-header">
-        <a className="wordmark" href="/" aria-label="Alex Infield home">
-          Alex Infield
-        </a>
-        <nav aria-label="Primary navigation">
-          <a href="/">Work</a>
-          <a href="/info">Info</a>
-          <a href="mailto:alex@infield.net">Contact</a>
-        </nav>
-      </header>
+      <a className="detail-return" href="/">Show all projects</a>
       <section className="project-detail" aria-label={project.title}>
-        <h1>{project.title}</h1>
+        <aside className="project-sidebar">
+          <p className="project-wordmark">Alex Infield</p>
+          <div>
+            <h1>{project.title}</h1>
+            <p>Industrial design by Alex Infield.</p>
+          </div>
+          <nav className="project-links" aria-label="Project navigation">
+            <a className="detail-link" href="/info">Info</a>
+            <a className="detail-link" href="mailto:alex@infield.net">Contact</a>
+          </nav>
+        </aside>
         <div className="project-gallery">
           {media.map(({ asset, poster }) => {
             const source = `/assets/${slug}/${asset.path}`;
