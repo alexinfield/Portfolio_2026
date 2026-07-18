@@ -2,21 +2,22 @@ import assert from "node:assert/strict";
 import { access, readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 
-const projectRoot = new URL("../", import.meta.url);
-
 function assetKey(asset) {
   const sourceName = decodeURIComponent(asset.name).split("/").pop();
   const sourceId = sourceName.match(/[a-f\d]{24}/i)?.[0] ?? asset.id;
   return `${asset.kind}:${sourceId}`;
 }
 
-async function render() {
+async function worker() {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
   workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
-  const { default: worker } = await import(workerUrl.href);
+  return (await import(workerUrl.href)).default;
+}
 
-  return worker.fetch(
-    new Request("http://localhost/", { headers: { accept: "text/html" } }),
+async function render(pathname = "/") {
+  const app = await worker();
+  return app.fetch(
+    new Request(`http://localhost${pathname}`, { headers: { accept: "text/html" } }),
     {
       ASSETS: {
         fetch: async () => new Response("Not found", { status: 404 }),
@@ -26,29 +27,70 @@ async function render() {
   );
 }
 
-test("server-renders the Alex Infield portfolio", async () => {
+test("server-renders the Porto Rocha-style Alex Infield workspace", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
   assert.match(html, /<title>Alex Infield/i);
-  assert.match(html, /Ping/);
-  assert.match(html, /Molekule Go/);
-  assert.match(html, /Hyphae Light/);
-  assert.match(html, /placeholder="I want to see\.\.\."/);
-  assert.match(html, /assets\/home\/media\/67b7e8c2a408546fe61055f6_hero-hand\.jpg/);
-  assert.match(html, /assets\/home\/media\/68cc87ee027f56988fed41fe_hero\.webp/);
+  assert.match(html, />Alex Infield</);
+  assert.match(html, /home-workspace/);
+  assert.match(html, /data-home-project-trigger="molekule-go"/);
+  assert.match(html, /data-home-project-panel="molekule-go"/);
+  assert.match(html, /data-home-preview-video/);
+  assert.match(html, /Industrial design, product systems, and digital interfaces/);
+  assert.match(html, /href="\/all"[^>]*>All projects</);
+  assert.doesNotMatch(html, /I want to see/i);
 });
 
-test("keeps complete source assets and a GitHub Pages publish copy", async () => {
+test("all-projects page uses verified order, original covers, and hover motion", async () => {
+  const response = await render("/all");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  const expectedOrder = ["Molekule Go", "Luma", "Niche", "Hyphae Light", "Ping", "Mode"];
+  let previous = -1;
+
+  for (const title of expectedOrder) {
+    const index = html.indexOf(`>${title}<`);
+    assert.ok(index > previous, `${title} is in verified Figma order`);
+    previous = index;
+  }
+
+  assert.match(html, /67b7e8c2a408546fe61055f6_hero-hand\.jpg/);
+  assert.match(html, /68cc87ee027f56988fed41fe_hero\.webp/);
+  assert.match(html, /689b274b032bfbc9129efc47_homePage\.webp/);
+  assert.match(html, /673e50477b24902040693b05_15-hero\.jpg/);
+  assert.match(html, /692fb99b7ff154a13bde26f2_251202-Hero-Hand\.webp/);
+  assert.match(html, /data-hover-video/);
+  assert.match(html, /site-header-index/);
+  assert.match(html, /href="\/"[^>]*>Alex Infield</);
+
+  const modeCard = html.slice(html.indexOf('/projects/mode"'));
+  assert.doesNotMatch(modeCard.slice(0, modeCard.indexOf("</a>")), /data-hover-video/);
+});
+
+test("project and info pages keep the close control and split workspace", async () => {
+  const [projectResponse, infoResponse] = await Promise.all([render("/projects/ping"), render("/info")]);
+  const [project, info] = await Promise.all([projectResponse.text(), infoResponse.text()]);
+
+  assert.match(project, /aria-label="Close Ping"/);
+  assert.match(project, /project-gallery/);
+  assert.match(project, /project-workspace/);
+  assert.match(project, /rail-project-card is-current/);
+  assert.match(info, /aria-label="Close Info"/);
+  assert.match(info, /info-workspace/);
+  assert.match(info, /alex@infield\.net/);
+});
+
+test("keeps complete source assets and exports one GitHub Pages presentation", async () => {
   const assetRoot = new URL("../public/assets/", import.meta.url);
-  const projects = (await readdir(assetRoot, { withFileTypes: true }))
+  const projectFolders = (await readdir(assetRoot, { withFileTypes: true }))
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
     .sort();
 
-  assert.deepEqual(projects, [
+  assert.deepEqual(projectFolders, [
     "home",
     "hyphae",
     "info",
@@ -59,7 +101,7 @@ test("keeps complete source assets and a GitHub Pages publish copy", async () =>
     "ping",
   ]);
 
-  for (const project of projects) {
+  for (const project of projectFolders) {
     const manifest = JSON.parse(
       await readFile(new URL(`../public/assets/${project}/manifest.json`, import.meta.url), "utf8"),
     );
@@ -67,19 +109,33 @@ test("keeps complete source assets and a GitHub Pages publish copy", async () =>
     assert.ok(manifest.assets.length > 0);
   }
 
-  const [home, info, workflow, source] = await Promise.all([
-    readFile(new URL("../public/index.html", import.meta.url), "utf8"),
-    readFile(new URL("../public/info/index.html", import.meta.url), "utf8"),
+  const [home, all, info, ping, workflow] = await Promise.all([
+    readFile(new URL("../gh-pages/index.html", import.meta.url), "utf8"),
+    readFile(new URL("../gh-pages/all/index.html", import.meta.url), "utf8"),
+    readFile(new URL("../gh-pages/info/index.html", import.meta.url), "utf8"),
+    readFile(new URL("../gh-pages/projects/ping/index.html", import.meta.url), "utf8"),
     readFile(new URL("../.github/workflows/deploy-pages.yml", import.meta.url), "utf8"),
-    readFile(new URL("app/portfolio-grid.tsx", projectRoot), "utf8"),
   ]);
 
-  assert.match(home, /data-page="home"/);
-  assert.match(info, /data-page="info"/);
+  assert.match(home, /href="\.\/all"/);
+  assert.match(all, /src="\.\.\/portfolio-runtime\.js"/);
+  assert.match(info, /href="\.\.\/all"/);
+  assert.match(ping, /src="\.\.\/\.\.\/assets\/ping/);
+  assert.doesNotMatch(home, /__VINEXT_RSC/);
+  assert.doesNotMatch(home, /rel="modulepreload"/);
   assert.match(workflow, /actions\/deploy-pages@v4/);
-  assert.match(workflow, /path: \.\/public/);
-  assert.match(source, /\/assets\/home\/media\/67b7e8c2a408546fe61055f6_hero-hand\.jpg/);
-  assert.match(source, /\/assets\/home\/media\//);
+  assert.match(workflow, /npm run build:github/);
+  assert.match(workflow, /path: \.\/gh-pages/);
+
+  const generatedCssName = (await readdir(new URL("../gh-pages/assets/", import.meta.url)))
+    .find((name) => /^index-.*\.css$/.test(name));
+  assert.ok(generatedCssName, "generated stylesheet exists");
+  const generatedCss = await readFile(
+    new URL(`../gh-pages/assets/${generatedCssName}`, import.meta.url),
+    "utf8",
+  );
+  assert.doesNotMatch(generatedCss, /url\(\/assets\//);
+  assert.match(generatedCss, /url\(\.\/home\/media\/.*FunktionalGrotesk-Regular/);
 });
 
 test("keeps each project gallery in its verified live-site sequence", async () => {

@@ -1,27 +1,17 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import "./globals.css";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const requestHeaders = await headers();
-  const host =
-    requestHeaders.get("x-forwarded-host") ??
-    requestHeaders.get("host") ??
-    "alexinfield.com";
-  const protocol = requestHeaders.get("x-forwarded-proto") ?? "https";
-  const metadataBase = new URL(`${protocol}://${host}`);
-
-  return {
-    metadataBase,
+export const metadata: Metadata = {
+  metadataBase: new URL("https://alexinfield.com"),
+  title: "Alex Infield — Industrial Design Portfolio",
+  description: "Selected industrial design work by Alex Infield.",
+  alternates: { canonical: "/" },
+  openGraph: {
     title: "Alex Infield — Industrial Design Portfolio",
     description: "Selected industrial design work by Alex Infield.",
-    openGraph: {
-      title: "Alex Infield — Industrial Design Portfolio",
-      description: "Selected industrial design work by Alex Infield.",
-      type: "website",
-    },
-  };
-}
+    type: "website",
+  },
+};
 
 export default function RootLayout({
   children,
@@ -30,7 +20,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {children}
+        <script src="/portfolio-runtime.js" defer />
+      </body>
     </html>
   );
 }
