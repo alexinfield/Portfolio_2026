@@ -41,3 +41,7 @@ next-env.d.ts
 /.wrangler/
 /outputs/
 /work/
+
+# Exact Figma source masters are archived in Drive and intentionally excluded
+# from the GitHub Pages build. Web-ready derivatives belong in public/assets.
+/source-assets/figma/

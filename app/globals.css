@@ -445,16 +445,24 @@ input:focus-visible {
   min-height: 100svh;
 }
 
+.project-presentation {
+  min-width: 0;
+  overflow: hidden;
+  background: #000;
+  container-type: inline-size;
+}
+
 .project-gallery {
   display: grid;
-  gap: var(--gutter);
+  gap: 0;
+  background: #000;
 }
 
 .project-slide {
   margin: 0;
   overflow: hidden;
-  border-radius: var(--radius);
-  background: var(--panel-deep);
+  border-radius: 0;
+  background: #000;
 }
 
 .project-slide img,
@@ -466,41 +474,86 @@ input:focus-visible {
 .project-hero img,
 .project-hero video {
   width: 100%;
-  aspect-ratio: 1.5 / 1;
-  object-fit: cover;
+  height: auto;
 }
 
-.project-story {
+.figma-project-intro {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--gutter);
+  gap: clamp(24px, 2.083cqw, 40px);
+  border: 1px solid #000;
+  padding: clamp(48px, 5cqw, 96px) clamp(40px, 6.667cqw, 128px);
+  background: #000;
 }
 
-.project-story > div {
-  display: flex;
-  min-height: 260px;
-  flex-direction: column;
-  justify-content: flex-end;
-  border-radius: var(--radius);
-  padding: 24px;
-  background: var(--panel-deep);
-}
-
-.project-story h1,
-.project-story p {
+.figma-project-intro h1,
+.figma-project-intro p,
+.figma-project-intro dl,
+.figma-project-intro dd {
   margin: 0;
 }
 
-.project-story h1 {
-  font-size: clamp(34px, 4.2vw, 68px);
-  font-weight: 400;
-  letter-spacing: -0.045em;
-  line-height: 0.94;
+.figma-project-intro h1 {
+  color: #fff;
+  font-size: clamp(54px, 5.833cqw, 112px);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1;
 }
 
-.project-story p {
-  max-width: 42ch;
-  color: var(--muted);
+.figma-project-intro-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 583px) minmax(140px, 1fr) auto;
+  gap: clamp(28px, 7.813cqw, 150px);
+  align-items: start;
+  color: #fff;
+  font-size: clamp(16px, 1.25cqw, 24px);
+  font-weight: 500;
+  line-height: 1.333;
+}
+
+.figma-project-intro-copy {
+  display: grid;
+  max-width: 38ch;
+  gap: 1.333em;
+}
+
+.figma-project-intro dl {
+  min-width: 0;
+}
+
+.figma-project-intro dl > div {
+  display: grid;
+  gap: 10px;
+}
+
+.figma-project-intro dt {
+  color: #999;
+  text-transform: uppercase;
+}
+
+.figma-project-intro dd,
+.figma-project-intro dd span {
+  display: block;
+}
+
+.figma-project-section {
+  position: relative;
+  min-width: 0;
+  background: #000;
+}
+
+.figma-mobile-media {
+  display: none;
+}
+
+.figma-project-transcript {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .next-project {
@@ -619,6 +672,19 @@ input:focus-visible {
     --rail-width: 310px;
   }
 
+  .project-page .project-rail {
+    display: none;
+  }
+
+  .project-page .project-workspace {
+    display: block;
+    padding: 0;
+  }
+
+  .project-page .project-canvas {
+    margin-top: 0;
+  }
+
   .portfolio-identity {
     min-height: 220px;
   }
@@ -640,6 +706,11 @@ input:focus-visible {
   .home-stage-notes > a {
     grid-column: 1 / -1;
     min-height: 120px;
+  }
+
+  .figma-project-intro-grid {
+    grid-template-columns: minmax(260px, 1fr) auto auto;
+    gap: 28px;
   }
 }
 
@@ -756,47 +827,114 @@ input:focus-visible {
     height: 100%;
   }
 
-  .project-page .project-rail {
-    padding-top: 38px;
+  .figma-project-intro {
+    gap: 32px;
+    padding: 48px 16px 40px;
   }
 
-  .project-page .portfolio-identity {
-    min-height: 225px;
+  .figma-project-intro h1 {
+    font-size: clamp(52px, 16vw, 72px);
+    letter-spacing: -0.045em;
   }
 
-  .project-page .rail-about-card,
-  .project-page .rail-project-card:not(.is-current) {
+  .figma-project-intro-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(88px, auto);
+    gap: 28px 20px;
+    font-size: 16px;
+    line-height: 1.35;
+  }
+
+  .figma-project-intro-copy {
+    grid-column: 1 / -1;
+    max-width: 44ch;
+  }
+
+  .figma-project-intro-grid > span[aria-hidden="true"] {
     display: none;
   }
 
-  .project-page .rail-card-list {
-    padding-bottom: var(--gutter);
+  .figma-project-intro dl:last-child {
+    justify-self: end;
   }
 
-  .project-canvas {
-    margin-top: var(--gutter);
+  .figma-project-section.has-mobile-deconstruction > .project-slide,
+  .figma-project-section.hide-composite-on-mobile > .project-slide {
+    display: none;
   }
 
-  .project-hero img,
-  .project-hero video {
-    aspect-ratio: auto;
+  .figma-mobile-media {
+    display: grid;
+    gap: var(--gutter);
+    padding: var(--gutter);
+    background: #000;
   }
 
-  .project-story {
+  .figma-mobile-media.is-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .figma-mobile-media.is-stack {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .project-story > div {
-    min-height: 220px;
-    padding: 16px;
+  .figma-mobile-media img {
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    background: #111;
+    object-fit: cover;
   }
 
-  .project-story h1 {
-    font-size: 44px;
+  .figma-project-transcript {
+    position: static;
+    display: grid;
+    width: auto;
+    height: auto;
+    gap: 8px;
+    overflow: visible;
+    clip: auto;
+    clip-path: none;
+    padding: 18px 16px 36px;
+    background: #000;
+    color: #fff;
+    white-space: normal;
+  }
+
+  .figma-project-section.hide-composite-on-mobile .figma-project-transcript {
+    min-height: 180px;
+    align-content: end;
+    padding-block: 48px 36px;
+  }
+
+  .figma-project-transcript span {
+    color: #999;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .figma-project-transcript h2,
+  .figma-project-transcript p {
+    max-width: 38ch;
+    margin: 0;
+    font-weight: 400;
+  }
+
+  .figma-project-transcript h2 {
+    font-size: clamp(24px, 8vw, 34px);
+    letter-spacing: -0.035em;
+    line-height: 1.02;
+  }
+
+  .figma-project-transcript p {
+    color: #d8d8d8;
+    font-size: 16px;
+    line-height: 1.38;
   }
 
   .next-project {
     min-height: 260px;
+    margin: var(--gutter);
     padding: 16px;
   }
 
