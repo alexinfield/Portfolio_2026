@@ -4,8 +4,8 @@ import SiteHeader from "../site-header";
 export default function InfoPage() {
   return (
     <main className="info-page portfolio-info-page">
-      <SiteHeader variant="index" title="Info" active="info" closeHref="/" />
-      <section className="portfolio-info-layout" aria-labelledby="info-title">
+      <SiteHeader variant="index" title="Info" active="info" />
+      <section className="portfolio-info-layout" aria-labelledby="info-title" id="main-content">
         <img src="/assets/info/media/67aca18a869f9276f4c0ef01_IMG_0019.png" alt="Alex Infield" />
         <div className="portfolio-info-copy">
           <span>Industrial designer · New York</span>

@@ -41,8 +41,8 @@ test("server-renders the approved two-column Alex Infield work feed", async () =
   assert.match(html, /Industrial designer working across products, interfaces/);
   assert.match(html, />Work</);
   assert.match(html, />Play</);
-  assert.match(html, />Professional Work</);
-  assert.match(html, />Alex OS</);
+  assert.match(html, />Professional</);
+  assert.doesNotMatch(html, />Alex OS</);
   assert.doesNotMatch(html, /I want to see/i);
 });
 
@@ -77,12 +77,12 @@ test("play uses real source projects and the same uniform card system as work", 
   assert.equal(response.status, 200);
   const html = await response.text();
 
-  for (const title of ["Off Campus", "Inflating Chair", "Mycelium Panels"]) {
+  for (const title of ["Off Campus", "Wave Shaper", "Juicebox", "Desk Pen", "Mycelium Panels"]) {
     assert.match(html, new RegExp(`>${title}<`));
   }
 
   assert.match(html, /Digital Product/);
-  assert.match(html, /Product Design/);
+  assert.match(html, /Interaction Design/);
   assert.match(html, /Material Research/);
   assert.match(html, /\/play\/off-campus\.webp/);
   assert.match(html, /portfolio-card/);
@@ -110,22 +110,23 @@ test("Alex OS server-renders the curated Finder, real media, and authentic Mac l
   await access(new URL("../public/assets/niche/media/15-transcode.mp4", import.meta.url));
 });
 
-test("project and info pages keep the close control and responsive portfolio structure", async () => {
+test("project and info pages keep predictable navigation and responsive portfolio structure", async () => {
   const [projectResponse, infoResponse] = await Promise.all([render("/projects/ping"), render("/info")]);
   const [project, info] = await Promise.all([projectResponse.text(), infoResponse.text()]);
 
-  assert.match(project, /aria-label="Close Ping"/);
+  assert.match(project, />Back to work</);
+  assert.match(project, />Next: Mode</);
   assert.match(project, /project-gallery/);
   assert.match(project, /project-workspace/);
-  assert.match(project, /class="portfolio-nav"/);
+  assert.match(project, /class="portfolio-nav portfolio-nav-desktop"/);
   assert.match(project, />Work</);
   assert.match(project, />Play</);
-  assert.match(project, />Professional Work</);
+  assert.match(project, />Professional</);
   assert.match(project, />Info</);
-  assert.match(project, />Alex OS</);
+  assert.doesNotMatch(project, />Alex OS</);
   assert.doesNotMatch(project, /project-drawer/);
   assert.doesNotMatch(project, /project-rail/);
-  assert.match(info, /aria-label="Close Info"/);
+  assert.doesNotMatch(info, /aria-label="Close Info"/);
   assert.match(info, /portfolio-info-layout/);
   assert.match(info, /alex@infield\.net/);
 });

@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 const root = fileURLToPath(new URL("../", import.meta.url));
 const output = join(root, "gh-pages");
 const projectSlugs = ["molekule-go", "luma", "niche", "hyphae", "ping", "mode"];
-const playSlugs = ["off-campus", "inflating-chair", "mycelium-panels"];
+const playSlugs = ["off-campus", "wave-shaper", "juicebox", "desk-pen", "mycelium-panels"];
 const routes = [
   "/",
   "/all",

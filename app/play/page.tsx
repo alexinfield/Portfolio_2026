@@ -5,8 +5,8 @@ import SiteHeader from "../site-header";
 export default function PlayPage() {
   return (
     <main className="portfolio-index-page">
-      <SiteHeader variant="index" title="Play" active="play" closeHref="/" />
-      <p className="portfolio-intro">
+      <SiteHeader variant="index" title="Play" active="play" />
+      <p className="portfolio-intro" id="main-content">
         Smaller studies, experiments, and projects that sit<br className="desktop-break" /> between process and finished work.
       </p>
       <PortfolioGrid projects={playProjects} section="play" />

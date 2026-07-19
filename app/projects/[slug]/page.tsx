@@ -143,9 +143,15 @@ export default async function ProjectPage({
 
   return (
     <main className="project-page">
-      <SiteHeader variant="detail" title={project.title} active="work" closeHref="/" />
+      <SiteHeader
+        variant="detail"
+        title={project.title}
+        active="work"
+        nextHref={`/projects/${nextProject.slug}`}
+        nextLabel={nextProject.title}
+      />
 
-      <div className="project-workspace">
+      <div className="project-workspace" id="main-content">
         <article
           className="project-canvas project-presentation"
           aria-labelledby="project-title"

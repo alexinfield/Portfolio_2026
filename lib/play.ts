@@ -11,15 +11,37 @@ export const playProjects = [
       "Creative/Projects/Off Campus/presentation v1/240707/Opening slide.jpg",
   },
   {
-    title: "Inflating Chair",
-    slug: "inflating-chair",
-    domain: "Product Design",
-    year: "2024",
-    cover: "/play/inflating-chair.webp",
+    title: "Wave Shaper",
+    slug: "wave-shaper",
+    domain: "Interaction Design",
+    year: "2023",
+    cover: "/play/wave-shaper.png",
     description:
-      "An experimental portable chair exploring inflatable structure, compact storage, and outdoor use.",
+      "A tactile interface study for shaping sound through direct, gestural control.",
     source:
-      "Creative/Projects/Inflating Chair/Keyshot/240531 photoshop/exports/airChairOutsideForest-ColorCorrected.jpg",
+      "Creative/Projects/waveshaper",
+  },
+  {
+    title: "Juicebox",
+    slug: "juicebox",
+    domain: "Product + Service",
+    year: "2022",
+    cover: "/play/juicebox.png",
+    description:
+      "A campus charging system designed to make shared power easier to find, understand, and use.",
+    source:
+      "Alex Infield Portfolio.pdf",
+  },
+  {
+    title: "Desk Pen",
+    slug: "desk-pen",
+    domain: "Object Study",
+    year: "2025",
+    cover: "/play/desk-pen.png",
+    description:
+      "A focused object study exploring proportion, machining, balance, and the ritual of a pen at rest.",
+    source:
+      "Creative/Projects/desk-pen",
   },
   {
     title: "Mycelium Panels",
@@ -38,4 +60,9 @@ export type PlaySlug = (typeof playProjects)[number]["slug"];
 
 export function getPlayProject(slug: string) {
   return playProjects.find((project) => project.slug === slug);
+}
+
+export function getNextPlayProject(slug: PlaySlug) {
+  const index = playProjects.findIndex((project) => project.slug === slug);
+  return playProjects[(index + 1) % playProjects.length];
 }

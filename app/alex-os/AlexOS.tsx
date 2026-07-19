@@ -88,7 +88,7 @@ const locationItems: Record<FinderLocation, FinderItem[]> = {
   ],
   RISD: [
     { name: "Off Campus", detail: "Digital Product · 2023", icon: Folder, href: "/play/off-campus", image: "/play/off-campus.webp" },
-    { name: "Inflating Chair", detail: "Product Design · 2022", icon: Folder, href: "/play/inflating-chair", image: "/play/inflating-chair.webp" },
+    { name: "Desk Pen", detail: "Object Study · 2025", icon: Folder, href: "/play/desk-pen", image: "/play/desk-pen.png" },
     { name: "Mycelium Panels", detail: "Material Research · 2022", icon: Folder, href: "/play/mycelium-panels", image: "/play/mycelium-panels.webp" },
     { name: "Sketchbooks", detail: "Process archive", icon: NotePencil },
   ],

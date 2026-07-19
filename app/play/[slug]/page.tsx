@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getPlayProject, playProjects } from "@/lib/play";
+import { getNextPlayProject, getPlayProject, playProjects, type PlaySlug } from "@/lib/play";
 import SiteHeader from "@/app/site-header";
 
 export function generateStaticParams() {
@@ -14,11 +14,20 @@ export default async function PlayProjectPage({
   const { slug } = await params;
   const project = getPlayProject(slug);
   if (!project) notFound();
+  const nextProject = getNextPlayProject(project.slug as PlaySlug);
 
   return (
     <main className="play-detail-page">
-      <SiteHeader variant="detail" title={project.title} closeHref="/play" />
-      <article className="play-detail-card">
+      <SiteHeader
+        variant="detail"
+        title={project.title}
+        active="play"
+        backHref="/play"
+        backLabel="Back to play"
+        nextHref={`/play/${nextProject.slug}`}
+        nextLabel={nextProject.title}
+      />
+      <article className="play-detail-card" id="main-content">
         <img src={project.cover} alt={`${project.title} project`} />
         <div className="play-detail-copy">
           <div>
