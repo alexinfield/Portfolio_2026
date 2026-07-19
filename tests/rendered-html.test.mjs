@@ -175,6 +175,18 @@ test("keeps complete source assets and exports one GitHub Pages presentation", a
   );
   assert.doesNotMatch(generatedCss, /url\(\/assets\//);
   assert.match(generatedCss, /url\(\.\/home\/media\/.*FunktionalGrotesk-Regular/);
+
+  const generatedJavascript = await Promise.all(
+    (await readdir(new URL("../gh-pages/assets/", import.meta.url)))
+      .filter((name) => name.endsWith(".js"))
+      .map((name) => readFile(new URL(`../gh-pages/assets/${name}`, import.meta.url), "utf8")),
+  );
+  const javascriptBundle = generatedJavascript.join("\n");
+  assert.doesNotMatch(javascriptBundle, /return`\/`\+e/);
+  assert.match(javascriptBundle, /return new URL\(`\.\.\/\$\{e\}`/);
+  assert.doesNotMatch(javascriptBundle, /[`"]\/assets\/niche\/media/);
+  assert.match(javascriptBundle, /\.\.\/alex-os\/audio\/sketch-01\.m4a/);
+  assert.match(javascriptBundle, /\.\.\/assets\/niche\/media\/15-transcode\.mp4/);
 });
 
 test("keeps each project gallery in its verified live-site sequence", async () => {

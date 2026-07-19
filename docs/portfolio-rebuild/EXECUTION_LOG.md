@@ -45,4 +45,5 @@ No DNS or `alexinfield.com` production setting was changed. The rollback tag rem
 - Added real local audio and video playback using Alex's existing source media.
 - Added light/dark persistence, the Alex OS launcher, and close navigation across secondary routes.
 - Expanded the GitHub Pages exporter to 15 routes while preserving client hydration and route-relative assets.
+- Made lazy-loaded CSS and Alex OS media repository-path-safe after the first live Pages check exposed root-relative client asset loading.
 - Passed the rendered-route test suite and browser design QA at desktop and mobile sizes.

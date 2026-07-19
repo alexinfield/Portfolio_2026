@@ -38,6 +38,8 @@ const windowDefaults: Record<WindowId, { x: number; y: number; width: number; he
   video: { x: 84, y: 520, width: 560, height: 330, title: "Video" },
 };
 
+const desktopAsset = (path: string) => path.startsWith("/") ? `..${path}` : path;
+
 function useCompactDesktop() {
   const [compact, setCompact] = useState(false);
   useEffect(() => {
@@ -220,7 +222,7 @@ function FinderApp({
           <div className={styles.fileGrid}>
             {projectFiles.map((project) => (
               <a className={styles.projectFile} href={`../${project.href.replace(/^\//, "")}/`} key={project.name}>
-                <img src={project.image} alt="" />
+                <img src={desktopAsset(project.image)} alt="" />
                 <strong>{project.name}</strong>
               </a>
             ))}
@@ -248,7 +250,7 @@ function MusicApp() {
     <div className={styles.musicApp}>
       <audio
         ref={audioRef}
-        src="/alex-os/audio/sketch-01.m4a"
+        src="../alex-os/audio/sketch-01.m4a"
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
         onTimeUpdate={(event) => setTime(event.currentTarget.currentTime)}
@@ -281,8 +283,8 @@ function MusicApp() {
 function VideoApp() {
   return (
     <div className={styles.videoApp}>
-      <video controls playsInline poster="/assets/niche/media/689b24381af8783a00ef221d_11-p-2600.webp">
-        <source src="/assets/niche/media/15-transcode.mp4" type="video/mp4" />
+      <video controls playsInline poster="../assets/niche/media/689b24381af8783a00ef221d_11-p-2600.webp">
+        <source src="../assets/niche/media/15-transcode.mp4" type="video/mp4" />
       </video>
       <p><span>Video Work</span><strong>Niche motion study</strong></p>
     </div>

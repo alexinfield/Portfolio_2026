@@ -27,11 +27,31 @@ await cp(join(root, "dist/client"), output, { recursive: true });
 // root-relative /assets URL. Make those generated URLs stylesheet-relative so
 // the same build works on both the custom domain and GitHub's repository path.
 const generatedAssets = join(output, "assets");
+let relativePreloadHelpers = 0;
 for (const entry of await readdir(generatedAssets, { withFileTypes: true })) {
-  if (!entry.isFile() || !entry.name.endsWith(".css")) continue;
-  const cssPath = join(generatedAssets, entry.name);
-  const css = await readFile(cssPath, "utf8");
-  await writeFile(cssPath, css.replaceAll("url(/assets/", "url(./"));
+  if (!entry.isFile()) continue;
+  const assetPath = join(generatedAssets, entry.name);
+
+  if (entry.name.endsWith(".css")) {
+    const css = await readFile(assetPath, "utf8");
+    await writeFile(assetPath, css.replaceAll("url(/assets/", "url(./"));
+  }
+
+  if (entry.name.endsWith(".js")) {
+    const javascript = await readFile(assetPath, "utf8");
+    const patched = javascript.replaceAll(
+      "return`/`+e",
+      "return new URL(`../${e}`,import.meta.url).href",
+    );
+    if (patched !== javascript) {
+      relativePreloadHelpers += 1;
+      await writeFile(assetPath, patched);
+    }
+  }
+}
+
+if (relativePreloadHelpers === 0) {
+  throw new Error("Could not make Vite's dynamic preload helper repository-path-safe");
 }
 
 function relativeRoot(route) {

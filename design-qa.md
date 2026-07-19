@@ -53,6 +53,7 @@ No actionable P0, P1, or P2 findings remain.
 - Alex OS supports window focus, drag, resize, close, minimize, maximize, restore, dock launch, real audio play/pause/scrubbing/volume, and local video playback.
 - At 390 × 844, Alex OS switches between active apps, hides the wide Finder sidebar, keeps the Finder grid within the viewport, and leaves the Dock accessible.
 - Browser console checked after the primary Alex OS interactions: no errors or warnings.
+- GitHub Pages repository-subpath simulation checked at `/Portfolio_2026/alex-os/`: lazy CSS, Finder, Dock, audio, video, and poster assets all resolved from the repository path with no current-host console errors.
 
 ## Comparison history
 
@@ -62,6 +63,9 @@ No actionable P0, P1, or P2 findings remain.
 - Earlier P2: the mobile desktop needed an explicit compact mode to prevent overlapping desktop windows and persistent controls.
   - Fix: compact mode shows one active app, collapses the Finder sidebar, tightens the grid, and preserves the Dock.
   - Post-fix evidence: at 390 × 844 the document width remained 390 px; Finder stayed within `x: 8–382`, the Dock within `x: 50–340`, and launching Music switched the active window without overflow.
+- Publish verification issue, outside the visual-comparison loop: the first GitHub Pages deployment loaded the Work feed but Alex OS failed while preloading lazy CSS from the domain root instead of the repository path.
+  - Fix: the static exporter now makes Vite's dynamic preload helper repository-relative, and Alex OS client-only media paths are route-relative.
+  - Post-fix evidence: the exact `/Portfolio_2026/alex-os/` path rendered Finder and the Dock; audio and video reached ready state 4 from repository-relative URLs, and the current-host console log was empty.
 
 ## Implementation checklist
 
