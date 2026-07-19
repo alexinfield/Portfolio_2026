@@ -41,3 +41,11 @@ The Drive folder at `Creative/Projects` is registered as the supplemental master
 - The former `All projects` destination remains as a compatibility route, but it is no longer promoted as a primary navigation action.
 - Professional Work is represented as a restrained locked/request-access route until the final access model and content are approved.
 - Alex OS uses maintained open-source drag/resize behavior and icon components while keeping its content model, visual system, and media local to the portfolio.
+
+## Project navigation drawer — 2026-07-19
+
+- Project case studies use a collapsible left drawer rather than a permanently allocated rail.
+- The open drawer contains four large section tiles, About Alex, and the complete Work list with the active project highlighted.
+- On desktop the drawer reduces the project canvas while open and restores the full canvas when collapsed.
+- On tablet and mobile it overlays the case study, reserves a reliable outside-dismiss target, and leaves a compact edge handle when closed.
+- Drawer state persists while moving between project pages during the current browser session.

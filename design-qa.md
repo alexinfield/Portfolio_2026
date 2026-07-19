@@ -1,4 +1,4 @@
-# Design QA — Portfolio Structure and Alex OS
+# Design QA — Portfolio Structure, Project Drawer, and Alex OS
 
 ## Comparison target
 
@@ -81,5 +81,46 @@ No actionable P0, P1, or P2 findings remain.
 
 - P3: add dock magnification and fuller menu dropdown behavior in a later Alex OS expansion.
 - P3: replace the three-project Play seed with the next approved batch of real projects once their metadata is selected.
+
+## Project drawer iteration — 2026-07-19
+
+- Source visual truth: `/var/folders/cr/qn1yz30s6jv0xl49c6pmykjh0000gn/T/codex-clipboard-14b93c61-9520-4522-b9ef-3e31b9a3af3b.png`.
+- Browser-rendered implementation screenshots:
+  - `/Users/ainfield/Documents/Portfolio/docs/portfolio-rebuild/qa/project-drawer-final.png` — desktop open state.
+  - `/Users/ainfield/Documents/Portfolio/docs/portfolio-rebuild/qa/project-drawer-closed.png` — desktop collapsed state.
+  - `/Users/ainfield/Documents/Portfolio/docs/portfolio-rebuild/qa/project-drawer-mobile-open.png` — mobile overlay state before the dismissal-target fix.
+- Viewports: 1280 × 720 desktop and 390 × 844 mobile.
+- State: dark theme, Molekule Go active, drawer open and closed.
+
+### Full-view and focused comparison evidence
+
+The supplied screenshot and `project-drawer-final.png` were opened together in the same comparison input. The implementation matches the reference's left-anchored dark panel, large two-by-two section navigation, compact About card, thumbnail project list, active-project treatment, and exposed edge handle. It intentionally omits the reference's `Frame 3 / Frame 4` prototype labels because they are not portfolio content. A focused pass checked the section-tile scale, drawer width, text density, thumbnail crops, active border, handle placement, and visible project canvas.
+
+### Drawer findings
+
+No actionable P0, P1, or P2 findings remain.
+
+- Fonts and typography: the drawer uses the site's existing Funktional Grotesk, with large low-contrast section tiles and compact project metadata matching the reference hierarchy.
+- Spacing and layout rhythm: the desktop drawer occupies 352 px at a 1280 px viewport, its 42 × 104 px handle remains centered on the edge, and the project canvas expands from 913 px to 1265 px when collapsed.
+- Colors and visual tokens: panel, cards, active border, muted type, and handle glass reuse the portfolio's dark/light tokens while preserving the reference's near-black and neutral-gray composition.
+- Image quality and asset fidelity: all six thumbnails use the existing project covers; no generated or placeholder imagery was introduced.
+- Copy and content: Work, play, pro, info, About Alex, and all six projects are present. The Professional Work tile keeps its lock indicator.
+- Accessibility and interaction: the handle exposes expanded state, the closed drawer is inert and hidden from assistive navigation, Escape closes it, the state persists while switching projects, and focus styles remain visible.
+
+### Drawer comparison history
+
+- Earlier P2: the first mobile overlay left only a narrow exposed strip, and the full-viewport scrim's click center sat behind the drawer, making outside-click dismissal unreliable.
+  - Fix: the mobile drawer now reserves 72 px and the scrim begins at the drawer edge instead of underneath it.
+  - Post-fix evidence: at 390 × 844 the drawer measured 318 px, the exposed scrim measured 57 px after the browser scrollbar, clicking it changed `aria-expanded` to `false`, moved the drawer edge to 0, removed the scrim, and produced no horizontal overflow.
+- Desktop open, collapse, reopen, active-project switching to Luma, mobile overlay dismissal, Escape support, and session persistence were tested. No current-page console errors were recorded.
+
+### Drawer implementation checklist
+
+- [x] Two-by-two section tiles.
+- [x] About card and complete project list.
+- [x] Current-project state and real thumbnails.
+- [x] Animated desktop push/collapse behavior.
+- [x] Tablet/mobile overlay and outside-click dismissal.
+- [x] Keyboard, accessibility, and persisted state.
 
 final result: passed

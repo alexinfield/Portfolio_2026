@@ -109,6 +109,13 @@ test("project and info pages keep the close control and responsive portfolio str
   assert.match(project, /aria-label="Close Ping"/);
   assert.match(project, /project-gallery/);
   assert.match(project, /project-workspace/);
+  assert.match(project, /project-drawer-shell is-open/);
+  assert.match(project, /aria-label="Collapse project navigation"/);
+  assert.match(project, /project-drawer-sections/);
+  assert.match(project, />Work</);
+  assert.match(project, />play</);
+  assert.match(project, />pro</);
+  assert.match(project, />info</);
   assert.match(project, /rail-project-card is-current/);
   assert.match(info, /aria-label="Close Info"/);
   assert.match(info, /portfolio-info-layout/);

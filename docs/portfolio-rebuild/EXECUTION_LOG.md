@@ -47,3 +47,4 @@ No DNS or `alexinfield.com` production setting was changed. The rollback tag rem
 - Expanded the GitHub Pages exporter to 15 routes while preserving client hydration and route-relative assets.
 - Made lazy-loaded CSS and Alex OS media repository-path-safe after the first live Pages check exposed root-relative client asset loading.
 - Passed the rendered-route test suite and browser design QA at desktop and mobile sizes.
+- Rebuilt project navigation as a screenshot-matched collapsible drawer with section tiles, About card, complete project list, desktop push behavior, and a dismissible mobile overlay.
