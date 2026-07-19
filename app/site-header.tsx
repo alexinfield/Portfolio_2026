@@ -96,17 +96,19 @@ export default function SiteHeader(props: SiteHeaderProps) {
 
       {props.variant === "detail" ? (
         <nav className="project-context-nav" aria-label={`${props.title} project navigation`}>
-          <a href={routeHref(props.backHref ?? (active === "play" ? "/play" : "/"))}>
-            <ArrowLeft size={15} weight="regular" aria-hidden="true" />
-            {props.backLabel ?? (active === "play" ? "Back to play" : "Back to work")}
-          </a>
           <span className="project-context-title">{props.title}</span>
-          {props.nextHref && props.nextLabel ? (
-            <a className="project-context-next" href={routeHref(props.nextHref)}>
-              <span>{`Next: ${props.nextLabel}`}</span>
-              <ArrowRight size={15} weight="regular" aria-hidden="true" />
+          <div className="project-context-links">
+            <a href={routeHref(props.backHref ?? (active === "play" ? "/play" : "/"))}>
+              <ArrowLeft size={15} weight="regular" aria-hidden="true" />
+              {props.backLabel ?? (active === "play" ? "Back to play" : "Back to work")}
             </a>
-          ) : <span aria-hidden="true" />}
+            {props.nextHref && props.nextLabel ? (
+              <a className="project-context-next" href={routeHref(props.nextHref)}>
+                <span>{`Next: ${props.nextLabel}`}</span>
+                <ArrowRight size={15} weight="regular" aria-hidden="true" />
+              </a>
+            ) : null}
+          </div>
         </nav>
       ) : null}
     </header>

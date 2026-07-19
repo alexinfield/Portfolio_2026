@@ -51,6 +51,7 @@ function ProjectIntroduction({
 }) {
   return (
     <header className="figma-project-intro" data-figma-section="title">
+      <span className="figma-project-intro-label">Project overview</span>
       <h1 id={titleId}>{narrative.displayTitle}</h1>
 
       <div className="figma-project-intro-grid">
