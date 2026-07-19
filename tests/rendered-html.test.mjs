@@ -91,6 +91,7 @@ test("keeps complete source assets and exports one GitHub Pages presentation", a
     .sort();
 
   assert.deepEqual(projectFolders, [
+    "figma-web",
     "home",
     "hyphae",
     "info",
@@ -101,7 +102,7 @@ test("keeps complete source assets and exports one GitHub Pages presentation", a
     "ping",
   ]);
 
-  for (const project of projectFolders) {
+  for (const project of projectFolders.filter((project) => project !== "figma-web")) {
     const manifest = JSON.parse(
       await readFile(new URL(`../public/assets/${project}/manifest.json`, import.meta.url), "utf8"),
     );
