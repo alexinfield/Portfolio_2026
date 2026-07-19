@@ -33,3 +33,16 @@ The portfolio is now implemented as one responsive Next/vinext codebase. The for
 ## Safe handoff
 
 No DNS or `alexinfield.com` production setting was changed. The rollback tag remains available, and the rebuild stays isolated on its own branch until review or merge.
+
+## 2026-07-19 structure and Alex OS pass
+
+- Started from the approved responsive branch on `codex/portfolio-structure-os-20260719`.
+- Replaced the homepage workspace with the approved restrained two-column Work feed.
+- Standardized Work and Play on uniform 16:9 cards with name, domain, and year.
+- Seeded Play with three real projects from the Drive master library: Off Campus, Inflating Chair, and Mycelium Panels.
+- Kept music, video sketches, and raw archive material out of Play and inside Alex OS.
+- Added a functional Alex OS with Finder, Dock, focus ordering, draggable/resizable windows, minimize/maximize/restore controls, and compact mobile app switching.
+- Added real local audio and video playback using Alex's existing source media.
+- Added light/dark persistence, the Alex OS launcher, and close navigation across secondary routes.
+- Expanded the GitHub Pages exporter to 15 routes while preserving client hydration and route-relative assets.
+- Passed the rendered-route test suite and browser design QA at desktop and mobile sizes.

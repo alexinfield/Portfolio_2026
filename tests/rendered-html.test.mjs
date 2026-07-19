@@ -27,7 +27,7 @@ async function render(pathname = "/") {
   );
 }
 
-test("server-renders the Porto Rocha-style Alex Infield workspace", async () => {
+test("server-renders the approved two-column Alex Infield work feed", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
@@ -35,12 +35,14 @@ test("server-renders the Porto Rocha-style Alex Infield workspace", async () => 
   const html = await response.text();
   assert.match(html, /<title>Alex Infield/i);
   assert.match(html, />Alex Infield</);
-  assert.match(html, /home-workspace/);
-  assert.match(html, /data-home-project-trigger="molekule-go"/);
-  assert.match(html, /data-home-project-panel="molekule-go"/);
-  assert.match(html, /data-home-preview-video/);
-  assert.match(html, /Industrial design, product systems, and digital interfaces/);
-  assert.match(html, /href="\/all"[^>]*>All projects</);
+  assert.match(html, /portfolio-index-page/);
+  assert.match(html, /portfolio-grid/);
+  assert.match(html, /data-hover-video/);
+  assert.match(html, /Industrial designer working across products, interfaces/);
+  assert.match(html, />Work</);
+  assert.match(html, />Play</);
+  assert.match(html, />Professional Work</);
+  assert.match(html, />Alex OS</);
   assert.doesNotMatch(html, /I want to see/i);
 });
 
@@ -64,13 +66,43 @@ test("all-projects page uses verified order, original covers, and hover motion",
   assert.match(html, /692fb99b7ff154a13bde26f2_251202-Hero-Hand\.webp/);
   assert.match(html, /data-hover-video/);
   assert.match(html, /site-header-index/);
-  assert.match(html, /href="\/"[^>]*>Alex Infield</);
+  assert.match(html, />Alex Infield</);
 
   const modeCard = html.slice(html.indexOf('/projects/mode"'));
   assert.doesNotMatch(modeCard.slice(0, modeCard.indexOf("</a>")), /data-hover-video/);
 });
 
-test("project and info pages keep the close control and split workspace", async () => {
+test("play uses real source projects and the same uniform card system as work", async () => {
+  const response = await render("/play");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+
+  for (const title of ["Off Campus", "Inflating Chair", "Mycelium Panels"]) {
+    assert.match(html, new RegExp(`>${title}<`));
+  }
+
+  assert.match(html, /Digital Product/);
+  assert.match(html, /Product Design/);
+  assert.match(html, /Material Research/);
+  assert.match(html, /\/play\/off-campus\.webp/);
+  assert.match(html, /portfolio-card/);
+  assert.doesNotMatch(html, /Music|Beats/i);
+});
+
+test("Alex OS server-renders the desktop, real media, and app launch controls", async () => {
+  const response = await render("/alex-os");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+
+  assert.match(html, /Alex Infield’s Computer/);
+  assert.match(html, /RISD Projects/);
+  assert.match(html, /aria-label="Open Music"/);
+  assert.match(html, /aria-label="Open Video"/);
+  await access(new URL("../public/alex-os/audio/sketch-01.m4a", import.meta.url));
+  await access(new URL("../public/assets/niche/media/15-transcode.mp4", import.meta.url));
+});
+
+test("project and info pages keep the close control and responsive portfolio structure", async () => {
   const [projectResponse, infoResponse] = await Promise.all([render("/projects/ping"), render("/info")]);
   const [project, info] = await Promise.all([projectResponse.text(), infoResponse.text()]);
 
@@ -79,7 +111,7 @@ test("project and info pages keep the close control and split workspace", async 
   assert.match(project, /project-workspace/);
   assert.match(project, /rail-project-card is-current/);
   assert.match(info, /aria-label="Close Info"/);
-  assert.match(info, /info-workspace/);
+  assert.match(info, /portfolio-info-layout/);
   assert.match(info, /alex@infield\.net/);
 });
 
@@ -110,19 +142,25 @@ test("keeps complete source assets and exports one GitHub Pages presentation", a
     assert.ok(manifest.assets.length > 0);
   }
 
-  const [home, all, info, ping, workflow] = await Promise.all([
+  const [home, all, play, alexOs, info, ping, workflow] = await Promise.all([
     readFile(new URL("../gh-pages/index.html", import.meta.url), "utf8"),
     readFile(new URL("../gh-pages/all/index.html", import.meta.url), "utf8"),
+    readFile(new URL("../gh-pages/play/index.html", import.meta.url), "utf8"),
+    readFile(new URL("../gh-pages/alex-os/index.html", import.meta.url), "utf8"),
     readFile(new URL("../gh-pages/info/index.html", import.meta.url), "utf8"),
     readFile(new URL("../gh-pages/projects/ping/index.html", import.meta.url), "utf8"),
     readFile(new URL("../.github/workflows/deploy-pages.yml", import.meta.url), "utf8"),
   ]);
 
-  assert.match(home, /href="\.\/all"/);
+  assert.match(home, /href="\.\/play\/"/);
   assert.match(all, /src="\.\.\/portfolio-runtime\.js"/);
-  assert.match(info, /href="\.\.\/all"/);
+  assert.match(play, /href="\.\.\/play\/off-campus"/);
+  assert.match(info, /href="\.\.\/"/);
   assert.match(ping, /src="\.\.\/\.\.\/assets\/ping/);
-  assert.doesNotMatch(home, /__VINEXT_RSC/);
+  assert.match(alexOs, /self\.__VINEXT_RSC_DONE__=true/);
+  assert.match(alexOs, /<script id="_R_">import\("\.\.\/assets\/index-/);
+  assert.doesNotMatch(alexOs, /import\("\/assets/);
+  assert.doesNotMatch(alexOs, /src="\/portfolio-runtime/);
   assert.doesNotMatch(home, /rel="modulepreload"/);
   assert.match(workflow, /actions\/deploy-pages@v4/);
   assert.match(workflow, /npm run build:github/);

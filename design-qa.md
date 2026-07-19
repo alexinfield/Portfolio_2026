@@ -1,53 +1,81 @@
-# Design QA — Porto Rocha restoration
+# Design QA — Portfolio Structure and Alex OS
 
-**Evidence**
+## Comparison target
 
-- Source visual truth: `/tmp/portfolio-design-qa/portorocha-home-desktop.png`, `/tmp/portfolio-design-qa/portorocha-all-desktop-top.png`, `/tmp/portfolio-design-qa/portorocha-all-mobile-top.png`, and `/tmp/portfolio-design-qa/portorocha-detail-mobile.png`.
-- Implementation screenshots: `/tmp/portfolio-design-qa/alex-home-desktop-v3.png`, `/tmp/portfolio-design-qa/alex-all-desktop-v1.png`, `/tmp/portfolio-design-qa/alex-home-mobile-v1.png`, `/tmp/portfolio-design-qa/alex-all-mobile-v1.png`, `/tmp/portfolio-design-qa/alex-project-desktop-v1.png`, and `/tmp/portfolio-design-qa/alex-project-mobile-v1.png`.
-- Viewports: 1440 × 1000 desktop and 390 × 844 mobile.
-- States: homepage active project workspace; project index at top; Ping detail page at top; desktop and mobile responsive states.
-- Full-view comparison evidence: `/tmp/portfolio-design-qa/home-desktop-comparison.png`, `/tmp/portfolio-design-qa/all-desktop-comparison.png`, and `/tmp/portfolio-design-qa/all-mobile-comparison.png`.
-- Focused-region evidence: the mobile comparison keeps the 30 px controls, 8 px margins, card radii, typography, restored stills, captions, and one-column collapse legible at native resolution. The desktop comparison keeps the split rail/stage geometry and two-column index legible, so a second crop was not needed.
+- Source visual truth:
+  - `/Users/ainfield/.codex/generated_images/019f49e5-9a42-7292-9580-1c51c04f7b9b/exec-7406b9a5-cadf-41f0-b2a9-643db4f456c2.png` — approved portfolio-feed direction.
+  - `/Users/ainfield/.codex/generated_images/019f49e5-9a42-7292-9580-1c51c04f7b9b/exec-9fa72d08-abfe-4531-bee7-8c95d5950838.png` — approved Alex OS concept, with the user's request to make the result more authentic than this mock.
+  - `/private/tmp/portfolio-structure-refs/apple-macos27-liquid-glass.png` — official macOS 27 Liquid Glass visual reference captured during implementation.
+- Browser-rendered implementation screenshots:
+  - `/Users/ainfield/Documents/Portfolio/docs/portfolio-rebuild/qa/home-final.png`
+  - `/Users/ainfield/Documents/Portfolio/docs/portfolio-rebuild/qa/play-desktop.png`
+  - `/Users/ainfield/Documents/Portfolio/docs/portfolio-rebuild/qa/play-light.png`
+  - `/Users/ainfield/Documents/Portfolio/docs/portfolio-rebuild/qa/alex-os-final.png`
+  - `/Users/ainfield/Documents/Portfolio/docs/portfolio-rebuild/qa/alex-os-music-open.png`
+- Viewports:
+  - Desktop comparison: 1280 × 720 CSS pixels at DPR 2.
+  - Mobile structural check: 390 × 844 CSS pixels.
+- State:
+  - Work in dark mode.
+  - Play in dark and light modes.
+  - Alex OS with Finder active, plus Music, maximize/restore, minimize, playback, and compact mobile app-switching states.
 
-**Findings**
+## Full-view comparison evidence
 
-- No actionable P0, P1, or P2 differences remain.
-- Fonts and typography: the reference uses SF Pro Text at 14 px with 1.25 line height. The implementation uses Alex's bundled Funktional Grotesk at the same scale and rhythm so the site remains self-contained. Large type is limited to restrained project titles; the previous oversized editorial treatment is gone.
-- Spacing and layout rhythm: the homepage now uses the reference's fixed left rail, 8 px gutters, 10 px cards, large active-media stage, and compact content tiles. The project index intentionally uses two desktop columns instead of the reference's four because Alex explicitly requested two; mobile collapses to one 359 px column.
-- Colors and visual tokens: black background, `#e2e6e3` foreground, 50% muted copy, soft `#1a1a1a` controls, and dark `#151716` content panels match the captured reference. The close control remains visible over both black and light project media.
-- Image quality and asset fidelity: all homepage and index previews use Alex's restored original portfolio stills. Project motion uses Alex's local MP4 files and project pages retain every media item in the verified sequence. No generated, placeholder, or hotlinked media is present.
-- Copy and content: the reference structure is populated only with Alex's identity, six verified project names, concise factual category descriptions, contact information, and portfolio media. The reference's search prompt was replaced with “Alex Infield” as requested.
-- Icons: the static close mark is the existing bundled Lucide asset with its repository license; no temporary glyph or CSS drawing is used.
-- Responsive behavior: no horizontal overflow was found at 1440 or 390 px. Mobile home becomes a full-height scrollable project rail; mobile detail keeps only the active project card before the hero and gallery; the index becomes one column.
-- Accessibility: routes use semantic landmarks and links, visible focus treatment, accessible close labels, muted inline video, touch-safe still defaults, reduced-motion handling, and real selectable text.
+The approved feed mock and `home-final.png` were opened together in one comparison input. The implementation preserves the mock's restrained black-and-white palette, top navigation, two-column content rhythm, project-first imagery, and small metadata. The updated uniform 16:9 cards intentionally supersede the mock's mixed row heights because the user explicitly requested a Zeg Zulka-style uniform system.
 
-**Primary Interactions Tested**
+The Alex OS concept, official macOS Liquid Glass reference, and `alex-os-final.png` were opened together in one comparison input. The implementation keeps the concept's Finder-led composition while moving closer to desktop conventions through a full menu bar, layered glass surfaces, toolbar controls, sidebar, dock, traffic-light window controls, focus ordering, and draggable/resizable windows. It uses Alex's real media and does not redistribute Apple-owned icons or system assets.
 
-- All Projects contains six restored stills and five matching local hover videos; Mode intentionally remains still-only because no verified Mode motion asset exists.
-- Molekule Go navigates from the index to the correct detail route.
-- The project close control returns to `/all`.
-- Molekule Go and Ping each render 17 gallery media items in their stored verified order.
-- The homepage renders six active-preview panels backed by the corresponding local project motion files or the verified Mode still.
-- Fresh-browser console errors checked after navigation and return: none.
+## Focused region comparison evidence
 
-**Comparison History**
+- Header and card metadata: checked name/domain/year alignment, active navigation underline, theme switch, launcher placement, card geometry, and image crop in `home-final.png`, `play-desktop.png`, and `play-light.png`.
+- Alex OS Finder and Dock: checked toolbar density, sidebar hierarchy, app icons, surface opacity, window elevation, and bottom safe area in `alex-os-final.png`.
+- Music and window controls: checked playback state, scrubber, volume, focus ordering, maximize/restore geometry, minimize behavior, and dock running indicators using `alex-os-music-open.png` plus live browser interaction.
 
-- Pass 1 found a P1 hydration overlay caused by the live New York clock updating before the development renderer finished. The clock text now suppresses the expected client-only difference and runtime setup waits until page load; the clean desktop capture is `/tmp/portfolio-design-qa/alex-home-desktop-v3.png`.
-- Pass 1 also found a P2 close-control contrast problem over light media. The control now has an opaque dark surface; the fix is visible in the desktop homepage and project screenshots.
-- Pass 2 found no remaining P0/P1/P2 mismatch. Side-by-side desktop and mobile comparisons confirm the intended reference system plus the requested two-column and navigation deviations.
+## Findings
 
-**Implementation Checklist**
+No actionable P0, P1, or P2 findings remain.
 
-- [x] Restore Porto Rocha split-rail homepage structure.
-- [x] Replace the selector prompt with Alex Infield.
-- [x] Preserve the circular X on internal routes and homepage.
-- [x] Keep All Projects two columns on desktop and one on mobile.
-- [x] Keep original stills as defaults with local motion available on hover/focus.
-- [x] Preserve verified project order and complete galleries.
-- [x] Verify responsive layout, navigation, static export, font paths, and browser console.
+### Required fidelity surfaces
 
-**Follow-up Polish**
+- Fonts and typography: the portfolio keeps the approved neutral sans-serif hierarchy with compact metadata and no oversized display text. Alex OS uses appropriate small UI weights and readable line heights across menu bar, Finder, and media windows.
+- Spacing and layout rhythm: desktop Work and Play use equal two-column tracks and uniform 16:9 media. Mobile collapses to one column. Alex OS maintains window and dock safe areas without horizontal overflow at 390 px.
+- Colors and visual tokens: dark and light portfolio tokens remain coherent and the switch persists. Alex OS glass, borders, highlights, shadows, and wallpaper contrast are internally consistent and closer to the supplied macOS reference than the earlier concept.
+- Image quality and asset fidelity: all visible portfolio and Play imagery comes from Alex's existing site or project source files. Crops remain sharp and proportional. Icons come from a consistent maintained icon library; no placeholder emoji, copied Apple assets, or generated imagery were introduced.
+- Copy and content: Work, Play, Professional Work, Info, and Alex OS now have distinct roles. Play contains smaller presentable design work, while music, video sketches, and archive material appear only inside Alex OS.
 
-- P3: project descriptions remain intentionally concise until project-specific case-study copy is sourced from Figma or Alex's approved text.
+## Responsive and interaction checks
+
+- Desktop and mobile routes have no horizontal overflow.
+- Work cards preserve still-first behavior and reveal verified project video on pointer hover where available.
+- Light/dark switching works and persists.
+- Section and project close controls return to their parent context.
+- Alex OS supports window focus, drag, resize, close, minimize, maximize, restore, dock launch, real audio play/pause/scrubbing/volume, and local video playback.
+- At 390 × 844, Alex OS switches between active apps, hides the wide Finder sidebar, keeps the Finder grid within the viewport, and leaves the Dock accessible.
+- Browser console checked after the primary Alex OS interactions: no errors or warnings.
+
+## Comparison history
+
+- Earlier P2: maximizing an Alex OS window changed position but retained its string-based dimensions, so the window did not fill the usable desktop.
+  - Fix: maximize now calculates numeric viewport dimensions and preserves the prior bounds for restore.
+  - Post-fix evidence: at 1280 × 720, the maximized Music window measured `x: 12`, `y: 44`, `width: 1256`, `height: 606`; Restore appeared and returned the previous window bounds.
+- Earlier P2: the mobile desktop needed an explicit compact mode to prevent overlapping desktop windows and persistent controls.
+  - Fix: compact mode shows one active app, collapses the Finder sidebar, tightens the grid, and preserves the Dock.
+  - Post-fix evidence: at 390 × 844 the document width remained 390 px; Finder stayed within `x: 8–382`, the Dock within `x: 50–340`, and launching Music switched the active window without overflow.
+
+## Implementation checklist
+
+- [x] Uniform Work and Play cards.
+- [x] Real source imagery and verified hover motion.
+- [x] Persistent light/dark theme.
+- [x] Functional close navigation.
+- [x] Authentic desktop structure with real media.
+- [x] Desktop and mobile browser checks.
+- [x] Static GitHub Pages export and rendered-HTML tests.
+
+## Follow-up polish
+
+- P3: add dock magnification and fuller menu dropdown behavior in a later Alex OS expansion.
+- P3: replace the three-project Play seed with the next approved batch of real projects once their metadata is selected.
 
 final result: passed

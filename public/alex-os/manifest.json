@@ -1,0 +1,12 @@
+{
+  "purpose": "First Alex OS media slice",
+  "generated": "2026-07-19",
+  "assets": [
+    {
+      "file": "audio/sketch-01.m4a",
+      "displayName": "Sketch 01",
+      "source": "Creative/Projects/Songs/In Progress/190604 Ableton/flower boy type beat.aif",
+      "note": "38.4 second AAC web preview encoded from the source AIFF"
+    }
+  ]
+}

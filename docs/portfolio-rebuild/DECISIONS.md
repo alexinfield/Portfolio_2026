@@ -31,3 +31,13 @@
 ## Source assets
 
 The Drive folder at `Creative/Projects` is registered as the supplemental master library. Assets are only substituted when project identity can be matched confidently.
+
+## Structure iteration — 2026-07-19
+
+- Work is the primary feed of finished portfolio case studies.
+- Play uses the same visual grammar as Work and contains smaller but still professionally presentable design projects.
+- Alex OS is a separate launcher and environment for music, video sketches, experiments, RISD material, and deeper archive content.
+- Work and Play cards remain visually uniform: 16:9 image, then project name, domain, and year.
+- The former `All projects` destination remains as a compatibility route, but it is no longer promoted as a primary navigation action.
+- Professional Work is represented as a restrained locked/request-access route until the final access model and content are approved.
+- Alex OS uses maintained open-source drag/resize behavior and icon components while keeping its content model, visual system, and media local to the portfolio.

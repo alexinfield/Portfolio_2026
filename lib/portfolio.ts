@@ -19,6 +19,8 @@ export const projectDefinitions = [
   {
     title: "Molekule Go",
     slug: "molekule-go",
+    domain: "Product Design",
+    year: "2025",
     description: "Portable air purification designed for life in motion.",
     cover: "/assets/home/media/67b7e8c2a408546fe61055f6_hero-hand.jpg",
     figmaPage: { id: "4576:675", name: "molekule portable air purifier" },
@@ -26,6 +28,8 @@ export const projectDefinitions = [
   {
     title: "Luma",
     slug: "luma",
+    domain: "Product Design",
+    year: "2024",
     description: "A lighting system shaped around atmosphere and control.",
     cover: "/assets/home/media/68cc87ee027f56988fed41fe_hero.webp",
     figmaPage: { id: "5352:397", name: "luma" },
@@ -33,6 +37,8 @@ export const projectDefinitions = [
   {
     title: "Niche",
     slug: "niche",
+    domain: "Product Design",
+    year: "2024",
     description: "A private phone booth for focused work and conversation.",
     cover: "/assets/home/media/689b274b032bfbc9129efc47_homePage.webp",
     figmaPage: { id: "3691:453", name: "phone booth" },
@@ -40,6 +46,8 @@ export const projectDefinitions = [
   {
     title: "Hyphae Light",
     slug: "hyphae",
+    domain: "Material Research",
+    year: "2023",
     description: "A bio-inspired lighting study grown from an adaptive structure.",
     cover: "/assets/home/media/673e50477b24902040693b05_15-hero.jpg",
     figmaPage: { id: "3408:453", name: "hyphae light" },
@@ -47,6 +55,8 @@ export const projectDefinitions = [
   {
     title: "Ping",
     slug: "ping",
+    domain: "Industrial Design",
+    year: "2025",
     description: "A connected product and interface for clearer coordination.",
     cover: "/assets/home/media/692fb99b7ff154a13bde26f2_251202-Hero-Hand.webp",
     figmaPage: { id: "8095:319", name: "Ping" },
@@ -54,6 +64,8 @@ export const projectDefinitions = [
   {
     title: "Mode",
     slug: "mode",
+    domain: "Furniture Design",
+    year: "2023",
     description: "A restrained side table shaped around simple utility.",
     cover: "/assets/home/media/665fb92ad4fed8da46bf0271_DSC_5550.avif",
     figmaPage: { id: "4859:659", name: "side table" },

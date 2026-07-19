@@ -5,7 +5,17 @@ import { fileURLToPath } from "node:url";
 const root = fileURLToPath(new URL("../", import.meta.url));
 const output = join(root, "gh-pages");
 const projectSlugs = ["molekule-go", "luma", "niche", "hyphae", "ping", "mode"];
-const routes = ["/", "/all", "/info", ...projectSlugs.map((slug) => `/projects/${slug}`)];
+const playSlugs = ["off-campus", "inflating-chair", "mycelium-panels"];
+const routes = [
+  "/",
+  "/all",
+  "/play",
+  "/professional-work",
+  "/info",
+  "/alex-os",
+  ...projectSlugs.map((slug) => `/projects/${slug}`),
+  ...playSlugs.map((slug) => `/play/${slug}`),
+];
 
 const workerUrl = new URL(`../dist/server/index.js?export=${Date.now()}`, import.meta.url);
 const { default: worker } = await import(workerUrl.href);
@@ -26,7 +36,7 @@ for (const entry of await readdir(generatedAssets, { withFileTypes: true })) {
 
 function relativeRoot(route) {
   if (route === "/") return "./";
-  if (route.startsWith("/projects/")) return "../../";
+  if (route.startsWith("/projects/") || route.startsWith("/play/")) return "../../";
   return "../";
 }
 
@@ -34,13 +44,13 @@ function staticHtml(html, route) {
   const base = relativeRoot(route);
 
   return html
-    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, (tag) =>
-      /^<script\b[^>]*\bsrc=["'][^"']*portfolio-runtime\.js["']/i.test(tag) ? tag : "",
-    )
     .replace(/<link\b[^>]*rel=["']modulepreload["'][^>]*\/?>/gi, "")
     .replace(/\sdata-rsc-css-href=("[^"]*"|'[^']*')/gi, "")
     .replace(/\sdata-precedence=("[^"]*"|'[^']*')/gi, "")
     .replace(/(href|src|poster)=(['"])\/(?!\/)/gi, `$1=$2${base}`)
+    .replaceAll('import("/assets/', `import("${base}assets/`)
+    .replaceAll('"/assets/', `"${base}assets/`)
+    .replaceAll('"/portfolio-runtime.js', `"${base}portfolio-runtime.js`)
     .replace(/<link rel="canonical" href="[^\"]*"\/>/i, `<link rel="canonical" href="https://alexinfield.com${route === "/" ? "/" : `${route}/`}"/>`);
 }
 

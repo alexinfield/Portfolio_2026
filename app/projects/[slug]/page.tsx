@@ -144,7 +144,7 @@ export default async function ProjectPage({
 
   return (
     <main className="project-page">
-      <SiteHeader variant="detail" title={project.title} closeHref="/all" />
+      <SiteHeader variant="detail" title={project.title} closeHref="/" />
 
       <div className="project-workspace">
         <ProjectRail activeSlug={project.slug} />
