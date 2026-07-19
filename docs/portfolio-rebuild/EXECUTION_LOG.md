@@ -51,3 +51,11 @@ No DNS or `alexinfield.com` production setting was changed. The rollback tag rem
 - Retired that drawer after the screenshot was clarified as a rough information-architecture mock rather than a final design.
 - Restored a direct full-width case-study viewer and made the approved Work, Play, Professional Work, Info, theme, Alex OS, and close controls universal on project pages.
 - Inspected ryOS directly and verified that its outer desktop is a browser application while its genuine Mac/PC execution comes from Infinite Mac and v86/js-dos integrations.
+- Rebuilt Alex OS around a public-safe Finder structure modeled on the recognizable top-level organization of Alex's creative archive without publishing private names, paths, or files.
+- Added a local NASA M90 wallpaper asset with visible credit.
+- Added a real Mac OS 9.0 / Power Macintosh 9500 computer through the official Infinite Mac embed, including Infinite HD's compatible software and games.
+- Separated the universal project navigation into its own sticky rounded control surface and contained each case-study deck in a rounded canvas below it.
+- Simplified Professional Work into a restrained access page and removed the ambiguous lock icon and oversized card.
+- Removed homepage project-title underlines on hover.
+- Re-ran the complete static export and route suite: 7 tests passed; lint reported 0 errors and six deliberate static-image warnings.
+- Compared the Alex OS source and implementation side by side and checked project viewer dark, light, desktop, and mobile states in the in-app browser.

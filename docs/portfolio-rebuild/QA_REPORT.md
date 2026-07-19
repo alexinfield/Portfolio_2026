@@ -1,56 +1,43 @@
-# QA Report
+# Portfolio QA Report
 
-Date: 2026-07-18
+Date: 2026-07-19
 
-## Porto Rocha restoration
+## Current pass
 
-- PASS — Replaced the later oversized editorial draft with the reference's compact split-rail/card system.
-- PASS — Homepage uses Alex's real video previews and restored cover stills.
-- PASS — All Projects uses the requested two desktop columns, one mobile column, still defaults, and five verified hover videos.
-- PASS — Project pages retain verified galleries and use the reference's rail/canvas responsive structure.
-- PASS — 1440 × 1000 and 390 × 844 browser checks found no horizontal overflow.
-- PASS — Molekule Go card navigation and project close navigation work; a fresh browser tab reported no console errors.
-- PASS — GitHub Pages export keeps nested links, media, and the bundled font relative to the repository path.
-- PASS — `npm test` (5 tests) and lint (warnings only for deliberate static `<img>` use).
+- PASS — Project navigation stays in a separate sticky rounded control band and no longer overlays the scrolling case-study deck.
+- PASS — The case-study canvas has its own rounded border and remains visually separated in both dark and light themes.
+- PASS — Professional Work no longer uses an oversized lock card or ambiguous shopping-bag-like icon.
+- PASS — Homepage project titles no longer gain an underline on hover.
+- PASS — Alex OS uses a locally hosted credited wallpaper, curated public-safe Finder, real media apps, and a real Mac OS 9 guest through Infinite Mac.
+- PASS — Compact Alex OS and project views were checked at 390 × 844.
+- PASS — Desktop Alex OS, Professional Work, and scrolled project states were checked in the in-app browser.
+- PASS — The ryOS source and Alex OS implementation were reviewed in one same-size comparison input.
 
 ## Automated checks
 
 Command: `npm test`
 
-Result: 5 tests passed.
+Result: 7 tests passed.
 
-The suite verifies:
+The suite verifies the two-column Work feed, original cover and hover-video behavior, Play structure, curated Alex OS server output, authentic Mac launch configuration, public-safe content boundary, project close controls, complete source assets, GitHub Pages export, and verified gallery order.
 
-- Editorial homepage content and removal of “I want to see”.
-- Correct Figma project order and cover mapping.
-- Hover-video markup and still-only Mode behavior.
-- Close controls on project and info pages.
-- GitHub Pages export with relative links and no hydration payload.
-- Complete downloaded manifests with zero recorded failures.
-- Gallery counts, uniqueness, asset existence, and video-poster links for all six projects.
+Command: `npm run lint`
 
-## Visual checks
+Result: 0 errors and six warnings for intentional static `<img>` elements.
 
-| Viewport | Pages checked | Result |
+## Visual evidence
+
+| State | Evidence | Result |
 | --- | --- | --- |
-| 1440 × 1000 | Home, All projects | Passed; two columns, correct crops, fixed header, correct order |
-| 1024 × 768 | Responsive structure | Passed by breakpoint/style inspection |
-| 768 × 1024 | Home | Passed; two-column tablet presentation, no horizontal overflow |
-| 390 × 844 | Home, All projects, Ping | Passed; one-column cards, still-first behavior, close control, 17 Ping slides |
-| 375 × 667 | Responsive rules | Covered by the same phone breakpoint and overflow checks |
+| ryOS vs. Alex OS, same-size desktop views | `/tmp/portfolio-os-comparison.png` | Passed |
+| Mac OS 9 fully booted to Infinite HD | `/tmp/portfolio-os-classic-ready.png` | Passed |
+| Professional Work | `/tmp/portfolio-professional-implementation.png` | Passed |
+| Project viewer, dark, scrollY 900 | `/tmp/portfolio-project-nav-dark.png` | Passed |
+| Project viewer, light, scrollY 900 | `/tmp/portfolio-project-nav-light.png` | Passed |
+| Mobile Alex OS, 390 × 844 | `/tmp/portfolio-os-mobile-final-390x844.png` | Passed |
+| Mobile project viewer, 390 × 844 | `/tmp/portfolio-project-mobile-390x844.png` | Passed |
 
-## Direct design comparison
+## Known low-priority constraints
 
-- Figma `Portfolio v1` and the rebuilt `/all` were placed side by side at the same visible state. The project order, two-column geometry, 16:9 covers, black canvas, and visual hierarchy align.
-- Figma `Portfolio v1.1` and the rebuilt homepage were placed side by side. The header language, two-column opening, black canvas, Molekule/Luma asset pairing, and editorial direction align; the implementation intentionally makes the opening more immersive before continuing into the selected-work narrative.
-
-## Interaction checks
-
-- Five cards have verified project-specific hover videos.
-- Mode has no video overlay.
-- The browser connection confirmed all five project-specific hover videos and the fine-pointer media-query path. Its test cursor does not expose a CSS hover state, so final pointer-event behavior is also covered by the runtime wiring and markup tests.
-- On the phone breakpoint, hover video opacity remains zero and taps remain normal project links.
-
-## Known source limitation
-
-The Figma MCP could enumerate and identify the Ping page, but broad extraction of that unusually large page timed out. Ping therefore uses the already downloaded, verified 17-slide sequence as the order authority, with the Figma page retained as its identity source.
+- The emulator's cold boot can take roughly 30–40 seconds before Infinite HD is fully ready.
+- The current Professional Work route requests access by email; the final protected-content system remains a future product decision.

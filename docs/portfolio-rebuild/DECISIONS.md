@@ -55,3 +55,18 @@ The Drive folder at `Creative/Projects` is registered as the supplemental master
 - Alex's fourth-grade year was primarily the OS X Mountain Lion era; fifth grade transitioned from Mountain Lion to Mavericks.
 - A genuine Mountain Lion or Mavericks guest is not a practical browser target with the available open-source web emulators: Infinite Mac currently reaches Mac OS X 10.4, while v86 does not implement the 64-bit CPU extensions required by OS X 10.8/10.9.
 - Recommended direction: keep the portfolio launcher lightweight, replace the current pretend desktop with a clearly authored Alex archive environment, and embed a genuine emulator as a featured application for compatible classic Mac software and games.
+
+## Alex OS implementation — approved direction, 2026-07-19
+
+- Use the outer Alex OS as an authored, portfolio-specific archive computer rather than claiming it is a complete modern macOS emulator.
+- Use the official Infinite Mac embed as the authentic computer layer: Mac OS 9.0, Power Macintosh 9500, and Infinite HD.
+- Mirror Alex's recognizable organization only at a public-safe level: Creative, Projects, RISD, Media, and dated Archive folders. Never expose private account names, local paths, personal documents, or raw Drive listings.
+- Keep modern portfolio images, audio, video, and links in web-native viewers so they remain fast and mobile-friendly.
+- Use the locally hosted NASA/ESA/STScI M90 image as the wallpaper and retain visible source credit.
+
+## Viewer and Professional Work revision — 2026-07-19
+
+- The universal project navigation belongs in its own sticky rounded control surface, separated from the case-study canvas.
+- The case-study deck belongs in a distinct bordered, rounded viewer layer beneath that control surface in both themes.
+- Professional Work uses a quiet editorial access page, not an oversized lock card. Its access method remains a direct request until the protected-content model is approved.
+- Project-title hover underlines are removed; still-first and video-on-hover behavior remains.

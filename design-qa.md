@@ -1,138 +1,69 @@
-# Design QA — Portfolio Structure, Project Viewer, and Alex OS
+# Design QA — Contained Project Viewer, Professional Work, and Alex OS
 
-## Comparison target
+Date: 2026-07-19
 
-- Source visual truth:
-  - `/Users/ainfield/.codex/generated_images/019f49e5-9a42-7292-9580-1c51c04f7b9b/exec-7406b9a5-cadf-41f0-b2a9-643db4f456c2.png` — approved portfolio-feed direction.
-  - `/Users/ainfield/.codex/generated_images/019f49e5-9a42-7292-9580-1c51c04f7b9b/exec-9fa72d08-abfe-4531-bee7-8c95d5950838.png` — approved Alex OS concept, with the user's request to make the result more authentic than this mock.
-  - `/private/tmp/portfolio-structure-refs/apple-macos27-liquid-glass.png` — official macOS 27 Liquid Glass visual reference captured during implementation.
-- Browser-rendered implementation screenshots:
-  - `/Users/ainfield/Documents/Portfolio/docs/portfolio-rebuild/qa/home-final.png`
-  - `/Users/ainfield/Documents/Portfolio/docs/portfolio-rebuild/qa/play-desktop.png`
-  - `/Users/ainfield/Documents/Portfolio/docs/portfolio-rebuild/qa/play-light.png`
-  - `/Users/ainfield/Documents/Portfolio/docs/portfolio-rebuild/qa/alex-os-final.png`
-  - `/Users/ainfield/Documents/Portfolio/docs/portfolio-rebuild/qa/alex-os-music-open.png`
-- Viewports:
-  - Desktop comparison: 1280 × 720 CSS pixels at DPR 2.
-  - Mobile structural check: 390 × 844 CSS pixels.
-- State:
-  - Work in dark mode.
-  - Play in dark and light modes.
-  - Alex OS with Finder active, plus Music, maximize/restore, minimize, playback, and compact mobile app-switching states.
+## Source and implementation evidence
 
-## Full-view comparison evidence
+- Desktop-computer reference: `https://os.ryo.lu/`.
+- Official emulator reference: `https://infinitemac.org/embed-docs`.
+- Same-state side-by-side comparison: `/tmp/portfolio-os-comparison.png` (two 720 × 997 views).
+- Alex OS default Finder: `/tmp/portfolio-os-implementation.png`.
+- Authentic Mac OS 9 boot and ready states: `/tmp/portfolio-os-classic-running.png` and `/tmp/portfolio-os-classic-ready.png`.
+- Professional Work: `/tmp/portfolio-professional-implementation.png`.
+- Project viewer, scrolled to 900 px: `/tmp/portfolio-project-nav-dark.png` and `/tmp/portfolio-project-nav-light.png`.
+- Mobile OS and project viewer at 390 × 844: `/tmp/portfolio-os-mobile-final-390x844.png` and `/tmp/portfolio-project-mobile-390x844.png`.
 
-The approved feed mock and `home-final.png` were opened together in one comparison input. The implementation preserves the mock's restrained black-and-white palette, top navigation, two-column content rhythm, project-first imagery, and small metadata. The updated uniform 16:9 cards intentionally supersede the mock's mixed row heights because the user explicitly requested a Zeg Zulka-style uniform system.
+## Full-view comparison
 
-The Alex OS concept, official macOS Liquid Glass reference, and `alex-os-final.png` were opened together in one comparison input. The implementation keeps the concept's Finder-led composition while moving closer to desktop conventions through a full menu bar, layered glass surfaces, toolbar controls, sidebar, dock, traffic-light window controls, focus ordering, and draggable/resizable windows. It uses Alex's real media and does not redistribute Apple-owned icons or system assets.
+The ryOS reference and Alex OS implementation were placed together in one comparison input at the same visible size. The implementation retains the convincing computer hierarchy that matters in the reference—wallpaper, menu bar, desktop shortcuts, Finder, Dock, overlapping windows, and a real emulator—without copying its visual identity. Alex OS instead uses Alex's public portfolio structure, real media, a credited NASA wallpaper, and an embedded Mac OS 9 computer with Infinite HD.
 
-## Focused region comparison evidence
+The earlier generic liquid-glass mock looked like a reskinned web app. The current version reads as a usable archive computer: Finder history, grid/list views, search, folders, apps, draggable/resizable windows, playback, and a genuine bootable guest all work.
 
-- Header and card metadata: checked name/domain/year alignment, active navigation underline, theme switch, launcher placement, card geometry, and image crop in `home-final.png`, `play-desktop.png`, and `play-light.png`.
-- Alex OS Finder and Dock: checked toolbar density, sidebar hierarchy, app icons, surface opacity, window elevation, and bottom safe area in `alex-os-final.png`.
-- Music and window controls: checked playback state, scrubber, volume, focus ordering, maximize/restore geometry, minimize behavior, and dock running indicators using `alex-os-music-open.png` plus live browser interaction.
+## Focused-region checks
 
-## Findings
+- Project header: the universal navigation is a separate sticky rounded surface at the top of the page. At a 1280 × 720 desktop viewport it stays within a 74 px control band and never overlays the project canvas.
+- Project canvas: a separate bordered, rounded presentation layer begins below the header. It was checked after scrolling in both dark and light themes.
+- Professional Work: the shopping-bag-like lock icon and oversized card are gone. The page is now a quiet editorial access screen with small structured details and one request action.
+- Homepage cards: title underline-on-hover is removed; the still-first/video-on-hover behavior remains intact.
+- Mobile: the project header collapses to its two-row layout, the viewer remains inside the viewport, Finder becomes a compact single-window experience, and the Dock remains horizontally usable without a visible scrollbar.
 
-No actionable P0, P1, or P2 findings remain.
+## Fidelity review
 
-### Required fidelity surfaces
+- Typography: the portfolio keeps the existing neutral sans-serif system and compact metadata. Alex OS uses a small native-system UI scale that is appropriate for a desktop shell.
+- Spacing and rhythm: project controls, viewer, Professional Work rows, Finder toolbar, file grid, and Dock all follow consistent compact spacing.
+- Color and tokens: the project control surface uses the site's dark/light tokens and stronger glass opacity so content cannot show through while scrolling. Alex OS uses one coherent dark glass system over the M90 wallpaper.
+- Asset quality: project covers, audio, and video come from the existing portfolio assets. The wallpaper is a downloaded, locally hosted NASA source asset. Icons come from the existing Phosphor library; no generated or placeholder imagery was introduced.
+- Copy and privacy: Finder labels expose only curated portfolio categories and public project names. No private local path, account name, contact data, or personal file listing is present. The emulator is explicitly isolated from personal files.
 
-- Fonts and typography: the portfolio keeps the approved neutral sans-serif hierarchy with compact metadata and no oversized display text. Alex OS uses appropriate small UI weights and readable line heights across menu bar, Finder, and media windows.
-- Spacing and layout rhythm: desktop Work and Play use equal two-column tracks and uniform 16:9 media. Mobile collapses to one column. Alex OS maintains window and dock safe areas without horizontal overflow at 390 px.
-- Colors and visual tokens: dark and light portfolio tokens remain coherent and the switch persists. Alex OS glass, borders, highlights, shadows, and wallpaper contrast are internally consistent and closer to the supplied macOS reference than the earlier concept.
-- Image quality and asset fidelity: all visible portfolio and Play imagery comes from Alex's existing site or project source files. Crops remain sharp and proportional. Icons come from a consistent maintained icon library; no placeholder emoji, copied Apple assets, or generated imagery were introduced.
-- Copy and content: Work, Play, Professional Work, Info, and Alex OS now have distinct roles. Play contains smaller presentable design work, while music, video sketches, and archive material appear only inside Alex OS.
+## Interaction and runtime checks
 
-## Responsive and interaction checks
-
-- Desktop and mobile routes have no horizontal overflow.
-- Work cards preserve still-first behavior and reveal verified project video on pointer hover where available.
-- Light/dark switching works and persists.
-- Section and project close controls return to their parent context.
-- Alex OS supports window focus, drag, resize, close, minimize, maximize, restore, dock launch, real audio play/pause/scrubbing/volume, and local video playback.
-- At 390 × 844, Alex OS switches between active apps, hides the wide Finder sidebar, keeps the Finder grid within the viewport, and leaves the Dock accessible.
-- Browser console checked after the primary Alex OS interactions: no errors or warnings.
-- GitHub Pages repository-subpath simulation checked at `/Portfolio_2026/alex-os/`: lazy CSS, Finder, Dock, audio, video, and poster assets all resolved from the repository path with no current-host console errors.
+- Work, Play, Professional Work, Info, theme, Alex OS, and close controls remain available across project pages.
+- Light/dark switching works on the contained header and leaves the project presentation itself intact.
+- Finder navigation, Back/Forward, search, list/grid switch, app launch, window controls, audio, video, and desktop links work.
+- Starting Classic Mac boots Mac OS 9.0 on a Power Macintosh 9500 profile and reaches Infinite HD, including period games, graphics, multimedia, publishing, and utility folders.
+- Desktop and 390 px mobile views show no page-level horizontal overflow.
+- `npm test`: 7 of 7 passed.
+- ESLint: 0 errors; six pre-existing deliberate static-image warnings.
 
 ## Comparison history
 
-- Earlier P2: maximizing an Alex OS window changed position but retained its string-based dimensions, so the window did not fill the usable desktop.
-  - Fix: maximize now calculates numeric viewport dimensions and preserves the prior bounds for restore.
-  - Post-fix evidence: at 1280 × 720, the maximized Music window measured `x: 12`, `y: 44`, `width: 1256`, `height: 606`; Restore appeared and returned the previous window bounds.
-- Earlier P2: the mobile desktop needed an explicit compact mode to prevent overlapping desktop windows and persistent controls.
-  - Fix: compact mode shows one active app, collapses the Finder sidebar, tightens the grid, and preserves the Dock.
-  - Post-fix evidence: at 390 × 844 the document width remained 390 px; Finder stayed within `x: 8–382`, the Dock within `x: 50–340`, and launching Music switched the active window without overflow.
-- Publish verification issue, outside the visual-comparison loop: the first GitHub Pages deployment loaded the Work feed but Alex OS failed while preloading lazy CSS from the domain root instead of the repository path.
-  - Fix: the static exporter now makes Vite's dynamic preload helper repository-relative, and Alex OS client-only media paths are route-relative.
-  - Post-fix evidence: the exact `/Portfolio_2026/alex-os/` path rendered Finder and the Dock; audio and video reached ready state 4 from repository-relative URLs, and the current-host console log was empty.
+1. Earlier P2: the navigation visually overlaid project content while scrolling.
+   - Fix: moved it into an opaque/blurred sticky control band and placed the project deck in a separate rounded canvas below.
+   - Evidence: `/tmp/portfolio-project-nav-dark.png` and `/tmp/portfolio-project-nav-light.png` at scrollY 900.
+2. Earlier P2: Professional Work used a giant card and an ambiguous lock that resembled a shopping bag.
+   - Fix: removed the pictogram and replaced the card with restrained editorial rows.
+   - Evidence: `/tmp/portfolio-professional-implementation.png`.
+3. Earlier P2: Alex OS was a surface imitation with a generic background and no genuine computer layer.
+   - Fix: rebuilt the outer archive environment and embedded the official Infinite Mac OS 9 configuration behind an explicit Start computer action.
+   - Evidence: `/tmp/portfolio-os-comparison.png` and `/tmp/portfolio-os-classic-ready.png`.
+4. Earlier P3: the compact Dock showed a browser scrollbar at 390 px.
+   - Fix: reduced compact icon geometry and hid only the Dock's visual scrollbar while retaining horizontal scrolling.
 
-## Implementation checklist
+## Remaining polish
 
-- [x] Uniform Work and Play cards.
-- [x] Real source imagery and verified hover motion.
-- [x] Persistent light/dark theme.
-- [x] Functional close navigation.
-- [x] Authentic desktop structure with real media.
-- [x] Desktop and mobile browser checks.
-- [x] Static GitHub Pages export and rendered-HTML tests.
-
-## Follow-up polish
-
-- P3: add dock magnification and fuller menu dropdown behavior in a later Alex OS expansion.
-- P3: replace the three-project Play seed with the next approved batch of real projects once their metadata is selected.
-
-## Project drawer iteration — 2026-07-19
-
-- Source visual truth: `/var/folders/cr/qn1yz30s6jv0xl49c6pmykjh0000gn/T/codex-clipboard-14b93c61-9520-4522-b9ef-3e31b9a3af3b.png`.
-- Browser-rendered implementation screenshots:
-  - `/Users/ainfield/Documents/Portfolio/docs/portfolio-rebuild/qa/project-drawer-final.png` — desktop open state.
-  - `/Users/ainfield/Documents/Portfolio/docs/portfolio-rebuild/qa/project-drawer-closed.png` — desktop collapsed state.
-  - `/Users/ainfield/Documents/Portfolio/docs/portfolio-rebuild/qa/project-drawer-mobile-open.png` — mobile overlay state before the dismissal-target fix.
-- Viewports: 1280 × 720 desktop and 390 × 844 mobile.
-- State: dark theme, Molekule Go active, drawer open and closed.
-
-### Full-view and focused comparison evidence
-
-The supplied screenshot and `project-drawer-final.png` were opened together in the same comparison input. The implementation matches the reference's left-anchored dark panel, large two-by-two section navigation, compact About card, thumbnail project list, active-project treatment, and exposed edge handle. It intentionally omits the reference's `Frame 3 / Frame 4` prototype labels because they are not portfolio content. A focused pass checked the section-tile scale, drawer width, text density, thumbnail crops, active border, handle placement, and visible project canvas.
-
-### Drawer findings
+- P3: the embedded Mac has a cold start of roughly 30–40 seconds before the full Infinite HD desktop is ready.
+- P3: future public-safe content can be added to Finder one approved project folder at a time.
 
 No actionable P0, P1, or P2 findings remain.
-
-- Fonts and typography: the drawer uses the site's existing Funktional Grotesk, with large low-contrast section tiles and compact project metadata matching the reference hierarchy.
-- Spacing and layout rhythm: the desktop drawer occupies 352 px at a 1280 px viewport, its 42 × 104 px handle remains centered on the edge, and the project canvas expands from 913 px to 1265 px when collapsed.
-- Colors and visual tokens: panel, cards, active border, muted type, and handle glass reuse the portfolio's dark/light tokens while preserving the reference's near-black and neutral-gray composition.
-- Image quality and asset fidelity: all six thumbnails use the existing project covers; no generated or placeholder imagery was introduced.
-- Copy and content: Work, play, pro, info, About Alex, and all six projects are present. The Professional Work tile keeps its lock indicator.
-- Accessibility and interaction: the handle exposes expanded state, the closed drawer is inert and hidden from assistive navigation, Escape closes it, the state persists while switching projects, and focus styles remain visible.
-
-### Drawer comparison history
-
-- Earlier P2: the first mobile overlay left only a narrow exposed strip, and the full-viewport scrim's click center sat behind the drawer, making outside-click dismissal unreliable.
-  - Fix: the mobile drawer now reserves 72 px and the scrim begins at the drawer edge instead of underneath it.
-  - Post-fix evidence: at 390 × 844 the drawer measured 318 px, the exposed scrim measured 57 px after the browser scrollbar, clicking it changed `aria-expanded` to `false`, moved the drawer edge to 0, removed the scrim, and produced no horizontal overflow.
-- Desktop open, collapse, reopen, active-project switching to Luma, mobile overlay dismissal, Escape support, and session persistence were tested. No current-page console errors were recorded.
-
-### Drawer implementation checklist
-
-- [x] Two-by-two section tiles.
-- [x] About card and complete project list.
-- [x] Current-project state and real thumbnails.
-- [x] Animated desktop push/collapse behavior.
-- [x] Tablet/mobile overlay and outside-click dismissal.
-- [x] Keyboard, accessibility, and persisted state.
-
-final result: passed
-
-## Universal project header revision — 2026-07-19
-
-- The project drawer evidence above is retained as iteration history only; that interface is no longer present in the current build.
-- Current target: the already-approved portfolio header and its direct Work-to-case-study navigation pattern.
-- Expected current behavior: project pages use the same Work, Play, Professional Work, Info, theme, and Alex OS controls as the homepage, add the circular close control, and keep the case-study canvas full width.
-- The proposed circular/rounded viewer layer remains out of scope for this revision pending a dedicated visual comparison and approval.
-- Desktop browser verification at a 1280 px layout viewport confirmed a 1265 px full-width project canvas, fixed header at `top: 0`, and no drawer node. Theme switching persisted, the close control returned to Work, and the Alex OS route resolved from the project depth.
-- Header control bounds remained inside the 1280 px viewport: theme control `x: 1094–1189`, close control `x: 1207–1241`.
-- Responsive CSS keeps the 96 px two-row mobile header, horizontally scrollable section navigation, and fixed theme/close actions at a 12 px safe inset. The existing project media and copy continue to collapse to the verified mobile presentation.
 
 final result: passed

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight, LockSimple, X } from "@phosphor-icons/react";
+import { ArrowUpRight, X } from "@phosphor-icons/react";
 import ThemeToggle from "./theme-toggle";
 
 type Section = "work" | "play" | "professional" | "info" | "os";
@@ -10,10 +10,10 @@ type SiteHeaderProps =
   | { variant: "index"; title?: string; active?: Section; closeHref?: string }
   | { variant: "detail"; title: string; active?: Section; closeHref?: string };
 
-const navItems: { label: string; href: string; section: Section; locked?: boolean; launcher?: boolean }[] = [
+const navItems: { label: string; href: string; section: Section; launcher?: boolean }[] = [
   { label: "Work", href: "/", section: "work" },
   { label: "Play", href: "/play", section: "play" },
-  { label: "Professional Work", href: "/professional-work", section: "professional", locked: true },
+  { label: "Professional Work", href: "/professional-work", section: "professional" },
   { label: "Info", href: "/info", section: "info" },
   { label: "Alex OS", href: "/alex-os", section: "os", launcher: true },
 ];
@@ -42,7 +42,6 @@ export default function SiteHeader(props: SiteHeaderProps) {
             key={item.section}
           >
             {item.label}
-            {item.locked ? <LockSimple size={12} weight="regular" aria-hidden="true" /> : null}
             {item.launcher ? <ArrowUpRight size={13} weight="regular" aria-hidden="true" /> : null}
           </a>
         ))}

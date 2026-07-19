@@ -89,16 +89,24 @@ test("play uses real source projects and the same uniform card system as work", 
   assert.doesNotMatch(html, /Music|Beats/i);
 });
 
-test("Alex OS server-renders the desktop, real media, and app launch controls", async () => {
+test("Alex OS server-renders the curated Finder, real media, and authentic Mac launch controls", async () => {
   const response = await render("/alex-os");
   assert.equal(response.status, 200);
   const html = await response.text();
 
-  assert.match(html, /Alex Infield’s Computer/);
+  assert.match(html, /Macintosh HD/);
+  assert.match(html, /Creative/);
   assert.match(html, /RISD Projects/);
   assert.match(html, /aria-label="Open Music"/);
   assert.match(html, /aria-label="Open Video"/);
+  assert.match(html, /aria-label="Open Classic Mac"/);
+  assert.doesNotMatch(html, /Library\/CloudStorage|@infield\.net|628-224|Backup DesktopDownloads/);
+  const alexOsSource = await readFile(new URL("../app/alex-os/AlexOS.tsx", import.meta.url), "utf8");
+  assert.match(alexOsSource, /Start Mac OS 9/);
+  assert.match(alexOsSource, /infinitemac\.org\/embed\?disk=Mac\+OS\+9\.0/);
+  assert.match(alexOsSource, /infinite_hd=true/);
   await access(new URL("../public/alex-os/audio/sketch-01.m4a", import.meta.url));
+  await access(new URL("../public/alex-os/m90-wallpaper.jpg", import.meta.url));
   await access(new URL("../public/assets/niche/media/15-transcode.mp4", import.meta.url));
 });
 
