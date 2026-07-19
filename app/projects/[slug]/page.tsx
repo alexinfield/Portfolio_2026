@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import ProjectRail from "@/app/project-rail";
 import SiteHeader from "@/app/site-header";
 import { getNextProject, getProject, getProjectMedia, projects, type ProjectSlug } from "@/lib/portfolio";
 import { getProjectNarrative, type ProjectNarrative, type ProjectSectionNote } from "@/lib/project-narratives";
@@ -144,11 +143,9 @@ export default async function ProjectPage({
 
   return (
     <main className="project-page">
-      <SiteHeader variant="detail" title={project.title} closeHref="/" />
+      <SiteHeader variant="detail" title={project.title} active="work" closeHref="/" />
 
       <div className="project-workspace">
-        <ProjectRail activeSlug={project.slug} />
-
         <article
           className="project-canvas project-presentation"
           aria-labelledby="project-title"

@@ -1,4 +1,4 @@
-# Design QA — Portfolio Structure, Project Drawer, and Alex OS
+# Design QA — Portfolio Structure, Project Viewer, and Alex OS
 
 ## Comparison target
 
@@ -122,5 +122,17 @@ No actionable P0, P1, or P2 findings remain.
 - [x] Animated desktop push/collapse behavior.
 - [x] Tablet/mobile overlay and outside-click dismissal.
 - [x] Keyboard, accessibility, and persisted state.
+
+final result: passed
+
+## Universal project header revision — 2026-07-19
+
+- The project drawer evidence above is retained as iteration history only; that interface is no longer present in the current build.
+- Current target: the already-approved portfolio header and its direct Work-to-case-study navigation pattern.
+- Expected current behavior: project pages use the same Work, Play, Professional Work, Info, theme, and Alex OS controls as the homepage, add the circular close control, and keep the case-study canvas full width.
+- The proposed circular/rounded viewer layer remains out of scope for this revision pending a dedicated visual comparison and approval.
+- Desktop browser verification at a 1280 px layout viewport confirmed a 1265 px full-width project canvas, fixed header at `top: 0`, and no drawer node. Theme switching persisted, the close control returned to Work, and the Alex OS route resolved from the project depth.
+- Header control bounds remained inside the 1280 px viewport: theme control `x: 1094–1189`, close control `x: 1207–1241`.
+- Responsive CSS keeps the 96 px two-row mobile header, horizontally scrollable section navigation, and fixed theme/close actions at a 12 px safe inset. The existing project media and copy continue to collapse to the verified mobile presentation.
 
 final result: passed

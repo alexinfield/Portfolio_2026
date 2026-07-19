@@ -42,10 +42,16 @@ The Drive folder at `Creative/Projects` is registered as the supplemental master
 - Professional Work is represented as a restrained locked/request-access route until the final access model and content are approved.
 - Alex OS uses maintained open-source drag/resize behavior and icon components while keeping its content model, visual system, and media local to the portfolio.
 
-## Project navigation drawer — 2026-07-19
+## Project navigation — revised 2026-07-19
 
-- Project case studies use a collapsible left drawer rather than a permanently allocated rail.
-- The open drawer contains four large section tiles, About Alex, and the complete Work list with the active project highlighted.
-- On desktop the drawer reduces the project canvas while open and restores the full canvas when collapsed.
-- On tablet and mobile it overlays the case study, reserves a reliable outside-dismiss target, and leaves a compact edge handle when closed.
-- Drawer state persists while moving between project pages during the current browser session.
+- The collapsible drawer experiment is retired. Its screenshot was an information-architecture mock, not a final visual target.
+- Project case studies return to the direct portfolio pattern: choose a project from Work, enter a full case-study viewer, and use the circular `×` to return.
+- The same Work, Play, Professional Work, Info, theme, and Alex OS navigation now remains available across the homepage and project pages.
+- The proposed rounded/circular viewer layer is intentionally deferred until its masking, surrounding canvas, and control hierarchy are approved visually.
+
+## Alex OS research — 2026-07-19
+
+- `os.ryo.lu` is a custom browser desktop with a virtual file system and web-native applications. Its genuine emulation comes from embedded Infinite Mac and v86/js-dos applications rather than from the outer desktop shell itself.
+- Alex's fourth-grade year was primarily the OS X Mountain Lion era; fifth grade transitioned from Mountain Lion to Mavericks.
+- A genuine Mountain Lion or Mavericks guest is not a practical browser target with the available open-source web emulators: Infinite Mac currently reaches Mac OS X 10.4, while v86 does not implement the 64-bit CPU extensions required by OS X 10.8/10.9.
+- Recommended direction: keep the portfolio launcher lightweight, replace the current pretend desktop with a clearly authored Alex archive environment, and embed a genuine emulator as a featured application for compatible classic Mac software and games.

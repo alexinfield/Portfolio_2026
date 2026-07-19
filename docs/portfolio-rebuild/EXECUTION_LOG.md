@@ -48,3 +48,6 @@ No DNS or `alexinfield.com` production setting was changed. The rollback tag rem
 - Made lazy-loaded CSS and Alex OS media repository-path-safe after the first live Pages check exposed root-relative client asset loading.
 - Passed the rendered-route test suite and browser design QA at desktop and mobile sizes.
 - Rebuilt project navigation as a screenshot-matched collapsible drawer with section tiles, About card, complete project list, desktop push behavior, and a dismissible mobile overlay.
+- Retired that drawer after the screenshot was clarified as a rough information-architecture mock rather than a final design.
+- Restored a direct full-width case-study viewer and made the approved Work, Play, Professional Work, Info, theme, Alex OS, and close controls universal on project pages.
+- Inspected ryOS directly and verified that its outer desktop is a browser application while its genuine Mac/PC execution comes from Infinite Mac and v86/js-dos integrations.
