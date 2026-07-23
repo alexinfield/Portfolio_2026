@@ -14,16 +14,27 @@ export type ProjectNavigatorSection = {
   order: number;
 };
 
+const contextLabels: Record<string, string> = {
+  render: "Rendering",
+  photography: "Photo",
+  motion: "Motion",
+  sketch: "Sketches",
+  prototype: "Prototypes",
+  cad: "CAD",
+  research: "Research",
+  collaboration: "Team",
+  production: "Making",
+};
+
 function contextFromLocation() {
   if (typeof window === "undefined") return "";
   const params = new URLSearchParams(window.location.search);
   const phase = params.get("phase");
   const content = params.get("type");
-  const labels = [
-    phase === "final" ? "Final" : phase === "process" ? "Process" : "",
-    content ? content === "cad" ? "CAD" : `${content.charAt(0).toUpperCase()}${content.slice(1)}` : "",
-  ].filter(Boolean);
-  return labels.join(" + ");
+  if (phase === "final") return "Final";
+  if (phase === "process") return "Process";
+  if (!content) return "";
+  return contextLabels[content] ?? "";
 }
 
 export default function ProjectSectionNavigator({
@@ -121,7 +132,6 @@ export default function ProjectSectionNavigator({
         <details className="project-section-mobile-menu">
           <summary>Sections</summary>
           <div>
-            <a href="#project-start">Start of project</a>
             {sections.map((section) => (
               <a href={`#${section.id}`} aria-current={activeSection?.id === section.id ? "location" : undefined} key={section.id}>
                 {section.label}
@@ -133,9 +143,9 @@ export default function ProjectSectionNavigator({
 
       {entryContext ? (
         <div className="project-entry-context" role="status">
-          <span>Showing {entryContext} match</span>
-          <a href="#project-start">View full project from start</a>
-          <button type="button" aria-label="Dismiss match message" onClick={() => setEntryContext("")}>×</button>
+          <span>Opened at {entryContext}</span>
+          <a href="#project-start">Start from beginning</a>
+          <button type="button" aria-label="Dismiss filter context" onClick={() => setEntryContext("")}>×</button>
         </div>
       ) : null}
     </>

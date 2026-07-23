@@ -26,9 +26,6 @@ export const contentTypes = [
 export type Collection = (typeof collections)[number];
 export type ContentType = (typeof contentTypes)[number];
 export type SlidePhase = "intro" | "process" | "final" | "credits" | "neutral";
-export type PhaseFilter = "final" | "process" | null;
-export type PortfolioView = "grid" | "index";
-export type ProjectPriority = "hero" | "standard" | "compact";
 
 export type ArchiveSlide = {
   id: string;
@@ -54,22 +51,20 @@ export type ArchiveProject = {
   href: string;
   kind: "work" | "play";
   collections: readonly Collection[];
-  priority: ProjectPriority;
   slides: readonly ArchiveSlide[];
 };
 
 type ProjectProfile = {
   collections: readonly Collection[];
-  priority: ProjectPriority;
 };
 
 const projectProfiles: Record<ProjectSlug, ProjectProfile> = {
-  "molekule-go": { collections: ["selected", "independent"], priority: "hero" },
-  luma: { collections: ["selected", "independent"], priority: "standard" },
-  niche: { collections: ["selected", "independent"], priority: "standard" },
-  hyphae: { collections: ["selected", "independent", "archive"], priority: "standard" },
-  ping: { collections: ["selected", "independent"], priority: "hero" },
-  mode: { collections: ["selected", "independent", "archive"], priority: "standard" },
+  "molekule-go": { collections: ["selected", "independent"] },
+  luma: { collections: ["selected", "independent"] },
+  niche: { collections: ["selected", "independent"] },
+  hyphae: { collections: ["selected", "independent", "archive"] },
+  ping: { collections: ["selected", "independent"] },
+  mode: { collections: ["selected", "independent", "archive"] },
 };
 
 const sectionPhases: Record<ProjectSlug, readonly SlidePhase[]> = {
@@ -245,17 +240,33 @@ function anchorFor(label: string, order: number, used: Set<string>) {
 
 function buildWorkSlides(slug: ProjectSlug): ArchiveSlide[] {
   const media = getProjectMedia(slug);
-  const visibleMedia = [media[0], ...media.slice(2)];
   const narrative = projectNarratives[slug];
-  const usedAnchors = new Set<string>(["overview"]);
+  const usedAnchors = new Set<string>(["project-start", "overview"]);
 
-  return visibleMedia.map((item, index) => {
+  return media.map((item, index) => {
     const order = index + 1;
-    const note = index === 0 ? undefined : narrative.sections[index - 1];
-    const label = index === 0 ? `${narrative.displayTitle} opening` : shortLabel(note, order);
-    const anchor = index === 0 ? "project-start" : anchorFor(label, order, usedAnchors);
-    const phase = index === 0 ? "final" : sectionPhases[slug][index - 1] ?? "neutral";
-    const taggedTypes = index === 0 ? (["photography"] as const) : (sectionTypes[slug][index - 1] ?? []);
+    const noteIndex = index - 2;
+    const note = noteIndex >= 0 ? narrative.sections[noteIndex] : undefined;
+    const label = index === 0
+      ? `${narrative.displayTitle} opening`
+      : index === 1
+        ? `${narrative.displayTitle} overview`
+        : shortLabel(note, order);
+    const anchor = index === 0
+      ? "project-start"
+      : index === 1
+        ? "overview"
+        : anchorFor(label, order, usedAnchors);
+    const phase = index === 0
+      ? "final"
+      : index === 1
+        ? "intro"
+        : sectionPhases[slug][noteIndex] ?? "neutral";
+    const taggedTypes = index === 0
+      ? (["photography"] as const)
+      : index === 1
+        ? []
+        : (sectionTypes[slug][noteIndex] ?? []);
     const contentTypeSet = new Set<ContentType>(taggedTypes);
     if (item.kind === "video") contentTypeSet.add("motion");
     const contentTypeList = [...contentTypeSet];
@@ -266,7 +277,17 @@ function buildWorkSlides(slug: ProjectSlug): ArchiveSlide[] {
       id: `${slug}-${String(order).padStart(2, "0")}`,
       anchor,
       order,
-      section: note?.eyebrow ?? note?.title ?? (phase === "final" ? "Final" : phase === "process" ? "Process" : "Project"),
+      section: index === 0
+        ? "Start"
+        : index === 1
+          ? "Overview"
+          : phase === "final"
+            ? "Final"
+            : phase === "process"
+              ? "Process"
+              : phase === "credits"
+                ? "Credits"
+                : "Project",
       phase,
       contentTypes: contentTypeList,
       title,
@@ -288,7 +309,6 @@ const workArchiveProjects: ArchiveProject[] = workProjects.map((project) => ({
   href: `/projects/${project.slug}`,
   kind: "work",
   collections: projectProfiles[project.slug].collections,
-  priority: projectProfiles[project.slug].priority,
   slides: buildWorkSlides(project.slug),
 }));
 
@@ -308,7 +328,6 @@ const playArchiveProjects: ArchiveProject[] = playProjects.map((project) => {
     href: `/play/${project.slug}`,
     kind: "play",
     collections: isOlderArchive ? ["play", "archive"] : ["play"],
-    priority: "compact",
     slides: [
       {
         id: `${project.slug}-01`,
@@ -336,7 +355,5 @@ export function getArchiveProject(slug: string) {
 }
 
 export function getProjectPresentation(slug: ProjectSlug) {
-  const media = getProjectMedia(slug);
-  return [media[0], ...media.slice(2)];
+  return getProjectMedia(slug);
 }
-

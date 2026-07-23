@@ -3,7 +3,7 @@ import SiteHeader from "@/app/site-header";
 import ProjectSectionNavigator from "@/app/project-section-navigator";
 import { getArchiveProject, getProjectPresentation, type ArchiveSlide } from "@/lib/archive";
 import { getNextProject, getProject, projects, type ProjectSlug } from "@/lib/portfolio";
-import { getProjectNarrative, type ProjectNarrative, type ProjectSectionNote } from "@/lib/project-narratives";
+import { getProjectNarrative } from "@/lib/project-narratives";
 
 type MediaItem = ReturnType<typeof getProjectPresentation>[number];
 
@@ -51,89 +51,6 @@ function ProjectMedia({
   );
 }
 
-function ProjectIntroduction({
-  narrative,
-  titleId,
-}: {
-  narrative: ProjectNarrative;
-  titleId: string;
-}) {
-  return (
-    <header className="figma-project-intro" data-figma-section="title" id="overview" data-archive-slide>
-      <span className="figma-project-intro-label">Project overview</span>
-      <h1 id={titleId}>{narrative.displayTitle}</h1>
-
-      <div className="figma-project-intro-grid">
-        <div className="figma-project-intro-copy">
-          <p>{narrative.introduction}</p>
-          {narrative.note ? <p>{narrative.note}</p> : null}
-        </div>
-
-        {narrative.meta.length ? (
-          <dl>
-            <div>
-              <dt>{narrative.metaLabel ?? "Type"}</dt>
-              <dd>{narrative.meta.map((item) => <span key={item}>{item}</span>)}</dd>
-            </div>
-          </dl>
-        ) : <span aria-hidden="true" />}
-
-        <dl>
-          <div>
-            <dt>Date</dt>
-            <dd>{narrative.date}</dd>
-          </div>
-        </dl>
-      </div>
-    </header>
-  );
-}
-
-function ProjectMediaSection({
-  item,
-  note,
-  slide,
-  projectTitle,
-  index,
-}: {
-  item: MediaItem;
-  note?: ProjectSectionNote;
-  slide: ArchiveSlide;
-  projectTitle: string;
-  index: number;
-}) {
-  const hasTranscript = Boolean(note?.eyebrow || note?.title || note?.body);
-  const hasMobileMedia = Boolean(note?.mobileMedia?.length);
-
-  return (
-    <section
-      className={`figma-project-section${hasTranscript ? " has-transcript" : ""}${hasMobileMedia ? " has-mobile-deconstruction" : ""}${note?.hideCompositeOnMobile ? " hide-composite-on-mobile" : ""}`}
-      data-project-section={index + 3}
-    >
-      <ProjectMedia item={item} slide={slide} projectTitle={projectTitle} priority={index < 2} />
-
-      {hasMobileMedia ? (
-        <div
-          className={`figma-mobile-media${note?.mobileLayout === "stack" ? " is-stack" : note!.mobileMedia!.length > 1 ? " is-grid" : ""}`}
-          aria-hidden="true"
-        >
-          {note!.mobileMedia!.map((source) => (
-            <img src={source} alt="" loading="lazy" decoding="async" key={source} />
-          ))}
-        </div>
-      ) : null}
-
-      {hasTranscript ? (
-        <div className="figma-project-transcript">
-          {note?.eyebrow ? <span>{note.eyebrow}</span> : null}
-          {note?.title ? <h2>{note.title}</h2> : null}
-          {note?.body ? <p>{note.body}</p> : null}
-        </div>
-      ) : null}
-    </section>
-  );
-}
-
 export function generateStaticParams() {
   return projects.map(({ slug }) => ({ slug }));
 }
@@ -149,26 +66,23 @@ export default async function ProjectPage({
   if (!project) notFound();
 
   const projectSlug = project.slug as ProjectSlug;
-  const [hero, ...media] = getProjectPresentation(projectSlug);
+  const media = getProjectPresentation(projectSlug);
   const narrative = getProjectNarrative(projectSlug);
   const nextProject = getNextProject(projectSlug);
   const archiveProject = getArchiveProject(projectSlug);
-  if (!archiveProject) notFound();
-  const [heroSlide, ...archiveSlides] = archiveProject.slides;
-  const navigatorSlides = [
-    { id: heroSlide.anchor, label: "Start", order: heroSlide.order },
-    { id: "overview", label: "Overview", order: 1.5 },
-    ...archiveSlides.map((slide) => ({ id: slide.anchor, label: slide.shortLabel, order: slide.order + 1 })),
-  ];
+  if (!archiveProject || archiveProject.slides.length !== media.length) notFound();
+
+  const navigatorSlides = archiveProject.slides.map((slide) => ({
+    id: slide.anchor,
+    label: slide.shortLabel,
+    order: slide.order,
+  }));
   const seenSections = new Set<string>();
-  const navigatorSections = [
-    { id: "overview", label: "Overview", order: 1.5 },
-    ...archiveSlides.flatMap((slide) => {
-      if (seenSections.has(slide.section) || slide.section === "Project") return [];
-      seenSections.add(slide.section);
-      return [{ id: slide.anchor, label: slide.section, order: slide.order + 1 }];
-    }),
-  ];
+  const navigatorSections = archiveProject.slides.flatMap((slide) => {
+    if (slide.section === "Project" || seenSections.has(slide.section)) return [];
+    seenSections.add(slide.section);
+    return [{ id: slide.anchor, label: slide.section, order: slide.order }];
+  });
 
   return (
     <main className="project-page">
@@ -193,18 +107,15 @@ export default async function ProjectPage({
           data-figma-page={project.figmaPage.id}
           data-figma-root={narrative.figmaRootId}
         >
+          <h1 className="sr-only" id="project-title">{project.title}</h1>
           <section className="project-gallery" aria-label={`${project.title} project gallery`}>
-            <ProjectMedia item={hero} slide={heroSlide} projectTitle={project.title} priority className="project-hero" />
-
-            <ProjectIntroduction narrative={narrative} titleId="project-title" />
-
             {media.map((item, index) => (
-              <ProjectMediaSection
+              <ProjectMedia
                 item={item}
-                note={narrative.sections[index]}
-                slide={archiveSlides[index]}
+                slide={archiveProject.slides[index]}
                 projectTitle={project.title}
-                index={index}
+                priority={index < 2}
+                className={index === 0 ? "project-hero" : ""}
                 key={item.key}
               />
             ))}

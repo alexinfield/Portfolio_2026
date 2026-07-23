@@ -38,24 +38,33 @@ test("server-renders the adaptive archive with preserved project content", async
   assert.match(html, /adaptive-archive-page/);
   assert.match(html, /archive-feed-grid/);
   assert.match(html, /aria-label="Portfolio collections"/);
+  assert.match(html, /class="archive-wordmark is-active"/);
+  assert.match(html, /aria-label="Alex Infield — show all projects"/);
   assert.match(html, />Selected</);
-  assert.match(html, />Professional</);
   assert.match(html, />Independent</);
   assert.match(html, />Archive</);
   assert.match(html, />Final</);
   assert.match(html, />Process</);
-  assert.match(html, />Filter \+</);
-  assert.match(html, />Grid</);
-  assert.match(html, />Index</);
-  assert.match(html, /Surprise Me/);
+  assert.match(html, />Rendering</);
+  assert.match(html, />Photo</);
+  assert.match(html, />Prototypes</);
+  assert.match(html, />Team</);
+  assert.match(html, />Making</);
+  assert.match(html, /Shuffle/);
   assert.match(html, /data-hover-video/);
-  assert.match(html, /Industrial designer working across products, interfaces/);
   assert.match(html, />Play</);
   assert.match(html, />About</);
-  assert.match(html, />Experience</);
   assert.match(html, />Contact</);
   assert.match(html, />Off Campus</);
-  assert.match(html, /is-receded/);
+  assert.doesNotMatch(html, /is-receded/);
+  assert.doesNotMatch(html, />All<\/button>/);
+  assert.doesNotMatch(html, />Professional</);
+  assert.doesNotMatch(html, />Experience</);
+  assert.doesNotMatch(html, />Filter \+</);
+  assert.doesNotMatch(html, />Index</);
+  assert.doesNotMatch(html, /Industrial designer working across products, interfaces/);
+  assert.doesNotMatch(html, /archive-introduction/);
+  assert.doesNotMatch(html, />Match</i);
   assert.doesNotMatch(html, />Alex OS</);
   assert.doesNotMatch(html, /I want to see/i);
   assert.doesNotMatch(html, />Overview<\/button>/i);
@@ -137,18 +146,34 @@ test("project and info pages keep predictable navigation and responsive portfoli
   assert.match(project, /data-archive-slide/);
   assert.match(project, /id="project-start"/);
   assert.match(project, /id="overview"/);
+  assert.match(project, /data-slide-order="17"/);
   assert.match(project, /class="portfolio-nav portfolio-nav-desktop"/);
   assert.match(project, />Work</);
   assert.match(project, />Play</);
-  assert.match(project, />Experience</);
   assert.match(project, />About</);
   assert.match(project, />Contact</);
+  assert.doesNotMatch(project, />Experience</);
+  assert.doesNotMatch(project, /figma-project-intro/);
+  assert.doesNotMatch(project, /figma-project-section/);
+  assert.doesNotMatch(project, /figma-project-transcript/);
+  assert.doesNotMatch(project, /Showing .* match/);
   assert.doesNotMatch(project, />Alex OS</);
   assert.doesNotMatch(project, /project-drawer/);
   assert.doesNotMatch(project, /project-rail/);
   assert.doesNotMatch(info, /aria-label="Close Info"/);
   assert.match(info, /portfolio-info-layout/);
   assert.match(info, /alex@infield\.net/);
+});
+
+test("uses a dense three-column archive and flush project presentations", async () => {
+  const css = await readFile(new URL("../app/portfolio.css", import.meta.url), "utf8");
+
+  assert.match(css, /\.archive-feed-grid\s*\{[^}]*grid-template-columns:\s*repeat\(3,/s);
+  assert.match(css, /\.project-page \.project-workspace\s*\{[^}]*padding:\s*0;/s);
+  assert.match(css, /\.project-gallery\s*\{[^}]*display:\s*block;[^}]*gap:\s*0;[^}]*padding:\s*0;/s);
+  assert.match(css, /\.project-slide,\s*\.figma-project-section,\s*\.next-project\s*\{[^}]*border-radius:\s*0;/s);
+  assert.match(css, /\.archive-project\.is-receded:hover,[^}]*opacity:\s*0\.22;/s);
+  assert.doesNotMatch(css, /--portfolio-accent:\s*#(?:ff5a36|f04d25)/i);
 });
 
 test("keeps complete source assets and exports one GitHub Pages presentation", async () => {

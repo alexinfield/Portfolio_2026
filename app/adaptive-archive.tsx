@@ -10,23 +10,26 @@ import {
   type ArchiveSlide,
   type Collection,
   type ContentType,
-  type PhaseFilter,
-  type PortfolioView,
 } from "@/lib/archive";
+
+type ArchiveFilter = "final" | "process" | ContentType | null;
 
 type ArchiveState = {
   collection: Collection;
-  phase: PhaseFilter;
-  content: ContentType | null;
-  view: PortfolioView;
+  filter: ArchiveFilter;
 };
 
 const defaultState: ArchiveState = {
-  collection: "selected",
-  phase: null,
-  content: null,
-  view: "grid",
+  collection: "all",
+  filter: null,
 };
+
+const visibleCollections: readonly Collection[] = [
+  "selected",
+  "independent",
+  "play",
+  "archive",
+];
 
 const collectionLabels: Record<Collection, string> = {
   selected: "Selected",
@@ -38,134 +41,111 @@ const collectionLabels: Record<Collection, string> = {
 };
 
 const contentLabels: Record<ContentType, string> = {
-  render: "Render",
-  photography: "Photography",
+  render: "Rendering",
+  photography: "Photo",
   motion: "Motion",
-  sketch: "Sketch",
-  prototype: "Prototype",
+  sketch: "Sketches",
+  prototype: "Prototypes",
   cad: "CAD",
   research: "Research",
-  collaboration: "Collaboration",
-  production: "Production",
+  collaboration: "Team",
+  production: "Making",
 };
+
+const filterOptions: readonly { value: Exclude<ArchiveFilter, null>; label: string }[] = [
+  { value: "final", label: "Final" },
+  { value: "process", label: "Process" },
+  ...contentTypes.map((value) => ({ value, label: contentLabels[value] })),
+];
 
 function stateFromLocation(): ArchiveState {
   if (typeof window === "undefined") return defaultState;
   const params = new URLSearchParams(window.location.search);
   const collection = params.get("collection") as Collection | null;
-  const phase = params.get("phase") as PhaseFilter;
+  const phase = params.get("phase");
   const content = params.get("type") as ContentType | null;
-  const view = params.get("view") as PortfolioView | null;
+  const filter: ArchiveFilter = phase === "final" || phase === "process"
+    ? phase
+    : content && contentTypes.includes(content)
+      ? content
+      : null;
 
   return {
-    collection: collection && collections.includes(collection) ? collection : "selected",
-    phase: phase === "final" || phase === "process" ? phase : null,
-    content: content && contentTypes.includes(content) ? content : null,
-    view: view === "index" ? "index" : "grid",
+    collection: collection && collections.includes(collection) ? collection : "all",
+    filter,
   };
 }
 
 function stateUrl(state: ArchiveState) {
   const params = new URLSearchParams();
-  if (state.collection !== "selected") params.set("collection", state.collection);
-  if (state.phase) params.set("phase", state.phase);
-  if (state.content) params.set("type", state.content);
-  if (state.view !== "grid") params.set("view", state.view);
+  if (state.collection !== "all") params.set("collection", state.collection);
+  if (state.filter === "final" || state.filter === "process") params.set("phase", state.filter);
+  else if (state.filter) params.set("type", state.filter);
   const query = params.toString();
   return `${window.location.pathname}${query ? `?${query}` : ""}`;
 }
 
-function slidesMatching(project: ArchiveProject, state: ArchiveState) {
-  return project.slides.filter((slide) => {
-    const phaseMatches = !state.phase || slide.phase === state.phase;
-    const contentMatches = !state.content || slide.contentTypes.includes(state.content);
-    return phaseMatches && contentMatches;
-  });
+function slideHasFilter(slide: ArchiveSlide, filter: ArchiveFilter) {
+  if (!filter) return true;
+  if (filter === "final" || filter === "process") return slide.phase === filter;
+  return slide.contentTypes.includes(filter);
 }
 
-function collectionMatches(project: ArchiveProject, collection: Collection) {
+function slidesForFilter(project: ArchiveProject, filter: ArchiveFilter) {
+  return project.slides.filter((slide) => slideHasFilter(slide, filter));
+}
+
+function collectionIncludes(project: ArchiveProject, collection: Collection) {
   return collection === "all" || project.collections.includes(collection);
 }
 
-function filterSummary(state: ArchiveState) {
-  const labels: string[] = [];
-  if (state.phase) labels.push(state.phase === "final" ? "Final" : "Process");
-  if (state.content) labels.push(contentLabels[state.content]);
-  return labels.length ? labels.join(" + ") : "No content filter";
-}
-
-function matchQuery(state: ArchiveState) {
-  const params = new URLSearchParams();
-  params.set("collection", state.collection);
-  if (state.phase) params.set("phase", state.phase);
-  if (state.content) params.set("type", state.content);
-  return params.toString();
+function filterLabel(filter: ArchiveFilter) {
+  if (filter === "final") return "Final";
+  if (filter === "process") return "Process";
+  return filter ? contentLabels[filter] : "All media";
 }
 
 function projectHref(project: ArchiveProject) {
   return `.${project.href}`;
 }
 
-function matchHref(project: ArchiveProject, slide: ArchiveSlide, state: ArchiveState) {
-  return `${projectHref(project)}?${matchQuery(state)}#${slide.anchor}`;
+function slideHref(project: ArchiveProject, slide: ArchiveSlide, state: ArchiveState) {
+  const params = new URLSearchParams();
+  if (state.collection !== "all") params.set("collection", state.collection);
+  if (state.filter === "final" || state.filter === "process") params.set("phase", state.filter);
+  else if (state.filter) params.set("type", state.filter);
+  const query = params.toString();
+  return `${projectHref(project)}${query ? `?${query}` : ""}#${slide.anchor}`;
 }
 
-function PhaseControls({
-  phase,
-  setPhase,
+function FilterControls({
+  filter,
   available,
+  onChange,
 }: {
-  phase: PhaseFilter;
-  setPhase: (phase: PhaseFilter) => void;
-  available: Record<"final" | "process", boolean>;
+  filter: ArchiveFilter;
+  available: Record<Exclude<ArchiveFilter, null>, boolean>;
+  onChange: (filter: ArchiveFilter) => void;
 }) {
   return (
-    <div className="archive-phase-controls" aria-label="Project phase filters">
-      {(["final", "process"] as const).map((item) => (
+    <div className="archive-filter-controls" aria-label="Portfolio filters">
+      {filterOptions.map((option) => (
         <button
           type="button"
-          aria-pressed={phase === item}
-          className={phase === item ? "is-active" : undefined}
-          disabled={!available[item]}
-          onClick={() => setPhase(phase === item ? null : item)}
-          key={item}
+          aria-pressed={filter === option.value}
+          className={filter === option.value ? "is-active" : undefined}
+          disabled={!available[option.value]}
+          onClick={() => onChange(filter === option.value ? null : option.value)}
+          key={option.value}
         >
-          {item === "final" ? "Final" : "Process"}
+          {option.label}
         </button>
       ))}
     </div>
   );
 }
 
-function ContentControls({
-  content,
-  setContent,
-  available,
-}: {
-  content: ContentType | null;
-  setContent: (content: ContentType | null) => void;
-  available: Record<ContentType, boolean>;
-}) {
-  return (
-    <div className="archive-content-controls" aria-label="Content filters">
-      {contentTypes.map((item) => (
-        <button
-          type="button"
-          aria-pressed={content === item}
-          className={content === item ? "is-active" : undefined}
-          disabled={!available[item]}
-          title={!available[item] ? `No ${contentLabels[item]} slides in this collection` : undefined}
-          onClick={() => setContent(content === item ? null : item)}
-          key={item}
-        >
-          {contentLabels[item]}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function MatchList({
+function SlideList({
   project,
   slides,
   state,
@@ -177,12 +157,12 @@ function MatchList({
   if (slides.length < 2) return null;
 
   return (
-    <details className="archive-match-list">
-      <summary>All {slides.length} matches</summary>
+    <details className="archive-slide-list">
+      <summary>Browse slides</summary>
       <ol>
         {slides.map((slide) => (
           <li key={slide.id}>
-            <a href={matchHref(project, slide, state)}>
+            <a href={slideHref(project, slide, state)}>
               <span>{String(slide.order).padStart(2, "0")}</span>
               {slide.shortLabel}
             </a>
@@ -196,20 +176,19 @@ function MatchList({
 function GridProject({
   project,
   state,
-  matches,
+  slides,
   emphasized,
 }: {
   project: ArchiveProject;
   state: ArchiveState;
-  matches: readonly ArchiveSlide[];
+  slides: readonly ArchiveSlide[];
   emphasized: boolean;
 }) {
-  const hasContentFilter = Boolean(state.phase || state.content);
-  const firstMatch = matches[0];
+  const firstSlide = slides[0];
 
   return (
     <article
-      className={`archive-project archive-project-${project.priority}${emphasized ? " is-emphasized" : " is-receded"}`}
+      className={`archive-project${emphasized ? " is-emphasized" : " is-receded"}`}
       data-project={project.slug}
     >
       <a className="archive-project-main" href={projectHref(project)} aria-label={`Open ${project.title} full project`}>
@@ -220,74 +199,26 @@ function GridProject({
               <source src={project.hoverVideo} type="video/mp4" />
             </video>
           ) : null}
-          {emphasized && hasContentFilter ? <span className="archive-match-marker">Match</span> : null}
         </div>
         <div className="archive-project-heading">
-          <div>
-            <h2>{project.title}</h2>
-            <p>{project.description}</p>
-          </div>
+          <h2>{project.title}</h2>
           <span>{project.domain} · {project.year}</span>
         </div>
       </a>
 
-      {emphasized && hasContentFilter && firstMatch ? (
-        <div className="archive-project-matches">
-          <a className="archive-first-match" href={matchHref(project, firstMatch, state)}>
-            <span>{filterSummary(state)} · {matches.length}</span>
-            <strong>Open {firstMatch.shortLabel} →</strong>
-          </a>
-          <MatchList project={project} slides={matches} state={state} />
+      {state.filter && emphasized && firstSlide ? (
+        <div className="archive-filter-result">
+          <span>{filterLabel(state.filter)} · {slides.length} {slides.length === 1 ? "slide" : "slides"}</span>
+          <a href={slideHref(project, firstSlide, state)}>{slides.length === 1 ? "Open slide" : "Open first"}</a>
+          <SlideList project={project} slides={slides} state={state} />
         </div>
-      ) : (
-        <a className="archive-full-project-label" href={projectHref(project)}>Full project ↗</a>
-      )}
-    </article>
-  );
-}
-
-function IndexProject({
-  project,
-  index,
-  state,
-  matches,
-  emphasized,
-}: {
-  project: ArchiveProject;
-  index: number;
-  state: ArchiveState;
-  matches: readonly ArchiveSlide[];
-  emphasized: boolean;
-}) {
-  const hasContentFilter = Boolean(state.phase || state.content);
-  const firstMatch = matches[0];
-
-  return (
-    <article className={`archive-index-row archive-index-${project.priority}${emphasized ? " is-emphasized" : " is-receded"}`}>
-      <span className="archive-index-number">{String(index + 1).padStart(2, "0")}</span>
-      <a className="archive-index-title" href={projectHref(project)}>
-        <strong>{project.title}</strong>
-        <span>{project.description}</span>
-      </a>
-      <span className="archive-index-domain">{project.domain}</span>
-      <span className="archive-index-year">{project.year}</span>
-      <div className="archive-index-match">
-        {emphasized && hasContentFilter && firstMatch ? (
-          <>
-            <a href={matchHref(project, firstMatch, state)}>{filterSummary(state)} · {matches.length} →</a>
-            <MatchList project={project} slides={matches} state={state} />
-          </>
-        ) : (
-          <span>{project.collections.filter((item) => item !== "all").map((item) => collectionLabels[item]).join(" · ")}</span>
-        )}
-      </div>
+      ) : null}
     </article>
   );
 }
 
 export default function AdaptiveArchive({ projects }: { projects: readonly ArchiveProject[] }) {
   const [state, setState] = useState<ArchiveState>(defaultState);
-  const [filterOpen, setFilterOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const mobileMenuButton = useRef<HTMLButtonElement>(null);
   const mobilePanel = useRef<HTMLDivElement>(null);
@@ -322,62 +253,53 @@ export default function AdaptiveArchive({ projects }: { projects: readonly Archi
   }, [menuOpen]);
 
   const collectionProjects = useMemo(
-    () => projects.filter((project) => collectionMatches(project, state.collection)),
+    () => projects.filter((project) => collectionIncludes(project, state.collection)),
     [projects, state.collection],
   );
 
-  const availableContent = useMemo(() => Object.fromEntries(
-    contentTypes.map((content) => [
-      content,
-      collectionProjects.some((project) => project.slides.some((slide) => slide.contentTypes.includes(content))),
+  const availableFilters = useMemo(() => Object.fromEntries(
+    filterOptions.map(({ value }) => [
+      value,
+      collectionProjects.some((project) => project.slides.some((slide) => slideHasFilter(slide, value))),
     ]),
-  ) as Record<ContentType, boolean>, [collectionProjects]);
-
-  const availablePhases = useMemo(() => ({
-    final: collectionProjects.some((project) => project.slides.some((slide) => slide.phase === "final")),
-    process: collectionProjects.some((project) => project.slides.some((slide) => slide.phase === "process")),
-  }), [collectionProjects]);
+  ) as Record<Exclude<ArchiveFilter, null>, boolean>, [collectionProjects]);
 
   const projectStates = useMemo(() => projects.map((project) => {
-    const matches = slidesMatching(project, state);
-    const emphasized = collectionMatches(project, state.collection)
-      && (!(state.phase || state.content) || matches.length > 0);
-    return { project, matches, emphasized };
+    const slides = slidesForFilter(project, state.filter);
+    const emphasized = collectionIncludes(project, state.collection) && (!state.filter || slides.length > 0);
+    return { project, slides, emphasized };
   }), [projects, state]);
 
-  const matchCount = projectStates.filter((item) => item.emphasized).length;
-  const announcement = `${filterSummary(state)} applied to ${collectionLabels[state.collection]}. ${matchCount} ${matchCount === 1 ? "project contains" : "projects contain"} matching content.`;
+  const emphasizedCount = projectStates.filter((item) => item.emphasized).length;
+  const announcement = state.filter
+    ? `${filterLabel(state.filter)} in ${collectionLabels[state.collection]}. ${emphasizedCount} projects contain this content.`
+    : `${collectionLabels[state.collection]} collection. ${emphasizedCount} projects.`;
 
   function changeCollection(collection: Collection) {
-    const eligible = projects.filter((project) => collectionMatches(project, collection));
-    const phase = state.phase && eligible.some((project) => project.slides.some((slide) => slide.phase === state.phase))
-      ? state.phase
+    const eligible = projects.filter((project) => collectionIncludes(project, collection));
+    const filter = state.filter && eligible.some((project) => project.slides.some((slide) => slideHasFilter(slide, state.filter)))
+      ? state.filter
       : null;
-    const content = state.content && eligible.some((project) => project.slides.some((slide) => slide.contentTypes.includes(state.content!)))
-      ? state.content
-      : null;
-    applyState({ ...state, collection, phase, content });
+    applyState({ collection, filter });
   }
 
-  function clearFilters() {
-    applyState({ ...state, phase: null, content: null });
+  function changeFilter(filter: ArchiveFilter) {
+    applyState({ ...state, filter });
   }
 
-  function surpriseMe() {
+  function shuffle() {
     const eligible = projectStates.filter((item) => item.emphasized);
     if (!eligible.length) return;
     const selection = eligible[Math.floor(Math.random() * eligible.length)];
-    const destination = (state.phase || state.content) && selection.matches[0]
-      ? matchHref(selection.project, selection.matches[0], state)
+    const destination = state.filter && selection.slides[0]
+      ? slideHref(selection.project, selection.slides[0], state)
       : projectHref(selection.project);
     window.location.assign(destination);
   }
 
-  const controls = {
-    phase: state.phase,
-    setPhase: (phase: PhaseFilter) => applyState({ ...state, phase }),
-    available: availablePhases,
-  };
+  const filterControls = (
+    <FilterControls filter={state.filter} available={availableFilters} onChange={changeFilter} />
+  );
 
   return (
     <main className="adaptive-archive-page">
@@ -385,10 +307,18 @@ export default function AdaptiveArchive({ projects }: { projects: readonly Archi
 
       <header className="adaptive-archive-header">
         <div className="archive-nav-row archive-nav-primary">
-          <a className="archive-wordmark" href="./">Alex Infield</a>
+          <button
+            className={`archive-wordmark${state.collection === "all" ? " is-active" : ""}`}
+            type="button"
+            aria-pressed={state.collection === "all"}
+            aria-label="Alex Infield — show all projects"
+            onClick={() => changeCollection("all")}
+          >
+            Alex Infield
+          </button>
 
           <nav className="archive-collection-nav" aria-label="Portfolio collections">
-            {collections.map((collection) => (
+            {visibleCollections.map((collection) => (
               <button
                 type="button"
                 aria-pressed={state.collection === collection}
@@ -403,7 +333,6 @@ export default function AdaptiveArchive({ projects }: { projects: readonly Archi
 
           <nav className="archive-destination-nav" aria-label="About and contact">
             <a href="./info">About</a>
-            <a href="./professional-work">Experience</a>
             <a href="mailto:alex@infield.net">Contact</a>
             <ThemeToggle />
           </nav>
@@ -419,49 +348,15 @@ export default function AdaptiveArchive({ projects }: { projects: readonly Archi
           </button>
         </div>
 
-        <div className="archive-nav-row archive-nav-filters">
-          <PhaseControls {...controls} />
-          <button
-            className={`archive-filter-toggle${filterOpen ? " is-active" : ""}`}
-            type="button"
-            aria-expanded={filterOpen}
-            aria-controls="archive-extra-filters"
-            onClick={() => setFilterOpen((open) => !open)}
-          >
-            Filter +
-          </button>
-          <span className="archive-active-summary">{filterSummary(state)}</span>
-          {(state.phase || state.content) ? <button className="archive-clear" type="button" onClick={clearFilters}>Clear</button> : null}
-        </div>
-
-        <div className="archive-extra-filter-row" id="archive-extra-filters" hidden={!filterOpen}>
-          <ContentControls content={state.content} setContent={(content) => applyState({ ...state, content })} available={availableContent} />
-        </div>
-
-        <div className="archive-nav-row archive-nav-utility">
-          <span>{projects.length} projects · {matchCount} {state.phase || state.content ? "matches" : "in collection"}</span>
-          <div className="archive-view-controls" aria-label="Portfolio view">
-            {(["grid", "index"] as const).map((view) => (
-              <button
-                type="button"
-                aria-pressed={state.view === view}
-                className={state.view === view ? "is-active" : undefined}
-                onClick={() => applyState({ ...state, view })}
-                key={view}
-              >
-                {view === "grid" ? "Grid" : "Index"}
-              </button>
-            ))}
-            <button type="button" className="archive-surprise" onClick={surpriseMe} disabled={!matchCount}>
-              <DiceFive size={15} aria-hidden="true" /> Surprise Me
+        <div className="archive-nav-row archive-nav-secondary">
+          {filterControls}
+          <div className="archive-utility-controls">
+            <span>{emphasizedCount} / {projects.length} projects</span>
+            {state.filter ? <button type="button" onClick={() => changeFilter(null)}>Clear</button> : null}
+            <button type="button" onClick={shuffle} disabled={!emphasizedCount}>
+              <DiceFive size={15} aria-hidden="true" /> Shuffle
             </button>
           </div>
-        </div>
-
-        <div className="archive-mobile-state" aria-hidden="true">
-          <span>{collectionLabels[state.collection]}</span>
-          <span>{filterSummary(state)}</span>
-          <span>{state.view === "grid" ? "Grid" : "Index"}</span>
         </div>
       </header>
 
@@ -474,7 +369,7 @@ export default function AdaptiveArchive({ projects }: { projects: readonly Archi
         }}>
           <div className="archive-mobile-panel" role="dialog" aria-modal="true" aria-label="Portfolio controls" ref={mobilePanel}>
             <div className="archive-mobile-panel-heading">
-              <span>Explore the archive</span>
+              <span>Portfolio</span>
               <button type="button" aria-label="Close menu" onClick={() => {
                 setMenuOpen(false);
                 mobileMenuButton.current?.focus();
@@ -486,7 +381,15 @@ export default function AdaptiveArchive({ projects }: { projects: readonly Archi
             <section>
               <h2>Collection</h2>
               <div className="archive-mobile-options">
-                {collections.map((collection) => (
+                <button
+                  type="button"
+                  aria-pressed={state.collection === "all"}
+                  className={state.collection === "all" ? "is-active" : undefined}
+                  onClick={() => changeCollection("all")}
+                >
+                  All
+                </button>
+                {visibleCollections.map((collection) => (
                   <button
                     type="button"
                     aria-pressed={state.collection === collection}
@@ -501,34 +404,15 @@ export default function AdaptiveArchive({ projects }: { projects: readonly Archi
             </section>
 
             <section>
-              <h2>Content</h2>
-              <PhaseControls {...controls} />
-              <ContentControls content={state.content} setContent={(content) => applyState({ ...state, content })} available={availableContent} />
-              {(state.phase || state.content) ? <button className="archive-mobile-clear" type="button" onClick={clearFilters}>Clear content filters</button> : null}
-            </section>
-
-            <section>
-              <h2>View</h2>
-              <div className="archive-mobile-options">
-                {(["grid", "index"] as const).map((view) => (
-                  <button
-                    type="button"
-                    aria-pressed={state.view === view}
-                    className={state.view === view ? "is-active" : undefined}
-                    onClick={() => applyState({ ...state, view })}
-                    key={view}
-                  >
-                    {view === "grid" ? "Grid" : "Index"}
-                  </button>
-                ))}
-                <button type="button" onClick={surpriseMe} disabled={!matchCount}>Surprise Me</button>
-              </div>
+              <h2>Filter</h2>
+              {filterControls}
+              {state.filter ? <button className="archive-mobile-clear" type="button" onClick={() => changeFilter(null)}>Clear filter</button> : null}
             </section>
 
             <nav className="archive-mobile-destinations" aria-label="About and contact">
               <a href="./info">About</a>
-              <a href="./professional-work">Experience</a>
               <a href="mailto:alex@infield.net">Contact</a>
+              <ThemeToggle />
             </nav>
           </div>
         </div>
@@ -536,24 +420,16 @@ export default function AdaptiveArchive({ projects }: { projects: readonly Archi
 
       <p className="sr-only" aria-live="polite">{announcement}</p>
 
-      <section className="archive-introduction" aria-labelledby="archive-title">
-        <p className="archive-kicker">Adaptive archive · Industrial design</p>
-        <h1 id="archive-title">Industrial designer working across products, interfaces, and the systems between them.</h1>
-        <p>Choose a collection, then follow Final, Process, or a specific kind of work into the existing project presentations.</p>
-      </section>
-
-      {matchCount === 0 ? (
+      {emphasizedCount === 0 ? (
         <aside className="archive-empty-state">
-          <p>No projects match {filterSummary(state)} in {collectionLabels[state.collection]}.</p>
-          {state.collection === "professional" ? <a href="./professional-work">View professional experience and request private work →</a> : <button type="button" onClick={clearFilters}>Clear content filters</button>}
+          <p>No projects contain {filterLabel(state.filter)} in {collectionLabels[state.collection]}.</p>
+          <button type="button" onClick={() => applyState(defaultState)}>Show all projects</button>
         </aside>
       ) : null}
 
-      <section className={`archive-feed archive-feed-${state.view}`} id="archive-feed" aria-label={`${collectionLabels[state.collection]} portfolio, ${state.view} view`}>
-        {state.view === "grid" ? projectStates.map(({ project, matches, emphasized }) => (
-          <GridProject project={project} state={state} matches={matches} emphasized={emphasized} key={`${project.kind}-${project.slug}`} />
-        )) : projectStates.map(({ project, matches, emphasized }, index) => (
-          <IndexProject project={project} index={index} state={state} matches={matches} emphasized={emphasized} key={`${project.kind}-${project.slug}`} />
+      <section className="archive-feed archive-feed-grid" id="archive-feed" aria-label={`${collectionLabels[state.collection]} portfolio`}>
+        {projectStates.map(({ project, slides, emphasized }) => (
+          <GridProject project={project} state={state} slides={slides} emphasized={emphasized} key={`${project.kind}-${project.slug}`} />
         ))}
       </section>
     </main>

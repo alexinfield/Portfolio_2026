@@ -22,7 +22,6 @@ type SiteHeaderProps =
 const navItems: { label: string; href: string; section?: Section }[] = [
   { label: "Work", href: "/", section: "work" },
   { label: "Play", href: "/?collection=play", section: "play" },
-  { label: "Experience", href: "/professional-work", section: "professional" },
   { label: "About", href: "/info", section: "info" },
   { label: "Contact", href: "mailto:alex@infield.net" },
 ];
