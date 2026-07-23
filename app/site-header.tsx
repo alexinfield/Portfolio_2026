@@ -19,18 +19,23 @@ type SiteHeaderProps =
       nextLabel?: string;
     };
 
-const navItems: { label: string; href: string; section: Section }[] = [
+const navItems: { label: string; href: string; section?: Section }[] = [
   { label: "Work", href: "/", section: "work" },
-  { label: "Play", href: "/play", section: "play" },
-  { label: "Professional", href: "/professional-work", section: "professional" },
-  { label: "Info", href: "/info", section: "info" },
+  { label: "Play", href: "/?collection=play", section: "play" },
+  { label: "Experience", href: "/professional-work", section: "professional" },
+  { label: "About", href: "/info", section: "info" },
+  { label: "Contact", href: "mailto:alex@infield.net" },
 ];
 
 export default function SiteHeader(props: SiteHeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const active = props.active;
   const root = props.variant === "home" ? "./" : props.variant === "detail" ? "../../" : "../";
-  const routeHref = (href: string) => href === "/" ? root : `${root}${href.replace(/^\//, "")}/`;
+  const routeHref = (href: string) => {
+    if (href.startsWith("mailto:")) return href;
+    if (href.startsWith("/?")) return `${root}${href.slice(1)}`;
+    return href === "/" ? root : `${root}${href.replace(/^\//, "")}/`;
+  };
 
   useEffect(() => {
     function closeOnEscape(event: KeyboardEvent) {
@@ -51,10 +56,10 @@ export default function SiteHeader(props: SiteHeaderProps) {
         <nav className="portfolio-nav portfolio-nav-desktop" aria-label="Portfolio sections">
           {navItems.map((item) => (
             <a
-              className={active === item.section ? "is-active" : undefined}
+              className={item.section && active === item.section ? "is-active" : undefined}
               href={routeHref(item.href)}
-              aria-current={active === item.section ? "page" : undefined}
-              key={item.section}
+              aria-current={item.section && active === item.section ? "page" : undefined}
+              key={item.label}
             >
               {item.label}
             </a>
@@ -84,10 +89,10 @@ export default function SiteHeader(props: SiteHeaderProps) {
       >
         {navItems.map((item) => (
           <a
-            className={active === item.section ? "is-active" : undefined}
+            className={item.section && active === item.section ? "is-active" : undefined}
             href={routeHref(item.href)}
-            aria-current={active === item.section ? "page" : undefined}
-            key={item.section}
+            aria-current={item.section && active === item.section ? "page" : undefined}
+            key={item.label}
           >
             {item.label}
           </a>

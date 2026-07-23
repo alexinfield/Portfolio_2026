@@ -27,7 +27,7 @@ async function render(pathname = "/") {
   );
 }
 
-test("server-renders the approved two-column Alex Infield work feed", async () => {
+test("server-renders the adaptive archive with preserved project content", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
@@ -35,15 +35,30 @@ test("server-renders the approved two-column Alex Infield work feed", async () =
   const html = await response.text();
   assert.match(html, /<title>Alex Infield/i);
   assert.match(html, />Alex Infield</);
-  assert.match(html, /portfolio-index-page/);
-  assert.match(html, /portfolio-grid/);
+  assert.match(html, /adaptive-archive-page/);
+  assert.match(html, /archive-feed-grid/);
+  assert.match(html, /aria-label="Portfolio collections"/);
+  assert.match(html, />Selected</);
+  assert.match(html, />Professional</);
+  assert.match(html, />Independent</);
+  assert.match(html, />Archive</);
+  assert.match(html, />Final</);
+  assert.match(html, />Process</);
+  assert.match(html, />Filter \+</);
+  assert.match(html, />Grid</);
+  assert.match(html, />Index</);
+  assert.match(html, /Surprise Me/);
   assert.match(html, /data-hover-video/);
   assert.match(html, /Industrial designer working across products, interfaces/);
-  assert.match(html, />Work</);
   assert.match(html, />Play</);
-  assert.match(html, />Professional</);
+  assert.match(html, />About</);
+  assert.match(html, />Experience</);
+  assert.match(html, />Contact</);
+  assert.match(html, />Off Campus</);
+  assert.match(html, /is-receded/);
   assert.doesNotMatch(html, />Alex OS</);
   assert.doesNotMatch(html, /I want to see/i);
+  assert.doesNotMatch(html, />Overview<\/button>/i);
 });
 
 test("all-projects page uses verified order, original covers, and hover motion", async () => {
@@ -118,11 +133,16 @@ test("project and info pages keep predictable navigation and responsive portfoli
   assert.match(project, />Next: Mode</);
   assert.match(project, /project-gallery/);
   assert.match(project, /project-workspace/);
+  assert.match(project, /project-section-navigator/);
+  assert.match(project, /data-archive-slide/);
+  assert.match(project, /id="project-start"/);
+  assert.match(project, /id="overview"/);
   assert.match(project, /class="portfolio-nav portfolio-nav-desktop"/);
   assert.match(project, />Work</);
   assert.match(project, />Play</);
-  assert.match(project, />Professional</);
-  assert.match(project, />Info</);
+  assert.match(project, />Experience</);
+  assert.match(project, />About</);
+  assert.match(project, />Contact</);
   assert.doesNotMatch(project, />Alex OS</);
   assert.doesNotMatch(project, /project-drawer/);
   assert.doesNotMatch(project, /project-rail/);
@@ -168,7 +188,7 @@ test("keeps complete source assets and exports one GitHub Pages presentation", a
     readFile(new URL("../.github/workflows/deploy-pages.yml", import.meta.url), "utf8"),
   ]);
 
-  assert.match(home, /href="\.\/play\/"/);
+  assert.match(home, /href="\.\/play\/off-campus"/);
   assert.match(all, /src="\.\.\/portfolio-runtime\.js"/);
   assert.match(play, /href="\.\.\/play\/off-campus"/);
   assert.match(info, /href="\.\.\/"/);
