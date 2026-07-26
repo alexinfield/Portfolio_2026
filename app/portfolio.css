@@ -1457,7 +1457,7 @@ html[data-theme="light"] .theme-toggle-knob { transform: translateX(-24px); }
   position: relative;
   min-height: 100svh;
   overflow: hidden;
-  padding: 0 0 72px;
+  padding: 0;
   isolation: isolate;
   background: var(--portfolio-bg);
   color: var(--portfolio-text);
@@ -1617,8 +1617,9 @@ html[data-theme="light"] .theme-toggle-knob { transform: translateX(-24px); }
 
 .archive-nav-secondary {
   position: absolute;
+  top: 68px;
   right: auto;
-  bottom: 14px;
+  bottom: auto;
   left: 50%;
   display: grid;
   width: min(calc(100vw - 28px), 1160px);
@@ -1672,33 +1673,6 @@ html[data-theme="light"] .theme-toggle-knob { transform: translateX(-24px); }
 
 .archive-mobile-menu-button {
   pointer-events: auto;
-}
-
-.archive-brand-overlay {
-  position: absolute;
-  z-index: 2;
-  top: 0;
-  left: 0;
-  display: flex;
-  width: 100%;
-  height: min(100svh, 62vw);
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 2.2vw 3vw;
-  color: #fff;
-  font-size: clamp(92px, 14.2vw, 270px);
-  font-weight: 400;
-  letter-spacing: -0.08em;
-  line-height: 0.74;
-  mix-blend-mode: difference;
-  pointer-events: none;
-  white-space: nowrap;
-}
-
-.archive-brand-overlay span:last-child {
-  font-family: Georgia, "Times New Roman", serif;
-  font-style: italic;
-  letter-spacing: -0.1em;
 }
 
 .archive-feed {
@@ -1927,7 +1901,8 @@ html[data-theme="light"] .theme-toggle-knob { transform: translateX(-24px); }
 .archive-empty-state {
   position: fixed;
   z-index: 280;
-  bottom: 76px;
+  top: 124px;
+  bottom: auto;
   left: 50%;
   display: flex;
   width: min(calc(100vw - 28px), 720px);
@@ -2267,11 +2242,6 @@ html[data-theme="light"] .theme-toggle-knob { transform: translateX(-24px); }
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .archive-brand-overlay {
-    height: min(100svh, 92vw);
-    font-size: 18vw;
-  }
-
   .archive-destination-nav a {
     padding-inline: 9px;
   }
@@ -2291,11 +2261,12 @@ html[data-theme="light"] .theme-toggle-knob { transform: translateX(-24px); }
 
 @media (max-width: 760px) {
   .adaptive-archive-page {
-    padding-bottom: 64px;
+    padding-bottom: 0;
   }
 
   .archive-nav-primary {
     top: 8px;
+    bottom: auto;
     right: 8px;
     left: 8px;
     grid-template-columns: auto minmax(0, 1fr) auto;
@@ -2311,6 +2282,7 @@ html[data-theme="light"] .theme-toggle-knob { transform: translateX(-24px); }
   .archive-collection-nav {
     position: fixed;
     top: 56px;
+    bottom: auto;
     right: 8px;
     left: 8px;
     display: flex;
@@ -2349,7 +2321,8 @@ html[data-theme="light"] .theme-toggle-knob { transform: translateX(-24px); }
   }
 
   .archive-nav-secondary {
-    bottom: 8px;
+    top: 104px;
+    bottom: auto;
     width: calc(100vw - 16px);
     min-height: 46px;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -2375,20 +2348,6 @@ html[data-theme="light"] .theme-toggle-knob { transform: translateX(-24px); }
   .archive-utility-controls button svg {
     width: 17px;
     height: 17px;
-  }
-
-  .archive-brand-overlay {
-    height: 100svh;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 72px 3.5vw 92px;
-    font-size: 29vw;
-    line-height: 0.72;
-  }
-
-  .archive-brand-overlay span:last-child {
-    align-self: flex-end;
   }
 
   .archive-feed-grid {
@@ -2423,7 +2382,8 @@ html[data-theme="light"] .theme-toggle-knob { transform: translateX(-24px); }
   }
 
   .archive-empty-state {
-    bottom: 64px;
+    top: 158px;
+    bottom: auto;
     align-items: flex-start;
     flex-direction: column;
     border-radius: 22px;
@@ -2673,6 +2633,32 @@ html[data-theme="light"] .theme-toggle-knob { transform: translateX(-24px); }
 
   .portfolio-info-copy h1 {
     font-size: clamp(48px, 15vw, 74px);
+  }
+}
+
+@media (max-width: 760px) and (orientation: portrait) {
+  .adaptive-archive-page {
+    padding-bottom: calc(158px + env(safe-area-inset-bottom));
+  }
+
+  .archive-nav-primary {
+    top: auto;
+    bottom: calc(8px + env(safe-area-inset-bottom));
+  }
+
+  .archive-collection-nav {
+    top: auto;
+    bottom: calc(56px + env(safe-area-inset-bottom));
+  }
+
+  .archive-nav-secondary {
+    top: auto;
+    bottom: calc(106px + env(safe-area-inset-bottom));
+  }
+
+  .archive-empty-state {
+    top: auto;
+    bottom: calc(164px + env(safe-area-inset-bottom));
   }
 }
 

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { access, readFile, readdir } from "node:fs/promises";
 import test from "node:test";
+import { orderArchiveProjects } from "../lib/archive-order.mjs";
 
 function assetKey(asset) {
   const sourceName = decodeURIComponent(asset.name).split("/").pop();
@@ -37,7 +38,7 @@ test("server-renders the adaptive archive with preserved project content", async
   assert.match(html, />Alex Infield</);
   assert.match(html, /adaptive-archive-page/);
   assert.match(html, /archive-feed-grid/);
-  assert.match(html, /archive-brand-overlay/);
+  assert.doesNotMatch(html, /archive-brand-overlay/);
   assert.match(html, /archive-project-number/);
   assert.match(html, /class="archive-project project-card is-emphasized"/);
   assert.match(html, /aria-label="Portfolio collections"/);
@@ -71,6 +72,26 @@ test("server-renders the adaptive archive with preserved project content", async
   assert.doesNotMatch(html, />Alex OS</);
   assert.doesNotMatch(html, /I want to see/i);
   assert.doesNotMatch(html, />Overview<\/button>/i);
+});
+
+test("archive ordering reflows by collection and filter relevance without mutating source order", () => {
+  const canonical = [
+    { slug: "alpha", emphasized: false, collectionMatch: false, filterMatch: true, slides: [{}], canonicalIndex: 0 },
+    { slug: "beta", emphasized: true, collectionMatch: true, filterMatch: true, slides: [{}], canonicalIndex: 1 },
+    { slug: "gamma", emphasized: true, collectionMatch: true, filterMatch: true, slides: [{}, {}, {}], canonicalIndex: 2 },
+    { slug: "delta", emphasized: false, collectionMatch: true, filterMatch: false, slides: [], canonicalIndex: 3 },
+  ];
+  const canonicalSnapshot = canonical.map(({ slug }) => slug);
+  const filtered = orderArchiveProjects(canonical, true);
+  const defaultOrder = orderArchiveProjects(
+    canonical.map((item) => ({ ...item, emphasized: true, collectionMatch: true, filterMatch: true })),
+    false,
+  );
+
+  assert.deepEqual(filtered.map(({ slug }) => slug), ["gamma", "beta", "delta", "alpha"]);
+  assert.deepEqual(defaultOrder.map(({ slug }) => slug), canonicalSnapshot);
+  assert.deepEqual(canonical.map(({ slug }) => slug), canonicalSnapshot);
+  assert.notEqual(filtered, canonical);
 });
 
 test("all-projects page uses verified order, original covers, and hover motion", async () => {
@@ -177,6 +198,9 @@ test("uses a dense three-column archive and flush project presentations", async 
   assert.match(css, /\.project-slide,\s*\.figma-project-section,\s*\.next-project\s*\{[^}]*border-radius:\s*0;/s);
   assert.match(css, /\.archive-project\.is-receded:hover,[^}]*opacity:\s*0\.14;/s);
   assert.match(css, /\.archive-project-media\s*\{[^}]*border-radius:\s*0;/s);
+  assert.match(css, /\.archive-nav-secondary\s*\{[^}]*top:\s*68px;[^}]*bottom:\s*auto;/s);
+  assert.match(css, /@media \(max-width: 760px\) and \(orientation: portrait\)/);
+  assert.doesNotMatch(css, /\.archive-brand-overlay/);
   assert.doesNotMatch(css, /--portfolio-accent:\s*#(?:ff5a36|f04d25)/i);
 });
 

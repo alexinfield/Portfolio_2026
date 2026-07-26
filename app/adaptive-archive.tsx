@@ -11,12 +11,17 @@ import {
   type Collection,
   type ContentType,
 } from "@/lib/archive";
+import { orderArchiveProjects } from "@/lib/archive-order.mjs";
 
 type ArchiveFilter = "final" | "process" | ContentType | null;
 
 type ArchiveState = {
   collection: Collection;
   filter: ArchiveFilter;
+};
+
+type ViewTransitionDocument = Document & {
+  startViewTransition?: (update: () => void | Promise<void>) => unknown;
 };
 
 const defaultState: ArchiveState = {
@@ -192,6 +197,7 @@ function GridProject({
     <article
       className={`archive-project project-card${emphasized ? " is-emphasized" : " is-receded"}`}
       data-project={project.slug}
+      style={{ viewTransitionName: `archive-card-${project.slug}` }}
     >
       <a className="archive-project-main" href={projectHref(project)} aria-label={`Open ${project.title} full project`}>
         <div className="archive-project-media project-card-media">
@@ -229,9 +235,23 @@ export default function AdaptiveArchive({ projects }: { projects: readonly Archi
   const mobilePanel = useRef<HTMLDivElement>(null);
 
   const applyState = useCallback((next: ArchiveState, history: "push" | "replace" = "push") => {
-    setState(next);
-    const method = history === "replace" ? "replaceState" : "pushState";
-    window.history[method]({ archive: next }, "", stateUrl(next));
+    const commit = () => {
+      setState(next);
+      const method = history === "replace" ? "replaceState" : "pushState";
+      window.history[method]({ archive: next }, "", stateUrl(next));
+    };
+    const transitionDocument = document as ViewTransitionDocument;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (transitionDocument.startViewTransition && !reduceMotion) {
+      transitionDocument.startViewTransition(() => new Promise<void>((resolve) => {
+        commit();
+        window.requestAnimationFrame(() => resolve());
+      }));
+      return;
+    }
+
+    commit();
   }, []);
 
   useEffect(() => {
@@ -269,11 +289,23 @@ export default function AdaptiveArchive({ projects }: { projects: readonly Archi
     ]),
   ) as Record<Exclude<ArchiveFilter, null>, boolean>, [collectionProjects]);
 
-  const projectStates = useMemo(() => projects.map((project) => {
-    const slides = slidesForFilter(project, state.filter);
-    const emphasized = collectionIncludes(project, state.collection) && (!state.filter || slides.length > 0);
-    return { project, slides, emphasized };
-  }), [projects, state]);
+  const projectStates = useMemo(() => orderArchiveProjects(
+    projects.map((project, canonicalIndex) => {
+      const slides = slidesForFilter(project, state.filter);
+      const collectionMatch = collectionIncludes(project, state.collection);
+      const filterMatch = !state.filter || slides.length > 0;
+      const emphasized = collectionMatch && filterMatch;
+      return {
+        project,
+        slides,
+        emphasized,
+        collectionMatch,
+        filterMatch,
+        canonicalIndex,
+      };
+    }),
+    Boolean(state.filter),
+  ), [projects, state]);
 
   const emphasizedCount = projectStates.filter((item) => item.emphasized).length;
   const announcement = state.filter
@@ -365,11 +397,6 @@ export default function AdaptiveArchive({ projects }: { projects: readonly Archi
           </div>
         </div>
       </header>
-
-      <div className="archive-brand-overlay" aria-hidden="true">
-        <span>Alex</span>
-        <span>Infield</span>
-      </div>
 
       {menuOpen ? (
         <div className="archive-mobile-overlay" role="presentation" onMouseDown={(event) => {
