@@ -1,6 +1,6 @@
 "use client";
 
-import { CaretDown, DiceFive, X } from "@phosphor-icons/react";
+import { DiceFive, Plus, X } from "@phosphor-icons/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ThemeToggle from "./theme-toggle";
 import {
@@ -178,17 +178,19 @@ function GridProject({
   state,
   slides,
   emphasized,
+  index,
 }: {
   project: ArchiveProject;
   state: ArchiveState;
   slides: readonly ArchiveSlide[];
   emphasized: boolean;
+  index: number;
 }) {
   const firstSlide = slides[0];
 
   return (
     <article
-      className={`archive-project${emphasized ? " is-emphasized" : " is-receded"}`}
+      className={`archive-project project-card${emphasized ? " is-emphasized" : " is-receded"}`}
       data-project={project.slug}
     >
       <a className="archive-project-main" href={projectHref(project)} aria-label={`Open ${project.title} full project`}>
@@ -201,8 +203,11 @@ function GridProject({
           ) : null}
         </div>
         <div className="archive-project-heading">
-          <h2>{project.title}</h2>
-          <span>{project.domain} · {project.year}</span>
+          <span className="archive-project-number">{String(index + 1).padStart(2, "0")}</span>
+          <div className="archive-project-title">
+            <h2>{project.title}</h2>
+            <span>{project.domain} · {project.year}</span>
+          </div>
         </div>
       </a>
 
@@ -344,7 +349,8 @@ export default function AdaptiveArchive({ projects }: { projects: readonly Archi
             onClick={() => setMenuOpen(true)}
             ref={mobileMenuButton}
           >
-            Menu <CaretDown size={14} aria-hidden="true" />
+            <span>Menu</span>
+            <Plus size={17} aria-hidden="true" />
           </button>
         </div>
 
@@ -359,6 +365,11 @@ export default function AdaptiveArchive({ projects }: { projects: readonly Archi
           </div>
         </div>
       </header>
+
+      <div className="archive-brand-overlay" aria-hidden="true">
+        <span>Alex</span>
+        <span>Infield</span>
+      </div>
 
       {menuOpen ? (
         <div className="archive-mobile-overlay" role="presentation" onMouseDown={(event) => {
@@ -428,8 +439,8 @@ export default function AdaptiveArchive({ projects }: { projects: readonly Archi
       ) : null}
 
       <section className="archive-feed archive-feed-grid" id="archive-feed" aria-label={`${collectionLabels[state.collection]} portfolio`}>
-        {projectStates.map(({ project, slides, emphasized }) => (
-          <GridProject project={project} state={state} slides={slides} emphasized={emphasized} key={`${project.kind}-${project.slug}`} />
+        {projectStates.map(({ project, slides, emphasized }, index) => (
+          <GridProject project={project} state={state} slides={slides} emphasized={emphasized} index={index} key={`${project.kind}-${project.slug}`} />
         ))}
       </section>
     </main>

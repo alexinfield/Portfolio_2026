@@ -37,6 +37,9 @@ test("server-renders the adaptive archive with preserved project content", async
   assert.match(html, />Alex Infield</);
   assert.match(html, /adaptive-archive-page/);
   assert.match(html, /archive-feed-grid/);
+  assert.match(html, /archive-brand-overlay/);
+  assert.match(html, /archive-project-number/);
+  assert.match(html, /class="archive-project project-card is-emphasized"/);
   assert.match(html, /aria-label="Portfolio collections"/);
   assert.match(html, /class="archive-wordmark is-active"/);
   assert.match(html, /aria-label="Alex Infield — show all projects"/);
@@ -172,7 +175,8 @@ test("uses a dense three-column archive and flush project presentations", async 
   assert.match(css, /\.project-page \.project-workspace\s*\{[^}]*padding:\s*0;/s);
   assert.match(css, /\.project-gallery\s*\{[^}]*display:\s*block;[^}]*gap:\s*0;[^}]*padding:\s*0;/s);
   assert.match(css, /\.project-slide,\s*\.figma-project-section,\s*\.next-project\s*\{[^}]*border-radius:\s*0;/s);
-  assert.match(css, /\.archive-project\.is-receded:hover,[^}]*opacity:\s*0\.22;/s);
+  assert.match(css, /\.archive-project\.is-receded:hover,[^}]*opacity:\s*0\.14;/s);
+  assert.match(css, /\.archive-project-media\s*\{[^}]*border-radius:\s*0;/s);
   assert.doesNotMatch(css, /--portfolio-accent:\s*#(?:ff5a36|f04d25)/i);
 });
 
