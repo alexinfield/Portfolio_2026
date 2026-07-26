@@ -39,7 +39,7 @@ test("server-renders the adaptive archive with preserved project content", async
   assert.match(html, /adaptive-archive-page/);
   assert.match(html, /archive-feed-grid/);
   assert.doesNotMatch(html, /archive-brand-overlay/);
-  assert.match(html, /archive-project-number/);
+  assert.doesNotMatch(html, /archive-project-number/);
   assert.match(html, /class="archive-project project-card is-emphasized"/);
   assert.match(html, /aria-label="Portfolio collections"/);
   assert.match(html, /class="archive-wordmark is-active"/);
@@ -191,13 +191,17 @@ test("project and info pages keep predictable navigation and responsive portfoli
 
 test("uses a dense three-column archive and flush project presentations", async () => {
   const css = await readFile(new URL("../app/portfolio.css", import.meta.url), "utf8");
+  const archiveCss = css.slice(css.indexOf("/* Image-led studio direction */"));
 
   assert.match(css, /\.archive-feed-grid\s*\{[^}]*grid-template-columns:\s*repeat\(3,/s);
   assert.match(css, /\.project-page \.project-workspace\s*\{[^}]*padding:\s*0;/s);
   assert.match(css, /\.project-gallery\s*\{[^}]*display:\s*block;[^}]*gap:\s*0;[^}]*padding:\s*0;/s);
   assert.match(css, /\.project-slide,\s*\.figma-project-section,\s*\.next-project\s*\{[^}]*border-radius:\s*0;/s);
-  assert.match(css, /\.archive-project\.is-receded:hover,[^}]*opacity:\s*0\.14;/s);
+  assert.match(css, /\.archive-project\.is-receded:hover,[^}]*opacity:\s*0\.22;/s);
   assert.match(css, /\.archive-project-media\s*\{[^}]*border-radius:\s*0;/s);
+  assert.match(archiveCss, /\.archive-project-media img,\s*\.archive-project-media video\s*\{[^}]*aspect-ratio:\s*16 \/ 9;/s);
+  assert.doesNotMatch(archiveCss, /aspect-ratio:\s*4 \/ 3;/);
+  assert.doesNotMatch(archiveCss, /\.archive-project-number/);
   assert.match(css, /\.archive-nav-secondary\s*\{[^}]*top:\s*68px;[^}]*bottom:\s*auto;/s);
   assert.match(css, /@media \(max-width: 760px\) and \(orientation: portrait\)/);
   assert.doesNotMatch(css, /\.archive-brand-overlay/);

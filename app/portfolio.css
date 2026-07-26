@@ -1678,54 +1678,52 @@ html[data-theme="light"] .theme-toggle-knob { transform: translateX(-24px); }
 .archive-feed {
   margin: 0;
   border: 0;
-  padding: 0;
+  padding: 10px 10px 0;
 }
 
 .archive-feed-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1px;
+  gap: 18px 10px;
   padding: 0;
-  background: var(--portfolio-line);
+  background: transparent;
 }
 
 .archive-project {
   position: relative;
   min-width: 0;
-  overflow: hidden;
-  align-self: stretch;
-  background: #080808;
+  overflow: visible;
+  align-self: start;
+  background: transparent;
   transition: opacity 180ms ease, filter 180ms ease;
 }
 
 .archive-project.is-receded,
 .archive-project.is-receded:hover,
 .archive-project.is-receded:focus-within {
-  opacity: 0.14;
+  opacity: 0.22;
   filter: grayscale(1);
   transform: none;
 }
 
 .archive-project-main {
   display: block;
-  height: 100%;
 }
 
 .archive-project-media {
   position: relative;
-  height: 100%;
   overflow: hidden;
   border: 0;
   border-radius: 0;
-  background: #080808;
+  background: #000;
 }
 
 .archive-project-media img,
 .archive-project-media video {
   display: block;
   width: 100%;
-  height: 100%;
-  aspect-ratio: 4 / 3;
+  height: auto;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
   transform: none;
 }
@@ -1757,95 +1755,60 @@ html[data-theme="light"] .theme-toggle-knob { transform: translateX(-24px); }
 }
 
 .archive-project-heading {
-  position: absolute;
-  z-index: 4;
-  right: 9px;
-  bottom: 9px;
-  left: 9px;
+  position: static;
   display: grid;
-  min-height: 46px;
-  grid-template-columns: 36px minmax(0, 1fr);
-  align-items: center;
-  gap: 10px;
-  border: 1px solid rgb(0 0 0 / 12%);
-  border-radius: 999px;
-  padding: 4px 14px 4px 5px;
-  background: rgb(250 250 247 / 91%);
-  color: #0b0b0b;
-  box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
-  -webkit-backdrop-filter: blur(16px) saturate(120%);
-  backdrop-filter: blur(16px) saturate(120%);
-  transition: background-color 180ms ease, transform 180ms ease;
-}
-
-.archive-project-number {
-  display: grid;
-  width: 36px;
-  height: 36px;
-  place-items: center;
-  border-radius: 50%;
-  background: #0b0b0b;
-  color: #fff;
-  font-size: 10px;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.04em;
-}
-
-.archive-project-title {
-  display: flex;
-  min-width: 0;
+  min-height: 0;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
+  border: 0;
+  border-radius: 0;
+  padding: 7px 1px 0;
+  background: transparent;
+  color: var(--portfolio-text);
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
 
-.archive-project-title h2,
-.archive-project-title span {
+.archive-project-heading h2,
+.archive-project-heading > span {
   overflow: hidden;
   margin: 0;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.archive-project-title h2 {
-  font-size: 14px;
+.archive-project-heading h2 {
+  font-size: 15px;
   font-weight: 400;
   letter-spacing: -0.025em;
 }
 
-.archive-project-title span {
-  color: rgb(11 11 11 / 56%);
+.archive-project-heading > span {
+  color: var(--portfolio-muted);
   font-size: 10px;
 }
 
 .archive-filter-result {
-  position: absolute;
-  z-index: 8;
-  top: 9px;
-  right: 9px;
+  position: relative;
   display: flex;
-  min-height: 38px;
+  min-height: 34px;
   align-items: center;
-  gap: 9px;
-  border: 1px solid rgb(255 255 255 / 22%);
-  border-radius: 999px;
-  padding: 3px 5px 3px 12px;
-  background: rgb(5 5 5 / 84%);
-  color: #fff;
+  gap: 12px;
+  margin-top: 7px;
+  border-top: 1px solid var(--portfolio-line);
+  color: var(--portfolio-muted);
   font-size: 10px;
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
+}
+
+.archive-filter-result > span {
+  margin-right: auto;
 }
 
 .archive-filter-result > a,
 .archive-slide-list summary {
-  display: inline-flex;
-  min-height: 30px;
-  align-items: center;
-  border-radius: 999px;
-  padding: 0 9px;
-  background: #fff;
-  color: #0b0b0b;
+  color: var(--portfolio-text);
   cursor: pointer;
   white-space: nowrap;
 }
@@ -1865,29 +1828,28 @@ html[data-theme="light"] .theme-toggle-knob { transform: translateX(-24px); }
 .archive-slide-list ol {
   position: absolute;
   z-index: 20;
-  top: 38px;
+  top: 24px;
   right: 0;
   display: grid;
-  width: min(320px, 82vw);
-  max-height: 360px;
+  width: min(320px, 80vw);
+  max-height: 320px;
   overflow: auto;
   margin: 0;
   border: 1px solid var(--portfolio-line);
-  border-radius: 18px;
   padding: 6px;
   background: var(--portfolio-glass-solid);
-  box-shadow: 0 20px 48px rgb(0 0 0 / 26%);
+  box-shadow: 0 18px 44px rgb(0 0 0 / 16%);
   color: var(--portfolio-text);
   list-style: none;
 }
 
 .archive-slide-list li a {
   display: grid;
-  min-height: 42px;
+  min-height: 40px;
   grid-template-columns: 34px minmax(0, 1fr);
   align-items: center;
   border-bottom: 1px solid var(--portfolio-line);
-  padding: 0 8px;
+  padding: 0 7px;
 }
 
 .archive-slide-list li a:hover {
@@ -2227,11 +2189,6 @@ html[data-theme="light"] .theme-toggle-knob { transform: translateX(-24px); }
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .archive-project:hover .archive-project-heading {
-    background: #fff;
-    transform: translateY(-2px);
-  }
-
   .archive-project:hover .archive-project-media img {
     filter: saturate(1.04) contrast(1.02);
   }
@@ -2350,25 +2307,33 @@ html[data-theme="light"] .theme-toggle-knob { transform: translateX(-24px); }
     height: 17px;
   }
 
+  .archive-feed {
+    padding: 8px 8px 0;
+  }
+
   .archive-feed-grid {
     grid-template-columns: minmax(0, 1fr);
-    gap: 1px;
+    gap: 22px;
   }
 
   .archive-project-heading {
-    right: 7px;
-    bottom: 7px;
-    left: 7px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
   }
 
-  .archive-project-title span {
-    display: none;
+  .archive-project-heading > span {
+    display: block;
+    grid-row: auto;
+  }
+
+  .archive-project-heading h2 {
+    font-size: 15px;
   }
 
   .archive-filter-result {
-    top: 7px;
-    right: 7px;
-    max-width: calc(100% - 14px);
+    top: auto;
+    right: auto;
+    max-width: none;
   }
 
   .archive-filter-result > span {
