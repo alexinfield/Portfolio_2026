@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { access, readFile, readdir } from "node:fs/promises";
 import test from "node:test";
-import { orderArchiveProjects } from "../lib/archive-order.mjs";
+import { curatedArchiveIndex, orderArchiveProjects } from "../lib/archive-order.mjs";
 
 function assetKey(asset) {
   const sourceName = decodeURIComponent(asset.name).split("/").pop();
@@ -54,10 +54,14 @@ test("server-renders the adaptive archive with preserved project content", async
   assert.match(html, />Prototypes</);
   assert.match(html, />Team</);
   assert.match(html, />Making</);
+  assert.match(html, /aria-label="Project sorting"/);
+  assert.match(html, />Curated</);
+  assert.match(html, />Newest</);
+  assert.match(html, />Relevance</);
   assert.match(html, /Shuffle/);
   assert.match(html, /data-hover-video/);
   assert.match(html, />Play</);
-  assert.match(html, />About</);
+  assert.match(html, />Info</);
   assert.match(html, />Contact</);
   assert.match(html, />Off Campus</);
   assert.doesNotMatch(html, /is-receded/);
@@ -72,26 +76,48 @@ test("server-renders the adaptive archive with preserved project content", async
   assert.doesNotMatch(html, />Alex OS</);
   assert.doesNotMatch(html, /I want to see/i);
   assert.doesNotMatch(html, />Overview<\/button>/i);
+
+  const curatedTitles = ["Ping", "Molekule Go", "Luma", "Niche", "Hyphae Light", "Mode"];
+  let previousCuratedTitle = -1;
+  for (const title of curatedTitles) {
+    const titleIndex = html.indexOf(`>${title}<`);
+    assert.ok(titleIndex > previousCuratedTitle, `${title} follows the public portfolio's curated order`);
+    previousCuratedTitle = titleIndex;
+  }
 });
 
 test("archive ordering reflows by collection and filter relevance without mutating source order", () => {
   const canonical = [
-    { slug: "alpha", emphasized: false, collectionMatch: false, filterMatch: true, slides: [{}], canonicalIndex: 0 },
-    { slug: "beta", emphasized: true, collectionMatch: true, filterMatch: true, slides: [{}], canonicalIndex: 1 },
-    { slug: "gamma", emphasized: true, collectionMatch: true, filterMatch: true, slides: [{}, {}, {}], canonicalIndex: 2 },
-    { slug: "delta", emphasized: false, collectionMatch: true, filterMatch: false, slides: [], canonicalIndex: 3 },
+    { slug: "alpha", emphasized: false, collectionMatch: false, filterMatch: true, slides: [{}], canonicalIndex: 0, curatedIndex: 0, year: 2023 },
+    { slug: "beta", emphasized: true, collectionMatch: true, filterMatch: true, slides: [{}], canonicalIndex: 1, curatedIndex: 1, year: 2025 },
+    { slug: "gamma", emphasized: true, collectionMatch: true, filterMatch: true, slides: [{}, {}, {}], canonicalIndex: 2, curatedIndex: 2, year: 2025 },
+    { slug: "delta", emphasized: false, collectionMatch: true, filterMatch: false, slides: [], canonicalIndex: 3, curatedIndex: 3, year: 2026 },
   ];
   const canonicalSnapshot = canonical.map(({ slug }) => slug);
-  const filtered = orderArchiveProjects(canonical, true);
+  const filtered = orderArchiveProjects(canonical, { hasFilter: true, sort: "relevance" });
+  const newest = orderArchiveProjects(
+    canonical.map((item) => ({ ...item, emphasized: true, collectionMatch: true, filterMatch: true })),
+    { hasFilter: false, sort: "newest" },
+  );
+  const boundedNewest = orderArchiveProjects(canonical, { hasFilter: false, sort: "newest" });
   const defaultOrder = orderArchiveProjects(
     canonical.map((item) => ({ ...item, emphasized: true, collectionMatch: true, filterMatch: true })),
-    false,
+    { hasFilter: false, sort: "curated" },
+  );
+  const relevanceWithoutFilter = orderArchiveProjects(
+    canonical.map((item) => ({ ...item, emphasized: true, collectionMatch: true, filterMatch: true })),
+    { hasFilter: false, sort: "relevance" },
   );
 
   assert.deepEqual(filtered.map(({ slug }) => slug), ["gamma", "beta", "delta", "alpha"]);
+  assert.deepEqual(newest.map(({ slug }) => slug), ["delta", "beta", "gamma", "alpha"]);
+  assert.deepEqual(boundedNewest.map(({ slug }) => slug), ["beta", "gamma", "delta", "alpha"]);
   assert.deepEqual(defaultOrder.map(({ slug }) => slug), canonicalSnapshot);
+  assert.deepEqual(relevanceWithoutFilter.map(({ slug }) => slug), canonicalSnapshot);
   assert.deepEqual(canonical.map(({ slug }) => slug), canonicalSnapshot);
   assert.notEqual(filtered, canonical);
+  assert.equal(curatedArchiveIndex("ping", 4), 0);
+  assert.ok(curatedArchiveIndex("new-project", 0) > curatedArchiveIndex("mode", 5));
 });
 
 test("all-projects page uses verified order, original covers, and hover motion", async () => {
@@ -191,19 +217,34 @@ test("project and info pages keep predictable navigation and responsive portfoli
 
 test("uses a dense three-column archive and flush project presentations", async () => {
   const css = await readFile(new URL("../app/portfolio.css", import.meta.url), "utf8");
-  const archiveCss = css.slice(css.indexOf("/* Image-led studio direction */"));
+  const archiveCss = css.slice(
+    css.indexOf("/* Image-led studio direction */"),
+    css.indexOf("/* Canonical project slides */"),
+  );
+  const portraitStart = css.indexOf("@media (max-width: 760px) and (orientation: portrait)");
+  const portraitCss = css.slice(
+    portraitStart,
+    css.indexOf("@media (prefers-reduced-motion: reduce)", portraitStart),
+  );
 
-  assert.match(css, /\.archive-feed-grid\s*\{[^}]*grid-template-columns:\s*repeat\(3,/s);
+  assert.match(archiveCss, /\.archive-feed-grid\s*\{[^}]*grid-template-columns:\s*repeat\(3,/s);
   assert.match(css, /\.project-page \.project-workspace\s*\{[^}]*padding:\s*0;/s);
   assert.match(css, /\.project-gallery\s*\{[^}]*display:\s*block;[^}]*gap:\s*0;[^}]*padding:\s*0;/s);
   assert.match(css, /\.project-slide,\s*\.figma-project-section,\s*\.next-project\s*\{[^}]*border-radius:\s*0;/s);
-  assert.match(css, /\.archive-project\.is-receded:hover,[^}]*opacity:\s*0\.22;/s);
-  assert.match(css, /\.archive-project-media\s*\{[^}]*border-radius:\s*0;/s);
+  assert.match(archiveCss, /\.adaptive-archive-page\s*\{[^}]*background:\s*#000;/s);
+  assert.match(archiveCss, /\.archive-project\.is-receded:hover,[^}]*opacity:\s*1;/s);
+  assert.match(archiveCss, /\.archive-project-media\s*\{[^}]*border-radius:\s*5px;/s);
   assert.match(archiveCss, /\.archive-project-media img,\s*\.archive-project-media video\s*\{[^}]*aspect-ratio:\s*16 \/ 9;/s);
+  assert.match(archiveCss, /\.archive-feed-grid\s*\{[^}]*gap:\s*20px 10px;[^}]*padding:\s*104px 8px 20px;/s);
+  assert.match(archiveCss, /\.archive-sort-controls button\.is-active,[^}]*border-bottom-color:\s*currentColor;/s);
   assert.doesNotMatch(archiveCss, /aspect-ratio:\s*4 \/ 3;/);
   assert.doesNotMatch(archiveCss, /\.archive-project-number/);
-  assert.match(css, /\.archive-nav-secondary\s*\{[^}]*top:\s*68px;[^}]*bottom:\s*auto;/s);
+  assert.doesNotMatch(archiveCss, /border-radius:\s*999px;/);
+  assert.match(archiveCss, /\.archive-nav-secondary\s*\{[^}]*top:\s*52px;[^}]*bottom:\s*auto;/s);
+  assert.match(css, /\.archive-mobile-sort-button\s*\{[^}]*display:\s*inline-flex;/s);
   assert.match(css, /@media \(max-width: 760px\) and \(orientation: portrait\)/);
+  assert.match(portraitCss, /\.archive-nav-primary\s*\{[^}]*top:\s*auto;[^}]*bottom:\s*0;/s);
+  assert.match(portraitCss, /\.archive-feed-grid\s*\{[^}]*padding-top:\s*8px;[^}]*padding-bottom:\s*calc\(150px \+ env\(safe-area-inset-bottom\)\);/s);
   assert.doesNotMatch(css, /\.archive-brand-overlay/);
   assert.doesNotMatch(css, /--portfolio-accent:\s*#(?:ff5a36|f04d25)/i);
 });

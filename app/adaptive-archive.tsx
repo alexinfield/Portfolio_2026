@@ -2,7 +2,6 @@
 
 import { DiceFive, Plus, X } from "@phosphor-icons/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import ThemeToggle from "./theme-toggle";
 import {
   collections,
   contentTypes,
@@ -11,13 +10,15 @@ import {
   type Collection,
   type ContentType,
 } from "@/lib/archive";
-import { orderArchiveProjects } from "@/lib/archive-order.mjs";
+import { curatedArchiveIndex, orderArchiveProjects } from "@/lib/archive-order.mjs";
 
 type ArchiveFilter = "final" | "process" | ContentType | null;
+type ArchiveSort = "curated" | "newest" | "relevance";
 
 type ArchiveState = {
   collection: Collection;
   filter: ArchiveFilter;
+  sort: ArchiveSort;
 };
 
 type ViewTransitionDocument = Document & {
@@ -27,6 +28,15 @@ type ViewTransitionDocument = Document & {
 const defaultState: ArchiveState = {
   collection: "all",
   filter: null,
+  sort: "curated",
+};
+
+const archiveSorts: readonly ArchiveSort[] = ["curated", "newest", "relevance"];
+
+const sortLabels: Record<ArchiveSort, string> = {
+  curated: "Curated",
+  newest: "Newest",
+  relevance: "Relevance",
 };
 
 const visibleCollections: readonly Collection[] = [
@@ -69,6 +79,7 @@ function stateFromLocation(): ArchiveState {
   const collection = params.get("collection") as Collection | null;
   const phase = params.get("phase");
   const content = params.get("type") as ContentType | null;
+  const sort = params.get("sort") as ArchiveSort | null;
   const filter: ArchiveFilter = phase === "final" || phase === "process"
     ? phase
     : content && contentTypes.includes(content)
@@ -78,14 +89,21 @@ function stateFromLocation(): ArchiveState {
   return {
     collection: collection && collections.includes(collection) ? collection : "all",
     filter,
+    sort: sort && archiveSorts.includes(sort) ? sort : "curated",
   };
 }
 
-function stateUrl(state: ArchiveState) {
+function stateParams(state: ArchiveState) {
   const params = new URLSearchParams();
   if (state.collection !== "all") params.set("collection", state.collection);
   if (state.filter === "final" || state.filter === "process") params.set("phase", state.filter);
   else if (state.filter) params.set("type", state.filter);
+  if (state.sort !== "curated") params.set("sort", state.sort);
+  return params;
+}
+
+function stateUrl(state: ArchiveState) {
+  const params = stateParams(state);
   const query = params.toString();
   return `${window.location.pathname}${query ? `?${query}` : ""}`;
 }
@@ -115,10 +133,7 @@ function projectHref(project: ArchiveProject) {
 }
 
 function slideHref(project: ArchiveProject, slide: ArchiveSlide, state: ArchiveState) {
-  const params = new URLSearchParams();
-  if (state.collection !== "all") params.set("collection", state.collection);
-  if (state.filter === "final" || state.filter === "process") params.set("phase", state.filter);
-  else if (state.filter) params.set("type", state.filter);
+  const params = stateParams(state);
   const query = params.toString();
   return `${projectHref(project)}${query ? `?${query}` : ""}#${slide.anchor}`;
 }
@@ -144,6 +159,30 @@ function FilterControls({
           key={option.value}
         >
           {option.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function SortControls({
+  sort,
+  onChange,
+}: {
+  sort: ArchiveSort;
+  onChange: (sort: ArchiveSort) => void;
+}) {
+  return (
+    <div className="archive-sort-controls" aria-label="Project sorting">
+      {archiveSorts.map((option) => (
+        <button
+          type="button"
+          aria-pressed={sort === option}
+          className={sort === option ? "is-active" : undefined}
+          onClick={() => onChange(option)}
+          key={option}
+        >
+          {sortLabels[option]}
         </button>
       ))}
     </div>
@@ -208,7 +247,6 @@ function GridProject({
         </div>
         <div className="archive-project-heading">
           <h2>{project.title}</h2>
-          <span>{project.domain} · {project.year}</span>
         </div>
       </a>
 
@@ -297,26 +335,35 @@ export default function AdaptiveArchive({ projects }: { projects: readonly Archi
         collectionMatch,
         filterMatch,
         canonicalIndex,
+        curatedIndex: curatedArchiveIndex(project.slug, canonicalIndex),
+        year: Number(project.year),
       };
     }),
-    Boolean(state.filter),
+    {
+      hasFilter: Boolean(state.filter),
+      sort: state.sort,
+    },
   ), [projects, state]);
 
   const emphasizedCount = projectStates.filter((item) => item.emphasized).length;
   const announcement = state.filter
-    ? `${filterLabel(state.filter)} in ${collectionLabels[state.collection]}. ${emphasizedCount} projects contain this content.`
-    : `${collectionLabels[state.collection]} collection. ${emphasizedCount} projects.`;
+    ? `${filterLabel(state.filter)} in ${collectionLabels[state.collection]}. ${emphasizedCount} projects contain this content. Sorted by ${sortLabels[state.sort]}.`
+    : `${collectionLabels[state.collection]} collection. ${emphasizedCount} projects. Sorted by ${sortLabels[state.sort]}.`;
 
   function changeCollection(collection: Collection) {
     const eligible = projects.filter((project) => collectionIncludes(project, collection));
     const filter = state.filter && eligible.some((project) => project.slides.some((slide) => slideHasFilter(slide, state.filter)))
       ? state.filter
       : null;
-    applyState({ collection, filter });
+    applyState({ ...state, collection, filter });
   }
 
   function changeFilter(filter: ArchiveFilter) {
     applyState({ ...state, filter });
+  }
+
+  function changeSort(sort: ArchiveSort) {
+    applyState({ ...state, sort });
   }
 
   function shuffle() {
@@ -331,6 +378,9 @@ export default function AdaptiveArchive({ projects }: { projects: readonly Archi
 
   const filterControls = (
     <FilterControls filter={state.filter} available={availableFilters} onChange={changeFilter} />
+  );
+  const sortControls = (
+    <SortControls sort={state.sort} onChange={changeSort} />
   );
 
   return (
@@ -363,11 +413,19 @@ export default function AdaptiveArchive({ projects }: { projects: readonly Archi
             ))}
           </nav>
 
-          <nav className="archive-destination-nav" aria-label="About and contact">
-            <a href="./info">About</a>
+          <nav className="archive-destination-nav" aria-label="Info and contact">
+            <a href="./info">Info</a>
             <a href="mailto:alex@infield.net">Contact</a>
-            <ThemeToggle />
           </nav>
+
+          <button
+            className="archive-mobile-sort-button"
+            type="button"
+            onClick={() => setMenuOpen(true)}
+            aria-label={`Change sorting. Currently ${sortLabels[state.sort]}`}
+          >
+            Sort · {sortLabels[state.sort]}
+          </button>
 
           <button
             className="archive-mobile-menu-button"
@@ -382,7 +440,14 @@ export default function AdaptiveArchive({ projects }: { projects: readonly Archi
         </div>
 
         <div className="archive-nav-row archive-nav-secondary">
-          {filterControls}
+          <div className="archive-filter-group">
+            <span className="archive-control-label">Filter</span>
+            {filterControls}
+          </div>
+          <div className="archive-sort-group">
+            <span className="archive-control-label">Sort</span>
+            {sortControls}
+          </div>
           <div className="archive-utility-controls">
             <span>{emphasizedCount} / {projects.length} projects</span>
             {state.filter ? <button type="button" onClick={() => changeFilter(null)}>Clear</button> : null}
@@ -442,10 +507,14 @@ export default function AdaptiveArchive({ projects }: { projects: readonly Archi
               {state.filter ? <button className="archive-mobile-clear" type="button" onClick={() => changeFilter(null)}>Clear filter</button> : null}
             </section>
 
-            <nav className="archive-mobile-destinations" aria-label="About and contact">
-              <a href="./info">About</a>
+            <section>
+              <h2>Sort</h2>
+              {sortControls}
+            </section>
+
+            <nav className="archive-mobile-destinations" aria-label="Info and contact">
+              <a href="./info">Info</a>
               <a href="mailto:alex@infield.net">Contact</a>
-              <ThemeToggle />
             </nav>
           </div>
         </div>
