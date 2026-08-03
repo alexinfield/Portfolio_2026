@@ -276,7 +276,7 @@ test("keeps complete source assets and exports one GitHub Pages presentation", a
     assert.ok(manifest.assets.length > 0);
   }
 
-  const [home, all, play, alexOs, info, ping, workflow] = await Promise.all([
+  const [home, all, play, alexOs, info, ping, workflow, robots] = await Promise.all([
     readFile(new URL("../gh-pages/index.html", import.meta.url), "utf8"),
     readFile(new URL("../gh-pages/all/index.html", import.meta.url), "utf8"),
     readFile(new URL("../gh-pages/play/index.html", import.meta.url), "utf8"),
@@ -284,6 +284,7 @@ test("keeps complete source assets and exports one GitHub Pages presentation", a
     readFile(new URL("../gh-pages/info/index.html", import.meta.url), "utf8"),
     readFile(new URL("../gh-pages/projects/ping/index.html", import.meta.url), "utf8"),
     readFile(new URL("../.github/workflows/deploy-pages.yml", import.meta.url), "utf8"),
+    readFile(new URL("../gh-pages/robots.txt", import.meta.url), "utf8"),
   ]);
 
   assert.match(home, /href="\.\/play\/off-campus"/);
@@ -296,19 +297,27 @@ test("keeps complete source assets and exports one GitHub Pages presentation", a
   assert.doesNotMatch(alexOs, /import\("\/assets/);
   assert.doesNotMatch(alexOs, /src="\/portfolio-runtime/);
   assert.doesNotMatch(home, /rel="modulepreload"/);
+  assert.match(home, /<meta name="robots" content="noindex,nofollow"\/>/);
+  assert.equal(robots, "User-agent: *\nDisallow: /\n");
   assert.match(workflow, /actions\/deploy-pages@v4/);
+  assert.match(workflow, /actions\/upload-pages-artifact@v4/);
   assert.match(workflow, /npm run build:github/);
   assert.match(workflow, /path: \.\/gh-pages/);
+  assert.match(workflow, /PORTFOLIO_ALLOW_INDEXING: "false"/);
 
-  const generatedCssName = (await readdir(new URL("../gh-pages/assets/", import.meta.url)))
-    .find((name) => /^index-.*\.css$/.test(name));
-  assert.ok(generatedCssName, "generated stylesheet exists");
-  const generatedCss = await readFile(
-    new URL(`../gh-pages/assets/${generatedCssName}`, import.meta.url),
-    "utf8",
-  );
+  const generatedCssNames = (await readdir(new URL("../gh-pages/assets/", import.meta.url)))
+    .filter((name) => name.endsWith(".css"));
+  assert.ok(generatedCssNames.length > 0, "generated stylesheets exist");
+  const generatedCss = (await Promise.all(
+    generatedCssNames.map((name) => readFile(
+      new URL(`../gh-pages/assets/${name}`, import.meta.url),
+      "utf8",
+    )),
+  )).join("\n");
   assert.doesNotMatch(generatedCss, /url\(\/assets\//);
+  assert.doesNotMatch(generatedCss, /url\(["']?\/alex-os\//);
   assert.match(generatedCss, /url\(\.\/home\/media\/.*FunktionalGrotesk-Regular/);
+  assert.match(generatedCss, /url\(["']?\.\.\/alex-os\/m90-wallpaper\.jpg/);
 
   const generatedJavascript = await Promise.all(
     (await readdir(new URL("../gh-pages/assets/", import.meta.url)))

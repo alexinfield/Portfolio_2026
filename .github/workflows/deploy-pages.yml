@@ -10,6 +10,12 @@ permissions:
   pages: write
   id-token: write
 
+env:
+  PORTFOLIO_SITE_ORIGIN: https://alexinfield.com
+  # Keep the temporary github.io deployment out of search results. Change this
+  # to "true" only after alexinfield.com is attached and production QA passes.
+  PORTFOLIO_ALLOW_INDEXING: "false"
+
 concurrency:
   group: pages
   cancel-in-progress: false
@@ -29,7 +35,7 @@ jobs:
       - run: npm ci
       - run: npm run build:github
       - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v4
         with:
           path: ./gh-pages
       - id: deployment
