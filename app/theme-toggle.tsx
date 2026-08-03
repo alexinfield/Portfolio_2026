@@ -37,11 +37,12 @@ export default function ThemeToggle() {
       aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
       aria-pressed={theme === "light"}
     >
-      <Sun size={16} weight="regular" aria-hidden="true" />
-      <span className="theme-toggle-track" aria-hidden="true">
-        <span className="theme-toggle-knob" />
-      </span>
-      <Moon size={15} weight="regular" aria-hidden="true" />
+      {theme === "dark" ? (
+        <Sun size={16} weight="regular" aria-hidden="true" />
+      ) : (
+        <Moon size={16} weight="regular" aria-hidden="true" />
+      )}
+      <span className="theme-toggle-label">{theme === "dark" ? "Light" : "Dark"}</span>
     </button>
   );
 }

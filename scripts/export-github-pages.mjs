@@ -4,6 +4,8 @@ import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const output = join(root, "gh-pages");
+const siteOrigin = (process.env.PORTFOLIO_SITE_ORIGIN ?? "https://alexinfield.com").replace(/\/+$/, "");
+const allowIndexing = process.env.PORTFOLIO_ALLOW_INDEXING === "true";
 const projectSlugs = ["molekule-go", "luma", "niche", "hyphae", "ping", "mode"];
 const playSlugs = ["off-campus", "wave-shaper", "juicebox", "desk-pen", "mycelium-panels"];
 const routes = [
@@ -34,7 +36,10 @@ for (const entry of await readdir(generatedAssets, { withFileTypes: true })) {
 
   if (entry.name.endsWith(".css")) {
     const css = await readFile(assetPath, "utf8");
-    await writeFile(assetPath, css.replaceAll("url(/assets/", "url(./"));
+    const patchedCss = css
+      .replace(/url\((["']?)\/assets\//g, "url($1./")
+      .replace(/url\((["']?)\/alex-os\//g, "url($1../alex-os/");
+    await writeFile(assetPath, patchedCss);
   }
 
   if (entry.name.endsWith(".js")) {
@@ -62,8 +67,8 @@ function relativeRoot(route) {
 
 function staticHtml(html, route) {
   const base = relativeRoot(route);
-
-  return html
+  const canonicalPath = route === "/" ? "/" : `${route}/`;
+  let result = html
     .replace(/<link\b[^>]*rel=["']modulepreload["'][^>]*\/?>/gi, "")
     .replace(/\sdata-rsc-css-href=("[^"]*"|'[^']*')/gi, "")
     .replace(/\sdata-precedence=("[^"]*"|'[^']*')/gi, "")
@@ -71,7 +76,14 @@ function staticHtml(html, route) {
     .replaceAll('import("/assets/', `import("${base}assets/`)
     .replaceAll('"/assets/', `"${base}assets/`)
     .replaceAll('"/portfolio-runtime.js', `"${base}portfolio-runtime.js`)
-    .replace(/<link rel="canonical" href="[^\"]*"\/>/i, `<link rel="canonical" href="https://alexinfield.com${route === "/" ? "/" : `${route}/`}"/>`);
+    .replace(/<meta\s+name="robots"[^>]*>/i, "")
+    .replace(/<link rel="canonical" href="[^\"]*"\/>/i, `<link rel="canonical" href="${siteOrigin}${canonicalPath}"/>`);
+
+  if (!allowIndexing) {
+    result = result.replace("</head>", '<meta name="robots" content="noindex,nofollow"/></head>');
+  }
+
+  return result;
 }
 
 async function renderRoute(route) {
@@ -101,6 +113,10 @@ for (const route of routes) {
 
 await writeFile(join(output, "404.html"), home);
 await writeFile(join(output, ".nojekyll"), "");
+await writeFile(
+  join(output, "robots.txt"),
+  allowIndexing ? "User-agent: *\nAllow: /\n" : "User-agent: *\nDisallow: /\n",
+);
 
 const generatedHome = await readFile(join(output, "index.html"), "utf8");
 if (generatedHome.includes("I want to see")) throw new Error("Legacy portfolio markup remains in export");

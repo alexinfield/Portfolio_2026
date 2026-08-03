@@ -27,8 +27,8 @@ export default async function PlayProjectPage({
         nextHref={`/play/${nextProject.slug}`}
         nextLabel={nextProject.title}
       />
-      <article className="play-detail-card" id="main-content">
-        <img src={project.cover} alt={`${project.title} project`} />
+      <article className="play-detail-card" id="main-content" data-archive-slide>
+        <img id="project-start" src={project.cover} alt={`${project.title}: ${project.description}`} />
         <div className="play-detail-copy">
           <div>
             <span>{project.domain}</span>
