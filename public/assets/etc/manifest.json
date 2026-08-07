@@ -1,0 +1,24 @@
+{
+  "assets": [
+    { "kind": "image", "contentType": "image/png", "name": "Desk pen", "path": "media/desk-pen.png", "source": "live alexinfield.com asset" },
+    { "kind": "video", "contentType": "video/mp4", "name": "Desk pen a31", "path": "media/desk-pen-a31.mp4", "source": "Unified Site Export Library" },
+    { "kind": "image", "contentType": "image/jpeg", "name": "Desk pen a31 poster", "path": "media/desk-pen-a31-poster.jpg", "source": "live alexinfield.com asset" },
+    { "kind": "video", "contentType": "video/mp4", "name": "Desk pen A2", "path": "media/desk-pen-a2.mp4", "source": "Unified Site Export Library" },
+    { "kind": "image", "contentType": "image/jpeg", "name": "Desk pen A2 poster", "path": "media/desk-pen-a2-poster.jpg", "source": "live alexinfield.com asset" },
+    { "kind": "video", "contentType": "video/mp4", "name": "Desk pen IMG 1421", "path": "media/desk-pen-img-1421.mp4", "source": "Unified Site Export Library" },
+    { "kind": "video", "contentType": "video/mp4", "name": "Desk pen IMG 1421 web derivative", "path": "media/desk-pen-img-1421-web.mp4", "source": "self-hosted H.264 web export derived from the Unified Site Export Library source" },
+    { "kind": "image", "contentType": "image/jpeg", "name": "Desk pen IMG 1421 poster", "path": "media/desk-pen-img-1421-poster.jpg", "source": "live alexinfield.com asset" },
+    { "kind": "image", "contentType": "image/jpeg", "name": "Desk pen IMG 1741 poster", "path": "media/desk-pen-img-1741-poster.jpg", "source": "live alexinfield.com asset" },
+    { "kind": "image", "contentType": "image/avif", "name": "Stool", "path": "media/stool.avif", "source": "live alexinfield.com asset" },
+    { "kind": "image", "contentType": "image/avif", "name": "CNC", "path": "media/cnc.avif", "source": "live alexinfield.com asset" },
+    { "kind": "image", "contentType": "image/jpeg", "name": "Wall mounts", "path": "media/wall-mounts.jpeg", "source": "live alexinfield.com asset" },
+    { "kind": "image", "contentType": "image/gif", "name": "Hyundai research", "path": "media/hyundai-research.gif", "source": "live alexinfield.com asset" },
+    { "kind": "image", "contentType": "image/jpeg", "name": "Mycelium", "path": "media/mycelium.jpeg", "source": "live alexinfield.com asset" }
+  ],
+  "failures": [
+    {
+      "name": "Desk pen IMG 1741 video",
+      "status": "original source not yet identified; live poster retained as the fifth carousel frame"
+    }
+  ]
+}
