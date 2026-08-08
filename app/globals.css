@@ -61,6 +61,17 @@ main.play-body > .header {
   width: 100%;
 }
 
+/* Responsive sources must not make intrinsic image widths expand CSS grid tracks. */
+main.home-body > .grid > a,
+main.info > .grid-2 > * {
+  min-width: 0;
+}
+
+main.home-body .content-2 > img,
+main.info > .grid-2 > img {
+  width: 100%;
+}
+
 /*
  * The source stylesheet positions background videos at z-index: -100. On the live site the
  * project class lives on <body>; here it lives on <main>, so the video would

@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-css-tags -- the exact source-site stylesheet is a static public asset */
+
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -33,6 +35,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="icon" href="data:," />
         <script async src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`} />
         <script dangerouslySetInnerHTML={{ __html: googleAnalyticsBootstrap }} />
         {clarityBootstrap ? <script dangerouslySetInnerHTML={{ __html: clarityBootstrap }} /> : null}

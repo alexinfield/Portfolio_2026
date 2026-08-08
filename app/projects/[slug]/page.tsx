@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import LiveHeader from "@/app/live-header";
+import ResponsiveImage from "@/app/responsive-image";
 import {
   getProject,
   getProjectMedia,
@@ -78,11 +79,12 @@ function ProjectMedia({
   }
 
   return (
-    <img
+    <ResponsiveImage
       src={item.source}
       alt=""
       width={item.width}
       height={item.height}
+      sizes="100vw"
       loading={index === 0 ? "eager" : "lazy"}
       fetchPriority={index === 0 ? "high" : "auto"}
       decoding="async"
@@ -97,11 +99,12 @@ function HyphaeComposite({ image, video, second = false }: {
 }) {
   return (
     <div className={second ? "slide-video-right-hyphae-2" : "slide-video-right-hyphae"}>
-      <img
+      <ResponsiveImage
         src={image.source}
         alt=""
         width={image.width}
         height={image.height}
+        sizes="100vw"
         loading="lazy"
         decoding="async"
         className={second ? "outline" : "outline-video"}
@@ -130,20 +133,22 @@ function HyphaeComposite({ image, video, second = false }: {
 function HyphaePresentation({ media }: { media: MediaItem[] }) {
   return (
     <>
-      <img
+      <ResponsiveImage
         src={media[0].source}
         alt=""
         width={media[0].width}
         height={media[0].height}
+        sizes="100vw"
         loading="eager"
         fetchPriority="high"
         decoding="async"
       />
-      <img
+      <ResponsiveImage
         src={media[1].source}
         alt=""
         width={media[1].width}
         height={media[1].height}
+        sizes="100vw"
         loading="lazy"
         decoding="async"
       />
@@ -161,11 +166,12 @@ function HyphaePresentation({ media }: { media: MediaItem[] }) {
         </div>
       </div>
       {media.slice(2, 9).map((item, index) => (
-        <img
+        <ResponsiveImage
           src={item.source}
           alt=""
           width={item.width}
           height={item.height}
+          sizes="100vw"
           loading="lazy"
           decoding="async"
           className={index > 1 ? "outline" : undefined}
@@ -174,11 +180,12 @@ function HyphaePresentation({ media }: { media: MediaItem[] }) {
       ))}
       <HyphaeComposite image={media[9]} video={media[10]} />
       {media.slice(11, 13).map((item) => (
-        <img
+        <ResponsiveImage
           src={item.source}
           alt=""
           width={item.width}
           height={item.height}
+          sizes="100vw"
           loading="lazy"
           decoding="async"
           className="outline"
@@ -187,11 +194,12 @@ function HyphaePresentation({ media }: { media: MediaItem[] }) {
       ))}
       <HyphaeComposite image={media[13]} video={media[14]} second />
       {media.slice(15).map((item) => (
-        <img
+        <ResponsiveImage
           src={item.source}
           alt=""
           width={item.width}
           height={item.height}
+          sizes="100vw"
           loading="lazy"
           decoding="async"
           className="outline"

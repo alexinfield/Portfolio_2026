@@ -52,6 +52,8 @@ test("homepage reproduces the live portfolio grid and published order", async ()
   }
 
   assert.match(html, /692fb99b7ff154a13bde26f2_251202-Hero-Hand\.webp/);
+  assert.match(html, /692fb99b7ff154a13bde26f2_251202-Hero-Hand-w960\.webp 960w/);
+  assert.match(html, /sizes="\(max-width: 767px\) 100vw, 50vw"/);
   assert.match(html, /665fb92ad4fed8da46bf0271_DSC_5550\.avif/);
   assert.doesNotMatch(html, /Industrial designer working across|archive-feed-grid|portfolio-card/);
 });
@@ -72,6 +74,8 @@ test("published project routes are flush live-site presentations", async () => {
   assert.match(ping, /background-video-11 w-background-video/);
   assert.match(ping, /background-video-12-copy w-background-video/);
   assert.match(ping, /background-video-12 w-background-video/);
+  assert.match(ping, /6954e5bc488edcd5e0b3e784_1-w960\.webp 960w/);
+  assert.match(ping, /sizes="100vw"/);
 
   const hyphae = await (await render("/projects/hyphae")).text();
   assert.match(hyphae, /hyphae-light-film\.mp4/);
@@ -145,6 +149,7 @@ test("source stylesheet and small clone layer preserve the live measurements", a
   assert.match(cloneCss, /\.hyphae-vimeo-frame\s*\{[^}]*aspect-ratio: 16 \/ 9/s);
   assert.match(cloneCss, /\.hyphae-vimeo-frame > video\s*\{[^}]*object-fit: cover/s);
   assert.match(cloneCss, /main\.body-molekule \.w-background-video,[\s\S]*isolation: isolate/);
+  assert.match(cloneCss, /img,\s*\nvideo\s*\{\s*height: auto;/s);
   assert.doesNotMatch(cloneCss, /orange|#ff5a36|border-radius:\s*999px/i);
 });
 
@@ -202,10 +207,16 @@ test("GitHub Pages export contains only live routes plus verified legacy redirec
   ]);
 
   assert.match(home, /href="\.\/projects\/ping"/);
+  assert.match(home, /<link rel="icon" href="data:,"\/>/);
+  assert.match(home, /srcset="\.\/assets\/home\/media\/692fb99b7ff154a13bde26f2_251202-Hero-Hand-w960\.webp 960w/);
   assert.match(home, /href="\.\/assets\/home\/media\/portfolio-source\.min\.css/);
   assert.match(etc, /src="\.\.\/assets\/etc\/media\/desk-pen/);
   assert.match(info, /src="\.\.\/assets\/info\/media/);
   assert.match(ping, /src="\.\.\/\.\.\/assets\/ping\/media/);
+  for (const staticPage of [home, info, ping]) {
+    assert.doesNotMatch(staticPage, /__VINEXT_RSC_|id="_R_"/);
+  }
+  assert.match(etc, /__VINEXT_RSC_|id="_R_"/);
   assert.match(playRedirect, /url=\.\.\/etc\//);
   assert.match(pillarRedirect, /url=\.\.\/niche\//);
   assert.match(furnitureRedirect, /url=\.\.\/mode\//);
@@ -224,6 +235,7 @@ test("GitHub Pages export contains only live routes plus verified legacy redirec
 
   await assert.rejects(access(new URL("../gh-pages/assets/etc/media/desk-pen-img-1421.mp4", import.meta.url)));
   await access(new URL("../gh-pages/assets/etc/media/desk-pen-img-1421-web.mp4", import.meta.url));
+  await access(new URL("../gh-pages/assets/home/media/692fb99b7ff154a13bde26f2_251202-Hero-Hand-w960.webp", import.meta.url));
 
   const bytes = await directorySize(new URL("../gh-pages/", import.meta.url));
   assert.ok(bytes < 1_000_000_000, `GitHub Pages payload is ${(bytes / 1_000_000).toFixed(1)} MB`);

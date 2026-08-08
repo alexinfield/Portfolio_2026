@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import LiveHeader from "../live-header";
+import ResponsiveImage from "../responsive-image";
 
 export const metadata: Metadata = {
   title: "Info",
@@ -15,11 +16,12 @@ export default function InfoPage() {
           {"\u200d"}
           <br />
         </p>
-        <img
+        <ResponsiveImage
           src="/assets/info/media/67aca18a869f9276f4c0ef01_IMG_0019.png"
           alt=""
           width={2000}
           height={2000}
+          sizes="(max-width: 767px) 100vw, 50vw"
           fetchPriority="high"
           decoding="async"
         />

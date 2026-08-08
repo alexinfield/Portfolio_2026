@@ -1,4 +1,5 @@
 import LiveHeader from "./live-header";
+import ResponsiveImage from "./responsive-image";
 import { projects } from "@/lib/portfolio";
 
 const projectClassNames: Record<string, string> = {
@@ -32,12 +33,13 @@ export default function Home() {
           >
             <div className={projectClassNames[project.slug]}>
               <div className="content-2">
-                <img
+                <ResponsiveImage
                   src={project.cover}
                   alt=""
                   className={imageClassNames[project.slug]}
                   width={project.coverWidth}
                   height={project.coverHeight}
+                  sizes="(max-width: 767px) 100vw, 50vw"
                   loading={index === 0 ? "eager" : "lazy"}
                   fetchPriority={index === 0 ? "high" : "auto"}
                   decoding="async"
