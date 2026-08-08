@@ -32,6 +32,12 @@ body {
   overflow-x: hidden;
 }
 
+/* Keep intrinsic media proportions when width/height attributes reserve layout space. */
+img,
+video {
+  height: auto;
+}
+
 main.home-body,
 main.info,
 main.body-molekule,

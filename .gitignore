@@ -46,3 +46,4 @@ next-env.d.ts
 /AGENTS.md
 /.agents/
 /.codex/
+/.playwright-cli/
