@@ -17,6 +17,15 @@ export type Asset = {
 
 export const projectDefinitions = [
   {
+    title: "Ping",
+    slug: "ping",
+    domain: "Industrial Design",
+    year: "2025",
+    description: "A connected product and interface for clearer coordination.",
+    cover: "/assets/home/media/692fb99b7ff154a13bde26f2_251202-Hero-Hand.webp",
+    figmaPage: { id: "8095:319", name: "Ping" },
+  },
+  {
     title: "Molekule Go",
     slug: "molekule-go",
     domain: "Product Design",
@@ -51,15 +60,6 @@ export const projectDefinitions = [
     description: "A bio-inspired lighting study grown from an adaptive structure.",
     cover: "/assets/home/media/673e50477b24902040693b05_15-hero.jpg",
     figmaPage: { id: "3408:453", name: "hyphae light" },
-  },
-  {
-    title: "Ping",
-    slug: "ping",
-    domain: "Industrial Design",
-    year: "2025",
-    description: "A connected product and interface for clearer coordination.",
-    cover: "/assets/home/media/692fb99b7ff154a13bde26f2_251202-Hero-Hand.webp",
-    figmaPage: { id: "8095:319", name: "Ping" },
   },
   {
     title: "Mode",

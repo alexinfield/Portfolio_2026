@@ -1,17 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import "./portfolio.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://alexinfield.com"),
-  title: "Alex Infield — Industrial Design Portfolio",
-  description: "Selected industrial design work by Alex Infield.",
-  alternates: { canonical: "/" },
-  openGraph: {
-    title: "Alex Infield — Industrial Design Portfolio",
-    description: "Selected industrial design work by Alex Infield.",
-    type: "website",
-  },
+  title: "Alex Infield",
 };
 
 export default function RootLayout({
@@ -20,7 +12,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="light" suppressHydrationWarning>
+    <html lang="en">
+      <head>
+        <link
+          href="/assets/home/media/ainfield.webflow.shared.5c0f55512.min.css"
+          rel="stylesheet"
+          type="text/css"
+        />
+      </head>
       <body>
         {children}
         <script src="/portfolio-runtime.js" defer />

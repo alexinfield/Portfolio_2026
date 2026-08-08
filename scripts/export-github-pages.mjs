@@ -6,17 +6,17 @@ const root = fileURLToPath(new URL("../", import.meta.url));
 const output = join(root, "gh-pages");
 const siteOrigin = (process.env.PORTFOLIO_SITE_ORIGIN ?? "https://alexinfield.com").replace(/\/+$/, "");
 const allowIndexing = process.env.PORTFOLIO_ALLOW_INDEXING === "true";
-const projectSlugs = ["molekule-go", "luma", "niche", "hyphae", "ping", "mode"];
-const playSlugs = ["off-campus", "wave-shaper", "juicebox", "desk-pen", "mycelium-panels"];
+const projectSlugs = ["ping", "molekule-go", "luma", "niche", "hyphae", "mode"];
 const routes = [
   "/",
-  "/all",
-  "/play",
-  "/professional-work",
+  "/etc",
   "/info",
-  "/alex-os",
   ...projectSlugs.map((slug) => `/projects/${slug}`),
-  ...playSlugs.map((slug) => `/play/${slug}`),
+];
+const redirects = [
+  { route: "/play", target: "/etc", relativeTarget: "../etc/" },
+  { route: "/projects/pillar", target: "/projects/niche", relativeTarget: "../niche/" },
+  { route: "/projects/furniture", target: "/projects/mode", relativeTarget: "../mode/" },
 ];
 
 const workerUrl = new URL(`../dist/server/index.js?export=${Date.now()}`, import.meta.url);
@@ -24,6 +24,11 @@ const { default: worker } = await import(workerUrl.href);
 
 await rm(output, { recursive: true, force: true });
 await cp(join(root, "dist/client"), output, { recursive: true });
+
+// Keep native and recovery sources in the repository/Drive, but do not spend
+// the Pages budget on files that no published route references.
+await rm(join(output, "assets", "figma-web"), { recursive: true, force: true });
+await rm(join(output, "assets", "etc", "media", "desk-pen-img-1421.mp4"), { force: true });
 
 // Vite emits imported fonts beside the generated stylesheet but keeps a
 // root-relative /assets URL. Make those generated URLs stylesheet-relative so
@@ -61,13 +66,13 @@ if (relativePreloadHelpers === 0) {
 
 function relativeRoot(route) {
   if (route === "/") return "./";
-  if (route.startsWith("/projects/") || route.startsWith("/play/")) return "../../";
+  if (route.startsWith("/projects/")) return "../../";
   return "../";
 }
 
 function staticHtml(html, route) {
   const base = relativeRoot(route);
-  const canonicalPath = route === "/" ? "/" : `${route}/`;
+  const canonicalPath = route === "/" ? "/" : route;
   let result = html
     .replace(/<link\b[^>]*rel=["']modulepreload["'][^>]*\/?>/gi, "")
     .replace(/\sdata-rsc-css-href=("[^"]*"|'[^']*')/gi, "")
@@ -76,12 +81,14 @@ function staticHtml(html, route) {
     .replaceAll('import("/assets/', `import("${base}assets/`)
     .replaceAll('"/assets/', `"${base}assets/`)
     .replaceAll('"/portfolio-runtime.js', `"${base}portfolio-runtime.js`)
-    .replace(/<meta\s+name="robots"[^>]*>/i, "")
-    .replace(/<link rel="canonical" href="[^\"]*"\/>/i, `<link rel="canonical" href="${siteOrigin}${canonicalPath}"/>`);
+    .replace(/<meta\s+name="robots"[^>]*>/gi, "")
+    .replace(/<link rel="canonical" href="[^\"]*"\/>/gi, "");
 
-  if (!allowIndexing) {
-    result = result.replace("</head>", '<meta name="robots" content="noindex,nofollow"/></head>');
-  }
+  const robots = allowIndexing ? "" : '<meta name="robots" content="noindex,nofollow"/>';
+  result = result.replace(
+    "</head>",
+    `<link rel="canonical" href="${siteOrigin}${canonicalPath}"/>${robots}</head>`,
+  );
 
   return result;
 }
@@ -105,13 +112,22 @@ async function renderRoute(route) {
   return html;
 }
 
-let home = "";
 for (const route of routes) {
-  const html = await renderRoute(route);
-  if (route === "/") home = html;
+  await renderRoute(route);
 }
 
-await writeFile(join(output, "404.html"), home);
+for (const { route, target, relativeTarget } of redirects) {
+  const path = join(output, route.slice(1), "index.html");
+  const robots = allowIndexing ? "" : '<meta name="robots" content="noindex,nofollow">';
+  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Alex Infield</title><link rel="canonical" href="${siteOrigin}${target}">${robots}<meta http-equiv="refresh" content="0;url=${relativeTarget}"></head><body><a href="${relativeTarget}">Continue</a><script>location.replace(new URL(${JSON.stringify(relativeTarget)},location.href).href)</script></body></html>`;
+  await mkdir(dirname(path), { recursive: true });
+  await writeFile(path, html);
+}
+
+await writeFile(
+  join(output, "404.html"),
+  '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Not Found</title><style>html,body{background:#000;margin:0;min-height:100%}</style></head><body></body></html>',
+);
 await writeFile(join(output, ".nojekyll"), "");
 await writeFile(
   join(output, "robots.txt"),
@@ -121,4 +137,4 @@ await writeFile(
 const generatedHome = await readFile(join(output, "index.html"), "utf8");
 if (generatedHome.includes("I want to see")) throw new Error("Legacy portfolio markup remains in export");
 
-console.log(`Exported ${routes.length} routes to ${output}`);
+console.log(`Exported ${routes.length} live routes and ${redirects.length} legacy redirects to ${output}`);

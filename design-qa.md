@@ -1,59 +1,66 @@
-# Design QA — Warm Editorial Styling Pass
+# Design QA — Exact Live Portfolio Clone
 
-Date: 2026-07-19
+Audited: 2026-08-07 15:00 EDT
 
 ## Comparison target
 
-- Source visual truth: `/Users/ainfield/.codex/generated_images/019f49e5-9a42-7292-9580-1c51c04f7b9b/exec-3f3d7e38-4987-4dad-8cc5-8cee36e385cd.png` (selected option 2), with the user-directed exception that the oversized introductory banner must be removed.
-- Structural reference: `https://www.apple.com/macbook-pro/`, used for project-level hierarchy, local navigation, media pacing, and section clarity rather than Apple branding.
-- Rendered homepage: `/tmp/portfolio-option2-home.png`.
-- Rendered project page: `/tmp/portfolio-option2-project.png` and `/tmp/portfolio-option2-project-intro.png`.
-- Combined full-view comparison: `/tmp/portfolio-qa-comparison.png`.
-- Viewport: 1280 × 720 desktop; responsive metrics checked at 390 × 844.
-- State: light mode, Work active, homepage at top; Molekule Go project at hero and overview positions.
+- Sole visual and content authority: `https://alexinfield.com`
+- Local implementation: `http://localhost:3000/`
+- Desktop viewport: 1280 × 720
+- Portrait-mobile viewport: 390 × 844
+- Compared routes: `/`, `/projects/ping`, `/info`, and `/etc`
+- Durable screenshot evidence: `/Users/ainfield/Library/CloudStorage/GoogleDrive-alex@infield.net/My Drive/Files/AI/Codex Hub/Projects/Personal/Portfolio Website/Deliverables/Exact Live Clone QA/Evidence/`
 
-## Full-view comparison evidence
+## Visual comparison
 
-- The implementation retains the selected direction’s warm bone canvas, near-black typography, fine rules, restrained orange signal color, compact active navigation, and uniform two-column image grid.
-- The implementation intentionally removes the mockup’s oversized display statement and preserves the approved compact portfolio introduction, as explicitly requested.
-- The work grid begins within the first viewport and preserves Alex’s original still imagery, metadata, project order, and video-on-hover behavior.
-- The project presentation uses a separate sticky local bar, cinematic media, small chapter gaps, and a clear overview block, matching the organizational principles observed in the Apple reference without copying its identity.
+Source and implementation screenshots were captured at the same viewport and state, placed side by side, and inspected as combined comparison images.
 
-## Focused-region comparison evidence
+| Surface | Viewport | Mean absolute RGB difference | Result |
+| --- | --- | ---: | --- |
+| Homepage | 1280 × 720 | 0.26 | Passed |
+| Homepage | 390 × 844 | 0.11 | Passed |
+| Ping project | 1280 × 720 | 0.08 | Passed |
+| Info | 1280 × 720 | 0.08 | Passed |
+| Etc | 1280 × 720 | 0.08 | Passed |
 
-- Header: Alex’s existing navigation labels and theme control remain in the same positions; the active state now uses a precise two-pixel editorial block and orange signal dot.
-- Project cards: real assets retain correct 16:9 crops; captions keep the requested title, domain, and year structure with increased typographic clarity and no hover underline.
-- Project overview: title, introduction, role/type metadata, and year remain source-backed and are presented as one legible chapter below the hero.
-- Mobile: measured layout width is 366 px inside a 390 px viewport, with a 390 px document width and no horizontal overflow. The grid becomes one column and the menu exposes all four sections.
+The remaining sub-pixel differences are consistent with capture timing and rendering noise. Layout, typography, color, spacing, crops, responsive behavior, and initial carousel state visually match the live source.
 
-## Required fidelity surfaces
+After the high-resolution Drive sources were promoted, Ping was captured again from the live site and local preview at the same in-app-browser viewport and state. The combined side-by-side comparison remained visually identical, including layout, typography, spacing, crops, and image sequence.
 
-- Fonts and typography: Funktional Grotesk is preserved; tighter tracking and larger card titles provide the selected editorial character without importing Suisse or SF Pro. No clipping or truncation was found.
-- Spacing and layout rhythm: 3.25vw desktop gutters, compact intro spacing, 20 px grid gap, fine section rules, three-pixel media radii, and eight-pixel project chapter gaps are consistent. The intentional removal of the oversized banner is the only major source-layout deviation.
-- Colors and visual tokens: warm bone `#f4f0e8`, near-black `#161411`, stepped warm neutrals, and restrained orange `#f04d25` track the selected direction. Dark mode uses the same hierarchy with warm-white text.
-- Image quality and asset fidelity: all visible project media uses existing Alex source assets. No generated or placeholder assets were introduced, and original crops remain sharp.
-- Copy and content: navigation, introduction, project titles, domains, years, case-study copy, and professional-work language remain unchanged except for the descriptive UI label “Project overview.”
+## Route and interaction checks
 
-## Interaction and browser checks
+- The static export contains the nine live routes: `/`, six project routes, `/info`, and `/etc`.
+- The live homepage order is preserved: Ping, Molekule Go, Luma, Niche, Hyphae, Mode.
+- The three verified legacy redirects are preserved: `/play` → `/etc`, `/projects/pillar` → `/projects/niche`, and `/projects/furniture` → `/projects/mode`.
+- The adaptive-archive-only routes are absent from the exported site.
+- Work, Info, Etc, project-card, and logo/home navigation were exercised locally.
+- Ping renders all 17 live media items in the original sequence.
+- Etc carousels advance automatically and retain the live page's desktop and mobile structure.
+- Every published route was reloaded in the in-app browser after the source promotion. All 256 local images decoded with nonzero natural dimensions, and all rendered image, video, and iframe media URLs remained local.
+- Every project background video was scrolled onscreen and observed advancing with `readyState = 4` and no media error. Offscreen background videos intentionally pause through the intersection observer, matching the intended resource-saving behavior.
+- The two Desk Pen carousels remain synchronized: only the active slide's two matching videos play, while hidden videos stay paused at time zero.
+- The Hyphae narrative film is now a self-hosted 1920 × 1080 H.264/AAC file with a local poster and native controls. Browser QA confirmed manual playback, time advancement, and no media error; the page no longer depends on Vimeo for delivery.
+- The generated site remains `noindex,nofollow`; Webflow, DNS, and `alexinfield.com` were not changed.
 
-- Theme switching was tested after hydration in both directions and updates the document theme correctly.
-- Mobile Menu opens, exposes Work, Play, Professional, and Info, reports `aria-expanded`, and closes correctly.
-- Project Back and Next links remain visible in the local project bar.
-- Hover-video behavior remains wired to the existing runtime and source video assets.
-- Browser console check returned no errors or warnings.
-- Build, GitHub Pages export, and all seven rendered-route tests pass.
+## Build verification
 
-## Findings
+- `npm test`: 9 of 9 tests passed, including the production build, GitHub Pages export, local-media assertions, synchronized-carousel behavior, and route/asset coverage.
+- `npm run lint`: completed with no errors. The remaining warnings are intentional raw-image and stylesheet-link warnings required for source-faithful rendering.
+- All 256 image files passed decoder/metadata validation. Compared with the pre-promotion snapshot, 65 image files were upgraded and none became smaller or changed aspect ratio.
+- All 17 repository MP4 files passed metadata probing; the deployable set uses browser-portable H.264 media, while the unused original Desk Pen HEVC source is excluded from the Pages export.
+- Generated GitHub Pages payload: 423,090,020 bytes (403.49 MiB), 39.40% of a 1 GiB ceiling, leaving 620.51 MiB of headroom. Unpublished Figma assets and the unused 60.95 MiB Desk Pen HEVC master are excluded from the published payload.
 
-No actionable P0, P1, or P2 findings remain.
+## Finding history
 
-## Comparison history
+- P1, resolved: The prior adaptive archive introduced unpublished routes, controls, and styling that did not match the live portfolio. The public surface has been replaced with the live site's route set, order, header, project galleries, Info page, and Etc page.
+- P1, resolved: Hidden Etc labels were briefly exposed because of local CSS specificity. The exact live hidden state is restored and the corrected comparison passes.
+- P1, resolved: Webflow's inherited `.w-background-video > video { z-index: -100 }` rule placed project videos behind the page background. Project video wrappers now establish a local stacking context, so the original videos remain visible without changing the live layout.
+- P1, resolved: The Hyphae narrative film previously depended on a Vimeo iframe and therefore remained an external delivery dependency. The exact 85.824-second delivery copy and poster are now stored locally and served by the static site.
+- P1, resolved: Hidden Desk Pen carousel videos could continue playing out of sync. Each carousel now explicitly resets and pauses inactive videos and starts only its active video.
+- P2, source limitation: The original fifth Desk Pen carousel video, `IMG_1741`, is not present in the repository or unified Drive export library. Figma confirms the matching video node and hash but does not expose the source bytes through the connected API. The exact live poster is used for that frame, so the initial visual state matches while motion on that one carousel frame remains unavailable.
 
-- Initial implementation: selected option 2 palette and typographic treatment were applied while the oversized banner was deliberately omitted; no P0/P1/P2 mismatch was found in the combined desktop comparison.
-- Responsive and interaction pass: mobile bounding-box checks showed no overflow; theme and menu interactions passed; no corrective visual iteration was required.
+## Final assessment
 
-## Follow-up polish
-
-- P3: Fine-tune the orange signal color after reviewing it on Alex’s preferred display if a slightly warmer or more muted accent feels more personal.
+The implementation faithfully duplicates the current live portfolio across every available route, uses the strongest verified Drive sources that fit the hosting budget, and serves all published media without Webflow or Vimeo delivery dependencies. The one unavailable Desk Pen source video is explicitly tracked and does not conceal a code or layout mismatch.
 
 final result: passed

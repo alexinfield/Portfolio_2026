@@ -232,6 +232,22 @@
       "name": "65e38724ba420d8b733d16eb%2F673e9d3ff35335eb252fe856_IMG_0469-transcode.mp4",
       "path": "media/673e9d3ff35335eb252fe856_img-0469-transcode.mp4",
       "url": "https://cdn.prod.website-files.com/65e38724ba420d8b733d16eb%2F673e9d3ff35335eb252fe856_IMG_0469-transcode.mp4"
+    },
+    {
+      "contentType": "video/mp4",
+      "id": "vimeo-960791919-self-hosted",
+      "kind": "video",
+      "name": "Hyphae Light film",
+      "path": "media/hyphae-light-film.mp4",
+      "source": "Exact H.264/AAC delivery copy preserved from the published Vimeo 960791919 embed"
+    },
+    {
+      "contentType": "image/jpeg",
+      "id": "vimeo-960791919-poster-self-hosted",
+      "kind": "image",
+      "name": "Hyphae Light film poster",
+      "path": "media/hyphae-light-film-poster.jpg",
+      "source": "Exact 1920x1080 poster preserved from the published Vimeo 960791919 embed"
     }
   ],
   "failures": []

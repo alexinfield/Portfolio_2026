@@ -1,15 +1,5 @@
-import { playProjects } from "@/lib/play";
-import PortfolioGrid from "../portfolio-grid";
-import SiteHeader from "../site-header";
+import { redirect } from "next/navigation";
 
-export default function PlayPage() {
-  return (
-    <main className="portfolio-index-page">
-      <SiteHeader variant="index" title="Play" active="play" />
-      <p className="portfolio-intro" id="main-content">
-        Smaller studies, experiments, and projects that sit<br className="desktop-break" /> between process and finished work.
-      </p>
-      <PortfolioGrid projects={playProjects} section="play" />
-    </main>
-  );
+export default function LegacyPlayRedirect() {
+  redirect("/etc");
 }
