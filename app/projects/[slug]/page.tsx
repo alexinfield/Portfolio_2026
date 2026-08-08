@@ -55,6 +55,8 @@ function ProjectVideo({
         playsInline
         preload={index === 0 ? "metadata" : "none"}
         poster={item.poster}
+        width={item.width}
+        height={item.height}
       >
         <source src={item.source} type={item.contentType ?? "video/mp4"} />
       </video>
@@ -75,7 +77,17 @@ function ProjectMedia({
     return <ProjectVideo item={item} slug={slug} index={index} />;
   }
 
-  return <img src={item.source} alt="" loading={index < 2 ? "eager" : "lazy"} />;
+  return (
+    <img
+      src={item.source}
+      alt=""
+      width={item.width}
+      height={item.height}
+      loading={index === 0 ? "eager" : "lazy"}
+      fetchPriority={index === 0 ? "high" : "auto"}
+      decoding="async"
+    />
+  );
 }
 
 function HyphaeComposite({ image, video, second = false }: {
@@ -85,10 +97,28 @@ function HyphaeComposite({ image, video, second = false }: {
 }) {
   return (
     <div className={second ? "slide-video-right-hyphae-2" : "slide-video-right-hyphae"}>
-      <img src={image.source} alt="" loading="lazy" className={second ? "outline" : "outline-video"} />
+      <img
+        src={image.source}
+        alt=""
+        width={image.width}
+        height={image.height}
+        loading="lazy"
+        decoding="async"
+        className={second ? "outline" : "outline-video"}
+      />
       <div className={second ? "video-small-airchair-hyphae-2" : "video-small-airchair-hyphae"}>
         <div className={`${second ? "background-video-hyphae-2" : "background-video-hyphae"} w-background-video w-background-video-atom`}>
-          <video data-autoplay-video autoPlay loop muted playsInline preload="none" poster={video.poster}>
+          <video
+            data-autoplay-video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="none"
+            poster={video.poster}
+            width={video.width}
+            height={video.height}
+          >
             <source src={video.source} type={video.contentType ?? "video/mp4"} />
           </video>
         </div>
@@ -100,8 +130,23 @@ function HyphaeComposite({ image, video, second = false }: {
 function HyphaePresentation({ media }: { media: MediaItem[] }) {
   return (
     <>
-      <img src={media[0].source} alt="" loading="eager" />
-      <img src={media[1].source} alt="" loading="eager" />
+      <img
+        src={media[0].source}
+        alt=""
+        width={media[0].width}
+        height={media[0].height}
+        loading="eager"
+        fetchPriority="high"
+        decoding="async"
+      />
+      <img
+        src={media[1].source}
+        alt=""
+        width={media[1].width}
+        height={media[1].height}
+        loading="lazy"
+        decoding="async"
+      />
       <div className="w-embed hyphae-vimeo">
         <div className="hyphae-vimeo-frame">
           <video
@@ -116,15 +161,42 @@ function HyphaePresentation({ media }: { media: MediaItem[] }) {
         </div>
       </div>
       {media.slice(2, 9).map((item, index) => (
-        <img src={item.source} alt="" loading="lazy" className={index > 1 ? "outline" : undefined} key={item.key} />
+        <img
+          src={item.source}
+          alt=""
+          width={item.width}
+          height={item.height}
+          loading="lazy"
+          decoding="async"
+          className={index > 1 ? "outline" : undefined}
+          key={item.source}
+        />
       ))}
       <HyphaeComposite image={media[9]} video={media[10]} />
       {media.slice(11, 13).map((item) => (
-        <img src={item.source} alt="" loading="lazy" className="outline" key={item.key} />
+        <img
+          src={item.source}
+          alt=""
+          width={item.width}
+          height={item.height}
+          loading="lazy"
+          decoding="async"
+          className="outline"
+          key={item.source}
+        />
       ))}
       <HyphaeComposite image={media[13]} video={media[14]} second />
       {media.slice(15).map((item) => (
-        <img src={item.source} alt="" loading="lazy" className="outline" key={item.key} />
+        <img
+          src={item.source}
+          alt=""
+          width={item.width}
+          height={item.height}
+          loading="lazy"
+          decoding="async"
+          className="outline"
+          key={item.source}
+        />
       ))}
     </>
   );
@@ -141,7 +213,10 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const project = getProject(slug);
-  return { title: project ? liveTitles[project.slug] : "Alex Infield" };
+  return {
+    title: project ? liveTitles[project.slug] : "Alex Infield",
+    description: project ? `${project.title} — a project by Alex Infield.` : undefined,
+  };
 }
 
 export default async function ProjectPage({
@@ -162,7 +237,7 @@ export default async function ProjectPage({
     <HyphaePresentation media={media} />
   ) : (
     media.map((item, index) => (
-      <ProjectMedia item={item} slug={projectSlug} index={index} key={item.key} />
+      <ProjectMedia item={item} slug={projectSlug} index={index} key={item.source} />
     ))
   );
 

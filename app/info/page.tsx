@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import LiveHeader from "../live-header";
 
-export const metadata: Metadata = { title: "Info" };
+export const metadata: Metadata = {
+  title: "Info",
+  description: "About Alex Infield.",
+};
 
 export default function InfoPage() {
   return (
@@ -12,7 +15,14 @@ export default function InfoPage() {
           {"\u200d"}
           <br />
         </p>
-        <img src="/assets/info/media/67aca18a869f9276f4c0ef01_IMG_0019.png" alt="" />
+        <img
+          src="/assets/info/media/67aca18a869f9276f4c0ef01_IMG_0019.png"
+          alt=""
+          width={2000}
+          height={2000}
+          fetchPriority="high"
+          decoding="async"
+        />
       </div>
     </main>
   );

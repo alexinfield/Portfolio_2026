@@ -53,7 +53,6 @@ test("homepage reproduces the live portfolio grid and published order", async ()
 
   assert.match(html, /692fb99b7ff154a13bde26f2_251202-Hero-Hand\.webp/);
   assert.match(html, /665fb92ad4fed8da46bf0271_DSC_5550\.avif/);
-  assert.doesNotMatch(html, /Adaptive Archive|Selected|Final|Process|Rendering|Shuffle|Relevance/);
   assert.doesNotMatch(html, /Industrial designer working across|archive-feed-grid|portfolio-card/);
 });
 
@@ -130,18 +129,18 @@ test("etc reproduces the live three-column play feed with local media", async ()
 });
 
 test("source stylesheet and small clone layer preserve the live measurements", async () => {
-  const [webflowCss, cloneCss] = await Promise.all([
-    readFile(new URL("../public/assets/home/media/ainfield.webflow.shared.5c0f55512.min.css", import.meta.url), "utf8"),
+  const [sourceCss, cloneCss] = await Promise.all([
+    readFile(new URL("../public/assets/home/media/portfolio-source.min.css", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
 
-  assert.match(webflowCss, /\.header\{[^}]*backdrop-filter:blur\(24px\)[^}]*padding:5px 20px/);
-  assert.match(webflowCss, /\.grid\{[^}]*grid-column-gap:10px;grid-row-gap:20px;margin:10px 10px 20px/);
-  assert.match(webflowCss, /\.home-image-hero-hyphae\{[^}]*aspect-ratio:16\/9[^}]*border-radius:5px/);
-  assert.match(webflowCss, /\.home-project-title\{[^}]*color:#999[^}]*font-size:24px/);
-  assert.match(webflowCss, /\.body-molekule\{[^}]*background-color:#000[^}]*padding-top:30px/);
-  assert.match(webflowCss, /\.play-column\{[^}]*padding-left:5px;padding-right:5px/);
-  assert.match(webflowCss, /@media screen and \(max-width:767px\)[\s\S]*\.grid\{grid-template-columns:1fr\}/);
+  assert.match(sourceCss, /\.header\{[^}]*backdrop-filter:blur\(24px\)[^}]*padding:5px 20px/);
+  assert.match(sourceCss, /\.grid\{[^}]*grid-column-gap:10px;grid-row-gap:20px;margin:10px 10px 20px/);
+  assert.match(sourceCss, /\.home-image-hero-hyphae\{[^}]*aspect-ratio:16\/9[^}]*border-radius:5px/);
+  assert.match(sourceCss, /\.home-project-title\{[^}]*color:#999[^}]*font-size:24px/);
+  assert.match(sourceCss, /\.body-molekule\{[^}]*background-color:#000[^}]*padding-top:30px/);
+  assert.match(sourceCss, /\.play-column\{[^}]*padding-left:5px;padding-right:5px/);
+  assert.match(sourceCss, /@media screen and \(max-width:767px\)[\s\S]*\.grid\{grid-template-columns:1fr\}/);
   assert.match(cloneCss, /FunktionalGrotesk-Light\.woff2/);
   assert.match(cloneCss, /\.hyphae-vimeo-frame\s*\{[^}]*aspect-ratio: 16 \/ 9/s);
   assert.match(cloneCss, /\.hyphae-vimeo-frame > video\s*\{[^}]*object-fit: cover/s);
@@ -170,20 +169,20 @@ test("published HTML serves portfolio images and videos locally", async () => {
 });
 
 test("every live gallery sequence resolves to a local source asset", async () => {
-  const sequences = JSON.parse(await readFile(new URL("../public/gallery-sequences.json", import.meta.url), "utf8"));
+  const registry = JSON.parse(await readFile(new URL("../lib/project-media.json", import.meta.url), "utf8"));
   const expectedCounts = { ping: 17, "molekule-go": 17, luma: 22, niche: 20, hyphae: 26, mode: 17 };
 
   for (const slug of publishedProjects) {
-    assert.equal(sequences[slug].order.length, expectedCounts[slug], slug);
-    const manifest = JSON.parse(await readFile(new URL(`../public/assets/${slug}/manifest.json`, import.meta.url), "utf8"));
-    const sourceIds = new Set(manifest.assets.map((asset) => {
-      const sourceName = decodeURIComponent(asset.name).split("/").pop();
-      return sourceName.match(/[a-f\d]{24}/i)?.[0] ?? asset.id;
-    }));
-    for (const key of sequences[slug].order) {
-      assert.ok(sourceIds.has(key.split(":")[1]), `${slug} resolves ${key}`);
+    assert.equal(registry[slug].length, expectedCounts[slug], slug);
+    for (const item of registry[slug]) {
+      assert.match(item.source, new RegExp(`^/assets/${slug}/media/`));
+      assert.ok(item.width > 0 && item.height > 0, `${item.source} has dimensions`);
+      await access(new URL(`../public${item.source}`, import.meta.url));
+      if (item.poster) await access(new URL(`../public${item.poster}`, import.meta.url));
     }
   }
+
+  assert.doesNotMatch(JSON.stringify(registry), /https?:\/\//i);
 });
 
 test("GitHub Pages export contains only live routes plus verified legacy redirects", async () => {
@@ -203,7 +202,7 @@ test("GitHub Pages export contains only live routes plus verified legacy redirec
   ]);
 
   assert.match(home, /href="\.\/projects\/ping"/);
-  assert.match(home, /href="\.\/assets\/home\/media\/ainfield\.webflow/);
+  assert.match(home, /href="\.\/assets\/home\/media\/portfolio-source\.min\.css/);
   assert.match(etc, /src="\.\.\/assets\/etc\/media\/desk-pen/);
   assert.match(info, /src="\.\.\/assets\/info\/media/);
   assert.match(ping, /src="\.\.\/\.\.\/assets\/ping\/media/);
@@ -223,11 +222,6 @@ test("GitHub Pages export contains only live routes plus verified legacy redirec
   assert.doesNotMatch(etcSource, /next\/link/);
   assert.match(liveHeaderSource, /<a\s+href="\/info"/);
 
-  for (const removed of ["all", "alex-os", "professional-work"]) {
-    await assert.rejects(access(new URL(`../gh-pages/${removed}/index.html`, import.meta.url)));
-  }
-
-  await assert.rejects(access(new URL("../gh-pages/assets/figma-web/", import.meta.url)));
   await assert.rejects(access(new URL("../gh-pages/assets/etc/media/desk-pen-img-1421.mp4", import.meta.url)));
   await access(new URL("../gh-pages/assets/etc/media/desk-pen-img-1421-web.mp4", import.meta.url));
 

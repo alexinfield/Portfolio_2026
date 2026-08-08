@@ -36,7 +36,11 @@ export default function Home() {
                   src={project.cover}
                   alt=""
                   className={imageClassNames[project.slug]}
-                  loading={index < 3 ? "eager" : "lazy"}
+                  width={project.coverWidth}
+                  height={project.coverHeight}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  fetchPriority={index === 0 ? "high" : "auto"}
+                  decoding="async"
                 />
                 <div className="text-5">
                   <div className="frame-39">

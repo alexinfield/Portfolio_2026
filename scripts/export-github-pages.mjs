@@ -25,11 +25,6 @@ const { default: worker } = await import(workerUrl.href);
 await rm(output, { recursive: true, force: true });
 await cp(join(root, "dist/client"), output, { recursive: true });
 
-// Keep native and recovery sources in the repository/Drive, but do not spend
-// the Pages budget on files that no published route references.
-await rm(join(output, "assets", "figma-web"), { recursive: true, force: true });
-await rm(join(output, "assets", "etc", "media", "desk-pen-img-1421.mp4"), { force: true });
-
 // Vite emits imported fonts beside the generated stylesheet but keeps a
 // root-relative /assets URL. Make those generated URLs stylesheet-relative so
 // the same build works on both the custom domain and GitHub's repository path.
@@ -42,8 +37,7 @@ for (const entry of await readdir(generatedAssets, { withFileTypes: true })) {
   if (entry.name.endsWith(".css")) {
     const css = await readFile(assetPath, "utf8");
     const patchedCss = css
-      .replace(/url\((["']?)\/assets\//g, "url($1./")
-      .replace(/url\((["']?)\/alex-os\//g, "url($1../alex-os/");
+      .replace(/url\((["']?)\/assets\//g, "url($1./");
     await writeFile(assetPath, patchedCss);
   }
 

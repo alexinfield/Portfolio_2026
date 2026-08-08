@@ -56,7 +56,7 @@ main.play-body > .header {
 }
 
 /*
- * Webflow positions background videos at z-index: -100. On the live site the
+ * The source stylesheet positions background videos at z-index: -100. On the live site the
  * project class lives on <body>; here it lives on <main>, so the video would
  * otherwise fall behind the main element's black background. Keep the source
  * stacking order, but contain it inside each transparent video frame.
