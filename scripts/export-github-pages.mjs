@@ -130,8 +130,16 @@ await writeFile(
 );
 await writeFile(join(output, ".nojekyll"), "");
 await writeFile(
+  join(output, "sitemap.xml"),
+  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${routes
+    .map((route) => `  <url><loc>${siteOrigin}${route === "/" ? "/" : route}</loc></url>`)
+    .join("\n")}\n</urlset>\n`,
+);
+await writeFile(
   join(output, "robots.txt"),
-  allowIndexing ? "User-agent: *\nAllow: /\n" : "User-agent: *\nDisallow: /\n",
+  allowIndexing
+    ? `User-agent: *\nAllow: /\nSitemap: ${siteOrigin}/sitemap.xml\n`
+    : "User-agent: *\nDisallow: /\n",
 );
 
 const generatedHome = await readFile(join(output, "index.html"), "utf8");
