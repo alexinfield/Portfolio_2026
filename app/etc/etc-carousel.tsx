@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import ResponsiveImage from "../responsive-image";
 
 type CarouselItem = {
   kind: "image" | "video";
@@ -88,11 +89,12 @@ export default function EtcCarousel({
                 <source src={item.src} type="video/mp4" />
               </video>
             ) : (
-              <img
+              <ResponsiveImage
                 src={item.src}
                 alt=""
                 width={item.width}
                 height={item.height}
+                sizes="(max-width: 991px) 100vw, 33vw"
                 className="image-43-copy"
                 loading="lazy"
                 decoding="async"

@@ -67,7 +67,23 @@ function relativeRoot(route) {
 function staticHtml(html, route) {
   const base = relativeRoot(route);
   const canonicalPath = route === "/" ? "/" : route;
-  let result = html
+  // Every route except /etc is fully static and uses native links plus the
+  // small portfolio runtime. Removing Vinext's hydration payload avoids
+  // shipping React to pages that have no client-side component behavior.
+  let result = route === "/etc"
+    ? html
+    : html
+        .replace(/<script\s+id=["']_R_["'][^>]*>[\s\S]*?<\/script>/gi, "")
+        .replace(
+          /<script>self\.__VINEXT_RSC_(?:PARAMS|NAV|CHUNKS|DONE)__[\s\S]*?<\/script>/gi,
+          "",
+        );
+
+  result = result
+    .replace(/srcset=(["'])(.*?)\1/gi, (_match, quote, value) => {
+      const rewritten = value.replace(/(^|,\s*)\/(?!\/)/g, `$1${base}`);
+      return `srcset=${quote}${rewritten}${quote}`;
+    })
     .replace(/<link\b[^>]*rel=["']modulepreload["'][^>]*\/?>/gi, "")
     .replace(/\sdata-rsc-css-href=("[^"]*"|'[^']*')/gi, "")
     .replace(/\sdata-precedence=("[^"]*"|'[^']*')/gi, "")

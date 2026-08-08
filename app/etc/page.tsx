@@ -2,6 +2,7 @@
 
 import type { Metadata } from "next";
 import LiveHeader from "../live-header";
+import ResponsiveImage from "../responsive-image";
 import EtcCarousel from "./etc-carousel";
 
 export const metadata: Metadata = {
@@ -70,13 +71,14 @@ export default function EtcPage() {
           <a href="/projects/hyphae" className="link-hyphae w-inline-block">
             <div className="home-project-cell">
               <div className="content-2">
-                <img
+                <ResponsiveImage
                   src="/assets/home/media/673e50477b24902040693b05_15-hero.jpg"
                   alt=""
                   className="home-image-hero-hyphae"
                   loading="lazy"
                   width={5760}
                   height={3817}
+                  sizes="(max-width: 991px) 100vw, 33vw"
                   decoding="async"
                 />
                 <div className="text-5">
@@ -110,25 +112,27 @@ export default function EtcPage() {
 
         <div className="play-column w-col w-col-4 w-col-stack">
           <div className="cell-play-casestudy exact-hover-card">
-            <img
+            <ResponsiveImage
               src="/assets/info/media/67aca18a869f9276f4c0ef01_IMG_0019.png"
               alt=""
               className="image-43"
               loading="lazy"
               width={2000}
               height={2000}
+              sizes="(max-width: 991px) 100vw, 33vw"
               decoding="async"
             />
             <CardLabel hidden>Book</CardLabel>
           </div>
           <div className="cell-play exact-hover-card">
-            <img
+            <ResponsiveImage
               src="/assets/etc/media/wall-mounts.jpeg"
               alt=""
               className="image-fullwidth"
               loading="lazy"
               width={480}
               height={640}
+              sizes="(max-width: 991px) 100vw, 33vw"
               decoding="async"
             />
             <CardLabel hidden>Wall mounts</CardLabel>
@@ -137,25 +141,27 @@ export default function EtcPage() {
 
         <div className="play-column w-col w-col-4 w-col-stack">
           <div className="cell-play exact-hover-card">
-            <img
+            <ResponsiveImage
               src="/assets/etc/media/hyundai-research.gif"
               alt=""
               className="image-43"
               loading="lazy"
               width={800}
               height={422}
+              sizes="(max-width: 991px) 100vw, 33vw"
               decoding="async"
             />
             <CardLabel hidden>Hyundai, research</CardLabel>
           </div>
           <div className="cell-play exact-hover-card">
-            <img
+            <ResponsiveImage
               src="/assets/etc/media/mycelium.jpeg"
               alt=""
               className="image-fullwidth"
               loading="lazy"
               width={480}
               height={640}
+              sizes="(max-width: 991px) 100vw, 33vw"
               decoding="async"
             />
             <CardLabel hidden>Mycelium</CardLabel>
