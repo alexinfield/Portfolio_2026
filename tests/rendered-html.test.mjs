@@ -218,6 +218,7 @@ test("GitHub Pages export contains only live routes plus verified legacy redirec
   assert.doesNotMatch(sitemap, /\/play|\/projects\/pillar|\/projects\/furniture/);
   assert.match(workflow, /actions\/deploy-pages@v4/);
   assert.match(workflow, /npm run build:github/);
+  assert.match(workflow, /PORTFOLIO_ALLOW_INDEXING: "true"/);
   assert.doesNotMatch(liveHeaderSource, /next\/link/);
   assert.doesNotMatch(etcSource, /next\/link/);
   assert.match(liveHeaderSource, /<a\s+href="\/info"/);
