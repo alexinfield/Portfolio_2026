@@ -22,6 +22,7 @@ const clarityBootstrap = clarityProjectId
 export const metadata: Metadata = {
   metadataBase: new URL("https://alexinfield.com"),
   title: "Alex Infield",
+  description: "Selected work by industrial designer Alex Infield.",
 };
 
 export default function RootLayout({
@@ -36,7 +37,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: googleAnalyticsBootstrap }} />
         {clarityBootstrap ? <script dangerouslySetInnerHTML={{ __html: clarityBootstrap }} /> : null}
         <link
-          href="/assets/home/media/ainfield.webflow.shared.5c0f55512.min.css"
+          href="/assets/home/media/portfolio-source.min.css"
           rel="stylesheet"
           type="text/css"
         />
