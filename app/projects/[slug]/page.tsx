@@ -87,7 +87,7 @@ function ProjectMedia({
       sizes="100vw"
       loading={index === 0 ? "eager" : "lazy"}
       fetchPriority={index === 0 ? "high" : "auto"}
-      decoding="async"
+      decoding={index === 0 ? "sync" : "async"}
     />
   );
 }
@@ -141,7 +141,7 @@ function HyphaePresentation({ media }: { media: MediaItem[] }) {
         sizes="100vw"
         loading="eager"
         fetchPriority="high"
-        decoding="async"
+        decoding="sync"
       />
       <ResponsiveImage
         src={media[1].source}

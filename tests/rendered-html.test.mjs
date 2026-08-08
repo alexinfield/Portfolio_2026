@@ -53,7 +53,9 @@ test("homepage reproduces the live portfolio grid and published order", async ()
 
   assert.match(html, /692fb99b7ff154a13bde26f2_251202-Hero-Hand\.webp/);
   assert.match(html, /692fb99b7ff154a13bde26f2_251202-Hero-Hand-w960\.webp 960w/);
+  assert.match(html, /692fb99b7ff154a13bde26f2_251202-Hero-Hand-w768\.webp 768w/);
   assert.match(html, /sizes="\(max-width: 767px\) 100vw, 50vw"/);
+  assert.match(html, /loading="eager"[^>]*decoding="sync"/);
   assert.match(html, /665fb92ad4fed8da46bf0271_DSC_5550\.avif/);
   assert.doesNotMatch(html, /Industrial designer working across|archive-feed-grid|portfolio-card/);
 });
@@ -208,7 +210,7 @@ test("GitHub Pages export contains only live routes plus verified legacy redirec
 
   assert.match(home, /href="\.\/projects\/ping"/);
   assert.match(home, /<link rel="icon" href="data:,"\/>/);
-  assert.match(home, /srcset="\.\/assets\/home\/media\/692fb99b7ff154a13bde26f2_251202-Hero-Hand-w960\.webp 960w/);
+  assert.match(home, /srcset="\.\/assets\/home\/media\/692fb99b7ff154a13bde26f2_251202-Hero-Hand-w768\.webp 768w, \.\/assets\/home\/media\/692fb99b7ff154a13bde26f2_251202-Hero-Hand-w960\.webp 960w/);
   assert.match(home, /href="\.\/assets\/home\/media\/portfolio-source\.min\.css/);
   assert.match(etc, /src="\.\.\/assets\/etc\/media\/desk-pen/);
   assert.match(info, /src="\.\.\/assets\/info\/media/);
