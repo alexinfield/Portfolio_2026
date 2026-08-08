@@ -187,7 +187,7 @@ test("every live gallery sequence resolves to a local source asset", async () =>
 });
 
 test("GitHub Pages export contains only live routes plus verified legacy redirects", async () => {
-  const [home, etc, info, ping, playRedirect, pillarRedirect, furnitureRedirect, robots, workflow, liveHeaderSource, etcSource] = await Promise.all([
+  const [home, etc, info, ping, playRedirect, pillarRedirect, furnitureRedirect, robots, sitemap, workflow, liveHeaderSource, etcSource] = await Promise.all([
     readFile(new URL("../gh-pages/index.html", import.meta.url), "utf8"),
     readFile(new URL("../gh-pages/etc/index.html", import.meta.url), "utf8"),
     readFile(new URL("../gh-pages/info/index.html", import.meta.url), "utf8"),
@@ -196,6 +196,7 @@ test("GitHub Pages export contains only live routes plus verified legacy redirec
     readFile(new URL("../gh-pages/projects/pillar/index.html", import.meta.url), "utf8"),
     readFile(new URL("../gh-pages/projects/furniture/index.html", import.meta.url), "utf8"),
     readFile(new URL("../gh-pages/robots.txt", import.meta.url), "utf8"),
+    readFile(new URL("../gh-pages/sitemap.xml", import.meta.url), "utf8"),
     readFile(new URL("../.github/workflows/deploy-pages.yml", import.meta.url), "utf8"),
     readFile(new URL("../app/live-header.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/etc/page.tsx", import.meta.url), "utf8"),
@@ -211,6 +212,10 @@ test("GitHub Pages export contains only live routes plus verified legacy redirec
   assert.match(furnitureRedirect, /url=\.\.\/mode\//);
   assert.match(home, /<meta name="robots" content="noindex,nofollow"\/>/);
   assert.equal(robots, "User-agent: *\nDisallow: /\n");
+  for (const route of ["/", "/etc", "/info", "/projects/ping", "/projects/molekule-go", "/projects/luma", "/projects/niche", "/projects/hyphae", "/projects/mode"]) {
+    assert.match(sitemap, new RegExp(`<loc>https://alexinfield\\.com${route === "/" ? "/" : route}</loc>`));
+  }
+  assert.doesNotMatch(sitemap, /\/play|\/projects\/pillar|\/projects\/furniture/);
   assert.match(workflow, /actions\/deploy-pages@v4/);
   assert.match(workflow, /npm run build:github/);
   assert.doesNotMatch(liveHeaderSource, /next\/link/);
