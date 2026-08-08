@@ -1,5 +1,6 @@
+/* eslint-disable @next/next/no-html-link-for-pages -- static Pages export requires native navigation */
+
 import type { Metadata } from "next";
-import Link from "next/link";
 import LiveHeader from "../live-header";
 import EtcCarousel from "./etc-carousel";
 
@@ -50,7 +51,7 @@ export default function EtcPage() {
             <CardLabel>Desk pen</CardLabel>
           </div>
 
-          <Link href="/projects/hyphae" className="link-hyphae w-inline-block">
+          <a href="/projects/hyphae" className="link-hyphae w-inline-block">
             <div className="home-project-cell">
               <div className="content-2">
                 <img
@@ -66,7 +67,7 @@ export default function EtcPage() {
                 </div>
               </div>
             </div>
-          </Link>
+          </a>
 
           <div className="cell-play exact-hover-card">
             <EtcCarousel items={deskPenItems} />

@@ -1,4 +1,4 @@
-import Link from "next/link";
+/* eslint-disable @next/next/no-html-link-for-pages -- static Pages export requires native navigation */
 
 type LiveHeaderProps = {
   current?: "work" | "info";
@@ -14,35 +14,35 @@ export default function LiveHeader({ current, light = false }: LiveHeaderProps) 
     <header className={`header${variant}`}>
       <div className="div-block-35">
         <h1 className={`heading${variant}`}>
-          <Link
+          <a
             href="/"
             aria-current={current === "work" ? "page" : undefined}
             className={`link primary-link${variant}${current === "work" ? " w--current" : ""}`}
           >
             Alex Infield
-          </Link>
+          </a>
         </h1>
       </div>
       <div className="div-block-36">
         <ul className={`list-2 w-list-unstyled${variant}`} aria-hidden="true" />
         <ul className={`list-2 w-list-unstyled${variant}`}>
           <li>
-            <Link
+            <a
               href="/"
               aria-current={current === "work" ? "page" : undefined}
               className={`five link${variant}${current === "work" ? " w--current" : ""}`}
             >
               Work
-            </Link>
+            </a>
           </li>
           <li>
-            <Link
+            <a
               href="/info"
               aria-current={current === "info" ? "page" : undefined}
               className={`five link${variant}${current === "info" ? " w--current" : ""}`}
             >
               Info
-            </Link>
+            </a>
           </li>
           <li>
             <a href="mailto:alex@infield.net" className={`five link${variant}`}>
