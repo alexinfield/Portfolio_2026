@@ -12,9 +12,8 @@ permissions:
 
 env:
   PORTFOLIO_SITE_ORIGIN: https://alexinfield.com
-  # Keep the temporary github.io deployment out of search results. Change this
-  # to "true" only after alexinfield.com is attached and production QA passes.
-  PORTFOLIO_ALLOW_INDEXING: "false"
+  # alexinfield.com is attached, HTTPS is enforced, and production QA passed.
+  PORTFOLIO_ALLOW_INDEXING: "true"
 
 concurrency:
   group: pages
