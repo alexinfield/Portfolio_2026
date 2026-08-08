@@ -229,7 +229,7 @@ test("GitHub Pages export contains only live routes plus verified legacy redirec
   assert.ok(bytes < 1_000_000_000, `GitHub Pages payload is ${(bytes / 1_000_000).toFixed(1)} MB`);
 });
 
-test("analytics preserves the live GA4 property without duplicate tags or public PII", async () => {
+test("analytics uses the dedicated relaunch property without duplicate tags or public PII", async () => {
   const [home, ping, runtime] = await Promise.all([
     readFile(new URL("../gh-pages/index.html", import.meta.url), "utf8"),
     readFile(new URL("../gh-pages/projects/ping/index.html", import.meta.url), "utf8"),
@@ -237,8 +237,10 @@ test("analytics preserves the live GA4 property without duplicate tags or public
   ]);
 
   for (const page of [home, ping]) {
-    assert.equal((page.match(/<script async="" src="https:\/\/www\.googletagmanager\.com\/gtag\/js\?id=G-171WY5DL4E">/g) ?? []).length, 1);
-    assert.equal((page.match(/<script>\s*window\.dataLayer[\s\S]*?gtag\('config', 'G-171WY5DL4E'\);\s*<\/script>/g) ?? []).length, 1);
+    assert.equal((page.match(/<script async="" src="https:\/\/www\.googletagmanager\.com\/gtag\/js\?id=G-C6H8Q9R5B5">/g) ?? []).length, 1);
+    assert.equal((page.match(/<script>\s*window\.dataLayer[\s\S]*?gtag\('config', 'G-C6H8Q9R5B5'\);\s*<\/script>/g) ?? []).length, 1);
+    assert.match(page, /clarity\.ms\/tag\/"\+i[\s\S]*?"xz6mz3a8cb"/);
+    assert.doesNotMatch(page, /G-171WY5DL4E/);
     assert.match(page, /portfolio-analytics\.js/);
   }
 

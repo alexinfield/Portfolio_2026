@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-const googleAnalyticsId = process.env.PORTFOLIO_GA_ID?.trim() || "G-171WY5DL4E";
-const clarityProjectId = process.env.PORTFOLIO_CLARITY_ID?.trim();
+const googleAnalyticsId = process.env.PORTFOLIO_GA_ID?.trim() || "G-C6H8Q9R5B5";
+const clarityProjectId = process.env.PORTFOLIO_CLARITY_ID?.trim() || "xz6mz3a8cb";
 
 const googleAnalyticsBootstrap = `
 window.dataLayer = window.dataLayer || [];
