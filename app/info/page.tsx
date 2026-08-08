@@ -23,7 +23,7 @@ export default function InfoPage() {
           height={2000}
           sizes="(max-width: 767px) 100vw, 50vw"
           fetchPriority="high"
-          decoding="async"
+          decoding="sync"
         />
       </div>
     </main>

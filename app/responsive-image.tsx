@@ -1,6 +1,6 @@
 import type { ImgHTMLAttributes } from "react";
 
-const responsiveWidths = [960, 1600, 2600] as const;
+const responsiveWidths = [768, 960, 1600, 2600] as const;
 const supportedSource = /\.(?:avif|jpe?g|png|webp)$/i;
 
 type ResponsiveImageProps = Omit<

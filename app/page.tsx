@@ -42,7 +42,7 @@ export default function Home() {
                   sizes="(max-width: 767px) 100vw, 50vw"
                   loading={index === 0 ? "eager" : "lazy"}
                   fetchPriority={index === 0 ? "high" : "auto"}
-                  decoding="async"
+                  decoding={index === 0 ? "sync" : "async"}
                 />
                 <div className="text-5">
                   <div className="frame-39">

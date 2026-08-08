@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 const execute = promisify(execFile);
 const root = fileURLToPath(new URL("../", import.meta.url));
 const assetRoot = join(root, "public", "assets");
-const widths = [960, 1600, 2600];
+const widths = [768, 960, 1600, 2600];
 const supportedExtensions = new Set([".avif", ".jpeg", ".jpg", ".png", ".webp"]);
 const force = process.argv.includes("--force");
 
@@ -75,7 +75,7 @@ const sources = (await walk(assetRoot)).filter((path) => {
   const extension = extname(path).toLowerCase();
   const name = basename(path);
   return supportedExtensions.has(extension)
-    && !/-w(?:960|1600|2600)\.webp$/i.test(name)
+    && !/-w(?:768|960|1600|2600)\.webp$/i.test(name)
     && !/poster/i.test(name);
 });
 
