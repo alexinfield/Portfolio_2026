@@ -3,17 +3,18 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
-const output = join(root, "gh-pages");
+const output = join(root, process.env.PORTFOLIO_EXPORT_DIR || "gh-pages");
 const siteOrigin = (process.env.PORTFOLIO_SITE_ORIGIN ?? "https://alexinfield.com").replace(/\/+$/, "");
 const allowIndexing = process.env.PORTFOLIO_ALLOW_INDEXING === "true";
 const projectSlugs = ["ping", "molekule-go", "luma", "niche", "hyphae", "mode"];
 const routes = [
   "/",
-  "/etc",
+  "/personal",
   "/info",
   ...projectSlugs.map((slug) => `/projects/${slug}`),
 ];
 const redirects = [
+  { route: "/etc", target: "/personal", relativeTarget: "../personal/" },
   { route: "/play", target: "/etc", relativeTarget: "../etc/" },
   { route: "/projects/pillar", target: "/projects/niche", relativeTarget: "../niche/" },
   { route: "/projects/furniture", target: "/projects/mode", relativeTarget: "../mode/" },
@@ -67,10 +68,10 @@ function relativeRoot(route) {
 function staticHtml(html, route) {
   const base = relativeRoot(route);
   const canonicalPath = route === "/" ? "/" : route;
-  // Every route except /etc is fully static and uses native links plus the
-  // small portfolio runtime. Removing Vinext's hydration payload avoids
-  // shipping React to pages that have no client-side component behavior.
-  let result = route === "/etc"
+  // Only the interactive shell pages hydrate. Cases/404 use the small static
+  // appearance/media controller and retain native links without shipping React.
+  const hydratedRoutes = new Set(["/", "/info", "/personal", "/etc"]);
+  let result = hydratedRoutes.has(route.replace(/\/+$/, "") || "/")
     ? html
     : html
         .replace(/<script\s+id=["']_R_["'][^>]*>[\s\S]*?<\/script>/gi, "")
@@ -91,7 +92,8 @@ function staticHtml(html, route) {
     .replaceAll('import("/assets/', `import("${base}assets/`)
     .replaceAll('"/assets/', `"${base}assets/`)
     .replaceAll('"/portfolio-runtime.js', `"${base}portfolio-runtime.js`)
-    .replace(/<meta\s+name="robots"[^>]*>/gi, "")
+    .replaceAll('"/favicon.png', `"${base}favicon.png`)
+    .replace(/<meta\b(?=[^>]*\bname=["']robots["'])[^>]*>/gi, "")
     .replace(/<link rel="canonical" href="[^\"]*"\/>/gi, "");
 
   const robots = allowIndexing ? "" : '<meta name="robots" content="noindex,nofollow"/>';
@@ -126,14 +128,6 @@ for (const route of routes) {
   await renderRoute(route);
 }
 
-for (const { route, target, relativeTarget } of redirects) {
-  const path = join(output, route.slice(1), "index.html");
-  const robots = allowIndexing ? "" : '<meta name="robots" content="noindex,nofollow">';
-  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Alex Infield</title><link rel="canonical" href="${siteOrigin}${target}">${robots}<meta http-equiv="refresh" content="0;url=${relativeTarget}"></head><body><a href="${relativeTarget}">Continue</a><script>location.replace(new URL(${JSON.stringify(relativeTarget)},location.href).href)</script></body></html>`;
-  await mkdir(dirname(path), { recursive: true });
-  await writeFile(path, html);
-}
-
 // Render the real application 404 so recovery keeps the same header and type.
 const missing = await worker.fetch(
   new Request("http://localhost/phase-b-intended-missing-page", { headers: { accept: "text/html" } }),
@@ -144,11 +138,33 @@ if (missing.status !== 404) throw new Error(`Expected a 404 response, got ${miss
 const missingHtml = staticHtml(await missing.text(), "/404")
   // A missing URL can be arbitrarily deep. Resolve its relative assets and Work
   // links from the configured site root, not from that unknown URL.
-  .replace("<head>", `<head><base href="${new URL(siteOrigin).pathname.replace(/\/?$/, "/")}">`)
+  .replace(/(href|src|poster)=(['"])\.\//gi, `$1=$2${new URL(siteOrigin).pathname.replace(/\/?$/, "/")}`)
+  .replace(/srcset=(["'])(.*?)\1/gi, (_match, quote, value) => `srcset=${quote}${value.replace(/(^|,\s*)\.\//g, `$1${new URL(siteOrigin).pathname.replace(/\/?$/, "/")}`)}${quote}`)
+  .replace(/<link\b(?=[^>]*\brel=["']canonical["'])[^>]*>/gi, "")
+  .replace(/<meta\b(?=[^>]*\bproperty=["']og:url["'])[^>]*>/gi, "")
+  .replace(/(<meta[^>]*(?:property="og:title"|name="twitter:title") content=")[^"]*/g, "$1Page not found — Alex Infield")
+  // Preserve main's untracked-404 behavior: metadata repair adds no analytics scope.
+  .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, script => /dataLayer|clarity|googletagmanager|portfolio-analytics/.test(script) ? "" : script)
   .replace(/<title>[^<]*<\/title>/, "<title>Page not found — Alex Infield</title>")
-  .replace(/<meta\s+name="robots"[^>]*>/gi, "")
+  .replace(/<meta\b(?=[^>]*\bname=["']robots["'])[^>]*>/gi, "")
   .replace("</head>", '<meta name="robots" content="noindex,nofollow"/></head>');
 await writeFile(join(output, "404.html"), missingHtml);
+
+// Redirect fallbacks reuse the real Compass 404 shell/components. Only their
+// destination and explanatory copy change; no second handmade UI system.
+for (const { route, target, relativeTarget } of redirects) {
+  const path = join(output, route.slice(1), "index.html");
+  const label = target === "/personal" || target === "/etc" ? "Personal" : target.endsWith("mode") ? "Folio" : "Niche";
+  const html = missingHtml
+    .replaceAll("Page not found", "Page moved")
+    .replace(">404</p>", `>Continue to ${label}.</p>`)
+    .replace(/(<div class="portfolio-actions">)([\s\S]*?)(<\/div>)/, (_match, open, actions, close) => open + actions.replace(/(<a\b[^>]*href=")[^"]*("[^>]*>)Work(<\/a>)/, `$1${relativeTarget}$2Continue to ${label}$3`) + close)
+    .replace("</head>", `<link rel="canonical" href="${siteOrigin}${target}"/><meta http-equiv="refresh" content="0;url=${relativeTarget}"></head>`)
+    .replace("</body>", `<script>location.replace(new URL(${JSON.stringify(relativeTarget)},location.href).href)</script></body>`);
+  await mkdir(dirname(path), { recursive: true });
+  await writeFile(path, html);
+}
+
 await writeFile(join(output, ".nojekyll"), "");
 await writeFile(
   join(output, "sitemap.xml"),
