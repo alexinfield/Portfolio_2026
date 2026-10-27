@@ -17,7 +17,7 @@ export default function PersonalCollection({ projects }: {projects: PersonalProj
   const reset = () => {setYear("all"); setCategory("all");};
   const renderProject = (item: PersonalProject, index: number) => <article className="portfolio-project" id={item.id} data-personal-id={item.id}
     data-year={item.year ?? undefined} data-category={item.category ?? undefined} key={item.id} hidden={!matches(item)}>
-    {item.link ? <ProjectCard href={`..${item.link}/`} title={item.title}><PersonalImage media={item.cover} eager={index<2} retry={false} /></ProjectCard>
+    {item.link ? <ProjectCard href={`..${item.link}/`} title={item.title}><PersonalImage media={item.cover} eager={index<2} retry={false} sizes="(max-width: 767px) 100vw, 50vw" /></ProjectCard>
       : <Card className="portfolio-personal-card"><PersonalGallery media={item.gallery.length ? item.gallery : [item.cover]} title={item.title} visible={matches(item)} /></Card>}
     {!item.link && (item.short_text ? <details className="portfolio-card-notes"><Button asChild variant="secondary" size="sm" data-plain=""><summary><h2 className="portfolio-project-title">{item.title}</h2><span className="portfolio-about-label">About</span></summary></Button><p className="portfolio-note-copy">{item.short_text}</p></details> : <h2 className="portfolio-project-title portfolio-card-label">{item.title}</h2>)}
   </article>;

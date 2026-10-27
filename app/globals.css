@@ -41,7 +41,8 @@ html[data-theme-changing] .portfolio-root, html[data-theme-changing] .portfolio-
 .portfolio-card-label {display: flex; align-items: center; min-height: 44px;}
 /* The public Compass link paints the control; this adapter lays out a stable
    image/caption card rather than an inline text button. */
-.portfolio-card-link[data-slot="button"] {display: flex; flex-direction: column; align-items: stretch; justify-content: start; width: 100%; height: auto; padding: 0; gap: 0; white-space: normal; transform: none!important; scale: none!important;}
+.portfolio-root .portfolio-card-link[data-slot="button"] {display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; width: 100%; max-width: none; height: auto; padding: 0; border: 0; gap: 0; text-align: left; white-space: normal; transform: none!important; scale: none!important;}
+.portfolio-root .portfolio-card-link > [data-slot="card"] {width: 100%; max-width: none;}
 .portfolio-personal-link {display: flex; justify-content: center; margin-top: var(--section);}
 .portfolio-info-page {display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--group); align-items: start;}
 .portfolio-info-copy {display: flex; flex-direction: column; align-items: flex-start; gap: var(--group); padding-block: var(--group);}

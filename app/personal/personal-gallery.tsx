@@ -5,7 +5,7 @@ import { Button } from "../compass";
 import DeferredVideo from "../deferred-video";
 import { personalAsset, type PersonalMedia } from "@/lib/personal";
 
-export function PersonalImage({media, eager=false, retry=true}: {media: PersonalMedia; eager?: boolean; retry?: boolean}) {
+export function PersonalImage({media, eager=false, retry=true, sizes="(max-width: 767px) 100vw, (max-width: 1199px) 50vw, 33vw"}: {media: PersonalMedia; eager?: boolean; retry?: boolean; sizes?: string}) {
   const [failed,setFailed] = useState(false);
   const [attempt,setAttempt] = useState(0);
   return <div className="portfolio-image">
@@ -13,7 +13,7 @@ export function PersonalImage({media, eager=false, retry=true}: {media: Personal
     {/* eslint-disable-next-line @next/next/no-img-element */}
     <img key={attempt} src={personalAsset(media.src)} alt={media.alt} width={media.width} height={media.height}
       srcSet={media.variants?.map(item=>`${personalAsset(item.src)} ${item.width}w`).join(", ")}
-      sizes="(max-width: 767px) 100vw, (max-width: 1199px) 50vw, 33vw" loading={eager ? "eager" : "lazy"} decoding="async"
+      sizes={sizes} loading={eager ? "eager" : "lazy"} decoding="async"
       onError={()=>setFailed(true)} onLoad={()=>setFailed(false)} />
     {failed && <div className="portfolio-image-failure"><p role="status">Image unavailable.</p>{retry && <Button type="button" variant="secondary" size="sm" aria-label={`Retry image: ${media.alt}`} onClick={event=>{
       (event.currentTarget.closest("[data-media-reveal]") as HTMLElement|null)?.focus({preventScroll:true}); setFailed(false); setAttempt(value=>value+1);
