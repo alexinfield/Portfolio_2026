@@ -50,3 +50,5 @@ next-env.d.ts
 
 # host-local TypeScript incremental state
 *.tsbuildinfo
+
+/.vite-cache/

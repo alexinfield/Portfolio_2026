@@ -1,3 +1,4 @@
+import { withBasePath } from "../lib/base-path";
 import type { CSSProperties } from "react";
 import { videoSources } from "@/lib/video-sources";
 import { Button } from "./compass";
@@ -30,7 +31,7 @@ export default function DeferredVideo({
   loop = true, autoplay = true, controls = false, active = true, paused = false,
   userStarted = false, showToggle = true, longFilm = false, durationSeconds, mediaStyle, frameBackground,
 }: DeferredVideoProps) {
-  const sources = videoSources(source);
+  const sources = videoSources(source).map(item=>({...item,src:withBasePath(item.src)}));
   const file = sources[0].src;
   return (
     <div className={className} data-video-frame data-media-reveal data-long-film={longFilm || undefined} style={frameBackground?{background:frameBackground}:undefined}>
@@ -42,7 +43,7 @@ export default function DeferredVideo({
         data-media-active={active ? "true" : "false"}
         data-playback-paused={paused ? "true" : "false"}
         data-user-started={userStarted ? "true" : "false"}
-        data-original-source={source}
+        data-original-source={withBasePath(source)}
         data-video-label={label}
         aria-label={label}
         loop={longFilm ? false : loop}
@@ -50,7 +51,7 @@ export default function DeferredVideo({
         playsInline
         controls={controls}
         preload="none"
-        poster={poster}
+        poster={poster ? withBasePath(poster) : undefined}
         width={width}
         height={height}
       >

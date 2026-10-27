@@ -6,6 +6,9 @@ const root = fileURLToPath(new URL("../", import.meta.url));
 const output = join(root, process.env.PORTFOLIO_EXPORT_DIR || "gh-pages");
 const siteOrigin = (process.env.PORTFOLIO_SITE_ORIGIN ?? "https://alexinfield.com").replace(/\/+$/, "");
 const allowIndexing = process.env.PORTFOLIO_ALLOW_INDEXING === "true";
+const basePath = process.env.PORTFOLIO_BASE_PATH ?? "";
+if (!["", "/next"].includes(basePath) || (basePath && allowIndexing)) throw new Error("Invalid private export configuration");
+const mount = value => !basePath || value === basePath || value.startsWith(basePath+"/") ? value : basePath+value;
 const projectSlugs = ["ping", "molekule-go", "luma", "niche", "hyphae", "mode"];
 const routes = [
   "/",
@@ -25,6 +28,7 @@ const { default: worker } = await import(workerUrl.href);
 
 await rm(output, { recursive: true, force: true });
 await cp(join(root, "dist/client"), output, { recursive: true });
+for(const name of ["_headers",".assetsignore",".vite"])await rm(join(output,name),{recursive:true,force:true});
 
 // Vite emits imported fonts beside the generated stylesheet but keeps a
 // root-relative /assets URL. Make those generated URLs stylesheet-relative so
@@ -55,7 +59,7 @@ for (const entry of await readdir(generatedAssets, { withFileTypes: true })) {
   }
 }
 
-if (relativePreloadHelpers === 0) {
+if (!basePath && relativePreloadHelpers === 0) {
   throw new Error("Could not make Vite's dynamic preload helper repository-path-safe");
 }
 
@@ -80,7 +84,7 @@ function staticHtml(html, route) {
           "",
         );
 
-  result = result
+  if (!basePath) result = result
     .replace(/srcset=(["'])(.*?)\1/gi, (_match, quote, value) => {
       const rewritten = value.replace(/(^|,\s*)\/(?!\/)/g, `$1${base}`);
       return `srcset=${quote}${rewritten}${quote}`;
@@ -95,6 +99,23 @@ function staticHtml(html, route) {
     .replaceAll('"/favicon.png', `"${base}favicon.png`)
     .replace(/<meta\b(?=[^>]*\bname=["']robots["'])[^>]*>/gi, "")
     .replace(/<link rel="canonical" href="[^\"]*"\/>/gi, "");
+
+  if(basePath){
+    result=result.replace(/<[^!][^>]*>/g,tag=>tag
+      .replace(/(href|src|poster)=(["'])\/(?!\/)(.*?)\2/gi,(_m,attr,q,value)=>`${attr}=${q}${mount("/"+value)}${q}`)
+      .replace(/srcset=(["'])(.*?)\1/gi,(_m,q,value)=>`srcset=${q}${value.replace(/(^|,\s*)\/(?!\/)([^,\s]+)/g,(_n,sep,path)=>sep+mount("/"+path))}${q}`));
+    const navPattern=/self\.__VINEXT_RSC_NAV__=(\{[^<]*?\})(?=<\/script>)/;
+    if(hydratedRoutes.has(route)){
+      if(!navPattern.test(result))throw Error("Missing mounted hydration navigation state");
+      result=result.replace(navPattern,(_m,json)=>{const nav=JSON.parse(json);nav.pathname=mount(route)+(route==="/"?"":"/");return "self.__VINEXT_RSC_NAV__="+JSON.stringify(nav).replaceAll("<","\\u003c");});
+    }
+  }
+  result = result
+    .replace(/<link\b[^>]*rel=["']modulepreload["'][^>]*\/?>/gi, "")
+    .replace(/\sdata-rsc-css-href=("[^"]*"|'[^']*')/gi, "")
+    .replace(/\sdata-precedence=("[^"]*"|'[^']*')/gi, "")
+    .replace(/<meta\b(?=[^>]*\bname=["']robots["'])[^>]*>/gi, "")
+    .replace(/<link\b(?=[^>]*\brel=["']canonical["'])[^>]*>/gi, "");
 
   const robots = allowIndexing ? "" : '<meta name="robots" content="noindex,nofollow"/>';
   result = result.replace(
@@ -111,7 +132,7 @@ function staticHtml(html, route) {
 
 async function renderRoute(route) {
   const response = await worker.fetch(
-    new Request(`http://localhost${route}`, { headers: { accept: "text/html" } }),
+    new Request(`http://localhost${basePath}${route}`, { headers: { accept: "text/html" } }),
     {
       ASSETS: {
         fetch: async () => new Response("Not found", { status: 404 }),
@@ -134,7 +155,7 @@ for (const route of routes) {
 
 // Render the real application 404 so recovery keeps the same header and type.
 const missing = await worker.fetch(
-  new Request("http://localhost/phase-b-intended-missing-page", { headers: { accept: "text/html" } }),
+  new Request(`http://localhost${basePath}/phase-b-intended-missing-page`, { headers: { accept: "text/html" } }),
   { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } },
   { waitUntil() {}, passThroughOnException() {} },
 );
@@ -142,8 +163,8 @@ if (missing.status !== 404) throw new Error(`Expected a 404 response, got ${miss
 const missingHtml = staticHtml(await missing.text(), "/404")
   // A missing URL can be arbitrarily deep. Resolve its relative assets and Work
   // links from the configured site root, not from that unknown URL.
-  .replace(/(href|src|poster)=(['"])\.\//gi, `$1=$2${new URL(siteOrigin).pathname.replace(/\/?$/, "/")}`)
-  .replace(/srcset=(["'])(.*?)\1/gi, (_match, quote, value) => `srcset=${quote}${value.replace(/(^|,\s*)\.\//g, `$1${new URL(siteOrigin).pathname.replace(/\/?$/, "/")}`)}${quote}`)
+  .replace(/(href|src|poster)=(['"])\.\//gi, `$1=$2${(basePath || new URL(siteOrigin).pathname.replace(/\/?$/, "")) + "/"}`)
+  .replace(/srcset=(["'])(.*?)\1/gi, (_match, quote, value) => `srcset=${quote}${value.replace(/(^|,\s*)\.\//g, `$1${(basePath || new URL(siteOrigin).pathname.replace(/\/?$/, "")) + "/"}`)}${quote}`)
   .replace(/<link\b(?=[^>]*\brel=["']canonical["'])[^>]*>/gi, "")
   .replace(/<meta\b(?=[^>]*\bproperty=["']og:url["'])[^>]*>/gi, "")
   .replace(/(<meta[^>]*(?:property="og:title"|name="twitter:title") content=")[^"]*/g, "$1Page not found — Alex Infield")
@@ -170,7 +191,7 @@ for (const { route, target, relativeTarget } of redirects) {
 }
 
 await writeFile(join(output, ".nojekyll"), "");
-await writeFile(
+if (!basePath) await writeFile(
   join(output, "sitemap.xml"),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${routes
     .map((route) => `  <url><loc>${siteOrigin}${route === "/" ? "/" : route}</loc></url>`)

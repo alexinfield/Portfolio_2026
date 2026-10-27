@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-html-link-for-pages -- native navigation for static Pages */
+import { withBasePath } from "@/lib/base-path";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import SiteShell from "@/app/site-shell";
@@ -232,11 +233,11 @@ export default async function ProjectPage({
   return (
     <SiteShell casePage>
       <div className="portfolio-case-heading">
-        <Button asChild variant="secondary" data-plain="" size="sm"><a href="/"><ArrowLeft aria-hidden="true" />Back to Work</a></Button>
+        <Button asChild variant="secondary" data-plain="" size="sm"><a href={withBasePath("/")}><ArrowLeft aria-hidden="true" />Back to Work</a></Button>
         <h1>{project.title}</h1>
       </div>
       <div className="portfolio-case-stack">{presentation}</div>
-      <div className="portfolio-case-back"><Button asChild variant="secondary" data-plain=""><a href="/"><ArrowLeft aria-hidden="true" />Back to Work</a></Button></div>
+      <div className="portfolio-case-back"><Button asChild variant="secondary" data-plain=""><a href={withBasePath("/")}><ArrowLeft aria-hidden="true" />Back to Work</a></Button></div>
     </SiteShell>
   );
 }

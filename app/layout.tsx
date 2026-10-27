@@ -1,3 +1,4 @@
+import { withBasePath } from "../lib/base-path";
 import type { Metadata } from "next";
 import "@alex-infield/compass-augmentation/styles.css";
 import "./alex-tokens.css";
@@ -36,15 +37,15 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" data-theme="dark" style={{ colorScheme: "dark" }} suppressHydrationWarning>
       <head>
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href={withBasePath("/favicon.png")} />
         <script async src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`} />
         <script dangerouslySetInnerHTML={{ __html: googleAnalyticsBootstrap }} />
         {clarityBootstrap ? <script dangerouslySetInnerHTML={{ __html: clarityBootstrap }} /> : null}
       </head>
       <body>
         {children}
-        <script src="/portfolio-runtime.js" defer />
-        <script src="/portfolio-analytics.js" defer />
+        <script src={withBasePath("/portfolio-runtime.js")} defer />
+        <script src={withBasePath("/portfolio-analytics.js")} defer />
       </body>
     </html>
   );

@@ -1,4 +1,5 @@
 import type { ImgHTMLAttributes } from "react";
+import { withBasePath } from "../lib/base-path";
 
 const responsiveWidths = [768, 960, 1600, 2600] as const;
 const supportedSource = /\.(?:avif|jpe?g|png|webp)$/i;
@@ -26,6 +27,7 @@ export default function ResponsiveImage({
   alt,
   ...props
 }: ResponsiveImageProps) {
+  src = withBasePath(src);
   const candidates = supportedSource.test(src)
     ? responsiveWidths.filter((candidateWidth) => candidateWidth < width)
     : [];
