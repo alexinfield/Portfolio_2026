@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState, type KeyboardEvent, type TouchEvent } from "react";
+import { useCallback, useRef, useState, type KeyboardEvent, type TouchEvent } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "../compass";
 import DeferredVideo from "../deferred-video";
@@ -8,13 +8,29 @@ import { personalAsset, personalMediaStyle, type PersonalMedia, type PersonalFra
 export function PersonalImage({media, eager=false, retry=true, framing, sizes="(max-width: 767px) 100vw, (max-width: 1199px) 50vw, 33vw"}: {media: PersonalMedia; eager?: boolean; retry?: boolean; framing?: PersonalFraming; sizes?: string}) {
   const [failed,setFailed] = useState(false);
   const [attempt,setAttempt] = useState(0);
+  const [edgeSource,setEdgeSource]=useState<{src:string;width:number}|null>(null);
+  const ratio=media.width/media.height;
+  const extendEdges=framing?.fill==="edge-extend"&&framing.fit==="pad"&&ratio<4/3;
+  const edgeWidth=(1-ratio/(4/3))*50;
+  const updateEdgeSource=useCallback((image:HTMLImageElement)=>{
+    if(!extendEdges||!image.complete||image.naturalWidth===0)return;
+    const src=image.currentSrc||personalAsset(media.src);
+    const width=media.variants?.find(item=>src.endsWith(item.src))?.width??media.width;
+    setEdgeSource(previous=>previous?.src===src&&previous.width===width?previous:{src,width});
+  },[extendEdges,media.src,media.variants,media.width]);
+  const imageRef=useCallback((image:HTMLImageElement|null)=>{if(image)updateEdgeSource(image);},[updateEdgeSource]);
+  const edgeStyle={width:`calc(${edgeWidth}% + 12px)`,backgroundImage:edgeSource?`url("${edgeSource.src}")`:"none",backgroundSize:`${(edgeSource?.width??media.width)*100}% 100%`};
   return <div className="portfolio-image" style={framing?{background:framing.background}:undefined}>
+    {extendEdges && <><span className="portfolio-edge-fill portfolio-edge-left" aria-hidden="true" style={edgeStyle}/><span className="portfolio-edge-fill portfolio-edge-right" aria-hidden="true" style={edgeStyle}/></>}
     {/* Package variants are native-size capped; never synthesize missing paths. */}
     {/* eslint-disable-next-line @next/next/no-img-element */}
-    <img style={framing?personalMediaStyle(media,framing):undefined} key={attempt} src={personalAsset(media.src)} alt={media.alt} width={media.width} height={media.height}
+    <img ref={imageRef} style={framing?{...personalMediaStyle(media,framing),...(extendEdges?{maskImage:"linear-gradient(90deg, transparent, #000 12px, #000 calc(100% - 12px), transparent)"}:{})}:undefined} key={attempt} src={personalAsset(media.src)} alt={media.alt} width={media.width} height={media.height}
       srcSet={media.variants?.map(item=>`${personalAsset(item.src)} ${item.width}w`).join(", ")}
       sizes={sizes} loading={eager ? "eager" : "lazy"} decoding="async"
-      onError={()=>setFailed(true)} onLoad={()=>setFailed(false)} />
+      onError={()=>setFailed(true)} onLoad={event=>{
+        setFailed(false);
+        updateEdgeSource(event.currentTarget);
+      }} />
     {failed && <div className="portfolio-image-failure"><p role="status">Image unavailable.</p>{retry && <Button type="button" variant="secondary" size="sm" aria-label={`Retry image: ${media.alt}`} onClick={event=>{
       (event.currentTarget.closest("[data-media-reveal]") as HTMLElement|null)?.focus({preventScroll:true}); setFailed(false); setAttempt(value=>value+1);
     }}>Retry image</Button>}</div>}

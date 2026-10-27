@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import collection from "./personal.json";
-export type PersonalFraming = {fit:"cover"|"pad";object_position:string;background:string};
+export type PersonalFraming = {fit:"cover"|"pad";object_position:string;background:string;fill?:"edge-extend"};
 export type PersonalMedia = {
   id: string; kind: "image" | "video"; src: string; width: number; height: number; alt: string;
   variants?: {src: string; width: number; height: number; bytes: number}[];

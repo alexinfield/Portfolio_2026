@@ -447,7 +447,13 @@
               "height": 3414,
               "bytes": 17350
             }
-          ]
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#F8F8F8",
+            "fill": "edge-extend"
+          }
         },
         {
           "kind": "video",
@@ -578,7 +584,8 @@
           "framing": {
             "fit": "pad",
             "object_position": "50% 50%",
-            "background": "#7B7B7B"
+            "background": "#7B7B7B",
+            "fill": "edge-extend"
           }
         },
         {
@@ -623,7 +630,8 @@
       "framing": {
         "fit": "pad",
         "object_position": "50% 50%",
-        "background": "#F8F8F8"
+        "background": "#F8F8F8",
+        "fill": "edge-extend"
       }
     },
     {
@@ -1054,7 +1062,13 @@
               "height": 1600,
               "bytes": 49842
             }
-          ]
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "linear-gradient(180deg, #BCC1B4 0%, #C6CDC1 12.5%, #CCD3C5 25%, #D1DACE 37.5%, #D4DCCD 50%, #D5DDCE 62.5%, #D6DFD3 75%, #D4DBCD 87.5%, #D0D6CD 100%) left top / 50% 100% no-repeat, linear-gradient(180deg, #A3A79C 0%, #ACAFA7 12.5%, #B1B7AE 25%, #B6BDAF 37.5%, #B7BDB4 50%, #B6BCB3 62.5%, #B2B8B0 75%, #AEB4AB 87.5%, #ABAEA6 100%) right top / 50% 100% no-repeat",
+            "fill": "edge-extend"
+          }
         },
         {
           "kind": "image",
@@ -1080,7 +1094,8 @@
           "framing": {
             "fit": "pad",
             "object_position": "50% 50%",
-            "background": "#A7A7A7"
+            "background": "#A7A7A7",
+            "fill": "edge-extend"
           }
         }
       ],
@@ -1088,7 +1103,8 @@
       "framing": {
         "fit": "pad",
         "object_position": "50% 50%",
-        "background": "linear-gradient(180deg, #BCC1B4 0%, #C6CDC1 12.5%, #CCD3C5 25%, #D1DACE 37.5%, #D4DCCD 50%, #D5DDCE 62.5%, #D6DFD3 75%, #D4DBCD 87.5%, #D0D6CD 100%) left top / 50% 100% no-repeat, linear-gradient(180deg, #A3A79C 0%, #ACAFA7 12.5%, #B1B7AE 25%, #B6BDAF 37.5%, #B7BDB4 50%, #B6BCB3 62.5%, #B2B8B0 75%, #AEB4AB 87.5%, #ABAEA6 100%) right top / 50% 100% no-repeat"
+        "background": "linear-gradient(180deg, #BCC1B4 0%, #C6CDC1 12.5%, #CCD3C5 25%, #D1DACE 37.5%, #D4DCCD 50%, #D5DDCE 62.5%, #D6DFD3 75%, #D4DBCD 87.5%, #D0D6CD 100%) left top / 50% 100% no-repeat, linear-gradient(180deg, #A3A79C 0%, #ACAFA7 12.5%, #B1B7AE 25%, #B6BDAF 37.5%, #B7BDB4 50%, #B6BCB3 62.5%, #B2B8B0 75%, #AEB4AB 87.5%, #ABAEA6 100%) right top / 50% 100% no-repeat",
+        "fill": "edge-extend"
       }
     },
     {
