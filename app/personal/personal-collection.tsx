@@ -2,6 +2,7 @@
 import { useState, useSyncExternalStore } from "react";
 import { Button, Card, Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../compass";
 import { type PersonalProject } from "@/lib/personal";
+import ProjectCard from "../project-card";
 import PersonalGallery, { PersonalImage } from "./personal-gallery";
 
 const subscribe = () => () => {};
@@ -16,10 +17,8 @@ export default function PersonalCollection({ projects }: {projects: PersonalProj
   const reset = () => {setYear("all"); setCategory("all");};
   const renderProject = (item: PersonalProject, index: number) => <article className="portfolio-project" id={item.id} data-personal-id={item.id}
     data-year={item.year ?? undefined} data-category={item.category ?? undefined} key={item.id} hidden={!matches(item)}>
-    <Card className="portfolio-personal-card">
-      {item.link ? <div className="portfolio-work-link"><PersonalImage media={item.cover} eager={index<2} /><h2 className="portfolio-card-label text-sm"><Button asChild variant="link" size="sm"><a href={`..${item.link}/`}>{item.title}</a></Button></h2></div>
-        : <PersonalGallery media={item.gallery.length ? item.gallery : [item.cover]} title={item.title} visible={matches(item)} />}
-    </Card>
+    {item.link ? <ProjectCard href={`..${item.link}/`} title={item.title}><PersonalImage media={item.cover} eager={index<2} retry={false} /></ProjectCard>
+      : <Card className="portfolio-personal-card"><PersonalGallery media={item.gallery.length ? item.gallery : [item.cover]} title={item.title} visible={matches(item)} /></Card>}
     {!item.link && (item.short_text ? <details className="portfolio-card-notes"><Button asChild variant="secondary" size="sm" data-plain=""><summary><h2 className="portfolio-project-title">{item.title}</h2><span className="portfolio-about-label">About</span></summary></Button><p className="portfolio-note-copy">{item.short_text}</p></details> : <h2 className="portfolio-project-title portfolio-card-label">{item.title}</h2>)}
   </article>;
   return <>

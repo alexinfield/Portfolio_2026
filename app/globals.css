@@ -21,6 +21,7 @@ html[data-theme-changing] .portfolio-root, html[data-theme-changing] .portfolio-
 .portfolio-header [disabled] {color: var(--disabled); opacity: 1; cursor: default;}
 .portfolio-boundary [data-button-kind] {min-width: 44px; min-height: 44px;}
 .portfolio-boundary [data-button-kind="icon"] {width: 44px; height: 44px;}
+.portfolio-root [data-slot="button"], .portfolio-root [data-slot="select-trigger"], .portfolio-root [data-slot="toggle-group-item"] {border-radius: var(--radius);}
 .portfolio-boundary [data-plain] {background: transparent;}
 .portfolio-boundary [data-plain]:not(:disabled):not([aria-disabled="true"]):is(:hover,:active) {background: var(--soft); color: var(--text);}
 .portfolio-boundary [data-slot="toggle-group-item"], .portfolio-boundary [data-slot="select-trigger"], .compass-scope [data-slot="select-item"] {min-height: 44px;}
@@ -38,11 +39,9 @@ html[data-theme-changing] .portfolio-root, html[data-theme-changing] .portfolio-
 .portfolio-work-card, .portfolio-personal-card {padding: 0; gap: 0; background: var(--canvas)!important; border: 0; box-shadow: none; overflow: hidden;}
 .portfolio-work-card img {width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: var(--radius);}
 .portfolio-card-label {display: flex; align-items: center; min-height: 44px;}
-.portfolio-card-label [data-slot="button"] {padding-inline: 0; font-size: inherit;}
-.portfolio-work-link h2 a {position: static;}
-.portfolio-work-link h2 a::after {content: ''; position: absolute; inset: 0; border-radius: var(--radius);}
-.portfolio-work-link h2 a:focus-visible {outline: none;}
-.portfolio-work-link h2 a:focus-visible::after {outline: var(--focus-width) solid var(--focus); outline-offset: var(--focus-gap);}
+/* The public Compass link paints the control; this adapter lays out a stable
+   image/caption card rather than an inline text button. */
+.portfolio-card-link[data-slot="button"] {display: flex; flex-direction: column; align-items: stretch; justify-content: start; width: 100%; height: auto; padding: 0; gap: 0; white-space: normal; transform: none!important; scale: none!important;}
 .portfolio-personal-link {display: flex; justify-content: center; margin-top: var(--section);}
 .portfolio-info-page {display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--group); align-items: start;}
 .portfolio-info-copy {display: flex; flex-direction: column; align-items: flex-start; gap: var(--group); padding-block: var(--group);}
@@ -80,6 +79,8 @@ html[data-portfolio-site-theme="light"] [data-site-light-icon] {display: block;}
 .portfolio-filter-options [data-slot="select-item"] {white-space: normal; overflow-wrap: anywhere;}
 .portfolio-filter-empty {display: grid; justify-items: start; gap: var(--group); padding-block: var(--section);}
 .portfolio-personal-front {margin-bottom: var(--group);}
+.portfolio-personal-front .portfolio-image {aspect-ratio: 16/9; overflow: hidden;}
+.portfolio-personal-front .portfolio-image img {width: 100%; height: 100%; object-fit: cover;}
 .portfolio-personal-grid {display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); column-gap: 10px; row-gap: var(--group); align-items: start;}
 .portfolio-project {min-width: 0; scroll-margin-top: 6rem;}
 .portfolio-project-title {font-size: .875rem; line-height: 1.25rem;}
@@ -93,6 +94,7 @@ html[data-portfolio-site-theme="light"] [data-site-light-icon] {display: block;}
 .portfolio-gallery-slide > div, .personal-video {width: 100%; height: 100%;}
 .portfolio-gallery-slide img, .portfolio-gallery-slide video {width: 100%; height: 100%; object-fit: contain;}
 .gallery-navigation {left: auto; right: var(--inline);}
+.portfolio-gallery .media-controls [data-slot="button"] {border-radius: calc(var(--radius) - 1px);}
 .portfolio-media-caption {min-height: 44px; display: flex; align-items: center; font-size: .875rem; line-height: 1.25rem; color: var(--secondary);}
 .portfolio-image-failure {position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: var(--inline); background: var(--canvas); color: var(--text); padding: var(--group);}
 @media (max-width:1199px) {.portfolio-personal-grid {grid-template-columns: repeat(2,minmax(0,1fr));}}

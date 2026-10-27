@@ -105,15 +105,29 @@
   // stay focusable while visually hidden; CSS reveals their focused container.
   document.addEventListener("pointerdown", (event) => {
     if (event.pointerType !== "touch") return;
-    const frame = event.target.closest?.("[data-media-reveal]");
-    if (frame) frame.dataset.controlsRevealed = "true";
-  });
+    let frame = event.target.closest?.("[data-media-reveal]");
+    while (frame) {
+      frame.dataset.controlsRevealed = "true";
+      frame = frame.parentElement?.closest("[data-media-reveal]");
+    }
+  }, true);
 
   document.addEventListener("click", (event) => {
-    const button = event.target.closest?.("[data-video-toggle]");
+    const button = event.target.closest?.("[data-video-toggle], [data-video-retry]");
     if (!button) return;
     const video = button.closest("[data-video-frame]").querySelector("video");
     const state = states.get(video);
+    if (button.hasAttribute("data-video-retry")) {
+      const frame = button.closest("[data-video-frame]");
+      const focus = frame.querySelector("[data-video-toggle]");
+      if (focus) focus.focus({ preventScroll: true });
+      else { frame.tabIndex = -1; frame.focus({ preventScroll: true }); }
+      state.loaded = false;
+      state.userPaused = false;
+      state.userStarted = true;
+      play(video);
+      return;
+    }
     state.userPaused = !video.paused;
     state.userStarted = video.paused;
     if (state.userPaused) video.pause();

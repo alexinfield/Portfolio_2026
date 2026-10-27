@@ -1,6 +1,7 @@
 import { videoSources } from "@/lib/video-sources";
 import { Button } from "./compass";
 import MediaToggle from "./media-toggle";
+import { RotateCw } from "lucide-react";
 
 type DeferredVideoProps = {
   source: string;
@@ -54,6 +55,7 @@ export default function DeferredVideo({
         <p className="media-status" data-video-status hidden role="status">
           <span data-video-message>Video unavailable in this browser.</span>{" "}
           <Button asChild variant="link" size="sm"><a href={file}>Open video file</a></Button>
+          <Button type="button" variant="secondary" size="icon-sm" data-video-retry aria-label={`Retry ${label}`}><RotateCw aria-hidden="true" /></Button>
         </p>
       <noscript><p className="media-noscript">Enable JavaScript to play here. <Button asChild variant="link" size="sm"><a href={file}>Open video file</a></Button></p></noscript>
     </div>
