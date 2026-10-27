@@ -384,3 +384,15 @@ test("unknown routes keep a real 404 and offer Work and Contact in the Pages exp
   assert.match(html, /name="robots" content="noindex,nofollow"/);
   assert.match(html, /portfolio-source\.min\.css/);
 });
+
+test("covers, Info artwork and Etc imagery also have visual descriptions", async () => {
+  for (const route of ["/", "/info", "/etc"]) {
+    const html = await (await render(route)).text();
+    const images = [...html.matchAll(/<img\b[^>]*>/g)].map(([tag]) => tag);
+    assert.ok(images.length > 0);
+    for (const image of images) {
+      const alt = /\salt="([^"]+)"/.exec(image)?.[1];
+      assert.ok(alt?.length > 10, `${route}: ${image.slice(0, 180)}`);
+    }
+  }
+});

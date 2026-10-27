@@ -64,6 +64,8 @@ export async function runBrowserRegressions(browser, baseURL) {
           assert.ok(parseFloat(style.width) >= 2);
         });
       }
+      const alts = await page.locator("main img").evaluateAll((items) => items.map((image) => image.alt));
+      record(`image descriptions: ${route}`, () => assert.ok(alts.every((alt) => alt.length > 10)));
       if (route.startsWith("/projects/")) {
         const panels = await page.locator(".case-text").evaluateAll((items) => items.map((element) => ({
           text: element.innerText, width: element.getBoundingClientRect().width, font: getComputedStyle(element).fontSize,
@@ -72,8 +74,6 @@ export async function runBrowserRegressions(browser, baseURL) {
           assert.ok(panels.some((panel) => panel.text.length > 120));
           assert.ok(panels.every((panel) => panel.width > 300 && panel.width <= 393 && parseFloat(panel.font) >= 16));
         });
-        const alts = await page.locator("main img").evaluateAll((items) => items.map((image) => image.alt));
-        record(`image descriptions: ${route}`, () => assert.ok(alts.every((alt) => alt.length > 10)));
         const videos = await page.locator("video").evaluateAll((items) => items.map((video) => ({ paused: video.paused, time: video.currentTime, src: video.currentSrc })));
         record(`reduced motion leaves videos dormant: ${route}`, () => assert.ok(videos.every((video) => video.paused && video.time === 0 && video.src === "")));
       }

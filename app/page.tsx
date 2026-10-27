@@ -35,7 +35,7 @@ export default function Home() {
               <div className="content-2">
                 <ResponsiveImage
                   src={project.cover}
-                  alt=""
+                  alt={project.coverAlt}
                   className={imageClassNames[project.slug]}
                   width={project.coverWidth}
                   height={project.coverHeight}

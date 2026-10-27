@@ -7,7 +7,7 @@ export function projectShareImage(project: (typeof projectDefinitions)[number]) 
     url: project.coverWidth > 1600 ? project.cover.replace(/\.[^.]+$/, "-w1600.webp") : project.cover,
     width,
     height: Math.round(project.coverHeight * width / project.coverWidth),
-    alt: `${project.title} project cover`,
+    alt: project.coverAlt,
   };
 }
 

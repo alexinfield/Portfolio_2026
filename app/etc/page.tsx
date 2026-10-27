@@ -80,7 +80,7 @@ export default function EtcPage() {
               <div className="content-2">
                 <ResponsiveImage
                   src="/assets/home/media/673e50477b24902040693b05_15-hero.jpg"
-                  alt=""
+                  alt="A branching light sculpture with small lights at its tips in blue light."
                   className="home-image-hero-hyphae"
                   loading="lazy"
                   width={5760}
@@ -107,8 +107,8 @@ export default function EtcPage() {
               variant="slider-5"
               label="Stool and CNC"
               items={[
-                { kind: "image", src: "/assets/etc/media/stool.avif", alt: "A wooden stool.", width: 3707, height: 3263 },
-                { kind: "image", src: "/assets/etc/media/cnc.avif", alt: "A CNC-machined form.", width: 2936, height: 2936 },
+                { kind: "image", src: "/assets/etc/media/stool.avif", alt: "A stool assembled from slotted, curved panels.", width: 3707, height: 3263 },
+                { kind: "image", src: "/assets/etc/media/cnc.avif", alt: "Close-up of the stool’s slotted panel and curved top.", width: 2936, height: 2936 },
               ]}
             />
             <div className="w-layout-hflex flex-block exact-hidden-label exact-label-pair">
@@ -122,7 +122,7 @@ export default function EtcPage() {
           <div className="cell-play-casestudy exact-hover-card">
             <ResponsiveImage
               src="/assets/info/media/67aca18a869f9276f4c0ef01_IMG_0019.png"
-              alt=""
+              alt="White paper folded into a repeating grid of triangular shapes."
               className="image-43"
               loading="lazy"
               width={2000}
@@ -135,7 +135,7 @@ export default function EtcPage() {
           <div className="cell-play exact-hover-card">
             <ResponsiveImage
               src="/assets/etc/media/wall-mounts.jpeg"
-              alt=""
+              alt="A relief of a face on a CNC machine bed beneath the cutting tool."
               className="image-fullwidth"
               loading="lazy"
               width={480}
@@ -153,7 +153,7 @@ export default function EtcPage() {
             <source media="(prefers-reduced-motion: reduce)" srcSet="/assets/etc/media/hyundai-research-still.webp" />
             <ResponsiveImage
               src="/assets/etc/media/hyundai-research.gif"
-              alt=""
+              alt="Animated rows of small red and pale blue squares on a black background."
               className="image-43"
               loading="lazy"
               width={800}
@@ -167,7 +167,7 @@ export default function EtcPage() {
           <div className="cell-play exact-hover-card">
             <ResponsiveImage
               src="/assets/etc/media/mycelium.jpeg"
-              alt=""
+              alt="Close-up of a pale, mottled surface with concentric curved lines."
               className="image-fullwidth"
               loading="lazy"
               width={480}
