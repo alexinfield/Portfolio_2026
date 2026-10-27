@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import { socialMetadata } from "@/lib/social-metadata";
 import LiveHeader from "../live-header";
 import ResponsiveImage from "../responsive-image";
 
-export const metadata: Metadata = {
-  title: "Info",
-  description: "About Alex Infield.",
-};
+export const metadata: Metadata = socialMetadata("Info", "About Alex Infield.", "/info", {
+  url: "/assets/info/media/67aca18a869f9276f4c0ef01_IMG_0019-w960.webp",
+  width: 960, height: 960, alt: "Paper book artwork",
+});
 
 export default function InfoPage() {
   return (

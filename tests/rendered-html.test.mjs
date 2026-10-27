@@ -209,7 +209,7 @@ test("GitHub Pages export contains only live routes plus verified legacy redirec
   ]);
 
   assert.match(home, /href="\.\/projects\/ping"/);
-  assert.match(home, /<link rel="icon" href="data:,"\/>/);
+  assert.match(home, /<link rel="icon" type="image\/png" sizes="32x32" href="\.\/favicon\.png"\/>/);
   assert.match(home, /srcset="\.\/assets\/home\/media\/692fb99b7ff154a13bde26f2_251202-Hero-Hand-w768\.webp 768w, \.\/assets\/home\/media\/692fb99b7ff154a13bde26f2_251202-Hero-Hand-w960\.webp 960w/);
   assert.match(home, /href="\.\/assets\/home\/media\/portfolio-source\.min\.css/);
   assert.match(etc, /src="\.\.\/assets\/etc\/media\/desk-pen/);
@@ -354,6 +354,23 @@ test("reduced-motion and manual carousel controls are part of the exported behav
   assert.match(carousel, /ArrowLeft/);
   assert.match(carousel, /ArrowRight/);
   assert.match(carousel, /!isVisible \|\| hidden \|\| !running/);
+});
+
+test("share metadata uses existing local covers and correct case titles", async () => {
+  for (const [route, title] of [["index.html", "Alex Infield"], ["info/index.html", "Info"], ["etc/index.html", "Etc"], ...publishedProjects.map((slug, index) => [`projects/${slug}/index.html`, publishedTitles[index]])]) {
+    const html = await readFile(new URL(`../gh-pages/${route}`, import.meta.url), "utf8");
+    assert.ok(html.includes(`<title>${title}</title>`), route);
+    assert.ok(html.includes(`property="og:title" content="${title}"`), route);
+    assert.match(html, /name="twitter:card" content="summary_large_image"/);
+    assert.ok(html.includes(`name="twitter:title" content="${title}"`), route);
+    const image = /property="og:image" content="https:\/\/alexinfield.com([^\"]+)"/.exec(html)?.[1];
+    assert.ok(image, route);
+    await access(new URL(`../public${image}`, import.meta.url));
+  }
+  const icon = await readFile(new URL("../public/favicon.png", import.meta.url));
+  assert.equal(icon.readUInt32BE(16), 32);
+  assert.equal(icon.readUInt32BE(20), 32);
+  assert.ok(icon.length < 5000);
 });
 
 test("unknown routes keep a real 404 and offer Work and Contact in the Pages export", async () => {

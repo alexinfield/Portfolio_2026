@@ -4,6 +4,7 @@ import LiveHeader from "@/app/live-header";
 import ResponsiveImage from "@/app/responsive-image";
 import CaseText, { casePanel } from "@/app/case-text";
 import DeferredVideo from "@/app/deferred-video";
+import { socialMetadata, projectShareImage } from "@/lib/social-metadata";
 import {
   getProject,
   getProjectMedia,
@@ -12,15 +13,6 @@ import {
 } from "@/lib/portfolio";
 
 type MediaItem = ReturnType<typeof getProjectMedia>[number];
-
-const liveTitles: Record<ProjectSlug, string> = {
-  ping: "Ping",
-  "molekule-go": "Molekule Go",
-  luma: "Luma",
-  niche: "pillar",
-  hyphae: "hyphae",
-  mode: "furniture",
-};
 
 const projectPageClasses: Record<ProjectSlug, string> = {
   ping: "body-molekule",
@@ -216,10 +208,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const project = getProject(slug);
-  return {
-    title: project ? liveTitles[project.slug] : "Alex Infield",
-    description: project ? `${project.title} — a project by Alex Infield.` : undefined,
-  };
+  return project ? socialMetadata(
+    project.title,
+    `${project.title} — a project by Alex Infield.`,
+    `/projects/${project.slug}`,
+    projectShareImage(project),
+  ) : { title: "Alex Infield" };
 }
 
 export default async function ProjectPage({

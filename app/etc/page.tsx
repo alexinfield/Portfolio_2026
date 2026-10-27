@@ -1,14 +1,16 @@
 /* eslint-disable @next/next/no-html-link-for-pages -- static Pages export requires native navigation */
 
 import type { Metadata } from "next";
+import { socialMetadata, projectShareImage } from "@/lib/social-metadata";
+import { projectDefinitions } from "@/lib/portfolio";
 import LiveHeader from "../live-header";
 import ResponsiveImage from "../responsive-image";
 import EtcCarousel from "./etc-carousel";
 
-export const metadata: Metadata = {
-  title: "Etc",
-  description: "Experiments and additional work by Alex Infield.",
-};
+export const metadata: Metadata = socialMetadata(
+  "Etc", "Experiments and additional work by Alex Infield.", "/etc",
+  projectShareImage(projectDefinitions[4]),
+);
 
 const deskPenItems = [
   {

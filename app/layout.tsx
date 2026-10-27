@@ -2,6 +2,7 @@
 
 import type { Metadata } from "next";
 import "./globals.css";
+import { socialMetadata } from "@/lib/social-metadata";
 
 const googleAnalyticsId = process.env.PORTFOLIO_GA_ID?.trim() || "G-C6H8Q9R5B5";
 const clarityProjectId = process.env.PORTFOLIO_CLARITY_ID?.trim() || "xz6mz3a8cb";
@@ -23,8 +24,7 @@ const clarityBootstrap = clarityProjectId
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://alexinfield.com"),
-  title: "Alex Infield",
-  description: "Selected work by industrial designer Alex Infield.",
+  ...socialMetadata("Alex Infield", "Selected work by industrial designer Alex Infield.", "/"),
 };
 
 export default function RootLayout({
@@ -35,7 +35,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="data:," />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
         <script async src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`} />
         <script dangerouslySetInnerHTML={{ __html: googleAnalyticsBootstrap }} />
         {clarityBootstrap ? <script dangerouslySetInnerHTML={{ __html: clarityBootstrap }} /> : null}
