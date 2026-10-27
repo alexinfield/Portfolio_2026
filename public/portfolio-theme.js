@@ -65,7 +65,12 @@
   });
   const refresh = () => { sync(); dispatchEvent(new Event("portfolio-appearance-change")); };
   query.addEventListener("change", refresh);
-  addEventListener("pageshow", refresh);
+  addEventListener("pageshow", () => {
+    // A cached document may have missed a preference changed on another route
+    // in this same tab; that write does not dispatch a storage event here.
+    try { const saved = localStorage.getItem(key); appearance = valid(saved) ? saved : "dark"; } catch { /* Retain the usable in-document preference. */ }
+    refresh();
+  });
   addEventListener("storage", event => {
     if (event.key !== key && event.key !== null) return;
     appearance = valid(event.newValue) ? event.newValue : "dark";
