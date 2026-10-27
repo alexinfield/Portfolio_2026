@@ -11,6 +11,8 @@ export default function LiveHeader({ current, light = false }: LiveHeaderProps) 
   const variant = light ? ` ${lightVariant}` : "";
 
   return (
+    <>
+    <a className="skip-link" href="#main-content">Skip to content</a>
     <header className={`header${variant}`}>
       <div className="div-block-35">
         <h1 className={`heading${variant}`}>
@@ -23,12 +25,13 @@ export default function LiveHeader({ current, light = false }: LiveHeaderProps) 
           </a>
         </h1>
       </div>
-      <div className="div-block-36">
+      <nav className="div-block-36" aria-label="Primary">
         <ul className={`list-2 w-list-unstyled${variant}`} aria-hidden="true" />
         <ul className={`list-2 w-list-unstyled${variant}`}>
           <li>
             <a
               href="/"
+              data-nav-link="work"
               aria-current={current === "work" ? "page" : undefined}
               className={`five link${variant}${current === "work" ? " w--current" : ""}`}
             >
@@ -38,6 +41,7 @@ export default function LiveHeader({ current, light = false }: LiveHeaderProps) 
           <li>
             <a
               href="/info"
+              data-nav-link="info"
               aria-current={current === "info" ? "page" : undefined}
               className={`five link${variant}${current === "info" ? " w--current" : ""}`}
             >
@@ -45,12 +49,13 @@ export default function LiveHeader({ current, light = false }: LiveHeaderProps) 
             </a>
           </li>
           <li>
-            <a href="mailto:alex@infield.net" className={`five link${variant}`}>
+            <a href="mailto:alex@infield.net" data-nav-link="contact" className={`five link${variant}`}>
               Contact
             </a>
           </li>
         </ul>
-      </div>
+      </nav>
     </header>
+    </>
   );
 }

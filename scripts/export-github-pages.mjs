@@ -59,7 +59,7 @@ if (relativePreloadHelpers === 0) {
 }
 
 function relativeRoot(route) {
-  if (route === "/") return "./";
+  if (route === "/" || route === "/404") return "./";
   if (route.startsWith("/projects/")) return "../../";
   return "../";
 }
@@ -134,10 +134,21 @@ for (const { route, target, relativeTarget } of redirects) {
   await writeFile(path, html);
 }
 
-await writeFile(
-  join(output, "404.html"),
-  '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Not Found</title><style>html,body{background:#000;margin:0;min-height:100%}</style></head><body></body></html>',
+// Render the real application 404 so recovery keeps the same header and type.
+const missing = await worker.fetch(
+  new Request("http://localhost/phase-b-intended-missing-page", { headers: { accept: "text/html" } }),
+  { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } },
+  { waitUntil() {}, passThroughOnException() {} },
 );
+if (missing.status !== 404) throw new Error(`Expected a 404 response, got ${missing.status}`);
+const missingHtml = staticHtml(await missing.text(), "/404")
+  // A missing URL can be arbitrarily deep. Resolve its relative assets and Work
+  // links from the configured site root, not from that unknown URL.
+  .replace("<head>", `<head><base href="${new URL(siteOrigin).pathname.replace(/\/?$/, "/")}">`)
+  .replace(/<title>[^<]*<\/title>/, "<title>Page not found — Alex Infield</title>")
+  .replace(/<meta\s+name="robots"[^>]*>/gi, "")
+  .replace("</head>", '<meta name="robots" content="noindex,nofollow"/></head>');
+await writeFile(join(output, "404.html"), missingHtml);
 await writeFile(join(output, ".nojekyll"), "");
 await writeFile(
   join(output, "sitemap.xml"),

@@ -66,7 +66,7 @@ export default function EtcPage() {
   return (
     <main className="play-body">
       <LiveHeader light />
-      <div className="play-columns w-row" id="main-content">
+      <div className="play-columns w-row" id="main-content" tabIndex={-1}>
         <div className="play-column w-col w-col-4 w-col-stack">
           <div className="cell-play">
             <EtcCarousel items={deskPenItems} />

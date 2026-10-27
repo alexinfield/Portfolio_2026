@@ -24,7 +24,7 @@ export default function Home() {
   return (
     <main className="home-body">
       <LiveHeader current="work" />
-      <div className="w-layout-grid grid" id="main-content">
+      <div className="w-layout-grid grid" id="main-content" tabIndex={-1}>
         {projects.map((project, index) => (
           <a
             href={`/projects/${project.slug}`}

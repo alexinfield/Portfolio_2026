@@ -311,3 +311,79 @@ main.play-body .exact-hover-card:focus-within > .exact-hidden-label {
     transition: none;
   }
 }
+
+/* Functional focus states override the source site's incomplete current-link rule. */
+body :is(a, button, [tabindex="0"]):focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 1000;
+  top: 10px;
+  left: 10px;
+  transform: translateY(-200%);
+  min-height: 44px;
+  padding: 10px;
+  background: #000;
+  color: #fff;
+  font: 300 18px/150% "Funktionalgrotesk", sans-serif;
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+#main-content {
+  scroll-margin-top: 80px;
+}
+
+@media (max-width: 767px) {
+  /* Negative margins preserve the original ink positions while enlarging links. */
+  .header .five.link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 48px;
+    padding-block: 16.2px;
+    margin-block: -16.2px;
+  }
+  .header .five.link[data-nav-link="work"] {
+    margin-inline: -8.5px;
+  }
+  .header .five.link[data-nav-link="info"] {
+    margin-inline: -12.5px;
+  }
+  .header .five.link[data-nav-link="contact"] {
+    margin-inline: -1.5px;
+  }
+  .header a.primary-link {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    margin-block: -12px;
+  }
+}
+
+.not-found-content {
+  padding: 120px 20px 20px;
+  color: #ccc;
+  font: 300 18px/150% "Funktionalgrotesk", sans-serif;
+}
+
+.not-found-content h1 {
+  color: #fff;
+  font: inherit;
+  font-size: 24px;
+  margin: 0 0 20px;
+}
+
+.not-found-content a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-right: 20px;
+  color: inherit;
+}

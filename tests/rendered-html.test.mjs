@@ -327,6 +327,19 @@ test("video URLs stay dormant in the exported HTML until viewport or play demand
   }
 });
 
+test("every page has a labelled navigation landmark, skip target and explicit focus and phone hit-area rules", async () => {
+  for (const route of ["index.html", "info/index.html", "etc/index.html", "404.html", ...publishedProjects.map((slug) => `projects/${slug}/index.html`)]) {
+    const html = await readFile(new URL(`../gh-pages/${route}`, import.meta.url), "utf8");
+    assert.match(html, /<nav[^>]*aria-label="Primary"/);
+    assert.match(html, /class="skip-link" href="#main-content">Skip to content/);
+    assert.match(html, /id="main-content" tabindex="-1"/);
+  }
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(css, /:focus-visible\s*\{\s*outline: 2px solid currentColor;/);
+  assert.match(css, /\.header \.five\.link\s*\{[^}]*min-width: 44px;[^}]*min-height: 48px;/s);
+  assert.match(css, /\.header a\.primary-link\s*\{[^}]*min-height: 48px;/s);
+});
+
 test("reduced-motion and manual carousel controls are part of the exported behavior", async () => {
   const [html, runtime, carousel] = await Promise.all([
     readFile(new URL("../gh-pages/etc/index.html", import.meta.url), "utf8"),
@@ -343,3 +356,14 @@ test("reduced-motion and manual carousel controls are part of the exported behav
   assert.match(carousel, /!isVisible \|\| hidden \|\| !running/);
 });
 
+test("unknown routes keep a real 404 and offer Work and Contact in the Pages export", async () => {
+  const response = await render("/phase-b-unknown-route");
+  assert.equal(response.status, 404);
+  const html = await readFile(new URL("../gh-pages/404.html", import.meta.url), "utf8");
+  assert.match(html, /<h1>Page not found<\/h1>/);
+  assert.match(html, /href="\.\/">Work<\/a>/);
+  assert.match(html, /href="mailto:alex@infield.net">Contact<\/a>/);
+  assert.match(html, /<title>Page not found — Alex Infield<\/title>/);
+  assert.match(html, /name="robots" content="noindex,nofollow"/);
+  assert.match(html, /portfolio-source\.min\.css/);
+});

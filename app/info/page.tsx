@@ -11,7 +11,7 @@ export default function InfoPage() {
   return (
     <main className="info">
       <LiveHeader current="info" />
-      <div className="w-layout-grid grid-2" id="main-content">
+      <div className="w-layout-grid grid-2" id="main-content" tabIndex={-1}>
         <p className="p2 info-spacer" aria-hidden="true">
           {"\u200d"}
           <br />

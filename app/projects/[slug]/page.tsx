@@ -250,6 +250,7 @@ export default async function ProjectPage({
   return (
     <main className={projectPageClasses[projectSlug]}>
       <LiveHeader />
+      <div id="main-content" tabIndex={-1} />
       {projectSlug === "mode" ? <div className="furniture">{presentation}</div> : presentation}
     </main>
   );
