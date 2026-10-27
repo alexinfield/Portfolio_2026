@@ -12,7 +12,6 @@ h1 {font-size: 2.125rem; line-height: 2.5625rem; font-weight: 500; letter-spacin
 h2 {font-weight: 500;}
 img, video {display: block; max-width: 100%; height: auto;}
 .portfolio-root {min-width: 0; min-height: 100dvh; background: var(--canvas); color: var(--text); overflow-wrap: anywhere;}
-html[data-theme-changing] .portfolio-root, html[data-theme-changing] .portfolio-root * {transition: none!important;}
 .portfolio-shell {width: 100%; padding-inline: 18px; margin-inline: auto;}
 .portfolio-header {position: sticky; top: 0; z-index: 40; background: var(--canvas); overflow-x: auto; overscroll-behavior-x: contain; scroll-padding-inline: 6px;}
 .portfolio-header-content {display: flex; align-items: center; gap: var(--inline); min-width: max-content; padding-block: var(--inline); font: 500 .875rem/1.3125rem var(--font);}
@@ -42,6 +41,7 @@ html[data-theme-changing] .portfolio-root, html[data-theme-changing] .portfolio-
 /* The public Compass link paints the control; this adapter lays out a stable
    image/caption card rather than an inline text button. */
 .portfolio-root .portfolio-card-link[data-slot="button"] {display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; width: 100%; max-width: none; height: auto; padding: 0; border: 0; gap: 0; text-align: left; white-space: normal; transform: none!important; scale: none!important;}
+.portfolio-root .portfolio-card-link:is(:link,:visited,:hover,:active,:focus), .portfolio-root .portfolio-card-link h2 {text-decoration: none!important;}
 .portfolio-root .portfolio-card-link > [data-slot="card"] {width: 100%; max-width: none;}
 .portfolio-personal-link {display: flex; justify-content: center; margin-top: var(--section);}
 .portfolio-info-page {display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--group); align-items: start;}
@@ -49,7 +49,6 @@ html[data-theme-changing] .portfolio-root, html[data-theme-changing] .portfolio-
 .portfolio-intro {font-size: 1.75rem; line-height: 2.125rem; max-width: 35ch;}
 .portfolio-artwork {overflow: hidden; border-radius: var(--radius);}
 .portfolio-artwork img {width: 100%;}
-.portfolio-appearance {display: grid; gap: var(--inline);}
 .text-muted {color: var(--secondary);}
 .portfolio-not-found {display: grid; justify-items: start; gap: var(--group); padding-block: var(--section);}
 /* Cases retain image content and source order; composition uses Compass spacing. */
@@ -69,9 +68,6 @@ html[data-theme-changing] .portfolio-root, html[data-theme-changing] .portfolio-
 .media-controls {position: absolute; z-index: 3; bottom: var(--inline); left: var(--inline); display: flex; gap: var(--inline); opacity: 0; pointer-events: none;}
 [data-media-reveal]:hover .media-controls, [data-media-reveal]:focus-within .media-controls, [data-controls-revealed="true"] .media-controls {opacity: 1; pointer-events: auto;}
 [data-video-toggle][data-playing="false"] [data-pause-icon], [data-video-toggle][data-playing="true"] [data-play-icon] {display: none;}
-[data-site-light-icon] {display: none;}
-html[data-portfolio-site-theme="light"] [data-site-dark-icon] {display: none;}
-html[data-portfolio-site-theme="light"] [data-site-light-icon] {display: block;}
 .media-status, .media-noscript {position: absolute; top: var(--inline); left: var(--inline); right: var(--inline); z-index: 4; padding: var(--inline); background: var(--surface); color: var(--text); font-size: .875rem; line-height: 1.25rem;}
 [hidden] {display: none!important;}
 .portfolio-filters {display: flex; flex-wrap: wrap; align-items: center; gap: var(--inline); margin-bottom: var(--group);}

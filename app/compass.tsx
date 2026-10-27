@@ -4,5 +4,5 @@
 // consumption on its public exports so a later tarball swap stays independent.
 export {
   Button, Card, DesignSystemBoundary, Select, SelectTrigger, SelectValue,
-  SelectContent, SelectItem, ToggleGroup, ToggleGroupItem,
+  SelectContent, SelectItem, Slider,
 } from "@alex-infield/compass-augmentation";

@@ -8,9 +8,6 @@
 .portfolio-root .text-muted-foreground {color: var(--secondary);}
 .portfolio-root .text-destructive {color: var(--error);}
 .portfolio-root .sr-only, .compass-scope .sr-only {position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;}
-/* Info: Light / Dark / System (Style decision D13). */
-.portfolio-appearance {display: grid; gap: .5rem; padding-top: .5rem;}
-.portfolio-appearance [data-slot='toggle-group-item'] {min-height: 44px; padding-inline: 14px;}
 /* Plain (text-only) buttons: Compass 1.0 has no ghost variant, so plain
  * navigation and tool buttons are the quiet secondary button without its
  * fill until hover or press. Same 5 px geometry, focus ring and targets. */

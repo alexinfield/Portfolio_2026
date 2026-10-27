@@ -1,6 +1,6 @@
 # Alex Infield portfolio
 
-Source for [alexinfield.com](https://alexinfield.com), a static portfolio hosted on GitHub Pages. The current refresh uses the pinned Compass 1.0 package, the approved 16-entry Personal collection and the existing six image-based cases. See [DESIGN.md](DESIGN.md) for the accepted design.
+Source for [alexinfield.com](https://alexinfield.com), a static portfolio hosted on GitHub Pages. Palettes are fixed: Personal is light and every other page is dark. The current refresh uses the pinned Compass 1.0 package, the approved 16-entry Personal collection and the existing six image-based cases. See [DESIGN.md](DESIGN.md) for the accepted design.
 
 ## Local development
 

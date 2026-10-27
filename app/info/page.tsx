@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { socialMetadata } from "@/lib/social-metadata";
 import SiteShell from "../site-shell";
 import ResponsiveImage from "../responsive-image";
-import AppearanceControl from "../appearance-control";
 import { Button } from "../compass";
 
 export const metadata: Metadata = socialMetadata("Info", "About Alex Infield.", "/info", {
@@ -17,7 +16,6 @@ export default function InfoPage() {
       <div className="portfolio-info-copy">
         <p className="portfolio-intro">I&apos;m Alex Infield, an industrial designer based in Brooklyn, New York. My work spans product visualization, CAD, prototyping and fabrication for consumer goods, furniture and lighting.</p>
         <Button asChild variant="link"><a href="mailto:alex@infield.net">alex@infield.net</a></Button>
-        <AppearanceControl />
       </div>
       <CardArtwork />
     </div>

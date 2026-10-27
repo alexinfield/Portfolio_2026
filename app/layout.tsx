@@ -1,5 +1,3 @@
-/* eslint-disable @next/next/no-sync-scripts -- blocking appearance restore prevents a wrong-theme first paint */
-
 import type { Metadata } from "next";
 import "@alex-infield/compass-augmentation/styles.css";
 import "./alex-tokens.css";
@@ -38,7 +36,6 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" data-theme="dark" style={{ colorScheme: "dark" }} suppressHydrationWarning>
       <head>
-        <script src="/portfolio-theme.js" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
         <script async src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`} />
         <script dangerouslySetInnerHTML={{ __html: googleAnalyticsBootstrap }} />

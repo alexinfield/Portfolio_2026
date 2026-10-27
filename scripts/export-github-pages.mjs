@@ -15,7 +15,7 @@ const routes = [
 ];
 const redirects = [
   { route: "/etc", target: "/personal", relativeTarget: "../personal/" },
-  { route: "/play", target: "/etc", relativeTarget: "../etc/" },
+  { route: "/play", target: "/personal", relativeTarget: "../personal/" },
   { route: "/projects/pillar", target: "/projects/niche", relativeTarget: "../niche/" },
   { route: "/projects/furniture", target: "/projects/mode", relativeTarget: "../mode/" },
 ];
@@ -70,7 +70,7 @@ function staticHtml(html, route) {
   const canonicalPath = route === "/" ? "/" : route;
   // Only the interactive shell pages hydrate. Cases/404 use the small static
   // appearance/media controller and retain native links without shipping React.
-  const hydratedRoutes = new Set(["/", "/info", "/personal", "/etc"]);
+  const hydratedRoutes = new Set(["/personal", "/projects/hyphae"]);
   let result = hydratedRoutes.has(route.replace(/\/+$/, "") || "/")
     ? html
     : html
@@ -102,6 +102,10 @@ function staticHtml(html, route) {
     `<link rel="canonical" href="${siteOrigin}${canonicalPath}"/>${robots}</head>`,
   );
 
+  const palette = route === "/personal" ? "light" : "dark";
+  result = result.replace(/(<html\b[^>]*class=")[^"]*(")/, `$1${palette === "dark" ? "dark" : ""}$2`)
+    .replace(/(<html\b[^>]*data-theme=")[^"]*(")/, `$1${palette}$2`)
+    .replace(/(<html\b[^>]*style=")[^"]*(")/, `$1color-scheme:${palette}$2`);
   return result;
 }
 
