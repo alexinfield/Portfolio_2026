@@ -1,4 +1,6 @@
 import { videoSources } from "@/lib/video-sources";
+import { Button } from "./compass";
+import MediaToggle from "./media-toggle";
 
 type DeferredVideoProps = {
   source: string;
@@ -12,21 +14,25 @@ type DeferredVideoProps = {
   controls?: boolean;
   active?: boolean;
   paused?: boolean;
+  userStarted?: boolean;
+  showToggle?: boolean;
 };
 
 export default function DeferredVideo({
   source, poster, label, className, width, height,
   loop = true, autoplay = true, controls = false, active = true, paused = false,
+  userStarted = false, showToggle = true,
 }: DeferredVideoProps) {
   const sources = videoSources(source);
-  const file = sources[sources.length - 1].src;
+  const file = sources[0].src;
   return (
-    <div className={className} data-video-frame>
+    <div className={className} data-video-frame data-media-reveal>
       <video
         data-lazy-video
         data-autoplay-video={autoplay ? "true" : undefined}
         data-media-active={active ? "true" : "false"}
         data-playback-paused={paused ? "true" : "false"}
+        data-user-started={userStarted ? "true" : "false"}
         data-original-source={source}
         data-video-label={label}
         aria-label={label}
@@ -42,14 +48,14 @@ export default function DeferredVideo({
         {sources.map((item) => <source data-src={item.src} type={item.type} key={item.src} />)}
         <p>Video unavailable in this browser. <a href={file}>Open video file</a>.</p>
       </video>
-      <div className="portfolio-video-controls">
-        <button type="button" data-video-toggle aria-label={`Play ${label}`}>Play</button>
-        <p data-video-status hidden role="status">
+      {!controls && showToggle && <div className="media-controls">
+        <MediaToggle label={label} />
+      </div>}
+        <p className="media-status" data-video-status hidden role="status">
           <span data-video-message>Video unavailable in this browser.</span>{" "}
-          <a href={file}>Open video file</a>.
+          <Button asChild variant="link" size="sm"><a href={file}>Open video file</a></Button>
         </p>
-      </div>
-      <noscript><p className="video-noscript">Enable JavaScript to play here, or <a href={file}>open the video file</a>.</p></noscript>
+      <noscript><p className="media-noscript">Enable JavaScript to play here. <Button asChild variant="link" size="sm"><a href={file}>Open video file</a></Button></p></noscript>
     </div>
   );
 }

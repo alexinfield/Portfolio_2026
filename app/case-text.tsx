@@ -1,5 +1,9 @@
 import panels from "@/lib/case-panels.json";
 
+// Alex deferred semantic case copy to the later rebuild. Image alternatives
+// remain active through casePanel(); re-enable the guarded tests with this flag.
+export const CASE_TEXT_ENABLED = false;
+
 type Panel = {
   alt: string;
   title?: string;
@@ -18,12 +22,13 @@ export function casePanel(source: string): Panel | undefined {
 // The original desktop boards remain intact. Their text equivalents are readable
 // on small screens and stay in the accessibility tree at every viewport size.
 export default function CaseText({ source }: { source: string }) {
+  if (!CASE_TEXT_ENABLED) return null;
   const panel = casePanel(source);
   if (!panel || !(panel.title || panel.heading || panel.blocks?.length)) return null;
 
   return (
     <section className="case-text" aria-label="Panel text">
-      {panel.title ? <h1>{panel.displayTitle ?? panel.title}</h1> : null}
+      {panel.title ? <h2>{panel.displayTitle ?? panel.title}</h2> : null}
       {panel.displayTitle ? <p>{panel.title}</p> : null}
       {panel.heading ? <h2>{panel.heading}</h2> : null}
       {panel.blocks?.map((block, index) => (

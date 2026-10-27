@@ -1,5 +1,5 @@
-// Web derivatives of the retained originals. Prefer VP9 where supported, with
-// H.264 for Safari and other browsers. No source URL is assigned before demand.
+// The H.264 derivatives are smaller than VP9 and are preferred in every browser.
+// No source URL is assigned before viewport or explicit playback demand.
 const derivatives: Record<string, string> = {
   "/assets/molekule-go/media/UV-animation-transcode.mp4": "/assets/molekule-go/media/uv-web",
   "/assets/molekule-go/media/aq-indicator-transcode.mp4": "/assets/molekule-go/media/aq-web",
@@ -11,6 +11,6 @@ const derivatives: Record<string, string> = {
 export function videoSources(source: string) {
   const base = derivatives[source];
   return base
-    ? [{ src: `${base}.webm`, type: "video/webm" }, { src: `${base}.mp4`, type: "video/mp4" }]
+    ? [{ src: `${base}.mp4`, type: "video/mp4" }, { src: `${base}.webm`, type: "video/webm" }]
     : [{ src: source, type: "video/mp4" }];
 }

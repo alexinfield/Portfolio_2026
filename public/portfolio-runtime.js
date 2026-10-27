@@ -6,7 +6,7 @@
     const button = video.closest("[data-video-frame]")?.querySelector("[data-video-toggle]");
     if (!button) return;
     const action = video.paused ? "Play" : "Pause";
-    button.textContent = action;
+    button.dataset.playing = String(!video.paused);
     button.setAttribute("aria-label", `${action} ${video.dataset.videoLabel}`);
   }
 
@@ -18,6 +18,7 @@
     });
     state.loaded = true;
     video.load();
+    nearObserver?.unobserve(video);
   }
 
   function message(video, text) {
@@ -49,7 +50,9 @@
       video.pause();
       return;
     }
-    if (automatic || state.userStarted) play(video);
+    if (automatic || state.userStarted) {
+      if (video.paused) play(video);
+    }
   }
 
   const nearObserver = "IntersectionObserver" in window ? new IntersectionObserver((entries) => {
@@ -65,16 +68,24 @@
   }, { threshold: 0.01 }) : null;
 
   document.querySelectorAll("video[data-lazy-video]").forEach((video) => {
-    states.set(video, { loaded: false, visible: false, userPaused: false, userStarted: false });
+    states.set(video, { loaded: false, visible: !visibleObserver, userPaused: false, userStarted: false });
     nearObserver?.observe(video);
     visibleObserver?.observe(video);
     video.addEventListener("play", () => updateButton(video));
     video.addEventListener("pause", () => updateButton(video));
     video.addEventListener("ended", () => {
-      states.get(video).userPaused = true;
+      if (video.controls) states.get(video).userPaused = true;
       updateButton(video);
     });
-    video.addEventListener("error", () => message(video, "Video unavailable in this browser."));
+    const sourceFailure = () => {
+      // Source errors are captured; the media element may settle NETWORK_NO_SOURCE
+      // after the last source's error dispatch, so also check on the next task.
+      if (video.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) message(video, "Video unavailable in this browser.");
+    };
+    video.addEventListener("error", () => {
+      sourceFailure();
+      setTimeout(sourceFailure, 0);
+    }, true);
     // A native-control activation also counts as demand, including reduced motion.
     const nativeDemand = () => {
       if (!video.controls) return;
@@ -87,6 +98,15 @@
     video.addEventListener("keydown", (event) => {
       if (event.key === " " || event.key === "Enter") nativeDemand();
     });
+    if (!visibleObserver) sync(video);
+  });
+
+  // A touch reveals controls without also toggling playback. Keyboard controls
+  // stay focusable while visually hidden; CSS reveals their focused container.
+  document.addEventListener("pointerdown", (event) => {
+    if (event.pointerType !== "touch") return;
+    const frame = event.target.closest?.("[data-media-reveal]");
+    if (frame) frame.dataset.controlsRevealed = "true";
   });
 
   document.addEventListener("click", (event) => {
@@ -110,12 +130,14 @@
       }
       if (video.dataset.mediaActive === "false") {
         state.userStarted = false;
+        state.userPaused = false;
         video.pause();
         video.currentTime = 0;
       }
+      if (video.dataset.userStarted === "true" && video.dataset.playbackPaused !== "true") state.userStarted = true;
       sync(video);
     });
-  }).observe(document.body, { subtree: true, attributes: true, attributeFilter: ["data-media-active", "data-playback-paused"] });
+  }).observe(document.body, { subtree: true, attributes: true, attributeFilter: ["data-media-active", "data-playback-paused", "data-user-started"] });
 
   motion.addEventListener("change", () => {
     states.forEach((state, video) => {
