@@ -53,17 +53,18 @@ test("every real page has the same Compass nav, disabled Professional and landma
     assert.match(html,/href="#main-content"[^>]*>Skip to content/);
     assert.match(html,/<main\b[^>]*id="main-content"[^>]*tabindex="-1"/);
     assert.equal((html.match(/<h1\b/g)||[]).length,1,path);
-    assert.match(html,/data-theme-toggle/);
+    assert.doesNotMatch(html,/data-theme-toggle|portfolio-theme\.js|portfolio-compass-theme|Appearance/);
+    const palette=path.startsWith("personal/")?"light":"dark";assert.match(html,new RegExp(`<html[^>]*data-theme="${palette}"`));
   }
 });
 
-test("Info contains the exact approved text, artwork, email and Compass appearance control",async()=>{
+test("Info contains the exact approved text, artwork, email once and no appearance control",async()=>{
   const html=documentOnly(await exported("info/index.html"));
   assert.match(html,/I&#x27;m Alex Infield, an industrial designer based in Brooklyn, New York\. My work spans product visualization, CAD, prototyping and fabrication for consumer goods, furniture and lighting\./);
   assert.match(html,/IMG_0019\.png/);
   assert.match(html,/mailto:alex@infield.net/);
-  for(const value of ["Light","Dark","System"])assert.ok(html.includes(`>${value}</button>`));
-  assert.match(html,/data-slot="toggle-group"/);
+  assert.equal((html.match(/href="mailto:alex@infield.net"/g)||[]).length,1);
+  assert.doesNotMatch(html,/<footer|Appearance|data-slot="toggle-group"/);
   assert.doesNotMatch(html,/résumé|resume|flower|garden/i);
 });
 
@@ -158,13 +159,14 @@ test("deferred video keeps sources dormant, posters present and MP4 first",async
   }
 });
 
-test("all video players have one Compass icon toggle, including the film",async()=>{
+test("all video players use Compass icons; long films add timeline, mute and fullscreen",async()=>{
   for(const slug of slugs){
     const html=documentOnly(await exported(`projects/${slug}/index.html`));
     assert.equal((html.match(/data-video-toggle="true"/g)||[]).length,(html.match(/<video\b/g)||[]).length,slug);
     assert.doesNotMatch(html,/<video[^>]*\scontrols/);
-    assert.match(html,/data-button-kind="icon"/);
+    if(html.includes("<video"))assert.match(html,/data-button-kind="icon"/);
     assert.doesNotMatch(html,/portfolio-video-controls|carousel-controls/);
+    if(slug==="hyphae"){assert.match(html,/data-film-controls/);assert.match(html,/Mute Hyphae Light film/);assert.match(html,/Enter fullscreen: Hyphae Light film/);assert.match(html,/data-slot="slider"/);}
   }
 });
 
@@ -176,28 +178,28 @@ test("404 retains a same-document skip target, one robots tag and no inherited U
   assert.equal((html.match(/name="robots"/g)||[]).length,1);
   assert.match(html,/<title>Page not found — Alex Infield<\/title>/);
   assert.match(html,/property="og:title" content="Page not found — Alex Infield"/);
-  assert.match(html,/src="\/portfolio-theme.js"/);
+  assert.doesNotMatch(html,/portfolio-theme/);
   assert.match(html,/href="\/"[^>]*>Work<\/a>/);
 });
 
 test("redirects and aliases have real targets and Compass fallback controls",async()=>{
-  for(const [route,target] of [["etc","../personal/"],["play","../etc/"],["projects/pillar","../niche/"],["projects/furniture","../mode/"]]){
+  for(const [route,target] of [["etc","../personal/"],["play","../personal/"],["projects/pillar","../niche/"],["projects/furniture","../mode/"]]){
     const html=await exported(`${route}/index.html`);
     assert.ok(html.includes(`content="0;url=${target}"`));
     assert.ok(new RegExp(`href="${target}"[^>]*>Continue to`).test(html));
     assert.match(html,/data-slot="button"/);
-    assert.match(html,/portfolio-theme.js/);
+    assert.doesNotMatch(html,/portfolio-theme/);
     assert.match(html,/Page moved/);
     assert.doesNotMatch(html,/<base\b/);
   }
-  for(const [route,target] of [["/etc","/personal/"],["/play","/etc"],["/projects/pillar","/projects/niche"],["/projects/furniture","/projects/mode"]]){
+  for(const [route,target] of [["/etc","/personal/"],["/play","/personal/"],["/projects/pillar","/projects/niche"],["/projects/furniture","/projects/mode"]]){
     const response=await render(route);assert.ok([307,308].includes(response.status));assert.equal(new URL(response.headers.get("location"),"http://localhost").pathname,target);
   }
 });
 
-test("hydration is retained only for home, Info and Personal; preview remains noindex",async()=>{
-  for(const path of ["index.html","info/index.html","personal/index.html"]){const html=await exported(path);assert.match(html,/__VINEXT_RSC_|id="_R_"/);}
-  for(const path of [...slugs.map(slug=>`projects/${slug}/index.html`),"404.html"]){assert.doesNotMatch(await exported(path),/__VINEXT_RSC_|id="_R_"/);}
+test("hydration is retained only for Personal and the Hyphae film; preview remains noindex",async()=>{
+  for(const path of ["personal/index.html","projects/hyphae/index.html"]){const html=await exported(path);assert.match(html,/__VINEXT_RSC_|id="_R_"/);}
+  for(const path of ["index.html","info/index.html",...slugs.filter(slug=>slug!=="hyphae").map(slug=>`projects/${slug}/index.html`),"404.html"]){assert.doesNotMatch(await exported(path),/__VINEXT_RSC_|id="_R_"/);}
   for(const path of pages)assert.match(await exported(path),/name="robots" content="noindex,nofollow"/);
   assert.equal(await exported("robots.txt"),"User-agent: *\nDisallow: /\n");
   const sitemap=await exported("sitemap.xml");assert.match(sitemap,/<loc>https:\/\/alexinfield.com\/personal<\/loc>/);assert.doesNotMatch(sitemap,/\/etc|\/play|\/professional/);
@@ -242,4 +244,12 @@ test("favicon is a plain white dot on black",async()=>{
 test("analytics identity is preserved on content pages, with no duplicate tags",async()=>{
   for(const path of pages){const html=await exported(path);assert.equal((html.match(/<script[^>]*src="https:\/\/www.googletagmanager.com\/gtag\/js/g)||[]).length,1);assert.match(html,/G-C6H8Q9R5B5/);assert.match(html,/xz6mz3a8cb/);assert.match(html,/portfolio-analytics.js/);assert.doesNotMatch(html,/G-171WY5DL4E/);}
   const runtime=await read("public/portfolio-analytics.js");assert.match(runtime,/portfolio_project_open/);assert.doesNotMatch(runtime,/recruiter|employer|company_name|email_address/i);
+});
+
+test("Personal frames carry reviewed positions and background-matched padding metadata",async()=>{
+  for(const item of packageData.items){assert.match(item.framing.object_position,/^\d+% \d+%$/);assert.ok(["cover","pad"].includes(item.framing.fit));assert.ok(item.framing.background);}
+  assert.equal(packageData.items.find(item=>item.id==="desk-pen").framing.background,"#F8F8F8");
+  assert.equal(packageData.items.find(item=>item.id.includes("neighborhood")).framing.fit,"pad");
+  const html=await exported("personal/index.html");assert.match(html,/property="og:image" content="https:\/\/alexinfield.com\/assets\/personal\/media\/stool-/);
+  const telefoni=html.match(/<video\b[^>]*data-original-source="[^"]*telefoni[^"]*"[^>]*>/)[0];assert.match(telefoni,/data-demand-only="true"/);assert.doesNotMatch(telefoni,/data-autoplay-video/);assert.match(telefoni,/preload="none"/);
 });

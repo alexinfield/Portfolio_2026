@@ -1,6 +1,6 @@
 import { createServer } from "node:http";
 import { createReadStream } from "node:fs";
-import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
+import { mkdir, stat, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { hostname } from "node:os";
 import { extname, join, resolve, sep } from "node:path";
@@ -36,29 +36,22 @@ const browser=await chromium.launch({executablePath,headless:true,args:["--no-sa
 report.browser=browser.version();
 async function context(options={}){const context=await browser.newContext(options);await context.route(/https:\/\//,route=>route.abort());return context;}
 try{
-  const routes=[["home","/"],["personal","/personal/"],["info","/info/"],...["ping","molekule-go","luma","niche","hyphae","mode"].map(slug=>[slug,`/projects/${slug}/`]),["404","/projects/compass-missing/deep/"]];
-  if(!process.env.PORTFOLIO_SKIP_CAPTURES)for(const [device,viewport]of[["desktop",{width:1440,height:900}],["phone",{width:393,height:852}]])for(const theme of["dark","light"])for(const[name,route]of routes){
+  const routes=[["home","/"],["personal","/personal/"],["info","/info/"],["ping","/projects/ping/"],["hyphae","/projects/hyphae/"]];
+  if(!process.env.PORTFOLIO_SKIP_CAPTURES)for(const [device,viewport]of[["desktop",{width:1440,height:900}],["phone",{width:393,height:852}]])for(const[name,route]of routes){
     const c=await context({viewport,deviceScaleFactor:1,isMobile:device==="phone",hasTouch:device==="phone",reducedMotion:"reduce"});
-    await c.addInitScript(theme=>localStorage.setItem("portfolio-compass-theme",theme),theme);
     const page=await c.newPage(),errors=[],bad=[];
     page.on("pageerror",error=>errors.push(error.message));page.on("console",message=>{if(message.type()==="error"&&!/Failed to load resource|net::ERR_FAILED/.test(message.text()))errors.push(message.text());});
-    page.on("response",response=>{if(response.status()>=400&&new URL(response.url()).pathname!==route)bad.push({url:response.url(),status:response.status()});});
+    page.on("response",response=>{if(response.status()>=400)bad.push({url:response.url(),status:response.status()});});
     const response=await page.goto(baseURL+route,{waitUntil:"load"});await page.evaluate(()=>document.fonts.ready);await page.waitForTimeout(350);
-    const stem=`${name}-${theme}-${device}`;await page.screenshot({path:join(out,"screens",stem+"-viewport.png")});
-    const initial=await page.evaluate(()=>({theme:document.documentElement.dataset.theme,width:innerWidth,scrollWidth:document.documentElement.scrollWidth,title:document.title,height:document.documentElement.scrollHeight,boundary:document.querySelector("[data-portfolio-boundary]").dataset.theme,font:getComputedStyle(document.body).fontFamily}));
+    const stem=`${name}-${device}`;await page.screenshot({path:join(out,"screens",stem+"-viewport.png")});
+    const initial=await page.evaluate(()=>({theme:document.documentElement.dataset.theme,width:innerWidth,scrollWidth:document.documentElement.scrollWidth,title:document.title,height:document.documentElement.scrollHeight,boundary:document.querySelector("[data-portfolio-boundary]").dataset.theme}));
     for(let i=0;i<90;i++){const end=await page.evaluate(()=>{scrollBy(0,innerHeight*.8);return scrollY+innerHeight>=document.documentElement.scrollHeight-2;});await page.waitForTimeout(55);if(end)break;}
     await page.waitForTimeout(200);await page.evaluate(()=>scrollTo(0,0));await page.screenshot({path:join(out,"screens",stem+"-full.png"),fullPage:true});
-    report.captures.push({name,route,device,theme,status:response.status(),initial,errors,bad});await save();console.log("capture",stem);
-    await c.close();
+    if(name==="hyphae"){const frame=page.locator(".case-film [data-video-frame]");await frame.scrollIntoViewIfNeeded();await frame.hover();await page.waitForFunction(()=>getComputedStyle(document.querySelector(".case-film .film-controls")).opacity==="1");await frame.screenshot({path:join(out,"screens",`hyphae-controls-${device}.png`)});}
+    if(name==="personal")for(const id of["desk-pen","p019-neighborhood-cnc-relief-map-study"]){const card=page.locator(`#${id}`);await card.scrollIntoViewIfNeeded();await card.screenshot({path:join(out,"screens",`${id}-${device}.png`)});}
+    report.captures.push({name,route,device,status:response.status(),initial,errors,bad});await save();console.log("capture",stem);await c.close();
   }
-  // Review the actual pinned icon-button at rest in each effective palette.
-  if(!process.env.PORTFOLIO_SKIP_CAPTURES)for(const theme of["dark","light"]){
-    const c=await context({viewport:{width:1440,height:900},reducedMotion:"reduce"});await c.addInitScript(theme=>localStorage.setItem("portfolio-compass-theme",theme),theme);const p=await c.newPage();
-    await p.goto(baseURL+"/projects/molekule-go/");const frame=p.locator("[data-video-frame]").first();await frame.scrollIntoViewIfNeeded();await frame.hover();await p.waitForFunction(()=>getComputedStyle(document.querySelector("[data-video-frame] .media-controls")).opacity==="1");const rect=await frame.locator(".media-controls").boundingBox();
-    await p.screenshot({path:join(out,"screens",`media-control-${theme}.png`),clip:{x:Math.max(0,rect.x-12),y:Math.max(0,rect.y-24),width:160,height:88}});await c.close();
-  }
-  const caseTextEnabled=(await readFile(join(root,"projects/ping/index.html"),"utf8")).includes('class="case-text"');
-  report.checks.push(...await runBrowserRegressions(browser,baseURL,{caseTextEnabled}));await save();
+  report.checks.push(...await runBrowserRegressions(browser,baseURL));await save();
   if(preview){
     const c=await context({viewport:{width:393,height:852},reducedMotion:"reduce"});const p=await c.newPage(),errors=[],requests=[];p.on("pageerror",error=>errors.push(error.message));p.on("console",message=>{if(message.type()==="error"&&!/Failed to load resource|net::ERR_FAILED/.test(message.text()))errors.push(message.text());});p.on("request",request=>{if(request.url().startsWith(baseURL)&&!new URL(request.url()).pathname.startsWith("/next/"))requests.push(request.url());});
     for(const route of["/","/personal/","/info/","/projects/mode/","/missing/deep/"]){await p.goto(baseURL+"/next"+route);await p.evaluate(()=>document.fonts.ready);await p.waitForTimeout(250);if(route==="/personal/"){await p.getByRole("combobox",{name:"Filter by year"}).click();await p.getByRole("option",{name:"2024",exact:true}).click();}report.checks.push({name:`/next route assets/chunks/filters: ${route}`,pass:errors.length===0&&requests.length===0,errors:[...errors],outsideMount:[...requests]});}
