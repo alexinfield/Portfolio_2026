@@ -54,7 +54,7 @@ try{
   // Review the actual pinned icon-button at rest in each effective palette.
   if(!process.env.PORTFOLIO_SKIP_CAPTURES)for(const theme of["dark","light"]){
     const c=await context({viewport:{width:1440,height:900},reducedMotion:"reduce"});await c.addInitScript(theme=>localStorage.setItem("portfolio-compass-theme",theme),theme);const p=await c.newPage();
-    await p.goto(baseURL+"/projects/molekule-go/");const frame=p.locator("[data-video-frame]").first();await frame.scrollIntoViewIfNeeded();await frame.hover();const rect=await frame.locator(".media-controls").boundingBox();
+    await p.goto(baseURL+"/projects/molekule-go/");const frame=p.locator("[data-video-frame]").first();await frame.scrollIntoViewIfNeeded();await frame.hover();await p.waitForFunction(()=>getComputedStyle(document.querySelector("[data-video-frame] .media-controls")).opacity==="1");const rect=await frame.locator(".media-controls").boundingBox();
     await p.screenshot({path:join(out,"screens",`media-control-${theme}.png`),clip:{x:Math.max(0,rect.x-12),y:Math.max(0,rect.y-24),width:160,height:88}});await c.close();
   }
   const caseTextEnabled=(await readFile(join(root,"projects/ping/index.html"),"utf8")).includes('class="case-text"');

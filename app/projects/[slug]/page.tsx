@@ -125,6 +125,8 @@ function HyphaePresentation({ media }: { media: MediaItem[] }) {
           source="/assets/hyphae/media/hyphae-light-film.mp4"
           poster="/assets/hyphae/media/hyphae-light-film-poster.jpg"
           label="Hyphae Light film"
+          width={1280}
+          height={720}
           autoplay={false}
           loop={false}
         />
