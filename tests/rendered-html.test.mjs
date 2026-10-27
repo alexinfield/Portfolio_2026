@@ -274,3 +274,26 @@ test("Ping exposes its authored narrative and image descriptions as semantic HTM
   assert.match(html, /Location is revealed progressively/);
   assert.doesNotMatch(html, /<img[^>]*alt=""/);
 });
+
+test("all six cases retain image order and expose the authored summaries, dates and research captions", async () => {
+  const registry = JSON.parse(await readFile(new URL("../lib/project-media.json", import.meta.url), "utf8"));
+  const panels = JSON.parse(await readFile(new URL("../lib/case-panels.json", import.meta.url), "utf8"));
+  const expected = {
+    ping: ["Ping", "2025", "Why do families give their kids mobile devices?"],
+    "molekule-go": ["Molekule Go", "2025", "This is a student project and is not affiliated with Molekule."],
+    luma: ["Luma", "2024", "I visited 2 smart homes to see the problems for myself."],
+    niche: ["Niche", "2024", "Quotes from interviews with 2 employers, 3 employees, and a 10-person survey."],
+    hyphae: ["Hyphae", "2023", "Extracting form from nature"],
+    mode: ["Mode", "2023", "Folio is a bedside table designed for the routines of modern life."],
+  };
+  for (const slug of publishedProjects) {
+    const html = await (await render(`/projects/${slug}`)).text();
+    assert.doesNotMatch(html, /<img[^>]*alt=""/, slug);
+    assert.match(html, new RegExp(`<section class="case-text"[^>]*><h1>${expected[slug][0]}</h1>`), slug);
+    for (const copy of expected[slug].slice(1)) assert.ok(html.includes(copy), `${slug}: ${copy}`);
+    const imageTags = [...html.matchAll(/<img\b[^>]*>/g)].map(([tag]) => tag);
+    const imageSources = imageTags.map((tag) => /\ssrc="([^"]+)"/.exec(tag)?.[1]);
+    assert.deepEqual(imageSources, registry[slug].filter((item) => item.kind === "image").map((item) => item.source), `${slug} image sequence`);
+    for (const item of registry[slug]) assert.ok(panels[item.source]?.alt.length > 10, item.source);
+  }
+});

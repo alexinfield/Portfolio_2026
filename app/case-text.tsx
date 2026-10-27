@@ -3,6 +3,7 @@ import panels from "@/lib/case-panels.json";
 type Panel = {
   alt: string;
   title?: string;
+  displayTitle?: string;
   heading?: string;
   roles?: string[];
   type?: string[];
@@ -22,7 +23,8 @@ export default function CaseText({ source }: { source: string }) {
 
   return (
     <section className="case-text" aria-label="Panel text">
-      {panel.title ? <h1>{panel.title}</h1> : null}
+      {panel.title ? <h1>{panel.displayTitle ?? panel.title}</h1> : null}
+      {panel.displayTitle ? <p>{panel.title}</p> : null}
       {panel.heading ? <h2>{panel.heading}</h2> : null}
       {panel.blocks?.map((block, index) => (
         <div key={index}>

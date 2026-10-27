@@ -102,7 +102,7 @@ function HyphaeComposite({ image, video, second = false }: {
     <div className={second ? "slide-video-right-hyphae-2" : "slide-video-right-hyphae"}>
       <ResponsiveImage
         src={image.source}
-        alt=""
+        alt={casePanel(image.source)?.alt ?? ""}
         width={image.width}
         height={image.height}
         sizes="100vw"
@@ -136,7 +136,7 @@ function HyphaePresentation({ media }: { media: MediaItem[] }) {
     <>
       <ResponsiveImage
         src={media[0].source}
-        alt=""
+        alt={casePanel(media[0].source)?.alt ?? ""}
         width={media[0].width}
         height={media[0].height}
         sizes="100vw"
@@ -146,13 +146,14 @@ function HyphaePresentation({ media }: { media: MediaItem[] }) {
       />
       <ResponsiveImage
         src={media[1].source}
-        alt=""
+        alt={casePanel(media[1].source)?.alt ?? ""}
         width={media[1].width}
         height={media[1].height}
         sizes="100vw"
         loading="lazy"
         decoding="async"
       />
+      <CaseText source={media[1].source} />
       <div className="w-embed hyphae-vimeo">
         <div className="hyphae-vimeo-frame">
           <video
@@ -167,45 +168,52 @@ function HyphaePresentation({ media }: { media: MediaItem[] }) {
         </div>
       </div>
       {media.slice(2, 9).map((item, index) => (
+        <div className="case-panel" key={item.source}>
         <ResponsiveImage
           src={item.source}
-          alt=""
+          alt={casePanel(item.source)?.alt ?? ""}
           width={item.width}
           height={item.height}
           sizes="100vw"
           loading="lazy"
           decoding="async"
           className={index > 1 ? "outline" : undefined}
-          key={item.source}
         />
+        <CaseText source={item.source} />
+        </div>
       ))}
       <HyphaeComposite image={media[9]} video={media[10]} />
+      <CaseText source={media[9].source} />
       {media.slice(11, 13).map((item) => (
+        <div className="case-panel" key={item.source}>
         <ResponsiveImage
           src={item.source}
-          alt=""
+          alt={casePanel(item.source)?.alt ?? ""}
           width={item.width}
           height={item.height}
           sizes="100vw"
           loading="lazy"
           decoding="async"
           className="outline"
-          key={item.source}
         />
+        <CaseText source={item.source} />
+        </div>
       ))}
       <HyphaeComposite image={media[13]} video={media[14]} second />
       {media.slice(15).map((item) => (
+        <div className="case-panel" key={item.source}>
         <ResponsiveImage
           src={item.source}
-          alt=""
+          alt={casePanel(item.source)?.alt ?? ""}
           width={item.width}
           height={item.height}
           sizes="100vw"
           loading="lazy"
           decoding="async"
           className="outline"
-          key={item.source}
         />
+        <CaseText source={item.source} />
+        </div>
       ))}
     </>
   );
