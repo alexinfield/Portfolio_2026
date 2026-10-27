@@ -1,6 +1,9 @@
+/* eslint-disable @next/next/no-html-link-for-pages -- native navigation for static Pages */
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
-import LiveHeader from "@/app/live-header";
+import SiteShell from "@/app/site-shell";
+import { Button } from "@/app/compass";
+import { ArrowLeft } from "lucide-react";
 import ResponsiveImage from "@/app/responsive-image";
 import CaseText, { casePanel } from "@/app/case-text";
 import DeferredVideo from "@/app/deferred-video";
@@ -14,23 +17,6 @@ import {
 
 type MediaItem = ReturnType<typeof getProjectMedia>[number];
 
-const projectPageClasses: Record<ProjectSlug, string> = {
-  ping: "body-molekule",
-  "molekule-go": "body-molekule",
-  luma: "luma-body",
-  niche: "niche-body",
-  hyphae: "hyphae-body",
-  mode: "body-6",
-};
-
-function videoClassName(slug: ProjectSlug, index: number) {
-  if (slug === "ping") {
-    return ["background-video-11", "background-video-12-copy", "background-video-12"][index - 10];
-  }
-  if (slug === "luma") return index === 0 ? "luma" : "_1080-video-luma";
-  return "_1080-video";
-}
-
 function ProjectVideo({
   item,
   slug,
@@ -42,7 +28,7 @@ function ProjectVideo({
 }) {
   return (
     <DeferredVideo
-      className={`${videoClassName(slug, index)} w-background-video w-background-video-atom`}
+      className="case-video"
       source={item.source}
       poster={item.poster}
       label={casePanel(item.source)?.alt ?? "Project video"}
@@ -80,13 +66,12 @@ function ProjectMedia({
   );
 }
 
-function HyphaeComposite({ image, video, second = false }: {
+function HyphaeComposite({ image, video }: {
   image: MediaItem;
   video: MediaItem;
-  second?: boolean;
 }) {
   return (
-    <div className={second ? "slide-video-right-hyphae-2" : "slide-video-right-hyphae"}>
+    <div className="case-composite">
       <ResponsiveImage
         src={image.source}
         alt={casePanel(image.source)?.alt ?? ""}
@@ -95,11 +80,11 @@ function HyphaeComposite({ image, video, second = false }: {
         sizes="100vw"
         loading="lazy"
         decoding="async"
-        className={second ? "outline" : "outline-video"}
+        className="case-image"
       />
-      <div className={second ? "video-small-airchair-hyphae-2" : "video-small-airchair-hyphae"}>
+      <div className="case-composite-video">
         <DeferredVideo
-          className={`${second ? "background-video-hyphae-2" : "background-video-hyphae"} w-background-video w-background-video-atom`}
+          className="case-video"
           source={video.source}
           poster={video.poster}
           label={casePanel(video.source)?.alt ?? "Hyphae video"}
@@ -134,18 +119,17 @@ function HyphaePresentation({ media }: { media: MediaItem[] }) {
         decoding="async"
       />
       <CaseText source={media[1].source} />
-      <div className="w-embed hyphae-vimeo">
+      <div className="case-film">
         <DeferredVideo
-          className="hyphae-vimeo-frame"
+          className="case-video"
           source="/assets/hyphae/media/hyphae-light-film.mp4"
           poster="/assets/hyphae/media/hyphae-light-film-poster.jpg"
           label="Hyphae Light film"
           autoplay={false}
           loop={false}
-          controls
         />
       </div>
-      {media.slice(2, 9).map((item, index) => (
+      {media.slice(2, 9).map((item) => (
         <div className="case-panel" key={item.source}>
         <ResponsiveImage
           src={item.source}
@@ -155,7 +139,7 @@ function HyphaePresentation({ media }: { media: MediaItem[] }) {
           sizes="100vw"
           loading="lazy"
           decoding="async"
-          className={index > 1 ? "outline" : undefined}
+          className="case-image"
         />
         <CaseText source={item.source} />
         </div>
@@ -172,12 +156,12 @@ function HyphaePresentation({ media }: { media: MediaItem[] }) {
           sizes="100vw"
           loading="lazy"
           decoding="async"
-          className="outline"
+          className="case-image"
         />
         <CaseText source={item.source} />
         </div>
       ))}
-      <HyphaeComposite image={media[13]} video={media[14]} second />
+      <HyphaeComposite image={media[13]} video={media[14]} />
       {media.slice(15).map((item) => (
         <div className="case-panel" key={item.source}>
         <ResponsiveImage
@@ -188,7 +172,7 @@ function HyphaePresentation({ media }: { media: MediaItem[] }) {
           sizes="100vw"
           loading="lazy"
           decoding="async"
-          className="outline"
+          className="case-image"
         />
         <CaseText source={item.source} />
         </div>
@@ -242,10 +226,13 @@ export default async function ProjectPage({
   );
 
   return (
-    <main className={projectPageClasses[projectSlug]}>
-      <LiveHeader />
-      <div id="main-content" tabIndex={-1} />
-      {projectSlug === "mode" ? <div className="furniture">{presentation}</div> : presentation}
-    </main>
+    <SiteShell casePage>
+      <div className="portfolio-case-heading">
+        <Button asChild variant="secondary" data-plain="" size="sm"><a href="/"><ArrowLeft aria-hidden="true" />Back to Work</a></Button>
+        <h1>{project.title}</h1>
+      </div>
+      <div className="portfolio-case-stack">{presentation}</div>
+      <div className="portfolio-case-back"><Button asChild variant="secondary" data-plain=""><a href="/"><ArrowLeft aria-hidden="true" />Back to Work</a></Button></div>
+    </SiteShell>
   );
 }

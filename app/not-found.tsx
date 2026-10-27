@@ -1,16 +1,12 @@
-/* eslint-disable @next/next/no-html-link-for-pages -- static Pages export requires native navigation */
-import LiveHeader from "./live-header";
-
+/* eslint-disable @next/next/no-html-link-for-pages -- native navigation for static Pages */
+import SiteShell from "./site-shell";
+import { Button } from "./compass";
 export default function NotFound() {
-  return (
-    <main className="home-body">
-      <LiveHeader />
-      <div id="main-content" tabIndex={-1} className="not-found-content">
-        <h1>Page not found</h1>
-        <p>404</p>
-        <a href="/">Work</a>
-        <a href="mailto:alex@infield.net">Contact</a>
-      </div>
-    </main>
-  );
+  return <SiteShell><div className="portfolio-not-found">
+    <h1>Page not found</h1><p className="text-muted">404</p>
+    <div className="portfolio-actions">
+      <Button asChild variant="secondary"><a href="/">Work</a></Button>
+      <Button asChild variant="secondary" data-plain=""><a href="mailto:alex@infield.net">Contact</a></Button>
+    </div>
+  </div></SiteShell>;
 }

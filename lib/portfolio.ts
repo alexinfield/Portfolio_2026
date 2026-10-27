@@ -42,7 +42,7 @@ export const projectDefinitions = [
     coverHeight: 3817,
   },
   {
-    title: "Mode",
+    title: "Folio",
     coverAlt: "A wooden bedside table with angled legs and two lower shelves.",
     slug: "mode",
     cover: "/assets/home/media/665fb92ad4fed8da46bf0271_DSC_5550.avif",
@@ -71,3 +71,5 @@ export function getProject(slug: string) {
 export function getProjectMedia(slug: ProjectSlug): ProjectMedia[] {
   return mediaRegistry[slug] as ProjectMedia[];
 }
+
+export const workProjects = ["molekule-go", "ping", "hyphae", "luma"].map(slug => projects.find(project => project.slug === slug)!);

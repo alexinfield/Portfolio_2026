@@ -46,7 +46,7 @@ export default function DeferredVideo({
         height={height}
       >
         {sources.map((item) => <source data-src={item.src} type={item.type} key={item.src} />)}
-        <p>Video unavailable in this browser. <a href={file}>Open video file</a>.</p>
+        <p>Video unavailable in this browser. <Button asChild variant="link" size="sm"><a href={file}>Open video file</a></Button></p>
       </video>
       {!controls && showToggle && <div className="media-controls">
         <MediaToggle label={label} />

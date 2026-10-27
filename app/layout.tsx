@@ -1,6 +1,9 @@
-/* eslint-disable @next/next/no-css-tags -- the exact source-site stylesheet is a static public asset */
+/* eslint-disable @next/next/no-sync-scripts -- blocking appearance restore prevents a wrong-theme first paint */
 
 import type { Metadata } from "next";
+import "@alex-infield/compass-augmentation/styles.css";
+import "./alex-tokens.css";
+import "./portfolio-type.css";
 import "./globals.css";
 import { socialMetadata } from "@/lib/social-metadata";
 
@@ -33,17 +36,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark" data-theme="dark" style={{ colorScheme: "dark" }} suppressHydrationWarning>
       <head>
+        <script src="/portfolio-theme.js" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
         <script async src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`} />
         <script dangerouslySetInnerHTML={{ __html: googleAnalyticsBootstrap }} />
         {clarityBootstrap ? <script dangerouslySetInnerHTML={{ __html: clarityBootstrap }} /> : null}
-        <link
-          href="/assets/home/media/portfolio-source.min.css"
-          rel="stylesheet"
-          type="text/css"
-        />
       </head>
       <body>
         {children}

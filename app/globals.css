@@ -1,389 +1,109 @@
-@font-face {
-  font-family: "Funktionalgrotesk";
-  src: url("/assets/home/media/6709e471672707c0cf4e6fa4_FunktionalGrotesk-Light.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 300;
-  font-display: swap;
+/* Portfolio composition on the approved Compass 1.0 tokens. No Webflow UI. */
+* {box-sizing: border-box;}
+html {min-width: 320px; scroll-padding-top: 6rem;}
+html, body {margin: 0; background: var(--canvas); color: var(--text);}
+body {font: 400 1rem/1.5 var(--font), system-ui, sans-serif; font-synthesis: none; -webkit-font-smoothing: antialiased;}
+button, input, select {font: inherit;}
+a {color: inherit; text-underline-offset: .2em;}
+::selection {background: var(--selected); color: var(--text);}
+:root {scrollbar-color: var(--secondary) var(--canvas);}
+h1, h2, h3, p {margin: 0;}
+h1 {font-size: 2.125rem; line-height: 2.5625rem; font-weight: 500; letter-spacing: -.012em;}
+h2 {font-weight: 500;}
+img, video {display: block; max-width: 100%; height: auto;}
+.portfolio-root {min-width: 0; min-height: 100dvh; background: var(--canvas); color: var(--text); overflow-wrap: anywhere;}
+html[data-theme-changing] .portfolio-root, html[data-theme-changing] .portfolio-root * {transition: none!important;}
+.portfolio-shell {width: 100%; padding-inline: 18px; margin-inline: auto;}
+.portfolio-header {position: sticky; top: 0; z-index: 40; background: var(--canvas); overflow-x: auto; overscroll-behavior-x: contain; scroll-padding-inline: 6px;}
+.portfolio-header-content {display: flex; align-items: center; gap: var(--inline); min-width: max-content; padding-block: var(--inline); font: 500 .875rem/1.3125rem var(--font);}
+.portfolio-nav {display: flex; align-items: center; gap: var(--inline); margin-left: auto;}
+.portfolio-header [data-slot="button"] {font: inherit; flex-shrink: 0;}
+.portfolio-header [disabled] {color: var(--disabled); opacity: 1; cursor: default;}
+.portfolio-boundary [data-button-kind] {min-width: 44px; min-height: 44px;}
+.portfolio-boundary [data-button-kind="icon"] {width: 44px; height: 44px;}
+.portfolio-boundary [data-plain] {background: transparent;}
+.portfolio-boundary [data-plain]:not(:disabled):not([aria-disabled="true"]):is(:hover,:active) {background: var(--soft); color: var(--text);}
+.portfolio-boundary [data-slot="toggle-group-item"], .portfolio-boundary [data-slot="select-trigger"], .compass-scope [data-slot="select-item"] {min-height: 44px;}
+.portfolio-boundary [data-slot="toggle-group-item"] {min-width: 44px;}
+.portfolio-root :is(a, button, summary, [tabindex="0"]):focus-visible {outline: var(--focus-width) solid var(--focus); outline-offset: var(--focus-gap); box-shadow: none; border-radius: var(--focus-radius);}
+.portfolio-root [role="option"]:focus-visible {outline: var(--focus-width) solid var(--focus); outline-offset: calc(-1 * var(--focus-gap));}
+.portfolio-skip-link {position: fixed!important; z-index: 100; top: var(--inline); left: var(--inline); transform: translateY(-200%);}
+.portfolio-skip-link:focus {transform: none;}
+#main-content {scroll-margin-top: 5rem;}
+.portfolio-main {min-height: 60vh; padding-block: var(--group) var(--section);}
+.portfolio-footer {display: flex; align-items: center; padding-block: var(--group);}
+.portfolio-actions {display: flex; flex-wrap: wrap; align-items: center; gap: var(--inline);}
+.portfolio-work-grid, .portfolio-personal-front {display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); column-gap: 10px; row-gap: var(--group);}
+.portfolio-work-link {position: relative; min-width: 0;}
+.portfolio-work-card, .portfolio-personal-card {padding: 0; gap: 0; background: var(--canvas)!important; border: 0; box-shadow: none; overflow: hidden;}
+.portfolio-work-card img {width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: var(--radius);}
+.portfolio-card-label {display: flex; align-items: center; min-height: 44px;}
+.portfolio-card-label [data-slot="button"] {padding-inline: 0; font-size: inherit;}
+.portfolio-work-link h2 a {position: static;}
+.portfolio-work-link h2 a::after {content: ''; position: absolute; inset: 0; border-radius: var(--radius);}
+.portfolio-work-link h2 a:focus-visible {outline: none;}
+.portfolio-work-link h2 a:focus-visible::after {outline: var(--focus-width) solid var(--focus); outline-offset: var(--focus-gap);}
+.portfolio-personal-link {display: flex; justify-content: center; margin-top: var(--section);}
+.portfolio-info-page {display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--group); align-items: start;}
+.portfolio-info-copy {display: flex; flex-direction: column; align-items: flex-start; gap: var(--group); padding-block: var(--group);}
+.portfolio-intro {font-size: 1.75rem; line-height: 2.125rem; max-width: 35ch;}
+.portfolio-artwork {overflow: hidden; border-radius: var(--radius);}
+.portfolio-artwork img {width: 100%;}
+.portfolio-appearance {display: grid; gap: var(--inline);}
+.text-muted {color: var(--secondary);}
+.portfolio-not-found {display: grid; justify-items: start; gap: var(--group); padding-block: var(--section);}
+/* Cases retain image content and source order; composition uses Compass spacing. */
+.portfolio-case-heading {display: grid; justify-items: start; gap: var(--group); margin-bottom: var(--section);}
+.portfolio-case-stack {display: grid; gap: var(--group);}
+.case-panel {display: contents;}
+.portfolio-case-stack > img, .case-composite, .case-video {width: 100%; border-radius: var(--radius); overflow: hidden;}
+.case-video video {width: 100%; height: auto; object-fit: contain;}
+.case-composite {display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--group); align-items: center;}
+.case-composite > img, .case-composite > div {width: 100%; min-width: 0;}
+.portfolio-case-back {margin-top: var(--section);}
+.case-text {font: 400 1rem/1.5 var(--font); color: var(--secondary);}
+.case-text :is(p,ul,dl) {margin-block: var(--group);}
+/* The kit supplies control fills, typography and geometry; this adapter only
+   positions/reveals them and switches the two stable Lucide glyphs. */
+[data-video-frame], [data-media-reveal] {position: relative;}
+.media-controls {position: absolute; z-index: 3; bottom: var(--inline); left: var(--inline); display: flex; gap: var(--inline); opacity: 0; pointer-events: none;}
+[data-media-reveal]:hover .media-controls, [data-media-reveal]:focus-within .media-controls, [data-controls-revealed="true"] .media-controls {opacity: 1; pointer-events: auto;}
+[data-video-toggle][data-playing="false"] [data-pause-icon], [data-video-toggle][data-playing="true"] [data-play-icon] {display: none;}
+[data-site-light-icon] {display: none;}
+html[data-portfolio-site-theme="light"] [data-site-dark-icon] {display: none;}
+html[data-portfolio-site-theme="light"] [data-site-light-icon] {display: block;}
+.media-status, .media-noscript {position: absolute; top: var(--inline); left: var(--inline); right: var(--inline); z-index: 4; padding: var(--inline); background: var(--surface); color: var(--text); font-size: .875rem; line-height: 1.25rem;}
+[hidden] {display: none!important;}
+.portfolio-filters {display: flex; flex-wrap: wrap; align-items: center; gap: var(--inline); margin-bottom: var(--group);}
+.portfolio-filter-trigger {width: auto; min-width: 8rem;}
+.portfolio-filter-options {max-width: calc(100vw - 2rem);}
+.portfolio-filter-options [data-slot="select-item"] {white-space: normal; overflow-wrap: anywhere;}
+.portfolio-filter-empty {display: grid; justify-items: start; gap: var(--group); padding-block: var(--section);}
+.portfolio-personal-front {margin-bottom: var(--group);}
+.portfolio-personal-grid {display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); column-gap: 10px; row-gap: var(--group); align-items: start;}
+.portfolio-project {min-width: 0; scroll-margin-top: 6rem;}
+.portfolio-project-title {font-size: .875rem; line-height: 1.25rem;}
+.portfolio-card-notes > summary {display: flex; align-items: center; min-height: 44px; gap: var(--inline); cursor: pointer; list-style: none;}
+.portfolio-card-notes > summary::-webkit-details-marker {display: none;}
+.portfolio-about-label {margin-left: auto; color: var(--secondary);}
+.portfolio-note-copy {font-size: .875rem; line-height: 1.25rem; color: var(--secondary); padding-block: var(--inline);}
+.portfolio-gallery {position: relative;}
+.portfolio-gallery-stage {position: relative; width: 100%; background: var(--canvas); border-radius: var(--radius); overflow: hidden; touch-action: pan-y pinch-zoom;}
+.portfolio-gallery-slide {position: absolute; inset: 0; width: 100%; height: 100%;}
+.portfolio-gallery-slide > div, .personal-video {width: 100%; height: 100%;}
+.portfolio-gallery-slide img, .portfolio-gallery-slide video {width: 100%; height: 100%; object-fit: contain;}
+.gallery-navigation {left: auto; right: var(--inline);}
+.portfolio-media-caption {min-height: 44px; display: flex; align-items: center; font-size: .875rem; line-height: 1.25rem; color: var(--secondary);}
+.portfolio-image-failure {position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: var(--inline); background: var(--canvas); color: var(--text); padding: var(--group);}
+@media (max-width:1199px) {.portfolio-personal-grid {grid-template-columns: repeat(2,minmax(0,1fr));}}
+@media (max-width:767px) {
+ .portfolio-header-content {font-size: .75rem; line-height: 1.125rem; gap: 4px;}
+ .portfolio-nav {gap: 4px;}
+ .portfolio-nav [data-slot="button"] {padding-inline: 6px;}
+ .portfolio-wordmark {padding-inline: 4px;}
+ .portfolio-work-grid, .portfolio-personal-front, .portfolio-personal-grid, .portfolio-info-page, .case-composite {grid-template-columns: minmax(0,1fr);}
+ .portfolio-intro {font-size: 1.25rem; line-height: 1.5rem;}
+ .portfolio-info-copy {padding-top: 0;}
 }
-
-@font-face {
-  font-family: "Funktionalgrotesk";
-  src: url("/assets/home/media/6709e4711141238c6075e88b_FunktionalGrotesk-Regular.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Funktionalgrotesk";
-  src: url("/assets/home/media/6709e4713af7da131946bb76_FunktionalGrotesk-Medium.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-}
-
-html,
-body {
-  min-width: 320px;
-  background: #000;
-}
-
-body {
-  overflow-x: hidden;
-}
-
-/* Keep intrinsic media proportions when width/height attributes reserve layout space. */
-img,
-video {
-  height: auto;
-}
-
-main.home-body,
-main.info,
-main.body-molekule,
-main.luma-body,
-main.niche-body,
-main.hyphae-body,
-main.body-6,
-main.play-body {
-  width: 100%;
-  min-height: 100vh;
-}
-
-main.home-body > .header,
-main.info > .header,
-main.body-molekule > .header,
-main.luma-body > .header,
-main.niche-body > .header,
-main.hyphae-body > .header,
-main.body-6 > .header,
-main.play-body > .header {
-  width: 100%;
-}
-
-/* Responsive sources must not make intrinsic image widths expand CSS grid tracks. */
-main.home-body > .grid > a,
-main.info > .grid-2 > * {
-  min-width: 0;
-}
-
-main.home-body .content-2 > img,
-main.info > .grid-2 > img {
-  width: 100%;
-}
-
-/*
- * The source stylesheet positions background videos at z-index: -100. On the live site the
- * project class lives on <body>; here it lives on <main>, so the video would
- * otherwise fall behind the main element's black background. Keep the source
- * stacking order, but contain it inside each transparent video frame.
- */
-main.body-molekule .w-background-video,
-main.luma-body .w-background-video,
-main.niche-body .w-background-video,
-main.hyphae-body .w-background-video,
-main.body-6 .w-background-video {
-  isolation: isolate;
-}
-
-.info-spacer {
-  order: -9999;
-  place-self: center;
-}
-
-.hyphae-vimeo,
-.hyphae-vimeo-frame {
-  width: 100%;
-}
-
-.hyphae-vimeo-frame {
-  aspect-ratio: 16 / 9;
-  position: relative;
-}
-
-.hyphae-vimeo-frame iframe,
-.hyphae-vimeo-frame > video {
-  display: block;
-  border: 0;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  inset: 0;
-}
-
-.hyphae-vimeo-frame > video {
-  background: #000;
-  object-fit: cover;
-}
-
-.exact-carousel {
-  position: relative;
-  overflow: hidden;
-}
-
-.exact-carousel-slide {
-  opacity: 0;
-  visibility: hidden;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  inset: 0;
-}
-
-.exact-carousel-slide.is-active {
-  opacity: 1;
-  visibility: visible;
-}
-
-.exact-carousel-slide img,
-.exact-carousel-slide video {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.exact-carousel-slide .div-block-37 .image-43-copy {
-  width: auto;
-  max-width: 100%;
-  object-fit: contain;
-}
-
-main.play-body .exact-hidden-label {
-  opacity: 0;
-  transition: opacity 180ms ease;
-}
-
-main.play-body .exact-hover-card:hover > .exact-hidden-label,
-main.play-body .exact-hover-card:focus-within > .exact-hidden-label {
-  opacity: 1;
-}
-
-.exact-label-pair {
-  width: 100%;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  main.play-body .exact-hidden-label {
-    transition: none;
-  }
-}
-
-/* Reflow the authored board text on phones without rescaling the desktop art. */
-.case-panel {
-  display: contents;
-}
-
-.case-text {
-  align-self: stretch;
-  min-width: 0;
-  color: #ccc;
-  font-family: "Funktionalgrotesk", sans-serif;
-  font-size: 18px;
-  font-weight: 300;
-  line-height: 150%;
-  margin: 20px;
-  overflow-wrap: anywhere;
-}
-
-.case-text h1 {
-  font: inherit;
-  font-size: 24px;
-  margin: 0 0 20px;
-}
-
-.case-text h2,
-.case-text h3,
-.case-text dt {
-  font: inherit;
-  font-weight: 500;
-  margin: 20px 0 10px;
-}
-
-.case-text p,
-.case-text ul,
-.case-text dl {
-  margin: 0 0 20px;
-}
-
-.case-text dd {
-  margin: 0;
-}
-
-@media (min-width: 768px) {
-  .case-text {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
-}
-
-[data-video-frame] {
-  position: relative;
-}
-
-.portfolio-video-controls {
-  position: absolute;
-  z-index: 1;
-  bottom: 10px;
-  left: 10px;
-  max-width: calc(100% - 20px);
-  color: #fff;
-  background: #000d;
-  font-family: "Funktionalgrotesk", sans-serif;
-  font-size: 18px;
-  line-height: 150%;
-}
-
-.portfolio-video-controls button,
-.carousel-controls button {
-  min-width: 44px;
-  min-height: 44px;
-  padding: 10px;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-}
-
-.portfolio-video-controls p {
-  margin: 0;
-  padding: 10px;
-}
-
-.portfolio-video-controls a,
-.video-noscript a {
-  color: inherit;
-  text-decoration: underline;
-}
-
-[data-video-status][hidden] {
-  display: none;
-}
-
-.carousel-video {
-  width: 100%;
-  height: 100%;
-}
-
-.video-noscript {
-  position: absolute;
-  inset: auto 10px 10px;
-  background: #000;
-  color: #fff;
-}
-
-.carousel-controls {
-  position: absolute;
-  z-index: 2;
-  top: 10px;
-  left: 10px;
-  display: flex;
-  align-items: center;
-  color: #fff;
-  background: #000d;
-  font: 300 18px/150% "Funktionalgrotesk", sans-serif;
-}
-
-.carousel-controls span {
-  padding: 0 10px;
-}
-
-.carousel-video .portfolio-video-controls {
-  bottom: 10px;
-}
-
-.motion-picture {
-  display: contents;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html:focus-within {
-    scroll-behavior: auto;
-  }
-  .exact-carousel-slide {
-    transition: none;
-  }
-}
-
-/* Functional focus states override the source site's incomplete current-link rule. */
-body :is(a, button, [tabindex="0"]):focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 3px;
-}
-
-.skip-link {
-  position: fixed;
-  z-index: 1000;
-  top: 10px;
-  left: 10px;
-  transform: translateY(-200%);
-  min-height: 44px;
-  padding: 10px;
-  background: #000;
-  color: #fff;
-  font: 300 18px/150% "Funktionalgrotesk", sans-serif;
-}
-
-.skip-link:focus {
-  transform: none;
-}
-
-#main-content {
-  scroll-margin-top: 80px;
-}
-
-@media (max-width: 767px) {
-  /* Negative margins preserve the original ink positions while enlarging links. */
-  .header .five.link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 44px;
-    min-height: 48px;
-    padding-block: 16.2px;
-    margin-block: -16.2px;
-  }
-  .header .five.link[data-nav-link="work"] {
-    margin-inline: -8.5px;
-  }
-  .header .five.link[data-nav-link="info"] {
-    margin-inline: -12.5px;
-  }
-  .header .five.link[data-nav-link="contact"] {
-    margin-inline: -1.5px;
-  }
-  .header a.primary-link {
-    display: flex;
-    align-items: center;
-    min-height: 48px;
-    margin-block: -12px;
-  }
-}
-
-.not-found-content {
-  padding: 120px 20px 20px;
-  color: #ccc;
-  font: 300 18px/150% "Funktionalgrotesk", sans-serif;
-}
-
-.not-found-content h1 {
-  color: #fff;
-  font: inherit;
-  font-size: 24px;
-  margin: 0 0 20px;
-}
-
-.not-found-content a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  margin-right: 20px;
-  color: inherit;
-}
+@media (max-width:640px) {.portfolio-shell {padding-inline: 10px;}}
+@media (prefers-reduced-motion:reduce) {html {scroll-behavior: auto;} *, *::before, *::after {scroll-behavior: auto!important;}}

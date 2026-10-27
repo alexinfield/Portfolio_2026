@@ -1,59 +1,21 @@
-import LiveHeader from "./live-header";
+import SiteShell from "./site-shell";
+import { Button, Card } from "./compass";
 import ResponsiveImage from "./responsive-image";
-import { projects } from "@/lib/portfolio";
-
-const projectClassNames: Record<string, string> = {
-  ping: "home-project-ping",
-  "molekule-go": "home-project-luma",
-  luma: "home-project-luma",
-  niche: "home-project-cell",
-  hyphae: "home-project-cell",
-  mode: "home-project-luma",
-};
-
-const imageClassNames: Record<string, string> = {
-  ping: "home-image-hero-hyphae",
-  "molekule-go": "home-image-hero-hyphae",
-  luma: "home-image-hero",
-  niche: "home-image-hero-niche",
-  hyphae: "home-image-hero-hyphae",
-  mode: "home-image-hero-hyphae",
-};
+import { workProjects } from "@/lib/portfolio";
 
 export default function Home() {
-  return (
-    <main className="home-body">
-      <LiveHeader current="work" />
-      <div className="w-layout-grid grid" id="main-content" tabIndex={-1}>
-        {projects.map((project, index) => (
-          <a
-            href={`/projects/${project.slug}`}
-            className={`link-${project.slug} w-inline-block`}
-            key={project.slug}
-          >
-            <div className={projectClassNames[project.slug]}>
-              <div className="content-2">
-                <ResponsiveImage
-                  src={project.cover}
-                  alt={project.coverAlt}
-                  className={imageClassNames[project.slug]}
-                  width={project.coverWidth}
-                  height={project.coverHeight}
-                  sizes="(max-width: 767px) 100vw, 50vw"
-                  loading={index === 0 ? "eager" : "lazy"}
-                  fetchPriority={index === 0 ? "high" : "auto"}
-                  decoding={index === 0 ? "sync" : "async"}
-                />
-                <div className="text-5">
-                  <div className="frame-39">
-                    <div className="home-project-title">{project.title}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </a>
-        ))}
-      </div>
-    </main>
-  );
+  return <SiteShell current="work">
+    <h1 className="sr-only">Work</h1>
+    <div className="portfolio-work-grid">
+      {workProjects.map((project, index) => <article className="portfolio-work-link" key={project.slug}>
+        <Card className="portfolio-work-card">
+          <ResponsiveImage src={project.cover} alt={project.coverAlt} width={project.coverWidth} height={project.coverHeight}
+            sizes="(max-width: 767px) 100vw, 50vw" loading={index < 2 ? "eager" : "lazy"}
+            fetchPriority={index === 0 ? "high" : "auto"} decoding={index === 0 ? "sync" : "async"} />
+        </Card>
+        <h2 className="portfolio-card-label text-sm"><Button asChild variant="link" size="sm"><a href={`./projects/${project.slug}/`}>{project.title}</a></Button></h2>
+      </article>)}
+    </div>
+    <div className="portfolio-personal-link"><Button asChild variant="secondary" data-plain=""><a href="./personal/">Personal work →</a></Button></div>
+  </SiteShell>;
 }

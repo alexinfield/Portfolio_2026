@@ -47,3 +47,6 @@ next-env.d.ts
 /.agents/
 /.codex/
 /.playwright-cli/
+
+# host-local TypeScript incremental state
+*.tsbuildinfo

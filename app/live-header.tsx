@@ -1,61 +1,23 @@
-/* eslint-disable @next/next/no-html-link-for-pages -- static Pages export requires native navigation */
+import { Moon, Sun } from "lucide-react";
+import { Button } from "./compass";
 
-type LiveHeaderProps = {
-  current?: "work" | "info";
-  light?: boolean;
-};
-
-const lightVariant = "w-variant-22095cef-840e-b01c-9554-e30a92fa6748";
-
-export default function LiveHeader({ current, light = false }: LiveHeaderProps) {
-  const variant = light ? ` ${lightVariant}` : "";
-
-  return (
-    <>
-    <a className="skip-link" href="#main-content">Skip to content</a>
-    <header className={`header${variant}`}>
-      <div className="div-block-35">
-        <h1 className={`heading${variant}`}>
-          <a
-            href="/"
-            aria-current={current === "work" ? "page" : undefined}
-            className={`link primary-link${variant}${current === "work" ? " w--current" : ""}`}
-          >
-            Alex Infield
-          </a>
-        </h1>
+export default function LiveHeader({ current, base = "/" }: { current?: "work" | "personal" | "info"; base?: string }) {
+  return <>
+    <Button asChild variant="secondary" size="sm" className="portfolio-skip-link"><a href="#main-content">Skip to content</a></Button>
+    <header className="portfolio-header">
+      <div className="portfolio-header-content portfolio-shell">
+        <Button asChild size="sm" variant="secondary" data-plain="" className="portfolio-wordmark"><a href={base}>Alex Infield</a></Button>
+        <nav className="portfolio-nav" aria-label="Primary">
+          <Button asChild size="sm" variant="secondary" data-plain={current === "work" ? undefined : ""}><a href={base} aria-current={current === "work" ? "page" : undefined}>Work</a></Button>
+          <Button asChild size="sm" variant="secondary" data-plain={current === "personal" ? undefined : ""}><a href={`${base}personal/`} aria-current={current === "personal" ? "page" : undefined}>Personal</a></Button>
+          <Button type="button" size="sm" variant="secondary" data-plain="" disabled aria-disabled="true">Professional</Button>
+          <Button asChild size="sm" variant="secondary" data-plain={current === "info" ? undefined : ""}><a href={`${base}info/`} aria-current={current === "info" ? "page" : undefined}>Info</a></Button>
+        </nav>
+        <Button type="button" variant="secondary" data-plain="" size="icon-sm" data-theme-toggle
+          aria-label="Dark site appearance" aria-pressed="true" title="Switch to Light" suppressHydrationWarning>
+          <Sun data-site-dark-icon aria-hidden="true" /><Moon data-site-light-icon aria-hidden="true" />
+        </Button>
       </div>
-      <nav className="div-block-36" aria-label="Primary">
-        <ul className={`list-2 w-list-unstyled${variant}`} aria-hidden="true" />
-        <ul className={`list-2 w-list-unstyled${variant}`}>
-          <li>
-            <a
-              href="/"
-              data-nav-link="work"
-              aria-current={current === "work" ? "page" : undefined}
-              className={`five link${variant}${current === "work" ? " w--current" : ""}`}
-            >
-              Work
-            </a>
-          </li>
-          <li>
-            <a
-              href="/info"
-              data-nav-link="info"
-              aria-current={current === "info" ? "page" : undefined}
-              className={`five link${variant}${current === "info" ? " w--current" : ""}`}
-            >
-              Info
-            </a>
-          </li>
-          <li>
-            <a href="mailto:alex@infield.net" data-nav-link="contact" className={`five link${variant}`}>
-              Contact
-            </a>
-          </li>
-        </ul>
-      </nav>
     </header>
-    </>
-  );
+  </>;
 }

@@ -15,7 +15,7 @@ export function socialMetadata(
   title: string,
   description: string,
   route: string,
-  image = projectShareImage(projectDefinitions[0]),
+  image: { url: string; width: number; height: number; alt: string } = projectShareImage(projectDefinitions[0]),
 ): Metadata {
   const absoluteImage = new URL(image.url, "https://alexinfield.com").href;
   return {
