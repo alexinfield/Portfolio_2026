@@ -16,6 +16,8 @@
     "test:browser": "node tests/browser-regressions.mjs"
   },
   "dependencies": {
+    "@alex-infield/compass-augmentation": "file:vendor/alex-infield-compass-augmentation-1.0.0.tgz",
+    "lucide-react": "^1.52.0",
     "next": "16.2.6",
     "react": "19.2.6",
     "react-dom": "19.2.6"
