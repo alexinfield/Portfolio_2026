@@ -36,7 +36,12 @@
         ]
       },
       "gallery": [],
-      "short_text": null
+      "short_text": null,
+      "framing": {
+        "fit": "cover",
+        "object_position": "50% 53%",
+        "background": "#000000"
+      }
     },
     {
       "id": "niche",
@@ -73,7 +78,12 @@
         ]
       },
       "gallery": [],
-      "short_text": null
+      "short_text": null,
+      "framing": {
+        "fit": "cover",
+        "object_position": "50% 50%",
+        "background": "#D9D9D9"
+      }
     },
     {
       "id": "server-rack",
@@ -164,7 +174,12 @@
               "height": 1100,
               "bytes": 48892
             }
-          ]
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#B3B3B3"
+          }
         },
         {
           "kind": "image",
@@ -192,7 +207,12 @@
               "height": 1000,
               "bytes": 42492
             }
-          ]
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#FFFFFF"
+          }
         },
         {
           "kind": "image",
@@ -214,10 +234,20 @@
               "height": 1280,
               "bytes": 198186
             }
-          ]
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#9A9A9A"
+          }
         }
       ],
-      "short_text": null
+      "short_text": null,
+      "framing": {
+        "fit": "pad",
+        "object_position": "50% 50%",
+        "background": "#B7B7B7"
+      }
     },
     {
       "id": "stool",
@@ -308,7 +338,12 @@
               "height": 1920,
               "bytes": 96606
             }
-          ]
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#212121"
+          }
         },
         {
           "kind": "image",
@@ -336,10 +371,20 @@
               "height": 1060,
               "bytes": 50036
             }
-          ]
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#000000"
+          }
         }
       ],
-      "short_text": null
+      "short_text": null,
+      "framing": {
+        "fit": "pad",
+        "object_position": "50% 50%",
+        "background": "#090B0F"
+      }
     },
     {
       "id": "desk-pen",
@@ -434,6 +479,11 @@
                 "bytes": 1980
               }
             ]
+          },
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#010101"
           }
         },
         {
@@ -466,6 +516,11 @@
                 "bytes": 1822
               }
             ]
+          },
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#010101"
           }
         },
         {
@@ -498,6 +553,11 @@
                 "bytes": 72226
               }
             ]
+          },
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#AEAEAE"
           }
         },
         {
@@ -514,7 +574,12 @@
               "height": 720,
               "bytes": 17872
             }
-          ]
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#7B7B7B"
+          }
         },
         {
           "kind": "video",
@@ -546,10 +611,20 @@
                 "bytes": 32046
               }
             ]
+          },
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#818181"
           }
         }
       ],
-      "short_text": "Desk Pen explores a simple pen form through sketches, digital studies and a physical prototype."
+      "short_text": "Desk Pen explores a simple pen form through sketches, digital studies and a physical prototype.",
+      "framing": {
+        "fit": "pad",
+        "object_position": "50% 50%",
+        "background": "#F8F8F8"
+      }
     },
     {
       "id": "mycelium",
@@ -659,7 +734,12 @@
           ]
         }
       ],
-      "short_text": null
+      "short_text": null,
+      "framing": {
+        "fit": "cover",
+        "object_position": "50% 50%",
+        "background": "#96958F"
+      }
     },
     {
       "id": "reusable-wall-hooks",
@@ -803,7 +883,12 @@
           ]
         }
       ],
-      "short_text": "Wall hook · mechanism concept"
+      "short_text": "Wall hook · mechanism concept",
+      "framing": {
+        "fit": "cover",
+        "object_position": "50% 50%",
+        "background": "#A9A09F"
+      }
     },
     {
       "id": "p016-biomaking-gelatin-wrap-materials-study",
@@ -913,7 +998,12 @@
           ]
         }
       ],
-      "short_text": "Gelatin-wrap and natural-dye material experiments."
+      "short_text": "Gelatin-wrap and natural-dye material experiments.",
+      "framing": {
+        "fit": "cover",
+        "object_position": "50% 58%",
+        "background": "#626760"
+      }
     },
     {
       "id": "p019-neighborhood-cnc-relief-map-study",
@@ -986,10 +1076,20 @@
               "height": 1600,
               "bytes": 26680
             }
-          ]
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#A7A7A7"
+          }
         }
       ],
-      "short_text": "A CNC relief-map study."
+      "short_text": "A CNC relief-map study.",
+      "framing": {
+        "fit": "pad",
+        "object_position": "50% 50%",
+        "background": "linear-gradient(90deg, #CDD4C6 0% 50%, #B2B7AF 50% 100%)"
+      }
     },
     {
       "id": "p025-warp-paper-light-and-shadow-relief",
@@ -1083,7 +1183,12 @@
           ]
         }
       ],
-      "short_text": "Paper, light and shadow."
+      "short_text": "Paper, light and shadow.",
+      "framing": {
+        "fit": "cover",
+        "object_position": "50% 50%",
+        "background": "#888783"
+      }
     },
     {
       "id": "book",
@@ -1149,7 +1254,12 @@
           ]
         }
       ],
-      "short_text": null
+      "short_text": null,
+      "framing": {
+        "fit": "cover",
+        "object_position": "50% 50%",
+        "background": "#000000"
+      }
     },
     {
       "id": "wall-mounts",
@@ -1191,7 +1301,12 @@
           ]
         }
       ],
-      "short_text": null
+      "short_text": null,
+      "framing": {
+        "fit": "cover",
+        "object_position": "50% 72%",
+        "background": "#88817A"
+      }
     },
     {
       "id": "off-campus",
@@ -1282,10 +1397,20 @@
               "height": 900,
               "bytes": 61338
             }
-          ]
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#FFFFFF"
+          }
         }
       ],
-      "short_text": "Housing-search interface study"
+      "short_text": "Housing-search interface study",
+      "framing": {
+        "fit": "pad",
+        "object_position": "50% 50%",
+        "background": "#FFFFFF"
+      }
     },
     {
       "id": "p021-gravity-synth-bouncing-ball-musical-interface",
@@ -1346,10 +1471,20 @@
                 "bytes": 4786
               }
             ]
+          },
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#020202"
           }
         }
       ],
-      "short_text": "Bouncing-ball musical interface study."
+      "short_text": "Bouncing-ball musical interface study.",
+      "framing": {
+        "fit": "pad",
+        "object_position": "50% 50%",
+        "background": "#010103"
+      }
     },
     {
       "id": "p024-contrast-exploratory-photoshop-series",
@@ -1422,10 +1557,20 @@
               "height": 1600,
               "bytes": 654582
             }
-          ]
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#585858"
+          }
         }
       ],
-      "short_text": "Exploratory image and texture studies."
+      "short_text": "Exploratory image and texture studies.",
+      "framing": {
+        "fit": "pad",
+        "object_position": "50% 50%",
+        "background": "#010101"
+      }
     },
     {
       "id": "p041-telefoni",
@@ -1486,10 +1631,20 @@
                 "bytes": 6942
               }
             ]
+          },
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#000000"
           }
         }
       ],
-      "short_text": "An archive montage and edit."
+      "short_text": "An archive montage and edit.",
+      "framing": {
+        "fit": "pad",
+        "object_position": "50% 50%",
+        "background": "#000000"
+      }
     }
   ]
 }

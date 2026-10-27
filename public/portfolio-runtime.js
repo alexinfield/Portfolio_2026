@@ -57,7 +57,7 @@
 
   const nearObserver = "IntersectionObserver" in window ? new IntersectionObserver((entries) => {
     entries.forEach(({ target: video, isIntersecting }) => {
-      if (isIntersecting && !motion.matches && video.dataset.mediaActive !== "false") load(video);
+      if (isIntersecting && !motion.matches && video.dataset.mediaActive !== "false" && video.dataset.demandOnly !== "true") load(video);
     });
   }, { rootMargin: "200px 0px" }) : null;
   const visibleObserver = "IntersectionObserver" in window ? new IntersectionObserver((entries) => {
@@ -111,6 +111,14 @@
       frame = frame.parentElement?.closest("[data-media-reveal]");
     }
   }, true);
+
+  document.addEventListener("focusin", (event) => {
+    const header = event.target.closest?.(".portfolio-header");
+    if (!header) return;
+    const bounds=header.getBoundingClientRect(),target=event.target.getBoundingClientRect();
+    if(target.left<bounds.left+6)header.scrollLeft+=target.left-bounds.left-6;
+    else if(target.right>bounds.right-6)header.scrollLeft+=target.right-bounds.right+6;
+  });
 
   document.addEventListener("click", (event) => {
     const button = event.target.closest?.("[data-video-toggle], [data-video-retry]");
