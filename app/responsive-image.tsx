@@ -27,16 +27,16 @@ export default function ResponsiveImage({
   alt,
   ...props
 }: ResponsiveImageProps) {
-  src = withBasePath(src);
-  const candidates = supportedSource.test(src)
+  const source = withBasePath(src);
+  const candidates = supportedSource.test(source)
     ? responsiveWidths.filter((candidateWidth) => candidateWidth < width)
     : [];
   const srcSet = candidates.length
     ? [
         ...candidates.map(
-          (candidateWidth) => `${candidatePath(src, candidateWidth)} ${candidateWidth}w`,
+          (candidateWidth) => `${candidatePath(source, candidateWidth)} ${candidateWidth}w`,
         ),
-        `${src} ${width}w`,
+        `${source} ${width}w`,
       ].join(", ")
     : undefined;
 
@@ -46,7 +46,7 @@ export default function ResponsiveImage({
     <img
       {...props}
       alt={alt}
-      src={src}
+      src={source}
       width={width}
       height={height}
       srcSet={srcSet}

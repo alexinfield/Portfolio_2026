@@ -1,5 +1,5 @@
-import { readFile, readdir, lstat, mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises';
-import { resolve, relative, join, extname } from 'node:path';
+import { readFile, readdir, lstat, mkdtemp, writeFile, rm } from 'node:fs/promises';
+import { resolve, relative, join } from 'node:path';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');

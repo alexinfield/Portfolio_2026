@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { access, readFile, readdir, stat } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import { inflateSync } from "node:zlib";
 import test from "node:test";
 
@@ -217,7 +218,7 @@ test("Professional material, legacy UI and discarded extras are absent from the 
 
 test("only public Compass exports are consumed and the tarball is pinned",async()=>{
   const pkg=JSON.parse(await read("package.json"));
-  assert.equal(pkg.dependencies["@alex-infield/compass-augmentation"],"file:vendor/alex-infield-compass-augmentation-1.0.0.tgz");
+  assert.equal(pkg.dependencies["@alex-infield/compass-augmentation"],"file:vendor/alex-infield-compass-augmentation-1.1.0.tgz");
   assert.equal(pkg.dependencies["lucide-react"],"1.52.0");
   const wrapper=await read("app/compass.tsx");assert.match(wrapper,/^"use client"/);assert.match(wrapper,/from "@alex-infield\/compass-augmentation"/);
   const layout=await read("app/layout.tsx");assert.ok(layout.indexOf("augmentation/styles.css")<layout.indexOf("alex-tokens.css"));
@@ -252,4 +253,11 @@ test("Personal frames carry reviewed positions and background-matched padding me
   assert.equal(packageData.items.find(item=>item.id.includes("neighborhood")).framing.fit,"pad");
   const html=await exported("personal/index.html");assert.match(html,/property="og:image" content="https:\/\/alexinfield.com\/assets\/personal\/media\/stool-/);
   const telefoni=html.match(/<video\b[^>]*data-original-source="[^"]*telefoni[^"]*"[^>]*>/)[0];assert.match(telefoni,/data-demand-only="true"/);assert.doesNotMatch(telefoni,/data-autoplay-video/);assert.match(telefoni,/preload="none"/);
+});
+
+test("approved 1.1.0 package and unchanged 1.0.0 rollback tarball are retained",async()=>{
+  const hash=async name=>createHash("sha256").update(await readFile(new URL(`../vendor/${name}`,import.meta.url))).digest("hex");
+  assert.equal(await hash("alex-infield-compass-augmentation-1.1.0.tgz"),"dfb9a8e55fe4fcf476ca78bd9a296729bf55a3620df86515a562f2839f3a473c");
+  assert.equal(await hash("alex-infield-compass-augmentation-1.0.0.tgz"),"58b382220404bfd2cc637110128899428a7bef936367f7d34999c4a50edc3151");
+  for(const item of packageData.items.filter(item=>item.id==="desk-pen"||item.id.includes("neighborhood")))assert.equal(item.framing.fill,"edge-extend");
 });

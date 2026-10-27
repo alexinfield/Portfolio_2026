@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-html-link-for-pages -- native navigation for static Pages */
 import { withBasePath } from "@/lib/base-path";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";

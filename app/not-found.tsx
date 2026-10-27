@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-html-link-for-pages -- native navigation for static Pages */
 import { withBasePath } from "@/lib/base-path";
 import SiteShell from "./site-shell";
 import { Button } from "./compass";
