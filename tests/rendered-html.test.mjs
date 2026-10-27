@@ -129,7 +129,7 @@ test("etc reproduces the live three-column play feed with local media", async ()
   ]) {
     assert.match(documentHtml, new RegExp(asset.replaceAll(".", "\\.")));
   }
-  assert.doesNotMatch(documentHtml, /<video[^>]*autoplay/i);
+  assert.doesNotMatch(documentHtml, /<video[^>]*\sautoplay(?:\s|=|>)/i);
   assert.doesNotMatch(documentHtml, /desk-pen-img-1421\.mp4/);
   assert.doesNotMatch(documentHtml, /IMG_1741[^"']*\.mp4/);
 });
@@ -157,7 +157,7 @@ test("source stylesheet and small clone layer preserve the live measurements", a
 
 test("self-hosted carousel videos use synchronized playback and a portable web derivative", async () => {
   const [carouselSource, derivative] = await Promise.all([
-    readFile(new URL("../app/etc/etc-carousel.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../public/portfolio-runtime.js", import.meta.url), "utf8"),
     stat(new URL("../public/assets/etc/media/desk-pen-img-1421-web.mp4", import.meta.url)),
   ]);
 
@@ -297,3 +297,49 @@ test("all six cases retain image order and expose the authored summaries, dates 
     for (const item of registry[slug]) assert.ok(panels[item.source]?.alt.length > 10, item.source);
   }
 });
+
+test("video URLs stay dormant in the exported HTML until viewport or play demand", async () => {
+  for (const slug of publishedProjects) {
+    const html = await readFile(new URL(`../gh-pages/projects/${slug}/index.html`, import.meta.url), "utf8");
+    for (const [video] of html.matchAll(/<video\b[\s\S]*?<\/video>/g)) {
+      assert.match(video, /data-lazy-video/);
+      assert.match(video, /preload="none"/);
+      assert.doesNotMatch(video, /<video[^>]*\sautoplay/i);
+      assert.doesNotMatch(video, /<source[^>]*\ssrc=/);
+      assert.match(video, /<source[^>]*data-src=/);
+      assert.match(video, /Video unavailable in this browser/);
+    }
+  }
+  const mapping = await readFile(new URL("../lib/video-sources.ts", import.meta.url), "utf8");
+  for (const [slug, name, original] of [
+    ["molekule-go", "uv-web", "UV-animation-transcode"],
+    ["molekule-go", "aq-web", "aq-indicator-transcode"],
+    ["hyphae", "growth-web", "growth-sim-transcode"],
+    ["hyphae", "making-web", "673e9d3ff35335eb252fe856_img-0469-transcode"],
+    ["hyphae", "film-web", "hyphae-light-film"],
+  ]) {
+    assert.ok(mapping.includes(`${slug}/media/${original}.mp4`));
+    const originalFile = await stat(new URL(`../public/assets/${slug}/media/${original}.mp4`, import.meta.url));
+    for (const extension of ["mp4", "webm"]) {
+      const derivative = await stat(new URL(`../public/assets/${slug}/media/${name}.${extension}`, import.meta.url));
+      assert.ok(derivative.size < originalFile.size, `${name}.${extension} is smaller than its original`);
+    }
+  }
+});
+
+test("reduced-motion and manual carousel controls are part of the exported behavior", async () => {
+  const [html, runtime, carousel] = await Promise.all([
+    readFile(new URL("../gh-pages/etc/index.html", import.meta.url), "utf8"),
+    readFile(new URL("../public/portfolio-runtime.js", import.meta.url), "utf8"),
+    readFile(new URL("../app/etc/etc-carousel.tsx", import.meta.url), "utf8"),
+  ]);
+  for (const label of ["Previous slide", "Next slide", "Play slideshow"]) assert.ok(html.includes(`aria-label="${label}"`), label);
+  assert.match(html, /<source media="\(prefers-reduced-motion: reduce\)" srcset="\.\.\/assets\/etc\/media\/hyundai-research-still.webp"/);
+  assert.match(runtime, /prefers-reduced-motion: reduce/);
+  assert.match(runtime, /visibilitychange/);
+  assert.match(runtime, /state\.userPaused/);
+  assert.match(carousel, /ArrowLeft/);
+  assert.match(carousel, /ArrowRight/);
+  assert.match(carousel, /!isVisible \|\| hidden \|\| !running/);
+});
+

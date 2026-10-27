@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import LiveHeader from "@/app/live-header";
 import ResponsiveImage from "@/app/responsive-image";
 import CaseText, { casePanel } from "@/app/case-text";
+import DeferredVideo from "@/app/deferred-video";
 import {
   getProject,
   getProjectMedia,
@@ -48,21 +49,15 @@ function ProjectVideo({
   index: number;
 }) {
   return (
-    <div className={`${videoClassName(slug, index)} w-background-video w-background-video-atom`}>
-      <video
-        data-autoplay-video
-        autoPlay
-        loop={!(slug === "luma" && index === 0)}
-        muted
-        playsInline
-        preload={index === 0 ? "metadata" : "none"}
-        poster={item.poster}
-        width={item.width}
-        height={item.height}
-      >
-        <source src={item.source} type={item.contentType ?? "video/mp4"} />
-      </video>
-    </div>
+    <DeferredVideo
+      className={`${videoClassName(slug, index)} w-background-video w-background-video-atom`}
+      source={item.source}
+      poster={item.poster}
+      label={casePanel(item.source)?.alt ?? "Project video"}
+      loop={!(slug === "luma" && index === 0)}
+      width={item.width}
+      height={item.height}
+    />
   );
 }
 
@@ -111,21 +106,14 @@ function HyphaeComposite({ image, video, second = false }: {
         className={second ? "outline" : "outline-video"}
       />
       <div className={second ? "video-small-airchair-hyphae-2" : "video-small-airchair-hyphae"}>
-        <div className={`${second ? "background-video-hyphae-2" : "background-video-hyphae"} w-background-video w-background-video-atom`}>
-          <video
-            data-autoplay-video
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="none"
-            poster={video.poster}
-            width={video.width}
-            height={video.height}
-          >
-            <source src={video.source} type={video.contentType ?? "video/mp4"} />
-          </video>
-        </div>
+        <DeferredVideo
+          className={`${second ? "background-video-hyphae-2" : "background-video-hyphae"} w-background-video w-background-video-atom`}
+          source={video.source}
+          poster={video.poster}
+          label={casePanel(video.source)?.alt ?? "Hyphae video"}
+          width={video.width}
+          height={video.height}
+        />
       </div>
     </div>
   );
@@ -155,17 +143,15 @@ function HyphaePresentation({ media }: { media: MediaItem[] }) {
       />
       <CaseText source={media[1].source} />
       <div className="w-embed hyphae-vimeo">
-        <div className="hyphae-vimeo-frame">
-          <video
-            controls
-            playsInline
-            preload="metadata"
-            poster="/assets/hyphae/media/hyphae-light-film-poster.jpg"
-            aria-label="Hyphae Light film"
-          >
-            <source src="/assets/hyphae/media/hyphae-light-film.mp4" type="video/mp4" />
-          </video>
-        </div>
+        <DeferredVideo
+          className="hyphae-vimeo-frame"
+          source="/assets/hyphae/media/hyphae-light-film.mp4"
+          poster="/assets/hyphae/media/hyphae-light-film-poster.jpg"
+          label="Hyphae Light film"
+          autoplay={false}
+          loop={false}
+          controls
+        />
       </div>
       {media.slice(2, 9).map((item, index) => (
         <div className="case-panel" key={item.source}>

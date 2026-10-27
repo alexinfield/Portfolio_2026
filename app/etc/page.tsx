@@ -14,12 +14,14 @@ const deskPenItems = [
   {
     kind: "image" as const,
     src: "/assets/etc/media/desk-pen.png",
+    alt: "A desk pen standing upright in its base.",
     width: 3840,
     height: 6827,
   },
   {
     kind: "video" as const,
     src: "/assets/etc/media/desk-pen-a31.mp4",
+    alt: "Animation of the desk pen and its base.",
     poster: "/assets/etc/media/desk-pen-a31-poster.jpg",
     loop: false,
     width: 2560,
@@ -28,6 +30,7 @@ const deskPenItems = [
   {
     kind: "video" as const,
     src: "/assets/etc/media/desk-pen-a2.mp4",
+    alt: "Animation of a desk pen rotating.",
     poster: "/assets/etc/media/desk-pen-a2-poster.jpg",
     width: 3840,
     height: 3840,
@@ -35,6 +38,7 @@ const deskPenItems = [
   {
     kind: "video" as const,
     src: "/assets/etc/media/desk-pen-img-1421-web.mp4",
+    alt: "Video demonstrating a desk pen prototype.",
     poster: "/assets/etc/media/desk-pen-img-1421-poster.jpg",
     width: 1920,
     height: 1080,
@@ -42,6 +46,7 @@ const deskPenItems = [
   {
     kind: "image" as const,
     src: "/assets/etc/media/desk-pen-img-1741-poster.jpg",
+    alt: "A still photograph of a desk pen prototype.",
     width: 404,
     height: 720,
   },
@@ -91,16 +96,17 @@ export default function EtcPage() {
           </a>
 
           <div className="cell-play exact-hover-card">
-            <EtcCarousel items={deskPenItems} />
+            <EtcCarousel items={deskPenItems} label="Desk pen, alternate view" />
             <CardLabel hidden>Desk pen</CardLabel>
           </div>
 
           <div className="cell-play-casestudy exact-hover-card">
             <EtcCarousel
               variant="slider-5"
+              label="Stool and CNC"
               items={[
-                { kind: "image", src: "/assets/etc/media/stool.avif", width: 3707, height: 3263 },
-                { kind: "image", src: "/assets/etc/media/cnc.avif", width: 2936, height: 2936 },
+                { kind: "image", src: "/assets/etc/media/stool.avif", alt: "A wooden stool.", width: 3707, height: 3263 },
+                { kind: "image", src: "/assets/etc/media/cnc.avif", alt: "A CNC-machined form.", width: 2936, height: 2936 },
               ]}
             />
             <div className="w-layout-hflex flex-block exact-hidden-label exact-label-pair">
@@ -141,6 +147,8 @@ export default function EtcPage() {
 
         <div className="play-column w-col w-col-4 w-col-stack">
           <div className="cell-play exact-hover-card">
+            <picture className="motion-picture">
+            <source media="(prefers-reduced-motion: reduce)" srcSet="/assets/etc/media/hyundai-research-still.webp" />
             <ResponsiveImage
               src="/assets/etc/media/hyundai-research.gif"
               alt=""
@@ -151,6 +159,7 @@ export default function EtcPage() {
               sizes="(max-width: 991px) 100vw, 33vw"
               decoding="async"
             />
+            </picture>
             <CardLabel hidden>Hyundai, research</CardLabel>
           </div>
           <div className="cell-play exact-hover-card">
