@@ -168,3 +168,55 @@ main.play-body .exact-hover-card:focus-within > .exact-hidden-label {
     transition: none;
   }
 }
+
+/* Reflow the authored board text on phones without rescaling the desktop art. */
+.case-panel {
+  display: contents;
+}
+
+.case-text {
+  color: #ccc;
+  font-family: "Funktionalgrotesk", sans-serif;
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 150%;
+  margin: 20px;
+  overflow-wrap: anywhere;
+}
+
+.case-text h1 {
+  font: inherit;
+  font-size: 24px;
+  margin: 0 0 20px;
+}
+
+.case-text h2,
+.case-text h3,
+.case-text dt {
+  font: inherit;
+  font-weight: 500;
+  margin: 20px 0 10px;
+}
+
+.case-text p,
+.case-text ul,
+.case-text dl {
+  margin: 0 0 20px;
+}
+
+.case-text dd {
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .case-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}

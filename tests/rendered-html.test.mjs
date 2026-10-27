@@ -68,7 +68,7 @@ test("published project routes are flush live-site presentations", async () => {
     assert.match(html, /class="header"/);
     assert.match(html, new RegExp(`/assets/${slug}/media/`));
     assert.doesNotMatch(html, /Next project|Back to work|project-section-navigator|project-workspace/);
-    assert.doesNotMatch(html, /Role|Contribution|Overview|Process|Outcome/);
+    // Authored panel copy is now available as semantic HTML.
   }
 
   const ping = await (await render("/projects/ping")).text();
@@ -262,4 +262,15 @@ test("analytics uses the dedicated relaunch property without duplicate tags or p
   assert.match(runtime, /portfolio_entry_attributed/);
   assert.match(runtime, /portfolio_media_complete/);
   assert.doesNotMatch(runtime, /recruiter|employer|company_name|email_address/i);
+});
+
+test("Ping exposes its authored narrative and image descriptions as semantic HTML", async () => {
+  const html = await (await render("/projects/ping")).text();
+  assert.match(html, /<section class="case-text"[^>]*><h1>Ping<\/h1>/);
+  assert.match(html, /voice messaging device that keeps families connected without smartphone distractions/);
+  assert.match(html, /<dt>Role<\/dt><dd>Industrial Design/);
+  assert.match(html, /<dt>Date<\/dt><dd>2025<\/dd>/);
+  assert.match(html, /Why do families give their kids mobile devices\?/);
+  assert.match(html, /Location is revealed progressively/);
+  assert.doesNotMatch(html, /<img[^>]*alt=""/);
 });

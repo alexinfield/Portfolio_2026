@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import LiveHeader from "@/app/live-header";
 import ResponsiveImage from "@/app/responsive-image";
+import CaseText, { casePanel } from "@/app/case-text";
 import {
   getProject,
   getProjectMedia,
@@ -81,7 +82,7 @@ function ProjectMedia({
   return (
     <ResponsiveImage
       src={item.source}
-      alt=""
+      alt={casePanel(item.source)?.alt ?? ""}
       width={item.width}
       height={item.height}
       sizes="100vw"
@@ -245,7 +246,10 @@ export default async function ProjectPage({
     <HyphaePresentation media={media} />
   ) : (
     media.map((item, index) => (
-      <ProjectMedia item={item} slug={projectSlug} index={index} key={item.source} />
+      <div className="case-panel" key={item.source}>
+        <ProjectMedia item={item} slug={projectSlug} index={index} />
+        <CaseText source={item.source} />
+      </div>
     ))
   );
 
