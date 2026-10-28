@@ -36,7 +36,7 @@ test("home has exactly the four approved name-only captions in order",async()=>{
   assert.deepEqual(captions,["Molekule Go","Ping","Hyphae Light","Luma"]);
   assert.equal((html.match(/>Personal work →<\/a>/g)||[]).length,1);
   assert.match(html,/href="\.\/personal\/"/);
-  assert.match(html,/<footer[^>]*>[\s\S]*mailto:alex@infield.net/);
+  assert.doesNotMatch(html,/<footer|mailto:/);
   assert.doesNotMatch(html,/I'm Alex|I&#x27;m Alex|ASCII|Grow a flower|portfolio-gallery/);
   assert.match(html,/hero-hand-w768\.webp 768w/);
   assert.match(html,/sizes="\(max-width: 767px\) 100vw, 50vw"/);
@@ -49,7 +49,10 @@ test("every real page has the same Compass nav, disabled Professional and landma
     assert.ok(nav,path);
     const items=[...nav.matchAll(/<(a|button)\b[^>]*>([\s\S]*?)<\/\1>/g)].map(match=>text(match[2]));
     assert.deepEqual(items,["Work","Personal","Professional","Info"],path);
-    assert.match(nav,/<button\b(?=[^>]*disabled="")(?=[^>]*aria-disabled="true")(?=[^>]*data-slot="button")[^>]*>Professional<\/button>/);
+    assert.match(nav,/<button\b(?=[^>]*data-unavailable-toggle="true")(?=[^>]*aria-disabled="true")(?=[^>]*data-slot="button")[^>]*>Professional<\/button>/);
+    const unavailable=nav.match(/<button\b[^>]*>Professional<\/button>/)[0];
+    assert.doesNotMatch(unavailable,/\sdisabled=""|\shref=/);
+    assert.match(html,/id="unavailable-status"[^>]*role="tooltip"/);
     assert.doesNotMatch(nav,/href="[^"]*professional|tabindex="0"[^>]*>Professional/);
     assert.match(html,/href="#main-content"[^>]*>Skip to content/);
     assert.match(html,/<main\b[^>]*id="main-content"[^>]*tabindex="-1"/);
@@ -59,12 +62,13 @@ test("every real page has the same Compass nav, disabled Professional and landma
   }
 });
 
-test("Info contains the exact approved text, artwork, email once and no appearance control",async()=>{
+test("Info contains the exact approved text, artwork and one secondary Contact mailto button",async()=>{
   const html=documentOnly(await exported("info/index.html"));
   assert.match(html,/I&#x27;m Alex Infield, an industrial designer based in Brooklyn, New York\. My work spans product visualization, CAD, prototyping and fabrication for consumer goods, furniture and lighting\./);
   assert.match(html,/IMG_0019\.png/);
   assert.match(html,/mailto:alex@infield.net/);
   assert.equal((html.match(/href="mailto:alex@infield.net"/g)||[]).length,1);
+  assert.match(html,/<a\b(?=[^>]*data-variant="secondary")(?=[^>]*href="mailto:alex@infield.net")[^>]*>Contact<\/a>/);
   assert.doesNotMatch(html,/<footer|Appearance|data-slot="toggle-group"/);
   assert.doesNotMatch(html,/résumé|resume|flower|garden/i);
 });
@@ -76,11 +80,14 @@ test("Personal exports exactly the package order, owner titles and existing case
   assert.deepEqual(ids,packageData.items.map(item=>item.id));
   const headings=[...html.matchAll(/<h2\b[^>]*>([\s\S]*?)<\/h2>/g)].map(match=>text(match[1]));
   assert.deepEqual(headings,packageData.items.map(item=>overrides[item.id]??item.title));
-  assert.match(html,/href="\.\.\/projects\/mode\/"/);
-  assert.match(html,/href="\.\.\/projects\/niche\/"/);
+  assert.match(html,/href="\.\.\/projects\/mode\/\?from=personal"/);
+  assert.match(html,/href="\.\.\/projects\/niche\/\?from=personal"/);
   assert.doesNotMatch(html,/>null<|>undefined<|JuiceBox|data-year="null"/);
-  assert.match(text(html),/16 projects shown/);
-  assert.match(html,/data-slot="select-trigger"[^>]*[\s\S]*Filter by year/);
+  assert.doesNotMatch(html,/data-slot="select-trigger"|Filter by year|Filter by category|projects shown|>Reset</);
+  const source=await read("app/personal/personal-collection.tsx");
+  assert.match(source,/PERSONAL_FILTERS_VISIBLE = false/);
+  assert.match(source,/PERSONAL_FILTERS_VISIBLE &&/);
+  assert.match(source,/const matches = [\s\S]*year === "all"[\s\S]*category === "all"/);
   assert.match(html,/complete collection is shown below/);
   assert.match(html,/data-portfolio-boundary="true"/);
   assert.match(html,/data-theme="light"/);
@@ -107,13 +114,14 @@ test("all six cases preserve the complete ordered image content and descriptions
   for(const [index,slug] of slugs.entries()){
     assert.equal(registry[slug].length,expected[slug]);
     const html=documentOnly(await exported(`projects/${slug}/index.html`));
-    assert.match(html,new RegExp(`<h1>${titles[index]}</h1>`));
+    assert.match(html,new RegExp(`<h1 class="sr-only">${titles[index]}</h1>`));
+    assert.doesNotMatch(html,/portfolio-case-heading|Back to Work/);
     const tags=[...html.matchAll(/<img\b[^>]*>/g)].map(match=>match[0]);
     assert.deepEqual(tags.map(tag=>/\ssrc="([^"]+)"/.exec(tag)[1].replace(/^\.\.\/\.\.\//,"/")),registry[slug].filter(item=>item.kind==="image").map(item=>item.source),slug);
     for(const tag of tags)assert.ok(/\salt="([^"]+)"/.exec(tag)?.[1].length>10);
     assert.match(html,/portfolio-case-stack/);
-    assert.match(html,/data-slot="button"[\s\S]*Back to Work/);
-    assert.match(html,/<footer/);
+    assert.match(html,/aria-label="Case navigation"/);
+    assert.doesNotMatch(html,/<footer/);
     if(!CASE_TEXT_ENABLED)assert.doesNotMatch(html,/class="case-text"/);
     for(const item of registry[slug]){await access(new URL(`../public${item.source}`,import.meta.url));if(item.poster)await access(new URL(`../public${item.poster}`,import.meta.url));}
   }
@@ -164,7 +172,10 @@ test("all video players use Compass icons; long films add timeline, mute and ful
   for(const slug of slugs){
     const html=documentOnly(await exported(`projects/${slug}/index.html`));
     assert.equal((html.match(/data-video-toggle="true"/g)||[]).length,(html.match(/<video\b/g)||[]).length,slug);
-    assert.doesNotMatch(html,/<video[^>]*\scontrols/);
+    for(const [video] of html.matchAll(/<video\b[^>]*>/g)){
+      if(video.includes('data-demand-only="true"'))assert.match(video,/\scontrols=""/);
+      else assert.doesNotMatch(video,/\scontrols=""/);
+    }
     if(html.includes("<video"))assert.match(html,/data-button-kind="icon"/);
     assert.doesNotMatch(html,/portfolio-video-controls|carousel-controls/);
     if(slug==="hyphae"){assert.match(html,/data-film-controls/);assert.match(html,/Mute Hyphae Light film/);assert.match(html,/Enter fullscreen: Hyphae Light film/);assert.match(html,/data-slot="slider"/);}
@@ -260,4 +271,44 @@ test("approved 1.1.0 package and unchanged 1.0.0 rollback tarball are retained",
   assert.equal(await hash("alex-infield-compass-augmentation-1.1.0.tgz"),"dfb9a8e55fe4fcf476ca78bd9a296729bf55a3620df86515a562f2839f3a473c");
   assert.equal(await hash("alex-infield-compass-augmentation-1.0.0.tgz"),"58b382220404bfd2cc637110128899428a7bef936367f7d34999c4a50edc3151");
   for(const item of packageData.items.filter(item=>item.id==="desk-pen"||item.id.includes("neighborhood")))assert.equal(item.framing.fill,"edge-extend");
+});
+
+test("no export document prints a raw email address",async()=>{
+  for(const path of (await files()).filter(name=>name.endsWith(".html"))){
+    const html=documentOnly(await exported(path));
+    const visible=html.replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi,"").replace(/<[^>]+>/g,"");
+    assert.doesNotMatch(visible,/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i,path);
+    if(path!=="info/index.html")assert.doesNotMatch(html,/mailto:/,path);
+  }
+});
+
+test("bottom case actions stay inside their collection and omit endpoints",async()=>{
+  for(const sequence of [["molekule-go","ping","hyphae","luma"],["mode","niche"]]){
+    const collection=sequence[0]==="mode"?"personal":"work";
+    for(const [index,slug] of sequence.entries()){
+      const html=documentOnly(await exported(`projects/${slug}/index.html`));
+      const nav=/<nav\b[^>]*aria-label="Case navigation"[^>]*>([\s\S]*?)<\/nav>/.exec(html)?.[1];
+      assert.ok(nav,slug);
+      assert.ok(html.indexOf('aria-label="Case navigation"')>html.indexOf('class="portfolio-case-stack"'));
+      const links=[...nav.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)].map(match=>({href:match[1],name:text(match[2])}));
+      assert.deepEqual(links.map(link=>link.name),[...(index>0?["Previous"]:[]),"Back",...(index<sequence.length-1?["Next"]:[])],slug);
+      for(const link of links){
+        const url=new URL(link.href,`https://alexinfield.com/projects/${slug}/`);
+        if(link.name==="Back")assert.equal(url.pathname,collection==="personal"?"/personal/":"/");
+        else {assert.equal(url.pathname,`/projects/${sequence[index+(link.name==="Next"?1:-1)]}/`);assert.equal(url.searchParams.get("from"),collection);}
+      }
+      assert.doesNotMatch(nav,/\s(?:aria-)?disabled=|<img|carousel/);
+    }
+  }
+});
+
+test("404 offers just one Work action and Personal uses genuine descriptions without About labels",async()=>{
+  const missing=documentOnly(await exported("404.html"));
+  const actions=/<div class="portfolio-actions">([\s\S]*?)<\/div>/.exec(missing)[1];
+  assert.deepEqual([...actions.matchAll(/<a\b[^>]*>([\s\S]*?)<\/a>/g)].map(match=>text(match[1])),["Work"]);
+  assert.doesNotMatch(missing,/Contact|mailto:/);
+  const personal=documentOnly(await exported("personal/index.html"));
+  assert.doesNotMatch(personal,/portfolio-about-label|portfolio-card-notes|>About</);
+  assert.equal((personal.match(/class="portfolio-description-strip"/g)||[]).length,packageData.items.filter(item=>item.short_text&&!item.link).length);
+  assert.match(personal,/aria-expanded="false"[^>]*aria-controls="desk-pen-description"/);
 });
