@@ -1,6 +1,100 @@
 (() => {
   const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const states = new Map();
+  const coarseFilm = window.matchMedia("(max-width: 767px) and (pointer: coarse)");
+
+  const header = document.querySelector(".portfolio-header");
+  const measureHeader = () => {
+    if (header) document.documentElement.style.setProperty("--portfolio-header-height", `${header.getBoundingClientRect().height}px`);
+  };
+  measureHeader();
+  if (header && "ResizeObserver" in window) new ResizeObserver(measureHeader).observe(header);
+
+  // A focusable unavailable action discloses its state, without a content route.
+  const unavailableAction = document.querySelector("[data-unavailable-toggle]");
+  const unavailable = document.getElementById("unavailable-status");
+  let pinnedUnavailable = false;
+  function discloseUnavailable(open) {
+    if (!unavailableAction || !unavailable) return;
+    unavailable.hidden = !open;
+    unavailableAction.setAttribute("aria-expanded", String(open));
+  }
+  unavailableAction?.addEventListener("pointerenter", event => { if (event.pointerType !== "touch") discloseUnavailable(true); });
+  unavailableAction?.addEventListener("pointerleave", () => { if (!pinnedUnavailable && document.activeElement !== unavailableAction) discloseUnavailable(false); });
+  unavailableAction?.addEventListener("focus", () => { if (unavailableAction.matches(":focus-visible")) discloseUnavailable(true); });
+  unavailableAction?.addEventListener("blur", () => { pinnedUnavailable = false; discloseUnavailable(false); });
+  unavailableAction?.addEventListener("click", () => { pinnedUnavailable = unavailable.hidden; discloseUnavailable(pinnedUnavailable); });
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") { pinnedUnavailable = false; discloseUnavailable(false); }
+  });
+  document.addEventListener("pointerdown", event => {
+    if (event.target !== unavailableAction && !unavailable?.contains(event.target)) { pinnedUnavailable = false; discloseUnavailable(false); }
+  });
+
+  // Explicit origin survives static document navigation. A pending entry is
+  // consumed once, and only that exact case entry is eligible for history.back.
+  const entryKey = "portfolio:collection-entry";
+  const workUrl = document.querySelector('.portfolio-nav a')?.href;
+  const collectionUrl = from => workUrl ? new URL(from === "personal" ? "personal/" : "./", workUrl).pathname : "/";
+  const pathname = location.pathname.replace(/\/+$/, "") || "/";
+  document.addEventListener("click", event => {
+    const link = event.target.closest?.("a[data-case-origin]");
+    if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || link.target === "_blank") return;
+    const destination = new URL(link.href);
+    if (destination.origin !== location.origin) return;
+    try {
+      sessionStorage.setItem(entryKey, JSON.stringify({ from: link.dataset.caseOrigin, collection: location.pathname, target: destination.pathname, scroll: scrollY }));
+    } catch { /* Query origin and a normal Back link remain available. */ }
+  });
+  const back = document.querySelector("[data-case-back]");
+  if (back) {
+    const explicit = new URLSearchParams(location.search).get("from");
+    const from = ["work", "personal"].includes(explicit) ? explicit : back.closest("[data-natural-collection]").dataset.naturalCollection;
+    back.href = collectionUrl(from);
+    let entry = null;
+    try {
+      const pending = JSON.parse(sessionStorage.getItem(entryKey) || "null");
+      sessionStorage.removeItem(entryKey);
+      const restored = history.state?.portfolioReturn;
+      if (pending?.target.replace(/\/+$/, "") === pathname && pending.from === from && pending.collection.replace(/\/+$/, "") === collectionUrl(from).replace(/\/+$/, "")) {
+        entry = pending;
+        history.replaceState({ ...history.state, portfolioReturn: { ...pending, casePath: pathname } }, "");
+      } else if (restored?.casePath === pathname && restored.from === from) entry = restored;
+    } catch { /* Storage restrictions do not block navigation. */ }
+    back.addEventListener("click", event => {
+      if (!entry || history.length < 2 || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      history.back();
+    });
+  }
+
+  // The kit's active scale is suppressed by CSS. This marker also works on
+  // static pages and cancels touch feedback when the contact becomes a gesture.
+  let press = null;
+  const clearPress = () => {
+    if (!press) return;
+    clearTimeout(press.timer);
+    delete press.target.dataset.pressed;
+    press = null;
+  };
+  document.addEventListener("pointerdown", event => {
+    clearPress();
+    if (motion.matches || event.button !== 0 || event.target.closest?.('input, [role="slider"], [data-slot="slider"]')) return;
+    const control = event.target.closest?.('[data-slot="button"]:not(.portfolio-skip-link)');
+    if (!control || control.matches(':disabled, [aria-disabled="true"]')) return;
+    const target = control.hasAttribute("data-press-surface") ? control.closest(".portfolio-gallery-stage") : control;
+    press = { target, x: event.clientX, y: event.clientY, id: event.pointerId, timer: null };
+    if (event.pointerType === "touch") press.timer = setTimeout(() => { if (press?.target === target) target.dataset.pressed = "true"; }, 70);
+    else target.dataset.pressed = "true";
+  }, true);
+  document.addEventListener("pointermove", event => {
+    if (press && (Math.abs(event.clientX - press.x) > 8 || Math.abs(event.clientY - press.y) > 8)) clearPress();
+  }, {passive:true});
+  document.addEventListener("pointerup", clearPress, true);
+  document.addEventListener("pointercancel", clearPress, true);
+  document.addEventListener("scroll", clearPress, {passive:true,capture:true});
+  window.addEventListener("blur", clearPress);
+  motion.addEventListener("change", clearPress);
 
   function updateButton(video) {
     const button = video.closest("[data-video-frame]")?.querySelector("[data-video-toggle]");
@@ -19,6 +113,36 @@
     state.loaded = true;
     video.load();
     nearObserver?.unobserve(video);
+  }
+
+  function initializeVideoEdges(video) {
+    const frame = video.closest("[data-video-frame]");
+    const edges = [...frame.querySelectorAll("[data-video-edge]")];
+    if (edges.length) {
+      const canvas = document.createElement("canvas"), context = canvas.getContext("2d");
+      function extend(source) {
+        if (!context) return;
+        const width = source.videoWidth || source.naturalWidth, height = source.videoHeight || source.naturalHeight;
+        if (!width || !height) return;
+        for (const edge of edges) {
+          const side = edge.dataset.videoEdge, vertical = side === "left" || side === "right";
+          canvas.width = vertical ? 1 : 128; canvas.height = vertical ? 128 : 1;
+          context.drawImage(source, side === "right" ? width - 1 : 0, side === "bottom" ? height - 1 : 0,
+            vertical ? 1 : width, vertical ? height : 1, 0, 0, canvas.width, canvas.height);
+          edge.style.backgroundImage = `url("${canvas.toDataURL()}")`;
+        }
+      }
+      const poster = new Image(); poster.onload = () => extend(video.readyState>=2?video:poster); poster.src = video.poster;
+      video.addEventListener("loadeddata", () => extend(video));
+      video.addEventListener("seeked", () => extend(video));
+      // Sample only the decoded edge rows/columns, at most ten times a second.
+      // Offscreen media is paused by the existing observer; no extra playback.
+      let previous = 0, callback = null;
+      const sample = now => { callback = null; if (now - previous > 100) { extend(video); previous = now; } if (!video.paused) callback = video.requestVideoFrameCallback?.(sample); };
+      video.addEventListener("play", () => { if (callback === null) callback = video.requestVideoFrameCallback?.(sample); });
+      video.addEventListener("pause", () => { if (callback != null) video.cancelVideoFrameCallback?.(callback); callback = null; });
+      if (!video.requestVideoFrameCallback) video.addEventListener("timeupdate", () => extend(video));
+    }
   }
 
   function message(video, text) {
@@ -57,7 +181,7 @@
 
   const nearObserver = "IntersectionObserver" in window ? new IntersectionObserver((entries) => {
     entries.forEach(({ target: video, isIntersecting }) => {
-      if (isIntersecting && !motion.matches && video.dataset.mediaActive !== "false" && video.dataset.demandOnly !== "true") load(video);
+      if (isIntersecting && (!motion.matches || video.dataset.previewTime) && video.dataset.mediaActive !== "false" && video.dataset.demandOnly !== "true") load(video);
     });
   }, { rootMargin: "200px 0px" }) : null;
   const visibleObserver = "IntersectionObserver" in window ? new IntersectionObserver((entries) => {
@@ -69,6 +193,22 @@
 
   document.querySelectorAll("video[data-lazy-video]").forEach((video) => {
     states.set(video, { loaded: false, visible: !visibleObserver, userPaused: false, userStarted: false });
+    const frame = video.closest("[data-video-frame]");
+    initializeVideoEdges(video);
+    if (frame.hasAttribute("data-long-film")) {
+      const nativeControls = () => { video.controls = coarseFilm.matches; frame.dataset.nativeFilm = String(coarseFilm.matches); };
+      nativeControls();
+      coarseFilm.addEventListener("change", nativeControls);
+    }
+    if (video.dataset.previewTime) {
+      // The supplied growth poster is its nearly empty first frame. Seek the
+      // unchanged clip to a readable still, including under reduced motion.
+      video.addEventListener("loadedmetadata", () => {
+        const time = Math.min(Number(video.dataset.previewTime), Math.max(0, video.duration - .1));
+        if (Number.isFinite(time) && !states.get(video).userStarted) video.currentTime = time;
+      }, {once:true});
+      video.addEventListener("seeked", () => { frame.dataset.previewReady = "true"; }, {once:true});
+    }
     nearObserver?.observe(video);
     visibleObserver?.observe(video);
     video.addEventListener("play", () => updateButton(video));

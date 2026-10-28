@@ -24,20 +24,30 @@ type DeferredVideoProps = {
   durationSeconds?: number;
   mediaStyle?: CSSProperties;
   frameBackground?: string;
+  previewTime?: number;
+  edgeFill?: boolean;
 };
 
 export default function DeferredVideo({
   source, poster, label, className, width, height,
   loop = true, autoplay = true, controls = false, active = true, paused = false,
-  userStarted = false, showToggle = true, longFilm = false, durationSeconds, mediaStyle, frameBackground,
+  userStarted = false, showToggle = true, longFilm = false, durationSeconds, mediaStyle, frameBackground, previewTime, edgeFill=false,
 }: DeferredVideoProps) {
   const sources = videoSources(source).map(item=>({...item,src:withBasePath(item.src)}));
   const file = sources[0].src;
+  const ratio=(width??4)/(height??3),portrait=ratio<4/3;
+  const edgeSize=(1-(portrait?ratio/(4/3):(4/3)/ratio))*50;
+  const edgeStyle=portrait?{width:`calc(${edgeSize}% + 12px)`}:{height:`calc(${edgeSize}% + 12px)`};
   return (
     <div className={className} data-video-frame data-media-reveal data-long-film={longFilm || undefined} style={frameBackground?{background:frameBackground}:undefined}>
+      {edgeFill && <>
+        <span className={`portfolio-video-edge portfolio-video-edge-${portrait?"left":"top"}`} data-video-edge={portrait?"left":"top"} aria-hidden="true" style={edgeStyle}/>
+        <span className={`portfolio-video-edge portfolio-video-edge-${portrait?"right":"bottom"}`} data-video-edge={portrait?"right":"bottom"} aria-hidden="true" style={edgeStyle}/>
+      </>}
       <video
-        style={mediaStyle}
+        style={{...mediaStyle,...(edgeFill?{maskImage:`linear-gradient(${portrait?90:180}deg, transparent, #000 12px, #000 calc(100% - 12px), transparent)`}:{})}}
         data-lazy-video
+        data-preview-time={previewTime}
         data-autoplay-video={autoplay && !longFilm ? "true" : undefined}
         data-demand-only={longFilm ? "true" : undefined}
         data-media-active={active ? "true" : "false"}
@@ -49,7 +59,8 @@ export default function DeferredVideo({
         loop={longFilm ? false : loop}
         muted={autoplay && !longFilm}
         playsInline
-        controls={controls}
+        controls={longFilm || controls}
+        suppressHydrationWarning
         preload="none"
         poster={poster ? withBasePath(poster) : undefined}
         width={width}

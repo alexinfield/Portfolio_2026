@@ -1,9 +1,7 @@
-import { withBasePath } from "@/lib/base-path";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import SiteShell from "@/app/site-shell";
-import { Button } from "@/app/compass";
-import { ArrowLeft } from "lucide-react";
+import CaseNavigation from "@/app/case-navigation";
 import ResponsiveImage from "@/app/responsive-image";
 import CaseText, { casePanel } from "@/app/case-text";
 import DeferredVideo from "@/app/deferred-video";
@@ -90,6 +88,7 @@ function HyphaeComposite({ image, video }: {
           label={casePanel(video.source)?.alt ?? "Hyphae video"}
           width={video.width}
           height={video.height}
+          previewTime={video.source.includes("growth-sim") ? 8 : undefined}
         />
       </div>
     </div>
@@ -231,12 +230,9 @@ export default async function ProjectPage({
 
   return (
     <SiteShell casePage>
-      <div className="portfolio-case-heading">
-        <Button asChild variant="secondary" data-plain="" size="sm"><a href={withBasePath("/")}><ArrowLeft aria-hidden="true" />Back to Work</a></Button>
-        <h1>{project.title}</h1>
-      </div>
+      <h1 className="sr-only">{project.title}</h1>
       <div className="portfolio-case-stack">{presentation}</div>
-      <div className="portfolio-case-back"><Button asChild variant="secondary" data-plain=""><a href={withBasePath("/")}><ArrowLeft aria-hidden="true" />Back to Work</a></Button></div>
+      <CaseNavigation slug={projectSlug} />
     </SiteShell>
   );
 }

@@ -15,7 +15,7 @@ export default function InfoPage() {
     <div className="portfolio-info-page">
       <div className="portfolio-info-copy">
         <p className="portfolio-intro">I&apos;m Alex Infield, an industrial designer based in Brooklyn, New York. My work spans product visualization, CAD, prototyping and fabrication for consumer goods, furniture and lighting.</p>
-        <Button asChild variant="link"><a href="mailto:alex@infield.net">alex@infield.net</a></Button>
+        <Button asChild variant="secondary"><a href="mailto:alex@infield.net">Contact</a></Button>
       </div>
       <CardArtwork />
     </div>

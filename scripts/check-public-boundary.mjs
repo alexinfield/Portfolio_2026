@@ -5,13 +5,23 @@ import { fileURLToPath } from 'node:url';
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const blocked = /professional|_professional-preview|__portfolio(?:-storage)?\/|portfolio[-_]private[-_]canary|(?:"|')audience(?:"|')\s*:\s*(?:"|')private/i;
 const routes = ['index.html','etc/index.html','personal/index.html','info/index.html', ...['ping','molekule-go','luma','niche','hyphae','mode','pillar','furniture'].map(x=>`projects/${x}/index.html`),'play/index.html','404.html'];
-// The one approved inert navigation label is UI, not a content record. Keep
-// the exception exact, disabled and without an href; all other bytes are scanned.
+// The approved unavailable navigation disclosure is UI, not a content record.
+// Only its exact label/message are masked; attributes and every other byte
+// still face the marker gate, including any URL added to the button.
 function withoutInertNavLabel(text, sourcePath="") {
   if(sourcePath==="app/live-header.tsx")text=text.replace(/<Button\b(?=[^>]*\sdisabled(?:\s|>))(?=[^>]*aria-disabled="true")[^>]*>Professional<\/Button>/g,tag=>tag.replace(">Professional<",">Unavailable<"));
+  if(sourcePath==="app/live-header.tsx")text=text.replace(/<Button\b(?=[^>]*data-unavailable-toggle)(?=[^>]*aria-disabled="true")[^>]*>Professional<\/Button>/g,tag=>tag.replace(">Professional<",">Unavailable<"));
   text=text.replace(/<button\b(?=[^>]*\sdisabled="")(?=[^>]*aria-disabled="true")[^>]*>Professional<\/button>/g,tag=>tag.replace(">Professional<",">Unavailable<"));
-  let props=JSON.stringify({type:"button",size:"sm",variant:"secondary","data-plain":"",disabled:true,"aria-disabled":"true",children:"Professional"});
-  for(let layer=0;layer<3;layer++){text=text.replaceAll(props,props.replace("Professional","Unavailable"));props=JSON.stringify(props).slice(1,-1);}
+  text=text.replace(/<button\b(?=[^>]*data-unavailable-toggle="true")(?=[^>]*aria-disabled="true")[^>]*>Professional<\/button>/g,tag=>tag.replace(">Professional<",">Unavailable<"));
+  const message=Buffer.from('Professional — unavailable for now').toString('latin1');
+  text=text.replaceAll(message,message.replace('Professional','Unavailable'));
+  for(const value of [
+    {type:"button",size:"sm",variant:"secondary","data-plain":"",disabled:true,"aria-disabled":"true",children:"Professional"},
+    {type:"button",size:"sm",variant:"secondary","data-plain":"","data-unavailable-toggle":true,"aria-disabled":"true","aria-describedby":"unavailable-status","aria-expanded":"false",children:"Professional"},
+  ]){
+    let props=JSON.stringify(value);
+    for(let layer=0;layer<3;layer++){text=text.replaceAll(props,props.replace("Professional","Unavailable"));props=JSON.stringify(props).slice(1,-1);}
+  }
   return text;
 }
 export async function checkBoundary(root, manifest, clientFiles = new Set()) {
@@ -59,13 +69,13 @@ async function selfTest() {
   await writeFile(join(dir,'index.html'),'<html>public</html>');
   await checkBoundary(dir,manifest);
   let rejected=0;
-  for (const [name,body] of [['record.json','{"audience":"Professional","canary":"portfolio-private-canary"}'],['renamed-image.bin','unknown media'],['index.html','<script>const record={classification:"Professional"}</script>'],['index.html','<a href="/professional/">Professional</a>'],['index.html','<button disabled="" aria-disabled="true" data-url="/professional/">Professional</button>']]) {
+  for (const [name,body] of [['record.json','{"audience":"Professional","canary":"portfolio-private-canary"}'],['renamed-image.bin','unknown media'],['index.html','<script>const record={classification:"Professional"}</script>'],['index.html','<a href="/professional/">Professional</a>'],['index.html','<button disabled="" aria-disabled="true" data-url="/professional/">Professional</button>'],['index.html','<button data-unavailable-toggle="true" aria-disabled="true" data-url="/professional/">Professional</button>'],['index.html','<button data-unavailable-toggle="true" aria-disabled="true">Professional</button><p>Professional record</p>']]) {
     const file=join(dir,name); const previous=await readFile(file).catch(()=>null);
     await writeFile(file,body);
     try { await checkBoundary(dir,manifest); } catch { rejected++; }
     if (previous) await writeFile(file,previous); else { const {unlink}=await import('node:fs/promises');await unlink(file); }
   }
-  if (rejected !== 5) throw new Error('Boundary negative controls did not all fail');
+  if (rejected !== 7) throw new Error('Boundary negative controls did not all fail');
   await rm(dir,{recursive:true,force:true});
   console.log(JSON.stringify({boundarySelfTest:'passed',cleanFixture:true,contaminatedFixturesRejected:rejected}));
 }

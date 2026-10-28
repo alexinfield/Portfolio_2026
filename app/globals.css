@@ -1,6 +1,6 @@
 /* Portfolio composition on the approved Compass 1.0 tokens. No Webflow UI. */
 * {box-sizing: border-box;}
-html {min-width: 320px; scroll-padding-top: 6rem;}
+html {min-width: 320px; --portfolio-header-height: 60px; scroll-padding-top: calc(var(--portfolio-header-height) + 8px);}
 html, body {margin: 0; background: var(--canvas); color: var(--text);}
 body {font: 400 1rem/1.5 var(--font), system-ui, sans-serif; font-synthesis: none; -webkit-font-smoothing: antialiased;}
 button, input, select {font: inherit;}
@@ -13,11 +13,19 @@ h2 {font-weight: 500;}
 img, video {display: block; max-width: 100%; height: auto;}
 .portfolio-root {min-width: 0; min-height: 100dvh; background: var(--canvas); color: var(--text); overflow-wrap: anywhere;}
 .portfolio-shell {width: 100%; padding-inline: 18px; margin-inline: auto;}
-.portfolio-header {position: sticky; top: 0; z-index: 40; background: var(--canvas); overflow-x: auto; overscroll-behavior-x: contain; scroll-padding-inline: 6px;}
+.portfolio-header {position: fixed; inset: 0 0 auto; z-index: 100; background: #000000f5; overflow-x: auto; overscroll-behavior-x: contain; scroll-padding-inline: 6px;}
+html[data-theme="light"] .portfolio-header {background: #fffffff5;}
+@supports ((backdrop-filter: blur(24px)) or (-webkit-backdrop-filter: blur(24px))) {
+ .portfolio-header {background: #000000d9; -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);}
+ html[data-theme="light"] .portfolio-header {background: #fffc;}
+}
 .portfolio-header-content {display: flex; align-items: center; gap: var(--inline); min-width: max-content; padding-block: var(--inline); font: 500 .875rem/1.3125rem var(--font);}
 .portfolio-nav {display: flex; align-items: center; gap: var(--inline); margin-left: auto;}
 .portfolio-header [data-slot="button"] {font: inherit; flex-shrink: 0;}
 .portfolio-header [disabled] {color: var(--disabled); opacity: 1; cursor: default;}
+.portfolio-header [data-unavailable-toggle] {color: var(--secondary); cursor: default;}
+.portfolio-unavailable-message {position: fixed; z-index: 101; top: calc(var(--portfolio-header-height) + 8px); right: 18px; max-width: calc(100vw - 20px); display: flex; align-items: center; gap: var(--inline); padding: 10px 12px; border-radius: var(--radius); background: var(--surface); color: var(--text); font-size: .875rem; box-shadow: 0 4px 16px #0003;}
+.portfolio-unavailable-message svg {width: 16px; height: 16px; flex-shrink: 0;}
 .portfolio-boundary [data-button-kind] {min-width: 44px; min-height: 44px;}
 .portfolio-boundary [data-button-kind="icon"] {width: 44px; height: 44px;}
 .portfolio-root [data-slot="button"], .portfolio-root [data-slot="select-trigger"], .portfolio-root [data-slot="toggle-group-item"] {border-radius: var(--radius);}
@@ -27,11 +35,11 @@ img, video {display: block; max-width: 100%; height: auto;}
 .portfolio-boundary [data-slot="toggle-group-item"] {min-width: 44px;}
 .portfolio-root :is(a, button, summary, [tabindex="0"]):focus-visible {outline: var(--focus-width) solid var(--focus); outline-offset: var(--focus-gap); box-shadow: none; border-radius: var(--focus-radius);}
 .portfolio-root [role="option"]:focus-visible {outline: var(--focus-width) solid var(--focus); outline-offset: calc(-1 * var(--focus-gap));}
-.portfolio-skip-link {position: fixed!important; z-index: 100; top: var(--inline); left: var(--inline); transform: translateY(-200%);}
+.portfolio-skip-link {position: fixed!important; z-index: 102; top: var(--inline); left: var(--inline); transform: translateY(-200%);}
 .portfolio-skip-link:focus {transform: none;}
-#main-content {scroll-margin-top: 5rem;}
-.portfolio-main {min-height: 60vh; padding-block: var(--group) var(--section);}
-.portfolio-footer {display: flex; align-items: center; padding-block: var(--group);}
+#main-content {scroll-margin-top: calc(var(--portfolio-header-height) + 8px);}
+.portfolio-main {min-height: 60vh; padding-block: calc(var(--portfolio-header-height) + var(--group)) var(--section);}
+.portfolio-main:has(.portfolio-personal-front), .portfolio-case-page {padding-top: var(--portfolio-header-height);}
 .portfolio-actions {display: flex; flex-wrap: wrap; align-items: center; gap: var(--inline);}
 .portfolio-work-grid, .portfolio-personal-front {display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); column-gap: 10px; row-gap: var(--group);}
 .portfolio-work-link {position: relative; min-width: 0;}
@@ -40,11 +48,11 @@ img, video {display: block; max-width: 100%; height: auto;}
 .portfolio-card-label {display: flex; align-items: center; min-height: 44px;}
 /* The public Compass link paints the control; this adapter lays out a stable
    image/caption card rather than an inline text button. */
-.portfolio-root .portfolio-card-link[data-slot="button"] {display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; width: 100%; max-width: none; height: auto; padding: 0; border: 0; gap: 0; text-align: left; white-space: normal; transform: none!important; scale: none!important;}
+.portfolio-root .portfolio-card-link[data-slot="button"] {display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; width: 100%; max-width: none; height: auto; padding: 0; border: 0; gap: 0; text-align: left; white-space: normal;}
 .portfolio-root .portfolio-card-link:is(:link,:visited,:hover,:active,:focus), .portfolio-root .portfolio-card-link h2 {text-decoration: none!important;}
 .portfolio-root .portfolio-card-link > [data-slot="card"] {width: 100%; max-width: none;}
 .portfolio-personal-link {display: flex; justify-content: center; margin-top: var(--section);}
-.portfolio-info-page {display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--group); align-items: start;}
+.portfolio-info-page {display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--group); align-items: center;}
 .portfolio-info-copy {display: flex; flex-direction: column; align-items: flex-start; gap: var(--group); padding-block: var(--group);}
 .portfolio-intro {font-size: 1.75rem; line-height: 2.125rem; max-width: 35ch;}
 .portfolio-artwork {overflow: hidden; border-radius: var(--radius);}
@@ -52,14 +60,13 @@ img, video {display: block; max-width: 100%; height: auto;}
 .text-muted {color: var(--secondary);}
 .portfolio-not-found {display: grid; justify-items: start; gap: var(--group); padding-block: var(--section);}
 /* Cases retain image content and source order; composition uses Compass spacing. */
-.portfolio-case-heading {display: grid; justify-items: start; gap: var(--group); margin-bottom: var(--section);}
 .portfolio-case-stack {display: grid; gap: var(--group);}
 .case-panel {display: contents;}
 .portfolio-case-stack > img, .case-composite, .case-video {width: 100%; border-radius: var(--radius); overflow: hidden;}
 .case-video video {width: 100%; height: auto; object-fit: contain;}
 .case-composite {display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--group); align-items: center;}
 .case-composite > img, .case-composite > div {width: 100%; min-width: 0;}
-.portfolio-case-back {margin-top: var(--section);}
+.portfolio-case-navigation {display: flex; justify-content: center; align-items: center; gap: var(--inline); margin-top: var(--section);}
 .case-text {font: 400 1rem/1.5 var(--font); color: var(--secondary);}
 .case-text :is(p,ul,dl) {margin-block: var(--group);}
 /* The kit supplies control fills, typography and geometry; this adapter only
@@ -81,16 +88,27 @@ img, video {display: block; max-width: 100%; height: auto;}
 .portfolio-personal-grid {display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); column-gap: 10px; row-gap: var(--group); align-items: start;}
 .portfolio-project {min-width: 0; scroll-margin-top: 6rem;}
 .portfolio-project-title {font-size: .875rem; line-height: 1.25rem;}
-.portfolio-card-notes > summary {display: flex; align-items: center; min-height: 44px; gap: var(--inline); cursor: pointer; list-style: none;}
-.portfolio-card-notes > summary::-webkit-details-marker {display: none;}
-.portfolio-about-label {margin-left: auto; color: var(--secondary);}
-.portfolio-note-copy {font-size: .875rem; line-height: 1.25rem; color: var(--secondary); padding-block: var(--inline);}
 .portfolio-gallery {position: relative;}
 .portfolio-gallery-stage {position: relative; width: 100%; background: var(--canvas); border-radius: var(--radius); overflow: hidden; touch-action: pan-y pinch-zoom;}
 .portfolio-gallery-slide {position: absolute; inset: 0; width: 100%; height: 100%;}
 .portfolio-gallery-slide > div, .personal-video {width: 100%; height: 100%;}
 .portfolio-gallery-slide img, .portfolio-gallery-slide video {width: 100%; height: 100%; object-fit: cover;}
-.gallery-navigation {left: auto; right: var(--inline);}
+.gallery-navigation {left: var(--inline); right: var(--inline); top: 50%; bottom: auto; transform: translateY(-50%); justify-content: space-between; pointer-events: none!important; z-index: 5;}
+.gallery-navigation button {pointer-events: none;}
+.portfolio-gallery:is(:hover,:focus-within) .gallery-navigation button, .portfolio-gallery[data-controls-revealed="true"] .gallery-navigation button {pointer-events: auto;}
+.portfolio-root .gallery-description-toggle[data-slot="button"] {position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; border: 0; padding: 0; background: transparent!important; border-radius: var(--radius); cursor: pointer; transform: none!important; scale: none!important;}
+.portfolio-root .gallery-description-toggle:focus-visible {outline-offset: -4px;}
+.portfolio-description-strip {position: absolute; z-index: 4; left: 0; right: 0; bottom: 0; padding: 10px 12px; background: #fffffff2; color: var(--text); font-size: .875rem; line-height: 1.25rem; pointer-events: none; visibility: hidden; opacity: 0;}
+.portfolio-gallery:has(.gallery-pagination) .portfolio-description-strip {bottom: 36px;}
+.portfolio-gallery[data-description-open="true"] .portfolio-description-strip {visibility: visible; opacity: 1;}
+@supports ((backdrop-filter: blur(16px)) or (-webkit-backdrop-filter: blur(16px))) {
+ .portfolio-description-strip {background: #fffc; -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);}
+}
+.gallery-pagination {position: absolute; z-index: 4; bottom: 0; left: 0; right: 0; height: 36px; display: flex; align-items: center; justify-content: center; gap: 10px; pointer-events: none;}
+.gallery-dots, .gallery-count {display: flex; align-items: center; justify-content: center; gap: 5px; height: 22px; padding-inline: 7px; background: #fffffff2; color: #171717; border-radius: var(--radius);}
+.gallery-count {font-size: .6875rem; line-height: 1; font-variant-numeric: tabular-nums;}
+.gallery-dot {width: 4px; height: 4px; border-radius: 50%; background: #aaa;}
+.gallery-dot[data-active="true"] {background: #171717;}
 .portfolio-gallery .media-controls [data-slot="button"] {border-radius: calc(var(--radius) - 1px);}
 .portfolio-media-caption {min-height: 44px; display: flex; align-items: center; font-size: .875rem; line-height: 1.25rem; color: var(--secondary);}
 .portfolio-image-failure {position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: var(--inline); background: var(--canvas); color: var(--text); padding: var(--group);}
@@ -125,6 +143,39 @@ img, video {display: block; max-width: 100%; height: auto;}
 .portfolio-edge-fill {position: absolute; top: 0; bottom: 0; pointer-events: none; background-repeat: no-repeat; transform: scaleX(-1); filter: blur(2px); z-index: 0;}
 .portfolio-edge-left {left: 0; background-position: left top;}
 .portfolio-edge-right {right: 0; background-position: right top;}
+.portfolio-edge-top, .portfolio-edge-bottom {left: 0; right: 0; width: 100%; transform: scaleY(-1);}
+.portfolio-edge-top {top: 0; bottom: auto; background-position: left top;}
+.portfolio-edge-bottom {top: auto; bottom: 0; background-position: left bottom;}
 .portfolio-image > img {position: relative; z-index: 1;}
+.portfolio-video-edge {position: absolute; pointer-events: none; background-repeat: no-repeat; background-size: 100% 100%; filter: blur(2px); z-index: 0;}
+.portfolio-video-edge-left, .portfolio-video-edge-right {top: 0; bottom: 0;}
+.portfolio-video-edge-left {left: 0;}
+.portfolio-video-edge-right {right: 0;}
+.portfolio-video-edge-top, .portfolio-video-edge-bottom {left: 0; right: 0;}
+.portfolio-video-edge-top {top: 0;}
+.portfolio-video-edge-bottom {bottom: 0;}
+.personal-video video {position: relative; z-index: 1;}
 
 .portfolio-image-failure {z-index: 2;}
+
+/* Override the kit's stronger active scale with the approved press-only cue.
+   Touch presses use the runtime's gesture-aware marker so swipes never scale. */
+.portfolio-root [data-slot="button"]:not(.portfolio-skip-link) {scale: none!important; transform: none; transition: transform 180ms cubic-bezier(.2,.8,.2,1.12);}
+.portfolio-root .portfolio-card-link, .portfolio-gallery-stage {transition: transform 200ms cubic-bezier(.2,.8,.2,1.12);}
+.portfolio-root [data-slot="button"][data-pressed="true"] {transform: scale(.965);}
+.portfolio-root .portfolio-card-link[data-pressed="true"], .portfolio-gallery-stage[data-pressed="true"] {transform: scale(.988);}
+@media (hover: hover) and (pointer: fine) {
+ .portfolio-root [data-slot="button"]:not(:disabled):not([aria-disabled="true"]):not([data-press-surface]):not(.portfolio-card-link):not(.portfolio-skip-link):active {transform: scale(.965);}
+ .portfolio-root .portfolio-card-link:active {transform: scale(.988);}
+}
+@media (max-width:767px) and (pointer:coarse) {
+ [data-long-film] .film-controls {display: none;}
+}
+[data-native-film="true"] .film-controls {display: none;}
+/* Telefoni is a 16:9 film padded in a 4:3 card. Leave its complete native
+   control row (and lower frame padding) outside the description hit target. */
+.portfolio-gallery:has([data-native-film="true"]) .gallery-description-toggle {bottom: calc(12.5% + 44px); height: calc(87.5% - 44px);}
+.portfolio-gallery:has([data-native-film="true"]) .portfolio-description-strip {bottom: calc(12.5% + 44px);}
+@media (prefers-reduced-motion:reduce) {
+ .portfolio-root [data-slot="button"]:not(.portfolio-skip-link), .portfolio-root .portfolio-card-link, .portfolio-root .portfolio-gallery-stage {transform: none!important; scale: none!important; transition: none!important;}
+}

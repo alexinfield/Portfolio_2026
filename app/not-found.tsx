@@ -6,7 +6,6 @@ export default function NotFound() {
     <h1>Page not found</h1><p className="text-muted">404</p>
     <div className="portfolio-actions">
       <Button asChild variant="secondary"><a href={withBasePath("/")}>Work</a></Button>
-      <Button asChild variant="secondary" data-plain=""><a href="mailto:alex@infield.net">Contact</a></Button>
     </div>
   </div></SiteShell>;
 }

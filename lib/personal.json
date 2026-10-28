@@ -33,7 +33,12 @@
             "height": 1272,
             "bytes": 31012
           }
-        ]
+        ],
+        "framing": {
+          "fit": "cover",
+          "object_position": "50% 53%",
+          "background": "#000000"
+        }
       },
       "gallery": [],
       "short_text": null,
@@ -75,7 +80,12 @@
             "height": 1080,
             "bytes": 18338
           }
-        ]
+        ],
+        "framing": {
+          "fit": "cover",
+          "object_position": "50% 50%",
+          "background": "#D9D9D9"
+        }
       },
       "gallery": [],
       "short_text": null,
@@ -117,7 +127,13 @@
             "height": 1100,
             "bytes": 64092
           }
-        ]
+        ],
+        "framing": {
+          "fit": "pad",
+          "object_position": "50% 50%",
+          "background": "#B7B7B7",
+          "fill": "edge-extend"
+        }
       },
       "gallery": [
         {
@@ -146,7 +162,13 @@
               "height": 1100,
               "bytes": 64092
             }
-          ]
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#B7B7B7",
+            "fill": "edge-extend"
+          }
         },
         {
           "kind": "image",
@@ -178,7 +200,8 @@
           "framing": {
             "fit": "pad",
             "object_position": "50% 50%",
-            "background": "#B3B3B3"
+            "background": "#B3B3B3",
+            "fill": "edge-extend"
           }
         },
         {
@@ -211,7 +234,8 @@
           "framing": {
             "fit": "pad",
             "object_position": "50% 50%",
-            "background": "#FFFFFF"
+            "background": "#FFFFFF",
+            "fill": "edge-extend"
           }
         },
         {
@@ -238,7 +262,8 @@
           "framing": {
             "fit": "pad",
             "object_position": "50% 50%",
-            "background": "#9A9A9A"
+            "background": "#9A9A9A",
+            "fill": "edge-extend"
           }
         }
       ],
@@ -246,7 +271,8 @@
       "framing": {
         "fit": "pad",
         "object_position": "50% 50%",
-        "background": "#B7B7B7"
+        "background": "#B7B7B7",
+        "fill": "edge-extend"
       }
     },
     {
@@ -281,7 +307,13 @@
             "height": 1690,
             "bytes": 117250
           }
-        ]
+        ],
+        "framing": {
+          "fit": "pad",
+          "object_position": "50% 50%",
+          "background": "#090B0F",
+          "fill": "edge-extend"
+        }
       },
       "gallery": [
         {
@@ -310,7 +342,13 @@
               "height": 1690,
               "bytes": 117250
             }
-          ]
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#090B0F",
+            "fill": "edge-extend"
+          }
         },
         {
           "kind": "image",
@@ -342,7 +380,8 @@
           "framing": {
             "fit": "pad",
             "object_position": "50% 50%",
-            "background": "#212121"
+            "background": "#212121",
+            "fill": "edge-extend"
           }
         },
         {
@@ -375,7 +414,8 @@
           "framing": {
             "fit": "pad",
             "object_position": "50% 50%",
-            "background": "#000000"
+            "background": "#000000",
+            "fill": "edge-extend"
           }
         }
       ],
@@ -383,7 +423,8 @@
       "framing": {
         "fit": "pad",
         "object_position": "50% 50%",
-        "background": "#090B0F"
+        "background": "#090B0F",
+        "fill": "edge-extend"
       }
     },
     {
@@ -418,7 +459,13 @@
             "height": 3414,
             "bytes": 17350
           }
-        ]
+        ],
+        "framing": {
+          "fit": "pad",
+          "object_position": "50% 50%",
+          "background": "#F8F8F8",
+          "fill": "edge-extend"
+        }
       },
       "gallery": [
         {
@@ -489,7 +536,8 @@
           "framing": {
             "fit": "pad",
             "object_position": "50% 50%",
-            "background": "#010101"
+            "background": "#010101",
+            "fill": "edge-extend"
           }
         },
         {
@@ -526,7 +574,8 @@
           "framing": {
             "fit": "pad",
             "object_position": "50% 50%",
-            "background": "#010101"
+            "background": "#010101",
+            "fill": "edge-extend"
           }
         },
         {
@@ -563,7 +612,8 @@
           "framing": {
             "fit": "pad",
             "object_position": "50% 50%",
-            "background": "#AEAEAE"
+            "background": "#AEAEAE",
+            "fill": "edge-extend"
           }
         },
         {
@@ -622,7 +672,8 @@
           "framing": {
             "fit": "pad",
             "object_position": "50% 50%",
-            "background": "#818181"
+            "background": "#818181",
+            "fill": "edge-extend"
           }
         }
       ],
@@ -660,7 +711,12 @@
             "height": 1600,
             "bytes": 162644
           }
-        ]
+        ],
+        "framing": {
+          "fit": "cover",
+          "object_position": "50% 50%",
+          "background": "#96958F"
+        }
       },
       "gallery": [
         {
@@ -683,7 +739,12 @@
               "height": 1600,
               "bytes": 162644
             }
-          ]
+          ],
+          "framing": {
+            "fit": "cover",
+            "object_position": "50% 50%",
+            "background": "#96958F"
+          }
         },
         {
           "kind": "image",
@@ -711,7 +772,13 @@
               "height": 1600,
               "bytes": 273786
             }
-          ]
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#96958F",
+            "fill": "edge-extend"
+          }
         },
         {
           "kind": "image",
@@ -739,7 +806,13 @@
               "height": 1552,
               "bytes": 139244
             }
-          ]
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#96958F",
+            "fill": "edge-extend"
+          }
         }
       ],
       "short_text": null,
@@ -781,7 +854,13 @@
             "height": 900,
             "bytes": 95338
           }
-        ]
+        ],
+        "framing": {
+          "fit": "pad",
+          "object_position": "50% 50%",
+          "background": "#A9A09F",
+          "fill": "edge-extend"
+        }
       },
       "gallery": [
         {
@@ -810,7 +889,13 @@
               "height": 900,
               "bytes": 95338
             }
-          ]
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#A9A09F",
+            "fill": "edge-extend"
+          }
         },
         {
           "kind": "image",
@@ -832,7 +917,13 @@
               "height": 900,
               "bytes": 45984
             }
-          ]
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#A9A09F",
+            "fill": "edge-extend"
+          }
         },
         {
           "kind": "image",
@@ -860,7 +951,13 @@
               "height": 1063,
               "bytes": 29698
             }
-          ]
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#A9A09F",
+            "fill": "edge-extend"
+          }
         },
         {
           "kind": "image",
@@ -888,7 +985,13 @@
               "height": 900,
               "bytes": 51574
             }
-          ]
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#A9A09F",
+            "fill": "edge-extend"
+          }
         }
       ],
       "short_text": "Wall hook · mechanism concept",
@@ -924,7 +1027,12 @@
             "height": 1024,
             "bytes": 24776
           }
-        ]
+        ],
+        "framing": {
+          "fit": "cover",
+          "object_position": "50% 58%",
+          "background": "#626760"
+        }
       },
       "gallery": [
         {
@@ -947,7 +1055,12 @@
               "height": 1024,
               "bytes": 24776
             }
-          ]
+          ],
+          "framing": {
+            "fit": "cover",
+            "object_position": "50% 58%",
+            "background": "#626760"
+          }
         },
         {
           "kind": "image",
@@ -975,7 +1088,13 @@
               "height": 308,
               "bytes": 30556
             }
-          ]
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 58%",
+            "background": "#626760",
+            "fill": "edge-extend"
+          }
         },
         {
           "kind": "image",
@@ -1003,7 +1122,13 @@
               "height": 246,
               "bytes": 33186
             }
-          ]
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 58%",
+            "background": "#626760",
+            "fill": "edge-extend"
+          }
         }
       ],
       "short_text": "Gelatin-wrap and natural-dye material experiments.",
@@ -1039,7 +1164,13 @@
             "height": 1600,
             "bytes": 49842
           }
-        ]
+        ],
+        "framing": {
+          "fit": "pad",
+          "object_position": "50% 50%",
+          "background": "linear-gradient(180deg, #BCC1B4 0%, #C6CDC1 12.5%, #CCD3C5 25%, #D1DACE 37.5%, #D4DCCD 50%, #D5DDCE 62.5%, #D6DFD3 75%, #D4DBCD 87.5%, #D0D6CD 100%) left top / 50% 100% no-repeat, linear-gradient(180deg, #A3A79C 0%, #ACAFA7 12.5%, #B1B7AE 25%, #B6BDAF 37.5%, #B7BDB4 50%, #B6BCB3 62.5%, #B2B8B0 75%, #AEB4AB 87.5%, #ABAEA6 100%) right top / 50% 100% no-repeat",
+          "fill": "edge-extend"
+        }
       },
       "gallery": [
         {
@@ -1139,7 +1270,12 @@
             "height": 1600,
             "bytes": 379258
           }
-        ]
+        ],
+        "framing": {
+          "fit": "cover",
+          "object_position": "50% 50%",
+          "background": "#888783"
+        }
       },
       "gallery": [
         {
@@ -1168,7 +1304,12 @@
               "height": 1600,
               "bytes": 379258
             }
-          ]
+          ],
+          "framing": {
+            "fit": "cover",
+            "object_position": "50% 50%",
+            "background": "#888783"
+          }
         },
         {
           "kind": "image",
@@ -1196,7 +1337,12 @@
               "height": 1600,
               "bytes": 361032
             }
-          ]
+          ],
+          "framing": {
+            "fit": "cover",
+            "object_position": "50% 50%",
+            "background": "#888783"
+          }
         }
       ],
       "short_text": "Paper, light and shadow.",
@@ -1238,7 +1384,13 @@
             "height": 1920,
             "bytes": 137746
           }
-        ]
+        ],
+        "framing": {
+          "fit": "pad",
+          "object_position": "50% 50%",
+          "background": "#000000",
+          "fill": "edge-extend"
+        }
       },
       "gallery": [
         {
@@ -1267,7 +1419,13 @@
               "height": 1920,
               "bytes": 137746
             }
-          ]
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#000000",
+            "fill": "edge-extend"
+          }
         }
       ],
       "short_text": null,
@@ -1297,7 +1455,13 @@
             "height": 640,
             "bytes": 41570
           }
-        ]
+        ],
+        "framing": {
+          "fit": "pad",
+          "object_position": "50% 72%",
+          "background": "#88817A",
+          "fill": "edge-extend"
+        }
       },
       "gallery": [
         {
@@ -1314,7 +1478,13 @@
               "height": 640,
               "bytes": 41570
             }
-          ]
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 72%",
+            "background": "#88817A",
+            "fill": "edge-extend"
+          }
         }
       ],
       "short_text": null,
@@ -1356,7 +1526,13 @@
             "height": 900,
             "bytes": 80348
           }
-        ]
+        ],
+        "framing": {
+          "fit": "pad",
+          "object_position": "50% 50%",
+          "background": "#FFFFFF",
+          "fill": "edge-extend"
+        }
       },
       "gallery": [
         {
@@ -1385,7 +1561,13 @@
               "height": 900,
               "bytes": 80348
             }
-          ]
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#FFFFFF",
+            "fill": "edge-extend"
+          }
         },
         {
           "kind": "image",
@@ -1417,7 +1599,8 @@
           "framing": {
             "fit": "pad",
             "object_position": "50% 50%",
-            "background": "#FFFFFF"
+            "background": "#FFFFFF",
+            "fill": "edge-extend"
           }
         }
       ],
@@ -1425,7 +1608,8 @@
       "framing": {
         "fit": "pad",
         "object_position": "50% 50%",
-        "background": "#FFFFFF"
+        "background": "#FFFFFF",
+        "fill": "edge-extend"
       }
     },
     {
@@ -1454,7 +1638,13 @@
             "height": 1280,
             "bytes": 4786
           }
-        ]
+        ],
+        "framing": {
+          "fit": "pad",
+          "object_position": "50% 50%",
+          "background": "#010103",
+          "fill": "edge-extend"
+        }
       },
       "gallery": [
         {
@@ -1491,7 +1681,8 @@
           "framing": {
             "fit": "pad",
             "object_position": "50% 50%",
-            "background": "#020202"
+            "background": "#020202",
+            "fill": "edge-extend"
           }
         }
       ],
@@ -1499,7 +1690,8 @@
       "framing": {
         "fit": "pad",
         "object_position": "50% 50%",
-        "background": "#010103"
+        "background": "#010103",
+        "fill": "edge-extend"
       }
     },
     {
@@ -1528,7 +1720,13 @@
             "height": 1600,
             "bytes": 938932
           }
-        ]
+        ],
+        "framing": {
+          "fit": "pad",
+          "object_position": "50% 50%",
+          "background": "#010101",
+          "fill": "edge-extend"
+        }
       },
       "gallery": [
         {
@@ -1551,7 +1749,13 @@
               "height": 1600,
               "bytes": 938932
             }
-          ]
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#010101",
+            "fill": "edge-extend"
+          }
         },
         {
           "kind": "image",
@@ -1577,7 +1781,8 @@
           "framing": {
             "fit": "pad",
             "object_position": "50% 50%",
-            "background": "#585858"
+            "background": "#585858",
+            "fill": "edge-extend"
           }
         }
       ],
@@ -1585,7 +1790,8 @@
       "framing": {
         "fit": "pad",
         "object_position": "50% 50%",
-        "background": "#010101"
+        "background": "#010101",
+        "fill": "edge-extend"
       }
     },
     {
@@ -1614,7 +1820,13 @@
             "height": 720,
             "bytes": 6942
           }
-        ]
+        ],
+        "framing": {
+          "fit": "pad",
+          "object_position": "50% 50%",
+          "background": "#000000",
+          "fill": "edge-extend"
+        }
       },
       "gallery": [
         {
@@ -1651,7 +1863,8 @@
           "framing": {
             "fit": "pad",
             "object_position": "50% 50%",
-            "background": "#000000"
+            "background": "#000000",
+            "fill": "edge-extend"
           }
         }
       ],
@@ -1659,7 +1872,8 @@
       "framing": {
         "fit": "pad",
         "object_position": "50% 50%",
-        "background": "#000000"
+        "background": "#000000",
+        "fill": "edge-extend"
       }
     }
   ]
