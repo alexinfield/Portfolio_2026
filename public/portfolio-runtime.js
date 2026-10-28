@@ -14,16 +14,20 @@
   const unavailableAction = document.querySelector("[data-unavailable-toggle]");
   const unavailable = document.getElementById("unavailable-status");
   let pinnedUnavailable = false;
+  let hoveringUnavailable = false;
   function discloseUnavailable(open) {
     if (!unavailableAction || !unavailable) return;
     unavailable.hidden = !open;
     unavailableAction.setAttribute("aria-expanded", String(open));
   }
-  unavailableAction?.addEventListener("pointerenter", event => { if (event.pointerType !== "touch") discloseUnavailable(true); });
-  unavailableAction?.addEventListener("pointerleave", () => { if (!pinnedUnavailable && document.activeElement !== unavailableAction) discloseUnavailable(false); });
+  unavailableAction?.addEventListener("pointerenter", event => { if (event.pointerType !== "touch") { hoveringUnavailable = true; discloseUnavailable(true); } });
+  unavailableAction?.addEventListener("pointerleave", () => { hoveringUnavailable = false; if (!pinnedUnavailable && document.activeElement !== unavailableAction) discloseUnavailable(false); });
   unavailableAction?.addEventListener("focus", () => { if (unavailableAction.matches(":focus-visible")) discloseUnavailable(true); });
   unavailableAction?.addEventListener("blur", () => { pinnedUnavailable = false; discloseUnavailable(false); });
-  unavailableAction?.addEventListener("click", () => { pinnedUnavailable = unavailable.hidden; discloseUnavailable(pinnedUnavailable); });
+  unavailableAction?.addEventListener("click", event => {
+    pinnedUnavailable = hoveringUnavailable && event.detail > 0 ? true : unavailable.hidden;
+    discloseUnavailable(pinnedUnavailable);
+  });
   document.addEventListener("keydown", event => {
     if (event.key === "Escape") { pinnedUnavailable = false; discloseUnavailable(false); }
   });
@@ -192,13 +196,30 @@
   }, { threshold: 0.01 }) : null;
 
   document.querySelectorAll("video[data-lazy-video]").forEach((video) => {
-    states.set(video, { loaded: false, visible: !visibleObserver, userPaused: false, userStarted: false });
+    // Long films have real sources plus preload=none from the first render.
+    // Native browser controls can therefore select media without page pointer
+    // events, which their shadow controls do not consistently dispatch.
+    states.set(video, { loaded: Boolean(video.querySelector("source[src]")), visible: !visibleObserver, userPaused: false, userStarted: false });
     const frame = video.closest("[data-video-frame]");
     initializeVideoEdges(video);
     if (frame.hasAttribute("data-long-film")) {
-      const nativeControls = () => { video.controls = coarseFilm.matches; frame.dataset.nativeFilm = String(coarseFilm.matches); };
+      const nativeControls = () => {
+        const native = coarseFilm.matches;
+        video.controls = native && frame.dataset.nativeFilmStarted === "true";
+        frame.dataset.nativeFilm = String(native);
+      };
       nativeControls();
       coarseFilm.addEventListener("change", nativeControls);
+      frame.querySelector("[data-native-film-play]")?.addEventListener("click", () => {
+        const state = states.get(video);
+        state.userStarted = true;
+        state.userPaused = false;
+        frame.dataset.nativeFilmStarted = "true";
+        nativeControls();
+        // Keep play() synchronous with this trusted gesture for iOS Safari.
+        play(video);
+        video.focus({ preventScroll: true });
+      });
     }
     if (video.dataset.previewTime) {
       // The supplied growth poster is its nearly empty first frame. Seek the
@@ -211,8 +232,17 @@
     }
     nearObserver?.observe(video);
     visibleObserver?.observe(video);
-    video.addEventListener("play", () => updateButton(video));
-    video.addEventListener("pause", () => updateButton(video));
+    video.addEventListener("play", () => {
+      if (video.controls) {
+        states.get(video).userStarted = true;
+        states.get(video).userPaused = false;
+      }
+      updateButton(video);
+    });
+    video.addEventListener("pause", () => {
+      if (video.controls && !video.ended) states.get(video).userPaused = true;
+      updateButton(video);
+    });
     video.addEventListener("ended", () => {
       if (video.controls) states.get(video).userPaused = true;
       updateButton(video);
@@ -226,18 +256,6 @@
       sourceFailure();
       setTimeout(sourceFailure, 0);
     }, true);
-    // A native-control activation also counts as demand, including reduced motion.
-    const nativeDemand = () => {
-      if (!video.controls) return;
-      const state = states.get(video);
-      state.userStarted = true;
-      state.userPaused = false;
-      load(video);
-    };
-    video.addEventListener("pointerdown", nativeDemand);
-    video.addEventListener("keydown", (event) => {
-      if (event.key === " " || event.key === "Enter") nativeDemand();
-    });
     if (!visibleObserver) sync(video);
   });
 

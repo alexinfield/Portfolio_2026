@@ -127,6 +127,7 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
 
 /* Narrative films use the public Compass slider and icon buttons. */
 .film-controls {right: var(--inline); display: grid; grid-template-columns: 44px minmax(64px,1fr) auto 44px 44px; align-items: center; gap: 4px;}
+.native-film-start {position: absolute; z-index: 6; top: 8px; left: 8px; display: none;}
 .film-timeline {min-width: 0; min-height: 44px;}
 .film-timeline [role="slider"] {min-width: 20px; min-height: 20px;}
 .film-time {font-size: .75rem; line-height: 1.125rem; font-variant-numeric: tabular-nums; white-space: nowrap; padding-inline: 4px; color: var(--text); background: var(--surface); border-radius: var(--radius);}
@@ -170,12 +171,14 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
 }
 @media (max-width:767px) and (pointer:coarse) {
  [data-long-film] .film-controls {display: none;}
+ [data-long-film]:not([data-native-film-started="true"]) .native-film-start {display: inline-flex;}
 }
 [data-native-film="true"] .film-controls {display: none;}
-/* Telefoni is a 16:9 film padded in a 4:3 card. Leave its complete native
-   control row (and lower frame padding) outside the description hit target. */
-.portfolio-gallery:has([data-native-film="true"]) .gallery-description-toggle {bottom: calc(12.5% + 44px); height: calc(87.5% - 44px);}
-.portfolio-gallery:has([data-native-film="true"]) .portfolio-description-strip {bottom: calc(12.5% + 44px);}
+[data-native-film="true"]:not([data-native-film-started="true"]) .native-film-start {display: inline-flex;}
+/* Telefoni is a 16:9 film padded in a 4:3 card. Native chrome includes both
+   the action row and scrubber. Keep that full area clear of the description. */
+.portfolio-gallery:has([data-native-film="true"]) .gallery-description-toggle {bottom: calc(12.5% + 80px); height: calc(87.5% - 80px);}
+.portfolio-gallery:has([data-native-film="true"]) .portfolio-description-strip {bottom: calc(12.5% + 80px);}
 @media (prefers-reduced-motion:reduce) {
  .portfolio-root [data-slot="button"]:not(.portfolio-skip-link), .portfolio-root .portfolio-card-link, .portfolio-root .portfolio-gallery-stage {transform: none!important; scale: none!important; transition: none!important;}
 }

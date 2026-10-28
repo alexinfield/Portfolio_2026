@@ -4,7 +4,7 @@ import { videoSources } from "@/lib/video-sources";
 import { Button } from "./compass";
 import MediaToggle from "./media-toggle";
 import FilmControls from "./film-controls";
-import { RotateCw } from "lucide-react";
+import { Play, RotateCw } from "lucide-react";
 
 type DeferredVideoProps = {
   source: string;
@@ -59,17 +59,22 @@ export default function DeferredVideo({
         loop={longFilm ? false : loop}
         muted={autoplay && !longFilm}
         playsInline
-        controls={longFilm || controls}
+        controls={controls}
         suppressHydrationWarning
         preload="none"
         poster={poster ? withBasePath(poster) : undefined}
         width={width}
         height={height}
       >
-        {sources.map((item) => <source data-src={item.src} type={item.type} key={item.src} />)}
+        {sources.map((item) => <source src={longFilm ? item.src : undefined} data-src={item.src} type={item.type} key={item.src} />)}
         <p>Video unavailable in this browser. <Button asChild variant="link" size="sm"><a href={file}>Open video file</a></Button></p>
       </video>
-      {longFilm ? <FilmControls label={label} durationSeconds={durationSeconds}/> : !controls && showToggle && <div className="media-controls">
+      {longFilm ? <>
+        <Button type="button" variant="secondary" size="icon-sm" className="native-film-start" data-native-film-play aria-label={`Play ${label}`}>
+          <Play aria-hidden="true" />
+        </Button>
+        <FilmControls label={label} durationSeconds={durationSeconds}/>
+      </> : !controls && showToggle && <div className="media-controls">
         <MediaToggle label={label} />
       </div>}
         <p className="media-status" data-video-status hidden role="status">

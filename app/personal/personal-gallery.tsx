@@ -72,7 +72,7 @@ export default function PersonalGallery({media,title,visible,framing,description
     tabIndex={media.length>1 && !description?0:-1} data-media-reveal data-description-open={description?open:undefined} onKeyDown={key}
     onPointerEnter={event=>{if(description && event.pointerType==="mouse")setOpen(true);}}
     onPointerLeave={event=>{if(!pinned.current&&!event.currentTarget.contains(document.activeElement))setOpen(false);}}
-    onFocus={event=>{if(description && ((event.target as HTMLElement).matches(":focus-visible") || matchMedia("(hover: hover)").matches))setOpen(true);}}
+    onFocus={event=>{if((event.target as HTMLElement).closest("[data-video-frame]"))return;if(description && ((event.target as HTMLElement).matches(":focus-visible") || matchMedia("(hover: hover)").matches))setOpen(true);}}
     onBlur={event=>{if(!event.currentTarget.contains(event.relatedTarget)&&!pinned.current)setOpen(false);}}>
     <div className="portfolio-gallery-stage" style={{aspectRatio:4/3}} onTouchStart={begin} onTouchEnd={end} onTouchCancel={()=>{touch.current=null;suppressClick.current=true;}}>
       {media.map((item,index)=><div className="portfolio-gallery-slide" role="group" aria-label={`${index+1} of ${media.length}`} aria-hidden={index!==active} inert={index!==active} hidden={index!==active} key={item.id} style={{background:(item.framing??framing).background}}>
