@@ -27,9 +27,15 @@ The supplied case-study image panels retain their content.
   focus and tap; Escape dismisses it. Its small static status adapter avoids
   adding a React tooltip runtime to every exported document.
 - Short silent loops reveal one Compass play/pause icon on hover, tap or focus.
-  Long films reveal play/pause, Compass slider, mute and fullscreen on desktop;
-  small coarse-pointer screens use native controls. Telefoni
-  stays on its poster with no source attachment until Play.
+  Long films reveal play/pause, Compass slider, mute and fullscreen on desktop.
+  Small coarse-pointer screens show one poster Play button first, away from the
+  opening title; its trusted tap starts playback and reveals native controls.
+  Long-film source URLs are present with preload="none" and no autoplay, so
+  native Play never depends on pointer events reaching page script. Native
+  control rows stay outside the Personal description hit target. Media-control
+  focus does not open a description. Telefoni stays paused on its poster until
+  demand. Actual H.264 decoding requires a supporting browser; tests label the
+  existing WebM fixture used for Telefoni UI coverage when H.264 is unavailable.
 - Cases start with authored media at the header bottom and retain an accessible
   hidden heading/metadata. Bottom Previous/Back/Next stay inside Work or Personal
   and omit endpoints. Explicit query origin plus a consumed session entry allow
@@ -48,3 +54,10 @@ The pinned kit is consumed through public exports and styles.css only. No
 component source is forked. Source-owned CSS supplies composition, image framing,
 visibility and the specified accessibility minimums. Professional material,
 garden/flower and semantic case text remain excluded.
+
+The browser gate combines the critique checks with the restored ce35959
+regressions: aliases, deep-404 skip, no-JS Personal, fixed palettes, navigation
+style parity/44 px targets/focus at 320/390/1440 and 200 percent text, cached
+image fills, Retry focus and explicit Telefoni playback. Phone film checks
+actually advance currentTime after one Play tap, twice on fresh loads under
+both motion preferences, then exercise native Play after a paused state.

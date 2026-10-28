@@ -45,17 +45,34 @@ export async function runBrowserRegressions(browser,baseURL,{artifacts}={}) {
       });
       await check("Professional discloses a lock through hover, keyboard focus and tap, without navigation",async()=>{
         await goto("/");
-        const button=page.getByRole("button",{name:"Professional",exact:true}),tip=page.locator("#unavailable-status"),url=page.url();
+        const button=page.getByRole("button",{name:"Professional",exact:true}),tip=page.locator("#unavailable-status");let url=page.url();
         assert.equal(await button.getAttribute("aria-disabled"),"true");assert.equal(await button.evaluate(element=>element.disabled),false);
-        if(device==="desktop"){await button.hover();await tip.waitFor({state:"visible"});assert.equal(await tip.locator("svg").count(),1);await page.keyboard.press("Escape");await tip.waitFor({state:"hidden"});}
-        await page.mouse.move(0,0);await page.evaluate(()=>document.activeElement?.blur());
+        if(device==="desktop"){
+          await button.hover();await tip.waitFor({state:"visible"});assert.equal(await tip.locator("svg").count(),1);
+          await button.click({force:true});assert.equal(await tip.isVisible(),true,'Click while hovered must pin the disclosure');
+          await page.mouse.move(0,0);assert.equal(await tip.isVisible(),true);
+          await page.keyboard.press("Escape");await tip.waitFor({state:"hidden"});
+        }
+        // Start keyboard traversal in a fresh document after the hover/click
+        // probe; blur alone preserves the browser's sequential focus origin.
+        await page.mouse.move(0,0);await goto('/?professional=keyboard');url=page.url();
         await page.keyboard.press("Tab");
         for(let i=0;i<8&&await button.evaluate(element=>element!==document.activeElement);i++)await page.keyboard.press("Tab");
         assert.ok(await button.evaluate(element=>element===document.activeElement));await tip.waitFor({state:"visible"});
         await page.keyboard.press("Escape");await tip.waitFor({state:"hidden"});
+        await page.keyboard.press('Enter');await tip.waitFor({state:'visible'});
+        await page.keyboard.press('Enter');await tip.waitFor({state:'hidden'});
+        await page.keyboard.press(' ');await tip.waitFor({state:'visible'});
+        await page.keyboard.press('Escape');await tip.waitFor({state:'hidden'});
         await page.evaluate(()=>document.activeElement?.blur());
         if(device==="phone")await button.tap({force:true});else {await button.hover();await page.keyboard.press("Escape");await button.click({force:true});}
         await tip.waitFor({state:"visible"});assert.equal(page.url(),url);assert.equal(await button.getAttribute("href"),null);
+        if(device==='phone'){
+          await button.tap({force:true});await tip.waitFor({state:'hidden'});
+          await button.tap({force:true});await tip.waitFor({state:'visible'});
+          const outside=await page.evaluate(()=>{const r=document.querySelector('header').getBoundingClientRect();for(const y of [r.bottom-2,r.height/2])for(let x=2;x<innerWidth-2;x+=4){const hit=document.elementFromPoint(x,y);if(hit&&!hit.closest('a,button,#unavailable-status'))return{x,y};}throw Error('No noninteractive header point');});
+          await page.touchscreen.tap(outside.x,outside.y);await tip.waitFor({state:'hidden'});assert.equal(page.url(),url);
+        }
         await page.keyboard.press("Escape");
       });
       await check("Personal has sixteen uniform frames, hidden filters and no permanent About labels",async()=>{
@@ -89,10 +106,10 @@ export async function runBrowserRegressions(browser,baseURL,{artifacts}={}) {
         await goto("/personal/");const gallery=page.locator("#desk-pen .portfolio-gallery"),button=gallery.locator("[data-gallery-description-toggle]");await gallery.scrollIntoViewIfNeeded();
         const box=await button.boundingBox(),x=box.x+box.width*.7,y=box.y+box.height*.4;
         const session=await context.newCDPSession(page);
-        async function gesture(dx,dy){await session.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y}]});await session.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+dx/2,y:y+dy/2}]});await session.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+dx,y:y+dy}]});await session.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});}
+        async function gesture(dx,dy){await session.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y}]});await page.waitForTimeout(30);await session.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+dx/2,y:y+dy/2}]});await page.waitForTimeout(30);await session.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+dx,y:y+dy}]});await session.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await page.waitForTimeout(100);}
         await gesture(-100,0);await gallery.getByRole("group",{name:"2 of 6",exact:true}).waitFor({state:"visible"});assert.equal(await button.getAttribute('aria-expanded'),'false');
-        await button.tap();assert.equal(await button.getAttribute('aria-expanded'),'true');assert.equal(await gallery.locator('.gallery-count').textContent(),'2 / 6');
-        await button.tap();await gesture(0,-70);assert.equal(await button.getAttribute('aria-expanded'),'false');assert.equal(await gallery.locator('.gallery-count').textContent(),'2 / 6');
+        await button.tap();await page.waitForFunction(()=>document.querySelector('#desk-pen [data-gallery-description-toggle]').getAttribute('aria-expanded')==='true');assert.equal(await gallery.locator('.gallery-count').textContent(),'2 / 6');
+        await button.tap();await page.waitForFunction(()=>document.querySelector('#desk-pen [data-gallery-description-toggle]').getAttribute('aria-expanded')==='false');await gesture(0,-70);assert.equal(await button.getAttribute('aria-expanded'),'false');assert.equal(await gallery.locator('.gallery-count').textContent(),'2 / 6');
         assert.equal(await gallery.locator('[data-pressed="true"]').count(),0);await session.detach();
       });
       await check("Folio and Niche picture/caption links open their actual cases; Back restores Personal",async()=>{
@@ -128,7 +145,7 @@ export async function runBrowserRegressions(browser,baseURL,{artifacts}={}) {
       });
       await check("Hyphae uses native long-film controls on phone and Compass controls on desktop, with original MP4/WebM order",async()=>{
         await goto('/projects/hyphae/');const frame=page.locator('.case-film [data-video-frame]'),video=frame.locator('video');await frame.scrollIntoViewIfNeeded();
-        assert.equal(await video.evaluate(video=>video.controls),device==='phone');assert.equal(await video.evaluate(video=>video.paused),true);
+        assert.equal(await video.evaluate(video=>video.controls),false);assert.equal(await video.evaluate(video=>video.paused),true);
         const types=await video.locator('source').evaluateAll(items=>items.map(item=>item.type));assert.deepEqual(types,['video/mp4','video/webm']);
         if(device==='desktop'){
           await page.mouse.move(0,0);assert.equal(await frame.locator('.film-controls').evaluate(element=>getComputedStyle(element).opacity),'0');await frame.hover();
@@ -136,7 +153,10 @@ export async function runBrowserRegressions(browser,baseURL,{artifacts}={}) {
           await frame.locator('[data-video-toggle]').click();const slider=frame.getByRole('slider',{name:'Seek Hyphae Light film'});await slider.focus();await page.keyboard.press('End');assert.ok(await video.evaluate(video=>video.currentTime>video.duration-.5));await page.keyboard.press('Home');assert.ok(await video.evaluate(video=>video.currentTime<.5));
           await frame.getByRole('button',{name:'Mute Hyphae Light film',exact:true}).click();assert.equal(await video.evaluate(video=>video.muted),true);await frame.getByRole('button',{name:'Unmute Hyphae Light film',exact:true}).click();assert.equal(await video.evaluate(video=>video.muted),false);
           await frame.getByRole('button',{name:'Enter fullscreen: Hyphae Light film',exact:true}).click();await page.waitForFunction(()=>document.fullscreenElement!==null);await frame.getByRole('button',{name:'Exit fullscreen: Hyphae Light film',exact:true}).click();await page.waitForFunction(()=>document.fullscreenElement===null);
-        }else assert.equal(await frame.locator('.film-controls').evaluate(element=>getComputedStyle(element).display),'none');
+        }else{
+          assert.equal(await frame.locator('.film-controls').evaluate(element=>getComputedStyle(element).display),'none');
+          assert.equal(await frame.locator('[data-native-film-play]').isVisible(),true);
+        }
         if(artifacts)await frame.screenshot({path:join(artifacts,`hyphae-controls-${device}.png`)});
         return {h264:await page.evaluate(()=>Boolean(document.createElement('video').canPlayType('video/mp4; codecs="avc1.42E01E"')))};
       });
@@ -147,10 +167,11 @@ export async function runBrowserRegressions(browser,baseURL,{artifacts}={}) {
         const range=await video.evaluate(video=>{const canvas=document.createElement('canvas');canvas.width=160;canvas.height=100;const c=canvas.getContext('2d');c.drawImage(video,0,0,160,100);const d=c.getImageData(0,0,160,100).data;let min=255,max=0,count=0;for(let i=0;i<d.length;i+=4){min=Math.min(min,d[i]);max=Math.max(max,d[i]);if(d[i]<180)count++;}return{min,max,darkPixels:count};});
         assert.ok(range.max-range.min>60&&range.darkPixels>30,JSON.stringify(range));if(artifacts)await frame.screenshot({path:join(artifacts,`hyphae-process-${device}.png`)});await page.emulateMedia({reducedMotion:'no-preference'});return range;
       });
-      await check("Telefoni remains dormant and phone description hit targets leave native film controls uncovered",async()=>{
+      await check("Telefoni remains dormant with real preload-none sources and native control space reserved",async()=>{
         await goto('/personal/');const video=page.locator('#p041-telefoni video');await video.scrollIntoViewIfNeeded();await page.mouse.move(0,0);await page.waitForTimeout(150);
         const state=await video.evaluate(video=>({src:video.currentSrc,paused:video.paused,sources:[...video.querySelectorAll('source')].map(source=>source.getAttribute('src'))}));
-        assert.equal(state.src,'');assert.equal(state.paused,true);assert.ok(state.sources.every(source=>source===null));
+        assert.equal(state.paused,true);assert.ok(state.sources.every(source=>source!==null));
+        assert.equal(await video.getAttribute('preload'),'none');assert.equal(await video.evaluate(video=>video.controls),false);
         if(device==='phone'){
           const bounds=await page.evaluate(()=>{const video=document.querySelector('#p041-telefoni video'),v=video.getBoundingClientRect(),toggle=document.querySelector('#p041-telefoni [data-gallery-description-toggle]').getBoundingClientRect();return{toggleBottom:toggle.bottom,controlsTop:v.bottom-44,targetIsVideo:document.elementFromPoint(v.left+24,v.bottom-20)===video};});
           assert.ok(bounds.toggleBottom<=bounds.controlsTop+.5,JSON.stringify(bounds));assert.ok(bounds.targetIsVideo);

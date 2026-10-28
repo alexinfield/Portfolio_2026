@@ -150,13 +150,18 @@ test("all cases expose authored summaries, dates and research captions",{skip:CA
   for(const slug of slugs){const html=await (await render(`/projects/${slug}`)).text();assert.match(html,new RegExp(`<section class="case-text"[^>]*><h2>${expected[slug][0]}</h2>`));for(const copy of expected[slug].slice(1))assert.ok(html.includes(copy),`${slug}: ${copy}`);}
 });
 
-test("deferred video keeps sources dormant, posters present and MP4 first",async()=>{
+test("video preserves preload none, posters, no autoplay and MP4 first; long films expose real sources",async()=>{
   for(const path of [...slugs.map(slug=>`projects/${slug}/index.html`),"personal/index.html"]){
     const html=documentOnly(await exported(path));
     for(const [video] of html.matchAll(/<video\b[\s\S]*?<\/video>/g)){
       assert.match(video,/preload="none"/);
       assert.match(video,/poster="[^"]+"/);
-      assert.doesNotMatch(video,/<video[^>]*\sautoplay|<source[^>]*\ssrc=/i);
+      assert.doesNotMatch(video,/<video[^>]*\sautoplay/i);
+      if(video.includes('data-demand-only="true"')){
+        for(const [source] of video.matchAll(/<source\b[^>]*>/g)){
+          assert.equal(/\ssrc="([^"]+)"/.exec(source)?.[1],/data-src="([^"]+)"/.exec(source)?.[1]);
+        }
+      }else assert.doesNotMatch(video,/<source[^>]*\ssrc=/i);
       assert.match(video,/<source[^>]*data-src="[^"]+\.mp4" type="video\/mp4"/);
       assert.match(video.match(/<source\b[^>]*>/)[0],/type="video\/mp4"/);
     }
@@ -173,12 +178,11 @@ test("all video players use Compass icons; long films add timeline, mute and ful
     const html=documentOnly(await exported(`projects/${slug}/index.html`));
     assert.equal((html.match(/data-video-toggle="true"/g)||[]).length,(html.match(/<video\b/g)||[]).length,slug);
     for(const [video] of html.matchAll(/<video\b[^>]*>/g)){
-      if(video.includes('data-demand-only="true"'))assert.match(video,/\scontrols=""/);
-      else assert.doesNotMatch(video,/\scontrols=""/);
+      assert.doesNotMatch(video,/\scontrols=""/);
     }
     if(html.includes("<video"))assert.match(html,/data-button-kind="icon"/);
     assert.doesNotMatch(html,/portfolio-video-controls|carousel-controls/);
-    if(slug==="hyphae"){assert.match(html,/data-film-controls/);assert.match(html,/Mute Hyphae Light film/);assert.match(html,/Enter fullscreen: Hyphae Light film/);assert.match(html,/data-slot="slider"/);}
+    if(slug==="hyphae"){assert.match(html,/data-film-controls/);assert.match(html,/data-native-film-play/);assert.match(html,/Mute Hyphae Light film/);assert.match(html,/Enter fullscreen: Hyphae Light film/);assert.match(html,/data-slot="slider"/);}
   }
 });
 
