@@ -106,6 +106,7 @@ test("every package media path is local and its exact variants exist",async()=>{
     if(media.poster)visit(media.poster);
   }
   for(const item of packageData.items){visit(item.cover);item.gallery.forEach(visit);}
+  for(const source of packageData.retired_media??[])sources.add(source);
   const actual=(await readdir(new URL("../public/assets/personal/media/",import.meta.url))).map(name=>"media/"+name);
   assert.deepEqual([...sources].sort(),actual.sort());
   for(const source of sources)await access(new URL(`../public/assets/personal/${source}`,import.meta.url));
@@ -329,7 +330,10 @@ test("hidden BioMaking and the old Telefoni name never reach the public export",
       const body=await exported(path);
       assert.doesNotMatch(body,/biomaking|gelatin/i,path);
       assert.doesNotMatch(body,/Telefoni/,path);
+      assert.doesNotMatch(body,/p041-telefoni-01-poster-w(640|1280)/,path);
     }
   }
   await access(new URL("../public/assets/personal/media/p016-biomaking-gelatin-wrap-materials-study-01-w768.webp",import.meta.url));
+  await access(new URL("../public/assets/personal/media/p041-telefoni-01-poster-w1280.webp",import.meta.url));
+  for(const path of await files())assert.doesNotMatch(path,/p041-telefoni-01-poster-w/,path);
 });

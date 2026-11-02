@@ -1803,23 +1803,23 @@
       "link": null,
       "cover": {
         "kind": "image",
-        "id": "p041-telefoni-01-poster",
-        "src": "media/p041-telefoni-01-poster-w1280.webp",
+        "id": "p041-telefoni-01-poster-140s",
+        "src": "media/p041-telefoni-01-poster-140s-w1280.webp",
         "width": 1280,
         "height": 720,
-        "alt": "Title frame of Video 2018, white lettering on dark gray.",
+        "alt": "A boy in a white shirt talking on a corded telephone, a black-and-white frame from the film.",
         "variants": [
           {
-            "src": "media/p041-telefoni-01-poster-w640.webp",
+            "src": "media/p041-telefoni-01-poster-140s-w640.webp",
             "width": 640,
             "height": 360,
-            "bytes": 2576
+            "bytes": 7306
           },
           {
-            "src": "media/p041-telefoni-01-poster-w1280.webp",
+            "src": "media/p041-telefoni-01-poster-140s-w1280.webp",
             "width": 1280,
             "height": 720,
-            "bytes": 6942
+            "bytes": 15622
           }
         ],
         "framing": {
@@ -1841,23 +1841,23 @@
           "alt": "An edited sequence of title cards, people using telephones and scenes from film footage.",
           "poster": {
             "kind": "image",
-            "id": "p041-telefoni-01-poster",
-            "src": "media/p041-telefoni-01-poster-w1280.webp",
+            "id": "p041-telefoni-01-poster-140s",
+            "src": "media/p041-telefoni-01-poster-140s-w1280.webp",
             "width": 1280,
             "height": 720,
-            "alt": "Title frame of Video 2018, white lettering on dark gray.",
+            "alt": "A boy in a white shirt talking on a corded telephone, a black-and-white frame from the film.",
             "variants": [
               {
-                "src": "media/p041-telefoni-01-poster-w640.webp",
+                "src": "media/p041-telefoni-01-poster-140s-w640.webp",
                 "width": 640,
                 "height": 360,
-                "bytes": 2576
+                "bytes": 7306
               },
               {
-                "src": "media/p041-telefoni-01-poster-w1280.webp",
+                "src": "media/p041-telefoni-01-poster-140s-w1280.webp",
                 "width": 1280,
                 "height": 720,
-                "bytes": 6942
+                "bytes": 15622
               }
             ]
           },
@@ -1877,5 +1877,9 @@
         "fill": "edge-extend"
       }
     }
+  ],
+  "retired_media": [
+    "media/p041-telefoni-01-poster-w640.webp",
+    "media/p041-telefoni-01-poster-w1280.webp"
   ]
 }
