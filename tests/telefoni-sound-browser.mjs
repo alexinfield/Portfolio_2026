@@ -32,7 +32,7 @@ export async function runTelefoniSoundRegressions(browser, baseURL) {
         assert.equal(await isMuted(page), true);
         assert.equal(await page.evaluate(s => document.querySelector(s + " video").defaultMuted, frameSel), true);
         assert.equal(await frame.locator("video").getAttribute("data-start-muted"), "true");
-        await frame.hover();
+        await page.locator("#p041-telefoni .portfolio-gallery").hover();
         const bar = frame.locator("[data-film-controls]");
         assert.equal(await bar.locator("[data-film-mute]").getAttribute("aria-label"), "Unmute " + await frame.locator("video").getAttribute("aria-label"));
         assert.equal(await bar.locator("[data-film-fullscreen]").isEnabled(), true);
@@ -40,7 +40,7 @@ export async function runTelefoniSoundRegressions(browser, baseURL) {
       });
       await check("desktop: Play keeps it muted; mute button turns sound on and off", async () => {
         await configureTelefoniCodecFixture(page, frame.locator("video"), baseURL);
-        await frame.hover(); await frame.locator("[data-film-controls] [data-video-toggle]").click();
+        await page.locator("#p041-telefoni .portfolio-gallery").hover(); await frame.locator("[data-film-controls] [data-video-toggle]").click();
         await page.waitForFunction(s => { const v = document.querySelector(s + " video"); return !v.paused && v.currentTime > .1; }, frameSel);
         assert.equal(await isMuted(page), true);
         const mute = frame.locator("[data-film-controls] [data-film-mute]");
@@ -49,7 +49,7 @@ export async function runTelefoniSoundRegressions(browser, baseURL) {
         await mute.click(); assert.equal(await isMuted(page), true);
       });
       await check("desktop: full screen turns the sound on", async () => {
-        await frame.hover(); await frame.locator("[data-film-controls] [data-film-fullscreen]").click();
+        await page.locator("#p041-telefoni .portfolio-gallery").hover(); await frame.locator("[data-film-controls] [data-film-fullscreen]").click();
         await page.waitForFunction(s => document.fullscreenElement === document.querySelector(s), frameSel);
         assert.equal(await isMuted(page), false);
         await page.evaluate(() => document.exitFullscreen()); await page.waitForFunction(() => !document.fullscreenElement);
