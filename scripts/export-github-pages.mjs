@@ -1,5 +1,6 @@
 import { cp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
+import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
@@ -74,6 +75,14 @@ if (!basePath && relativePreloadHelpers === 0) {
   throw new Error("Could not make Vite's dynamic preload helper repository-path-safe");
 }
 
+// Fixed script URLs are cached for up to 10 minutes on GitHub Pages; stamp each
+// reference with the exported file's content hash so HTML and scripts always match.
+const scriptVersions = {};
+for (const name of ["portfolio-runtime.js", "portfolio-analytics.js"]) {
+  scriptVersions[name] = createHash("sha256").update(await readFile(join(output, name))).digest("hex").slice(0, 8);
+}
+const versionScripts = html => html.replace(/(portfolio-(?:runtime|analytics)\.js)(?=["'])/g, name => `${name}?v=${scriptVersions[name]}`);
+
 function relativeRoot(route) {
   if (route === "/" || route === "/404") return "./";
   if (route.startsWith("/projects/")) return "../../";
@@ -134,6 +143,7 @@ function staticHtml(html, route) {
     `<link rel="canonical" href="${siteOrigin}${canonicalPath}"/>${robots}</head>`,
   );
 
+  result = versionScripts(result);
   const palette = route === "/personal" ? "light" : "dark";
   result = result.replace(/(<html\b[^>]*class=")[^"]*(")/, `$1${palette === "dark" ? "dark" : ""}$2`)
     .replace(/(<html\b[^>]*data-theme=")[^"]*(")/, `$1${palette}$2`)

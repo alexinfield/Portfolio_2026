@@ -356,3 +356,20 @@ test("Video 2018 ships with its sound track and starts muted with mute and full-
   const runtime=await read("public/portfolio-runtime.js");
   assert.match(runtime,/webkitbeginfullscreen/);assert.match(runtime,/video\.muted = true/);
 });
+
+test("every exported page references the runtime and analytics scripts by their current content hash",async()=>{
+  const version=async name=>createHash("sha256").update(await readFile(new URL(`../gh-pages/${name}`,import.meta.url))).digest("hex").slice(0,8);
+  const runtime=await version("portfolio-runtime.js"),analytics=await version("portfolio-analytics.js");
+  const html=(await files()).filter(path=>path.endsWith(".html"));
+  assert.ok(html.length>=12);
+  let runtimeRefs=0;
+  for(const path of html){
+    const body=await exported(path);
+    for(const match of body.matchAll(/portfolio-(runtime|analytics)\.js(\?v=[0-9a-f]+)?/g)){
+      assert.equal(match[2],`?v=${match[1]==="runtime"?runtime:analytics}`,`${path}: ${match[0]}`);
+      if(match[1]==="runtime")runtimeRefs++;
+    }
+    assert.match(body,new RegExp(`portfolio-runtime\\.js\\?v=${runtime}`),path);
+  }
+  assert.ok(runtimeRefs>=html.length);
+});
