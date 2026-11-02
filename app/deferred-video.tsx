@@ -76,8 +76,8 @@ export default function DeferredVideo({
         <Button type="button" variant="secondary" size="icon-sm" className="native-film-start" data-native-film-play aria-label={`Play ${label}`}>
           <Play aria-hidden="true" />
         </Button>
-        <FilmControls label={label} durationSeconds={durationSeconds}/>
-        {startMuted && <FilmControls label={label} durationSeconds={durationSeconds} compact/>}
+        <FilmControls label={label} durationSeconds={durationSeconds} startMuted={startMuted}/>
+        {startMuted && <FilmControls label={label} durationSeconds={durationSeconds} startMuted compact/>}
       </> : !controls && showToggle && <div className="media-controls">
         <MediaToggle label={label} />
       </div>}

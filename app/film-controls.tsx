@@ -7,12 +7,13 @@ import MediaToggle from "./media-toggle";
 // iPhone Safari has no element fullscreen; its video element offers its own.
 type IosVideo = HTMLVideoElement & { webkitEnterFullscreen?: () => void; webkitDisplayingFullscreen?: boolean };
 
-const serverSnapshot = () => "0|0|0|0|0|0";
+const serverSnapshotFor = (muted:boolean) => `0|0|${Number(muted)}|0|0|0`;
 function clock(seconds:number) {
   const value=Number.isFinite(seconds)?Math.max(0,Math.floor(seconds)):0;
   return `${Math.floor(value/60)}:${String(value%60).padStart(2,"0")}`;
 }
-export default function FilmControls({label,durationSeconds=0,compact=false}: {label:string;durationSeconds?:number;compact?:boolean}) {
+export default function FilmControls({label,durationSeconds=0,compact=false,startMuted=false}: {label:string;durationSeconds?:number;compact?:boolean;startMuted?:boolean}) {
+  const serverSnapshot=useCallback(()=>serverSnapshotFor(startMuted),[startMuted]);
   const controls=useRef<HTMLDivElement>(null);
   const frame=useCallback(()=>controls.current?.closest<HTMLElement>("[data-video-frame]"),[]);
   const video=useCallback(()=>frame()?.querySelector<IosVideo>("video"),[frame]);
@@ -23,7 +24,7 @@ export default function FilmControls({label,durationSeconds=0,compact=false}: {l
     const elementFullscreen=typeof container.requestFullscreen==="function"&&document.fullscreenEnabled;
     const videoFullscreen=typeof media.webkitEnterFullscreen==="function";
     return [media.currentTime.toFixed(2),duration.toFixed(2),Number(media.muted),Number(media.readyState>=1),Number(document.fullscreenElement===container||Boolean(media.webkitDisplayingFullscreen)),Number(elementFullscreen||videoFullscreen)].join("|");
-  },[frame,video]);
+  },[frame,video,serverSnapshot]);
   const subscribe=useCallback((change:()=>void)=>{
     const media=video();
     const events=["timeupdate","durationchange","loadedmetadata","volumechange","seeking","seeked","emptied","ended","webkitbeginfullscreen","webkitendfullscreen"];
