@@ -81,7 +81,7 @@ const scriptVersions = {};
 for (const name of ["portfolio-runtime.js", "portfolio-analytics.js"]) {
   scriptVersions[name] = createHash("sha256").update(await readFile(join(output, name))).digest("hex").slice(0, 8);
 }
-const versionScripts = html => html.replace(/(portfolio-(?:runtime|analytics)\.js)(?=["'])/g, name => `${name}?v=${scriptVersions[name]}`);
+const versionScripts = html => html.replace(/(portfolio-(?:runtime|analytics)\.js)(?=\\?["'])/g, name => `${name}?v=${scriptVersions[name]}`);
 
 function relativeRoot(route) {
   if (route === "/" || route === "/404") return "./";
