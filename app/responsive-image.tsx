@@ -1,6 +1,5 @@
 import type { ImgHTMLAttributes } from "react";
 import { withBasePath } from "../lib/base-path";
-import { lqipProps } from "../lib/lqip";
 
 const responsiveWidths = [768, 960, 1600, 2600] as const;
 const supportedSource = /\.(?:avif|jpe?g|png|webp)$/i;
@@ -14,8 +13,6 @@ type ResponsiveImageProps = Omit<
   width: number;
   height: number;
   sizes: string;
-  /** The enclosing frame carries the placeholder (lqipFrameProps); the image only inherits it. */
-  lqipFromFrame?: boolean;
 };
 
 function candidatePath(source: string, width: number) {
@@ -28,7 +25,6 @@ export default function ResponsiveImage({
   height,
   sizes,
   alt,
-  lqipFromFrame,
   ...props
 }: ResponsiveImageProps) {
   const source = withBasePath(src);
@@ -49,7 +45,6 @@ export default function ResponsiveImage({
     // eslint-disable-next-line @next/next/no-img-element
     <img
       {...props}
-      {...lqipProps(src, props.style, lqipFromFrame)}
       alt={alt}
       src={source}
       width={width}

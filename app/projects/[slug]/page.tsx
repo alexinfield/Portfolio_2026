@@ -5,7 +5,6 @@ import CaseNavigation from "@/app/case-navigation";
 import ResponsiveImage from "@/app/responsive-image";
 import CaseText, { casePanel } from "@/app/case-text";
 import DeferredVideo from "@/app/deferred-video";
-import { lqipFor } from "@/lib/lqip";
 import { sequences } from "@/lib/sequences";
 import { withBasePath } from "@/lib/base-path";
 import { socialMetadata, projectShareImage } from "@/lib/social-metadata";
@@ -36,7 +35,6 @@ function ProjectVideo({
       className="case-video"
       source={item.source}
       poster={item.poster}
-      posterLqip={lqipFor(item.poster)}
       label={casePanel(item.source)?.alt ?? "Project video"}
       loop={!(slug === "luma" && index === 0)}
       width={item.width}
@@ -77,8 +75,8 @@ function ProjectMedia({
 }
 
 // Apple-style scroll-scrubbed frame sequence (public/assets/scroll-sequence). Edge to edge in the
-// case stack, no text over it; the module's own blurred placeholder, poster, reduced-motion and
-// no-JS still apply.
+// case stack, no text over it; the first-frame poster is the first paint, and the module's
+// reduced-motion and no-JS still apply.
 function CaseSequence({ name }: { name: string }) {
   const sequence = sequences[name];
   return <div className="case-sequence" dangerouslySetInnerHTML={{ __html: sequence.html.replaceAll("{BASE}", withBasePath(sequence.base)) }} />;
@@ -106,7 +104,6 @@ function HyphaeComposite({ image, video }: {
           className="case-video"
           source={video.source}
           poster={video.poster}
-          posterLqip={lqipFor(video.poster)}
           label={casePanel(video.source)?.alt ?? "Hyphae video"}
           width={video.width}
           height={video.height}
@@ -150,7 +147,6 @@ function HyphaePresentation({ media }: { media: MediaItem[] }) {
           className="case-video"
           source="/assets/hyphae/media/hyphae-light-film.mp4"
           poster="/assets/hyphae/media/hyphae-light-film-poster.jpg"
-          posterLqip={lqipFor("/assets/hyphae/media/hyphae-light-film-poster.jpg")}
           label="Hyphae Light film"
           longFilm
           durationSeconds={86}

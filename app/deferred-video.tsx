@@ -28,14 +28,12 @@ type DeferredVideoProps = {
   edgeFill?: boolean;
   /** Film with sound that starts muted; mute and full screen turn the sound on. */
   startMuted?: boolean;
-  /** Pre-blurred placeholder painted until the poster loads. */
-  posterLqip?: string;
 };
 
 export default function DeferredVideo({
   source, poster, label, className, width, height,
   loop = true, autoplay = true, controls = false, active = true, paused = false,
-  userStarted = false, showToggle = true, longFilm = false, durationSeconds, mediaStyle, frameBackground, previewTime, edgeFill=false, startMuted=false, posterLqip,
+  userStarted = false, showToggle = true, longFilm = false, durationSeconds, mediaStyle, frameBackground, previewTime, edgeFill=false, startMuted=false,
 }: DeferredVideoProps) {
   const sources = videoSources(source).map(item=>({...item,src:withBasePath(item.src)}));
   const file = sources[0].src;
@@ -49,8 +47,7 @@ export default function DeferredVideo({
         <span className={`portfolio-video-edge portfolio-video-edge-${portrait?"right":"bottom"}`} data-video-edge={portrait?"right":"bottom"} aria-hidden="true" style={edgeStyle}/>
       </>}
       <video
-        data-lqip={posterLqip ? "" : undefined}
-        style={{...mediaStyle,...(posterLqip?{"--lqip":`url("${posterLqip}")`}:{}),...(edgeFill?{maskImage:`linear-gradient(${portrait?90:180}deg, transparent, #000 12px, #000 calc(100% - 12px), transparent)`}:{})}}
+        style={{...mediaStyle,...(edgeFill?{maskImage:`linear-gradient(${portrait?90:180}deg, transparent, #000 12px, #000 calc(100% - 12px), transparent)`}:{})}}
         data-lazy-video
         data-preview-time={previewTime}
         data-autoplay-video={autoplay && !longFilm ? "true" : undefined}

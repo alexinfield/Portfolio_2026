@@ -3,7 +3,7 @@ import { useCallback, useRef, useState, type KeyboardEvent, type TouchEvent } fr
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "../compass";
 import DeferredVideo from "../deferred-video";
-import { personalAsset, personalMediaStyle, lqipStyle, type PersonalMedia, type PersonalFraming } from "@/lib/personal-media";
+import { personalAsset, personalMediaStyle, type PersonalMedia, type PersonalFraming } from "@/lib/personal-media";
 
 export function PersonalImage({media, eager=false, retry=true, framing, sizes="(max-width: 767px) 100vw, (max-width: 1199px) 50vw, 33vw"}: {media: PersonalMedia; eager?: boolean; retry?: boolean; framing?: PersonalFraming; sizes?: string}) {
   const [failed,setFailed] = useState(false);
@@ -26,7 +26,7 @@ export function PersonalImage({media, eager=false, retry=true, framing, sizes="(
     {extendEdges && <><span className={`portfolio-edge-fill portfolio-edge-${portrait?"left":"top"}`} aria-hidden="true" style={edgeStyle}/><span className={`portfolio-edge-fill portfolio-edge-${portrait?"right":"bottom"}`} aria-hidden="true" style={edgeStyle}/></>}
     {/* Package variants are native-size capped; never synthesize missing paths. */}
     {/* eslint-disable-next-line @next/next/no-img-element */}
-    <img ref={imageRef} data-lqip={media.lqip?"":undefined} style={{...lqipStyle(media.lqip),...(framing?{...personalMediaStyle(media,framing),...(extendEdges?{maskImage:`linear-gradient(${portrait?90:180}deg, transparent, #000 12px, #000 calc(100% - 12px), transparent)`}:{})}:{})}} key={attempt} src={personalAsset(media.src)} alt={media.alt} width={media.width} height={media.height}
+    <img ref={imageRef} style={framing?{...personalMediaStyle(media,framing),...(extendEdges?{maskImage:`linear-gradient(${portrait?90:180}deg, transparent, #000 12px, #000 calc(100% - 12px), transparent)`}:{})}:undefined} key={attempt} src={personalAsset(media.src)} alt={media.alt} width={media.width} height={media.height}
       srcSet={media.variants?.map(item=>`${personalAsset(item.src)} ${item.width}w`).join(", ")}
       sizes={sizes} loading={eager ? "eager" : "lazy"} decoding="async"
       onError={()=>setFailed(true)} onLoad={event=>{
@@ -77,7 +77,7 @@ export default function PersonalGallery({media,title,visible,framing,description
     <div className="portfolio-gallery-stage" style={{aspectRatio:4/3}} onTouchStart={begin} onTouchEnd={end} onTouchCancel={()=>{touch.current=null;suppressClick.current=true;}}>
       {media.map((item,index)=><div className="portfolio-gallery-slide" role="group" aria-label={`${index+1} of ${media.length}`} aria-hidden={index!==active} inert={index!==active} hidden={index!==active} key={item.id} style={{background:(item.framing??framing).background}}>
         {item.kind==="video"?<DeferredVideo className="personal-video" source={personalAsset(item.src)} poster={item.poster?personalAsset(item.poster.src):undefined}
-          label={item.alt} width={item.width} height={item.height} active={visible && index===active} loop longFilm={(item.duration_seconds??0)>=60} durationSeconds={item.duration_seconds} mediaStyle={personalMediaStyle(item,item.framing??framing)} frameBackground={(item.framing??framing).background} edgeFill={(item.framing??framing).fill==="edge-extend"} startMuted={item.has_audio===true} posterLqip={item.poster?.lqip}/>:<PersonalImage media={item} framing={item.framing??framing} />}
+          label={item.alt} width={item.width} height={item.height} active={visible && index===active} loop longFilm={(item.duration_seconds??0)>=60} durationSeconds={item.duration_seconds} mediaStyle={personalMediaStyle(item,item.framing??framing)} frameBackground={(item.framing??framing).background} edgeFill={(item.framing??framing).fill==="edge-extend"} startMuted={item.has_audio===true}/>:<PersonalImage media={item} framing={item.framing??framing} />}
       </div>)}
       {description && <>
         <Button type="button" variant="ghost" className="gallery-description-toggle" data-gallery-description-toggle data-press-surface

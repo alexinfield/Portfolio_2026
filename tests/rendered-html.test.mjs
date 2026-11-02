@@ -376,42 +376,16 @@ test("every exported page references the runtime and analytics scripts by their 
   assert.ok(runtimeRefs>=html.length);
 });
 
-test("every rendered image and video poster carries a blurred low-res placeholder; inline bytes stay small",async t=>{
-  const lqip=JSON.parse(await read("lib/lqip.json"));
-  const skipped=new Set(Object.keys(lqip.skipped));
+// PR #14 ships with no blurred loading placeholders (Alex, Nov 2: "ship #14 first, blur
+// later"); the Apple Extend-style blur returns as PR #15. Scroll sequences paint their poster.
+test("no blurred loading placeholders ship: no inline placeholder images, attributes or rules",async()=>{
   for(const path of pages){
     const html=documentOnly(await exported(path));
-    let bytes=0,images=0,missing=[],frame=false;
-    for(const [tag] of withoutSequences(html).matchAll(/<(?:img|video|div)\b[^>]*>/g)){
-      if(/^<div/.test(tag)){
-        // Home cards: the card frame carries the placeholder; its cover inherits it.
-        if(/\sdata-lqip-frame=""/.test(tag)){const p=tag.match(/--lqip:url\(&quot;(data:image\/svg\+xml,[^&]*?)&quot;\)/);assert.ok(p,`${path}: frame without placeholder`);assert.match(p[1],/feGaussianBlur/);bytes+=p[1].length;frame=true;}
-        continue;
-      }
-      if(/^<video/.test(tag)&&!/\sposter=/.test(tag))continue;
-      images++;
-      const src=(tag.match(/\s(?:src|poster)="([^"]+)"/)||[])[1]??"";
-      const placeholder=tag.match(/--lqip:url\(&quot;(data:image\/svg\+xml,[^&]*?)&quot;\)/);
-      if(placeholder){assert.match(placeholder[1],/feGaussianBlur/,path);assert.match(placeholder[1],/data:image\/webp;base64,[A-Za-z0-9+/=]+/,path);assert.doesNotMatch(placeholder[1],/'/,path);}
-      if(placeholder){assert.match(tag,/\sdata-lqip=""/,path);bytes+=placeholder[1].length;continue;}
-      if(frame&&/^<img/.test(tag)&&/\sdata-lqip=""/.test(tag)){frame=false;continue;}
-      const key=src.replace(/^(\.\.\/)+|^\.\//,"/").replace(/^\/?(?=assets)/,"/");
-      if(![...skipped].some(s=>key.endsWith(s.replace(/^\//,""))))missing.push(src);
-    }
-    assert.deepEqual(missing,[],`${path}: media without placeholder`);
-    t.diagnostic(`${path}: ${images} media, ${bytes} inline placeholder bytes`);
-    assert.ok(bytes<40000,`${path}: ${bytes} placeholder bytes`);
+    assert.doesNotMatch(html,/data-lqip|--lqip|--ss-lqip|feGaussianBlur/,path);
   }
-  const css=(await Promise.all((await readdir(new URL("../gh-pages/assets/",import.meta.url))).filter(name=>name.endsWith(".css")).map(name=>exported("assets/"+name)))).join("\n");
-  assert.match(css,/\[data-lqip\]:not\(\[data-lqip-done\]\)\{background:var\(--lqip-grain\)/);
-  assert.match(css,/\[data-lqip\]\[data-lqip-done\]\)?\{(?:box-shadow:none;background:(?:0 0|none)|background:(?:0 0|none);box-shadow:none)\}/);
-  // Home cards fade only with scripting and motion allowed, opacity only, with a failsafe.
-  assert.match(css,/@media \(scripting:\s?enabled\) and \(prefers-reduced-motion:\s?no-preference\)/);
-  assert.match(css,/lqip-failsafe/);assert.doesNotMatch(css,/lqip-focus|data-lqip-reveal/);
-  // The placeholder table is server-only: no client chunk may bundle it.
-  for(const name of (await readdir(new URL("../gh-pages/assets/",import.meta.url))).filter(name=>name.endsWith(".js")))assert.doesNotMatch(await exported("assets/"+name),/feGaussianBlur/,name);
-  const runtime=await read("public/portfolio-runtime.js");assert.match(runtime,/lqipDone = "true"/);
-  assert.match(runtime,/a\.animationName === "lqip-failsafe" && a\.playState !== "finished"/);assert.match(runtime,/frame\.dataset\.lqipShow = ""/);
+  const assets=(await readdir(new URL("../gh-pages/assets/",import.meta.url))).filter(name=>/\.(css|js)$/.test(name));
+  for(const name of assets)assert.doesNotMatch(await exported("assets/"+name),/data-lqip|--lqip|feGaussianBlur/,name);
+  assert.doesNotMatch(await read("public/portfolio-runtime.js"),/lqip/i);
 });
 
 test("Luma opens and Molekule Go panel 19 plays as scroll sequences with versioned module, poster, still and frames",async()=>{
@@ -431,7 +405,7 @@ test("Luma opens and Molekule Go panel 19 plays as scroll sequences with version
     assert.match(section,/role="img" aria-label="[^"]{30,}"/);
     assert.match(section,/<img src="[^"]*sequence-[0-9a-f]{8}\/landscape\/jpg\/001\.jpg"[^>]*fetchpriority="high"/);
     assert.match(section,/<noscript><picture class="ss-still">/);
-    assert.match(section,/--ss-lqip:url\(data:image\/webp;base64,/);
+    assert.doesNotMatch(section,/--ss-lqip|class="ss-lqip"/);
     assert.match(html,new RegExp(`scroll-sequence\\.js\\?v=${js}`));assert.match(html,new RegExp(`scroll-sequence\\.css\\?v=${css}`));
     const config=JSON.parse(section.match(/<script type="application\/json" class="ss-config">([\s\S]*?)<\/script>/)[1]);
     assert.equal(config.count,90);
