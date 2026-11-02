@@ -1,21 +1,23 @@
 /* scroll-sequence.js: a scroll-scrubbed image sequence on one <canvas>. No dependencies.
  * Markup and config: HANDOFF.md. Every [data-scroll-sequence] on the page starts by itself.
- * Loading tiers: blurred inline placeholder > first-frame poster (in the HTML, high priority) >
- * a low-res pass of every lowStep'th frame (the scrub is usable once it lands) > full frames,
- * coarse to fine. Each scroll position always draws the nearest frame it has, so nothing goes blank.
+ * Site copy (alexinfield.com), changed from the lab module for memory and phone weight (Nov 2):
+ * - Frame sets by width: every landscape set in the config is a candidate; the player takes the
+ *   smallest one at least as wide as the frame's device pixels (CSS width x min(DPR, 2), with 10 %
+ *   slack), capped at the widest. If the frame grows a lot (rotation, a dual screen spanned) it
+ *   upgrades once to the set that now fits; it never downgrades.
+ * - Loading tiers: first-frame poster (in the HTML, high priority) > one low-res sprite of every
+ *   lowStep'th frame (the scrub is usable once it lands) > full frames, but only after the first
+ *   scroll, only about +-10 frames around the current one (ahead of the scroll direction first),
+ *   3 requests at a time. Frames further away are released, so decoded memory stays at a window
+ *   instead of the whole sequence. Each scroll position draws the nearest frame it has, so nothing
+ *   goes blank.
  * iOS: one canvas, backing store capped at the frame's own pixel size and devicePixelRatio 2;
  * frames are decoded <img> elements, not createImageBitmap (WebKit bug 229825). */
 (() => {
   "use strict";
   const RM = matchMedia("(prefers-reduced-motion: reduce)");
   const PORTRAIT = matchMedia("(orientation: portrait)");
-
-  function order(list) { // first, last, then halves, quarters...
-    const out = [], seen = new Set(), push = (i) => { if (i !== undefined && !seen.has(i)) { seen.add(i); out.push(i); } };
-    push(list[0]); push(list[list.length - 1]);
-    for (let s = 1 << Math.floor(Math.log2(list.length)); s >= 1; s >>= 1) for (let j = 0; j < list.length; j += s) push(list[j]);
-    return out;
-  }
+  const WINDOW = 10, KEEP = 12, CONCURRENT = 3, SLACK = 0.9;
 
   function init(root) {
     if (root.ssInit) return;
@@ -25,12 +27,14 @@
     const poster = root.querySelector(".ss-poster img"), canvas = root.querySelector("canvas");
     const n = cfg.count, step = cfg.lowStep || 4;
     const conn = navigator.connection || {}, lite = conn.saveData || /2g/.test(conn.effectiveType || "");
+    const every = lite ? 2 : 1; // Save-Data and 2G: every other full frame
     let set, fmt, sprite, gen = 0, full = [], low = [], start = 0, range = 1, cur = 0, shown = null;
-    let ticking = false, last = 0, begun = false, live = false;
+    let ticking = false, last = 0, begun = false, live = false, armed = false, active = 0, dir = 1, prev = 0, done = false;
+    const pending = new Set();
 
     const posterIn = () => {
-      root.classList.add("has-poster"); // fades the blurred placeholder out...
-      setTimeout(() => root.classList.add("no-lqip"), 300); // ...then drops it, so the canvas scrubs alone
+      root.classList.add("has-poster");
+      setTimeout(() => root.classList.add("no-lqip"), 300);
       if (begun && set && !full[0]) { full[0] = poster; request(); }
     };
     if (poster.complete && poster.naturalWidth) posterIn();
@@ -40,8 +44,17 @@
     if (!ctx) return;
     const url = (i) => `${set.path}/${fmt}/${String(i + 1).padStart(3, "0")}.${fmt}`;
 
+    function choose() {
+      if (PORTRAIT.matches && cfg.sets.portrait) return cfg.sets.portrait;
+      const sets = Object.entries(cfg.sets).filter(([name]) => name !== "portrait").map(([, s]) => s).sort((a, b) => a.w - b.w);
+      const need = frame.getBoundingClientRect().width * Math.min(devicePixelRatio || 1, 2) * SLACK;
+      return sets.find((s) => s.w >= need) || sets[sets.length - 1];
+    }
+
     function measure() {
       if (!set) return;
+      const fit = choose();
+      if (fit !== set && fit.w > set.w && set !== cfg.sets.portrait) { load(fit); return; } // upgrade, never downgrade
       start = root.getBoundingClientRect().top + scrollY - (parseFloat(getComputedStyle(stage).top) || 0);
       range = Math.max(1, root.offsetHeight - stage.offsetHeight);
       const dpr = Math.min(devicePixelRatio || 1, 2);
@@ -78,55 +91,71 @@
     function tick(now) {
       ticking = false;
       const target = progress();
+      if (Math.abs(target - prev) > 0.01) { dir = target > prev ? 1 : -1; prev = target; }
       const dt = last ? Math.min(64, now - last) : 16.7; // frame-rate-independent easing
       last = now;
       cur += (target - cur) * (1 - Math.pow(0.7, dt / 16.7));
       if (Math.abs(target - cur) < 0.05) cur = target;
       paint();
+      fill();
       if (cur !== target) request(); else last = 0;
     }
 
     function request() { if (!ticking) { ticking = true; requestAnimationFrame(tick); } }
 
-    function fetchAll(list, conc, done) {
-      const g = gen;
-      let k = 0, active = 0, finished = 0;
-      if (!list.length) return done();
-      const next = () => {
-        while (active < conc && k < list.length) {
-          const i = list[k++], img = new Image();
-          active++;
-          img.decoding = "async";
-          img.src = url(i);
-          img.decode().then(() => {
-            if (g !== gen) return;
-            full[i] = img; low[i] = undefined;
-            request();
-          }, () => {}).finally(() => {
-            if (g !== gen) return;
-            active--;
-            if (++finished === list.length) done(); else next();
-          });
-        }
-      };
-      next();
+    // The frames to hold: +-WINDOW around the current one, ahead of the scroll direction first.
+    function wanted() {
+      const c = Math.round(cur), out = [];
+      for (let d = 0; d <= WINDOW; d++) for (const i of [c + d * dir, c - d * dir]) {
+        const k = i === n - 1 ? i : i - (i % every);
+        if (k >= 0 && k < n && !out.includes(k)) out.push(k);
+      }
+      return out;
     }
 
-    function load() {
+    function fill() {
+      if (!armed || !set || (!sprite && !root.classList.contains("is-ready"))) return; // after the sprite pass
+      const c = Math.round(cur), g = gen;
+      full.forEach((img, i) => { if (img !== poster && Math.abs(i - c) > KEEP) delete full[i]; }); // release
+      const list = wanted();
+      for (const i of list) {
+        if (active >= CONCURRENT) break;
+        if (full[i] || pending.has(i)) continue;
+        const img = new Image();
+        active++; pending.add(i);
+        img.decoding = "async";
+        img.src = url(i);
+        img.decode().then(() => {
+          if (g !== gen) return;
+          if (Math.abs(i - Math.round(cur)) <= KEEP) { full[i] = img; request(); }
+        }, () => {}).finally(() => {
+          if (g !== gen) return;
+          active--; pending.delete(i);
+          fill();
+        });
+      }
+      if (!done && list.every((i) => full[i])) {
+        done = true;
+        root.classList.add("is-loaded");
+        root.dispatchEvent(new CustomEvent("scrollsequence:loaded"));
+      }
+    }
+
+    function load(next) {
       gen++;
+      active = 0; pending.clear(); done = false;
       full = []; low = []; shown = null; sprite = null;
-      set = (PORTRAIT.matches && cfg.sets.portrait) || cfg.sets.landscape;
+      set = next || choose();
       const m = /\.(avif|webp|jpe?g)(\?|$)/.exec(poster.currentSrc || "");
       fmt = m ? (m[1][0] === "j" ? "jpg" : m[1]) : cfg.formats[cfg.formats.length - 1];
-      if (poster.complete && poster.naturalWidth) full[0] = poster; // the poster is frame 1 of this set
+      if (poster.complete && poster.naturalWidth) full[0] = poster; // the poster is frame 1 (any set)
       measure();
-      cur = progress();
-      const g = gen, lows = [], all = [], sp = new Image();
+      cur = prev = progress();
+      if (cur > 0) armed = true; // restored mid-scrub: the visitor is already scrubbing
+      const g = gen, lows = [], sp = new Image();
       for (let i = 0; i < n; i += step) lows.push(i);
       if (lows[lows.length - 1] !== n - 1) lows.push(n - 1);
-      for (let i = 0; i < n; i += lite ? 2 : 1) all.push(i);
-      if (all[all.length - 1] !== n - 1) all.push(n - 1);
-      // First pass: one sprite of every lowStep'th frame. Then the full frames, coarse to fine.
+      // First pass: one sprite of every lowStep'th frame. Full frames follow the scroll.
       sp.decoding = "async";
       sp.src = `${set.path}/low.${fmt}`;
       sp.decode().then(() => {
@@ -138,13 +167,7 @@
         if (g !== gen) return;
         root.classList.add("is-ready");
         root.dispatchEvent(new CustomEvent("scrollsequence:ready"));
-        fetchAll(order(all).filter((i) => !full[i]), 6, () => {
-          if (!lite) { low = []; sprite = null; } // every frame is in at full size: free the sprite
-          shown = shown > 0 ? null : shown;
-          request();
-          root.classList.add("is-loaded");
-          root.dispatchEvent(new CustomEvent("scrollsequence:loaded"));
-        });
+        fill();
       });
     }
 
@@ -152,17 +175,17 @@
       if (begun || RM.matches) return;
       begun = true;
       if (!poster.currentSrc && !poster.complete) { // wait until the browser has picked a format
-        poster.addEventListener("load", load, { once: true });
-        poster.addEventListener("error", load, { once: true });
+        poster.addEventListener("load", () => load(), { once: true });
+        poster.addEventListener("error", () => load(), { once: true });
       } else load();
-      addEventListener("scroll", request, { passive: true });
+      addEventListener("scroll", () => { if (!armed) { armed = true; fill(); } request(); }, { passive: true });
       new ResizeObserver(measure).observe(frame);
       new ResizeObserver(measure).observe(root);
       // Rotation swaps sets: wait for the <picture> to load the other poster, then reload frames.
-      if (cfg.sets.portrait) PORTRAIT.addEventListener("change", () => { gen++; root.classList.remove("is-ready", "is-loaded"); poster.addEventListener("load", load, { once: true }); });
+      if (cfg.sets.portrait) PORTRAIT.addEventListener("change", () => { gen++; root.classList.remove("is-ready", "is-loaded"); poster.addEventListener("load", () => load(), { once: true }); });
     }
 
-    // Start loading frames only when the sequence is within a screen of the viewport.
+    // Start (poster + sprite) only when the sequence is within a screen of the viewport.
     const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { io.disconnect(); begin(); } }, { rootMargin: "100% 0px" });
     const watch = () => { if (!RM.matches) io.observe(root); };
     RM.addEventListener("change", watch);

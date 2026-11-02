@@ -411,7 +411,9 @@ test("Luma opens and Molekule Go panel 19 plays as scroll sequences with version
     assert.match(html,new RegExp(`scroll-sequence\\.js\\?v=${js}`));assert.match(html,new RegExp(`scroll-sequence\\.css\\?v=${css}`));
     const config=JSON.parse(section.match(/<script type="application\/json" class="ss-config">([\s\S]*?)<\/script>/)[1]);
     assert.equal(config.count,90);
-    assert.deepEqual(Object.keys(config.sets),["landscape"]);assert.equal(config.sets.landscape.w/config.sets.landscape.h,16/9);
+    // Three 16:9 sets by width; the player picks by the frame's device pixels (phones get 720).
+    assert.deepEqual(Object.entries(config.sets).map(([name,set])=>[name,set.w]).sort((a,b)=>a[1]-b[1]),[["landscape-720",720],["landscape-1080",1080],["landscape",1440]]);
+    for(const set of Object.values(config.sets))assert.ok(Math.abs(set.w/set.h-16/9)<.005,JSON.stringify(set));
     for(const set of Object.values(config.sets)){
       const dir=set.path.replace(/^(\.\.\/)+/,"");
       for(const fmt of config.formats){
@@ -421,6 +423,9 @@ test("Luma opens and Molekule Go panel 19 plays as scroll sequences with version
     }
     assert.doesNotMatch(section,/DESCRIBE THE ANIMATION|frames\//);
   }
+  // Memory (Lighthouse fix 1): full frames only after the first scroll, a +-10 window, 3 at a time.
+  const player=await exported("assets/scroll-sequence/scroll-sequence.js");
+  assert.match(player,/WINDOW = 10, KEEP = 12, CONCURRENT = 3/);assert.doesNotMatch(player,/fetchAll/);
   const luma=documentOnly(await exported("projects/luma/index.html"));
   assert.doesNotMatch(luma,/11-transcode\.mp4/);
   for(const slug of ["ping","niche","hyphae","mode"])assert.doesNotMatch(await exported(`projects/${slug}/index.html`),/scroll-sequence\.js/);
