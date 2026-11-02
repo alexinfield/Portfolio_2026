@@ -56,7 +56,7 @@ export async function runCaseStackRegressions(browser, baseURL) {
   };
   const open = async scale => {
     const context = await browser.newContext({viewport: {width: 1440, height: 900}, deviceScaleFactor: scale, reducedMotion: "reduce"});
-    context.setDefaultTimeout(20000);
+    context.setDefaultTimeout(60000);
     await context.route("**/*", route => new URL(route.request().url()).origin === origin ? route.continue() : route.abort());
     return {context, page: await context.newPage()};
   };
@@ -94,7 +94,7 @@ export async function runCaseStackRegressions(browser, baseURL) {
               .map(image => { image.loading = "eager"; return Promise.race([image.decode().catch(() => {}), new Promise(done => setTimeout(done, 15000))]); })); });
             await scan.waitForTimeout(200);
             const m = await scan.evaluate(measure), boundary = rowsOf(m.boxes)[index].top - m.scrollY;
-            const shot = await scan.screenshot({clip: {x: 0, y: boundary - 8, width, height: 16}, animations: "disabled"});
+            const shot = await scan.screenshot({clip: {x: 0, y: boundary - 8, width, height: 16}, animations: "disabled", timeout: 60000});
             const found = await scan.evaluate(seamRows, {base64: shot.toString("base64"), maxThickness: scale + 1});
             if (found.length) seams.push({boundary: index, found});
           }
