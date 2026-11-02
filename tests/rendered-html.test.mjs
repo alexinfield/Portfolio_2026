@@ -11,6 +11,8 @@ const read = path => readFile(new URL(`../${path}`,import.meta.url),"utf8");
 const exported = path => read(`gh-pages/${path}`);
 const documentOnly = html => html.slice(0,html.indexOf("</html>")+7);
 const text = html => html.replace(/<[^>]+>/g,"").trim();
+// Scroll sequences carry their own poster, still and placeholder (scroll-sequence.js).
+const withoutSequences = html => html.replace(/<section class="ss[\s\S]*?<\/section>/g,"");
 const caseSource = await read("app/case-text.tsx");
 const CASE_TEXT_ENABLED = /export const CASE_TEXT_ENABLED = true\b/.test(caseSource);
 const packageData = JSON.parse(await read("lib/personal.json"));
@@ -114,13 +116,13 @@ test("every package media path is local and its exact variants exist",async()=>{
 
 test("all six cases preserve the complete ordered image content and descriptions",async()=>{
   const registry=JSON.parse(await read("lib/project-media.json"));
-  const expected={ping:17,"molekule-go":17,luma:22,niche:20,hyphae:26,mode:17};
+  const expected={ping:17,"molekule-go":18,luma:22,niche:20,hyphae:26,mode:17};
   for(const [index,slug] of slugs.entries()){
     assert.equal(registry[slug].length,expected[slug]);
     const html=documentOnly(await exported(`projects/${slug}/index.html`));
     assert.match(html,new RegExp(`<h1 class="sr-only">${titles[index]}</h1>`));
     assert.doesNotMatch(html,/portfolio-case-heading|Back to Work/);
-    const tags=[...html.matchAll(/<img\b[^>]*>/g)].map(match=>match[0]);
+    const tags=[...withoutSequences(html).matchAll(/<img\b[^>]*>/g)].map(match=>match[0]);
     assert.deepEqual(tags.map(tag=>/\ssrc="([^"]+)"/.exec(tag)[1].replace(/^\.\.\/\.\.\//,"/")),registry[slug].filter(item=>item.kind==="image").map(item=>item.source),slug);
     for(const tag of tags)assert.ok(/\salt="([^"]+)"/.exec(tag)?.[1].length>10);
     assert.match(html,/portfolio-case-stack/);
@@ -380,7 +382,7 @@ test("every rendered image and video poster carries a blurred low-res placeholde
   for(const path of pages){
     const html=documentOnly(await exported(path));
     let bytes=0,images=0,missing=[];
-    for(const [tag] of html.matchAll(/<(?:img|video)\b[^>]*>/g)){
+    for(const [tag] of withoutSequences(html).matchAll(/<(?:img|video)\b[^>]*>/g)){
       if(/^<video/.test(tag)&&!/\sposter=/.test(tag))continue;
       images++;
       const src=(tag.match(/\s(?:src|poster)="([^"]+)"/)||[])[1]??"";
@@ -397,4 +399,39 @@ test("every rendered image and video poster carries a blurred low-res placeholde
   assert.match(css,/\[data-lqip\]\{background-image:var\(--lqip\)/);
   assert.match(css,/\[data-lqip\]\[data-lqip-done\]/);
   const runtime=await read("public/portfolio-runtime.js");assert.match(runtime,/lqipDone = "true"/);
+});
+
+test("Luma opens and Molekule Go panel 19 plays as scroll sequences with versioned module, poster, still and frames",async()=>{
+  const registry=JSON.parse(await read("lib/project-media.json"));
+  assert.deepEqual(registry.luma[0],{kind:"sequence",source:"sequence:luma",sequence:"luma",width:1440,height:810});
+  const mg=registry["molekule-go"].map(item=>item.source);
+  assert.equal(mg[mg.indexOf("sequence:molekule-go")-1],"/assets/molekule-go/media/67b7c8cb7571d49d5ac98813_18.webp");
+  assert.equal(mg[mg.indexOf("sequence:molekule-go")+1],"/assets/molekule-go/media/67b7c8d47a4f2aac5389bc87_20.webp");
+  const version=async path=>createHash("sha256").update(await readFile(new URL(`../gh-pages/${path}`,import.meta.url))).digest("hex").slice(0,8);
+  const js=await version("assets/scroll-sequence/scroll-sequence.js"),css=await version("assets/scroll-sequence/scroll-sequence.css");
+  for(const [slug,stackIndex] of [["luma",0],["molekule-go",null]]){
+    const html=documentOnly(await exported(`projects/${slug}/index.html`));
+    const sections=[...html.matchAll(/<div class="case-sequence"><section class="ss"[\s\S]*?<\/section><\/div>/g)].map(m=>m[0]);
+    assert.equal(sections.length,1,slug);
+    const section=sections[0];
+    if(stackIndex===0)assert.match(html,/<div class="portfolio-case-stack"><div class="case-panel"><div class="case-sequence">/);
+    assert.match(section,/role="img" aria-label="[^"]{30,}"/);
+    assert.match(section,/<img src="[^"]*sequence-[0-9a-f]{8}\/landscape\/jpg\/001\.jpg"[^>]*fetchpriority="high"/);
+    assert.match(section,/<noscript><picture class="ss-still">/);
+    assert.match(section,/--ss-lqip:url\(data:image\/webp;base64,/);
+    assert.match(html,new RegExp(`scroll-sequence\\.js\\?v=${js}`));assert.match(html,new RegExp(`scroll-sequence\\.css\\?v=${css}`));
+    const config=JSON.parse(section.match(/<script type="application\/json" class="ss-config">([\s\S]*?)<\/script>/)[1]);
+    assert.equal(config.count,90);
+    for(const [name,set] of Object.entries(config.sets)){
+      const dir=set.path.replace(/^(\.\.\/)+/,"");
+      for(const fmt of config.formats){
+        for(const n of [1,45,90])await access(new URL(`../gh-pages/${dir}/${fmt}/${String(n).padStart(3,"0")}.${fmt}`,import.meta.url));
+        await access(new URL(`../gh-pages/${dir}/low.${fmt}`,import.meta.url));
+      }
+    }
+    assert.doesNotMatch(section,/DESCRIBE THE ANIMATION|frames\//);
+  }
+  const luma=documentOnly(await exported("projects/luma/index.html"));
+  assert.doesNotMatch(luma,/11-transcode\.mp4/);
+  for(const slug of ["ping","niche","hyphae","mode"])assert.doesNotMatch(await exported(`projects/${slug}/index.html`),/scroll-sequence\.js/);
 });

@@ -78,10 +78,10 @@ if (!basePath && relativePreloadHelpers === 0) {
 // Fixed script URLs are cached for up to 10 minutes on GitHub Pages; stamp each
 // reference with the exported file's content hash so HTML and scripts always match.
 const scriptVersions = {};
-for (const name of ["portfolio-runtime.js", "portfolio-analytics.js"]) {
-  scriptVersions[name] = createHash("sha256").update(await readFile(join(output, name))).digest("hex").slice(0, 8);
+for (const [name, path] of [["portfolio-runtime.js", "portfolio-runtime.js"], ["portfolio-analytics.js", "portfolio-analytics.js"], ["scroll-sequence.js", "assets/scroll-sequence/scroll-sequence.js"], ["scroll-sequence.css", "assets/scroll-sequence/scroll-sequence.css"]]) {
+  scriptVersions[name] = createHash("sha256").update(await readFile(join(output, path))).digest("hex").slice(0, 8);
 }
-const versionScripts = html => html.replace(/(portfolio-(?:runtime|analytics)\.js)(?=\\?["'])/g, name => `${name}?v=${scriptVersions[name]}`);
+const versionScripts = html => html.replace(/(portfolio-(?:runtime|analytics)\.js|scroll-sequence\.(?:js|css))(?=\\?["'])/g, name => `${name}?v=${scriptVersions[name]}`);
 
 function relativeRoot(route) {
   if (route === "/" || route === "/404") return "./";

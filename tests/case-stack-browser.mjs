@@ -11,11 +11,11 @@ const pixelCases = ["molekule-go", "ping", "mode"], pixelWidths = [393, 1440], p
 
 const measure = () => {
   const vw = document.documentElement.clientWidth, header = document.querySelector(".portfolio-header").getBoundingClientRect().bottom;
-  const boxes = [...document.querySelectorAll(".portfolio-case-stack img, .portfolio-case-stack .case-video")]
+  const boxes = [...document.querySelectorAll(".portfolio-case-stack img:not(.ss img), .portfolio-case-stack .case-video, .portfolio-case-stack .case-sequence")]
     .filter(element => element.getClientRects().length && !element.closest("[hidden],noscript"))
     .map(element => { const r = element.getBoundingClientRect(); const style = getComputedStyle(element);
       return {top: r.top + scrollY, bottom: r.bottom + scrollY, left: r.left, right: r.right, border: style.borderTopWidth + style.borderBottomWidth, radius: style.borderTopLeftRadius, margin: style.marginTop + style.marginBottom}; });
-  const first = document.querySelector(".portfolio-case-stack img, .portfolio-case-stack video").getBoundingClientRect().top + scrollY;
+  const first = document.querySelector(".portfolio-case-stack .case-sequence, .portfolio-case-stack img:not(.ss img), .portfolio-case-stack video:not(.ss video)").getBoundingClientRect().top + scrollY;
   return {vw, scrollWidth: document.documentElement.scrollWidth, header, scrollY, boxes, first};
 };
 

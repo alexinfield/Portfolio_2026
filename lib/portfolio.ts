@@ -54,8 +54,10 @@ export const projectDefinitions = [
 export type ProjectSlug = (typeof projectDefinitions)[number]["slug"];
 
 export type ProjectMedia = {
-  kind: "image" | "video";
+  kind: "image" | "video" | "sequence";
   source: string;
+  /** Scroll-sequence name in lib/sequences.ts (kind "sequence"). */
+  sequence?: string;
   poster?: string;
   contentType?: string;
   width: number;

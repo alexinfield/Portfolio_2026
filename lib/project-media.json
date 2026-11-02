@@ -211,6 +211,13 @@
       "height": 4321
     },
     {
+      "kind": "sequence",
+      "source": "sequence:molekule-go",
+      "sequence": "molekule-go",
+      "width": 1440,
+      "height": 810
+    },
+    {
       "kind": "image",
       "source": "/assets/molekule-go/media/67b7c8d47a4f2aac5389bc87_20.webp",
       "width": 7680,
@@ -219,12 +226,11 @@
   ],
   "luma": [
     {
-      "kind": "video",
-      "source": "/assets/luma/media/11-transcode.mp4",
-      "poster": "/assets/luma/media/68cc895c3452528c1dc05ba2_11-poster-00001.jpg",
-      "contentType": "video/mp4",
-      "width": 2560,
-      "height": 1440
+      "kind": "sequence",
+      "source": "sequence:luma",
+      "sequence": "luma",
+      "width": 1440,
+      "height": 810
     },
     {
       "kind": "image",

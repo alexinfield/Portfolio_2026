@@ -1,0 +1,56 @@
+/* scroll-sequence.css: layout for scroll-sequence.js. Variables are set per sequence in the markup
+   (make_sequence.py writes them): --ss-ar, --ss-safe, --ss-lqip, --ss-lqip-end, their -p portrait
+   twins, --ss-bg, --ss-fade and --ss-track. The page may set --ss-top (fixed header height). */
+.ss{position:relative;height:var(--ss-track,400vh)}
+.ss-stage{position:sticky;top:var(--ss-top,0px);height:calc(100vh - var(--ss-top,0px));height:calc(100svh - var(--ss-top,0px));overflow:hidden;background:var(--ss-bg,#000);container-type:size}
+/* The frame box: covers the stage but never crops inside the safe width; past that it fits the width
+   and letterboxes on --ss-bg. Placeholder, poster and canvas all fill this box, so they line up. */
+.ss-frame{--a:var(--ss-ar,1.7778);--s:var(--ss-safe,1);position:absolute;left:50%;top:50%;width:100%;aspect-ratio:var(--a);transform:translate(-50%,-50%);overflow:hidden}
+@media (orientation:portrait){
+  .ss-frame{--a:var(--ss-ar-p,var(--ss-ar,1.7778));--s:var(--ss-safe-p,var(--ss-safe,1))}
+  .ss-lqip{background-image:var(--ss-lqip-p,var(--ss-lqip))}
+}
+@supports (width:1cqw){
+  .ss-frame{--fw:min(max(100cqw,100cqh * var(--a)),100cqw / var(--s));width:var(--fw)}
+  /* Letterbox fade (class ss-fade, portrait only): the frame's top and bottom edges fade into --ss-bg
+     when the frame is shorter than the stage. Any layer over the canvas costs scrub frame rate
+     without a GPU, so the overlay exists only where it can show. */
+  @media (orientation:portrait){
+    .ss-fade .ss-frame::after{content:"";position:absolute;inset:0;pointer-events:none;
+      --f:min(calc(var(--ss-fade,0) * 100%),max(0px,(100cqh - var(--fw) / var(--a)) * 1000));
+      background:linear-gradient(var(--ss-bg,#000),transparent var(--f),transparent calc(100% - var(--f)),var(--ss-bg,#000))}
+  }
+}
+.ss-lqip,.ss-poster,.ss-still,.ss-frame img,.ss-frame canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+/* Blur-up: a ~120 B inline image with the blur baked in, scaled up, clipped to the frame, sits over
+   the poster and fades out (200 ms) once the poster has loaded. The poster itself is never hidden, so
+   it counts for LCP the moment it paints. The canvas takes over once it has drawn a frame. A live CSS
+   blur on top is optional (--ss-filter:blur(24px)); it is costly where there is no GPU. */
+.ss-lqip{background:var(--ss-lqip) center/100% 100% no-repeat;filter:var(--ss-filter,none);transition:opacity .2s ease-out,visibility 0s .2s}
+.has-poster .ss-lqip{opacity:0;visibility:hidden}
+.ss.no-lqip .ss-lqip{display:none}
+.ss-frame canvas{opacity:0}
+.ss.is-live canvas{opacity:1}
+/* Reduced motion and no JS: no scrub. One still of the end state, in the flow of the page. */
+@media (prefers-reduced-motion:reduce),(scripting:none){
+  .ss{height:auto}
+  .ss-stage{position:relative;top:auto;height:auto;container-type:normal}
+  .ss-frame{position:relative;left:auto;top:auto;width:100%;transform:none}
+  .ss-frame::after,.ss-frame canvas{display:none}
+  .ss-lqip{background-image:var(--ss-lqip-end,var(--ss-lqip));transition:none}
+}
+@media (prefers-reduced-motion:reduce) and (orientation:portrait),(scripting:none) and (orientation:portrait){
+  .ss-lqip{background-image:var(--ss-lqip-end-p,var(--ss-lqip-end,var(--ss-lqip)))}
+}
+@media (scripting:none){.ss-poster,.ss-lqip{display:none}}
+
+/* The same blur-up for any image on the site (tools/make_lqip.py prints the data URI):
+   <div class="blur-up" style="--lqip:url(data:image/webp;base64,...);aspect-ratio:16/9">
+     <img src="photo.avif" alt="..." onload="this.parentNode.classList.add('is-loaded')"></div>
+   Images that are already cached fire onload too. Without JS the placeholder is skipped. */
+.blur-up{position:relative;overflow:hidden;background:var(--ss-bg,#000)}
+.blur-up img{display:block;width:100%;height:100%;object-fit:cover}
+.blur-up::after{content:"";position:absolute;inset:0;background:var(--lqip) center/cover no-repeat;filter:var(--ss-filter,none);transition:opacity .2s ease-out,visibility 0s .2s}
+.blur-up.is-loaded::after{opacity:0;visibility:hidden}
+@media (prefers-reduced-motion:reduce){.blur-up::after{transition:none}}
+@media (scripting:none){.blur-up::after{display:none}}

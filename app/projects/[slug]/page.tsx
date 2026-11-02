@@ -6,6 +6,8 @@ import ResponsiveImage from "@/app/responsive-image";
 import CaseText, { casePanel } from "@/app/case-text";
 import DeferredVideo from "@/app/deferred-video";
 import { lqipFor } from "@/lib/lqip";
+import { sequences } from "@/lib/sequences";
+import { withBasePath } from "@/lib/base-path";
 import { socialMetadata, projectShareImage } from "@/lib/social-metadata";
 import {
   getProject,
@@ -56,6 +58,7 @@ function ProjectMedia({
   if (item.kind === "video") {
     return <ProjectVideo item={item} slug={slug} index={index} />;
   }
+  if (item.kind === "sequence") return <CaseSequence name={item.sequence!} />;
 
   return (
     <ResponsiveImage
@@ -71,6 +74,14 @@ function ProjectMedia({
       decoding={index === 0 ? "sync" : "async"}
     />
   );
+}
+
+// Apple-style scroll-scrubbed frame sequence (public/assets/scroll-sequence). Edge to edge in the
+// case stack, no text over it; the module's own blurred placeholder, poster, reduced-motion and
+// no-JS still apply.
+function CaseSequence({ name }: { name: string }) {
+  const sequence = sequences[name];
+  return <div className="case-sequence" dangerouslySetInnerHTML={{ __html: sequence.html.replaceAll("{BASE}", withBasePath(sequence.base)) }} />;
 }
 
 function HyphaeComposite({ image, video }: {
@@ -254,6 +265,10 @@ export default async function ProjectPage({
       <h1 className="sr-only">{project.title}</h1>
       <div className="portfolio-case-stack">{presentation}</div>
       <CaseNavigation slug={projectSlug} />
+      {media.some(item => item.kind === "sequence") && <>
+        <link rel="stylesheet" href={withBasePath("/assets/scroll-sequence/scroll-sequence.css")} precedence="default" />
+        <script src={withBasePath("/assets/scroll-sequence/scroll-sequence.js")} defer />
+      </>}
     </SiteShell>
   );
 }
