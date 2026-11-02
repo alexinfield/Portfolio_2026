@@ -83,6 +83,8 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
 .portfolio-case-stack :is(.case-video, .case-film, .case-composite) {overflow: visible;}
 .portfolio-case-stack .case-video {display: flow-root;}
 .portfolio-case-stack .case-video video {height: calc((100cqw + 4px) * var(--media-ratio, .5625) - 4px); margin-block: -1px;}
+/* An opening film starts exactly at the header's bottom edge: no upward bleed. */
+.portfolio-case-stack > :first-child .case-video video, .portfolio-case-stack > .case-video:first-child video {height: calc((100cqw + 4px) * var(--media-ratio, .5625) - 5px); margin-top: 0;}
 /* Side-by-side panels share one row height: each column's fr equals its
    media's aspect ratio (set inline), so neither side leaves an empty band. */
 .case-composite {display: grid; grid-template-columns: var(--composite-columns, repeat(2,minmax(0,1fr))); gap: 0; align-items: stretch;}

@@ -15,7 +15,8 @@ const measure = () => {
     .filter(element => element.getClientRects().length && !element.closest("[hidden],noscript"))
     .map(element => { const r = element.getBoundingClientRect(); const style = getComputedStyle(element);
       return {top: r.top + scrollY, bottom: r.bottom + scrollY, left: r.left, right: r.right, border: style.borderTopWidth + style.borderBottomWidth, radius: style.borderTopLeftRadius, margin: style.marginTop + style.marginBottom}; });
-  return {vw, scrollWidth: document.documentElement.scrollWidth, header, scrollY, boxes};
+  const first = document.querySelector(".portfolio-case-stack img, .portfolio-case-stack video").getBoundingClientRect().top + scrollY;
+  return {vw, scrollWidth: document.documentElement.scrollWidth, header, scrollY, boxes, first};
 };
 
 function rowsOf(boxes) {
@@ -68,6 +69,7 @@ export async function runCaseStackRegressions(browser, baseURL) {
         assert.ok(rows.length > 1, "case has stacked media");
         assert.equal(m.scrollWidth, m.vw, "no horizontal scroll");
         assert.ok(Math.abs(m.boxes[0].top - (m.header + m.scrollY)) < 0.01, `first media meets the header (${m.boxes[0].top} vs ${m.header})`);
+        assert.ok(Math.abs(m.first - (m.header + m.scrollY)) < 0.01, `first media element starts at the header (${m.first} vs ${m.header})`);
         for (const box of m.boxes) { assert.equal(box.border, "0px0px"); assert.equal(box.radius, "0px"); assert.equal(box.margin, "0px0px"); }
         rows.forEach((row, index) => {
           // Media boxes overscan 2 px each side (the stack clips them) so no edge column shows.
