@@ -35,7 +35,7 @@ export async function runBrowserRegressions(browser,baseURL,{artifacts}={}) {
         for(const slug of ["molekule-go","ping","hyphae","luma","mode","niche"]){
           await goto(`/projects/${slug}/`);
           const bottom=await page.locator("header").evaluate(element=>element.getBoundingClientRect().bottom);
-          const top=await page.locator(".portfolio-case-stack img,.portfolio-case-stack video").first().evaluate(element=>element.getBoundingClientRect().top);
+          const top=await page.locator(".portfolio-case-stack .case-sequence,.portfolio-case-stack img:not(.ss img),.portfolio-case-stack video:not(.ss video)").first().evaluate(element=>element.getBoundingClientRect().top);
           assert.ok(Math.abs(top-bottom)<.6,`${slug}: ${top} vs ${bottom}`);
           assert.equal(await page.locator("h1").getAttribute("class"),"sr-only");
         }
