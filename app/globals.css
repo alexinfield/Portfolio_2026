@@ -157,6 +157,10 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
 /* Narrative films use the public Compass slider and icon buttons. */
 .film-controls {right: var(--inline); display: grid; grid-template-columns: 44px minmax(64px,1fr) auto 44px 44px; align-items: center; gap: 4px;}
 .native-film-start {position: absolute; z-index: 6; top: 8px; left: 8px; display: none;}
+/* Phone films with sound: once started, the same Compass mute and full-screen
+   buttons sit top-right, clear of the native control row and Play button. */
+.film-quick-controls {display: none; top: 8px; right: 8px; bottom: auto; left: auto; z-index: 6;}
+[data-native-film="true"][data-native-film-started="true"] .film-quick-controls {display: flex;}
 .film-timeline {min-width: 0; min-height: 44px;}
 .film-timeline [role="slider"] {min-width: 20px; min-height: 20px;}
 .film-time {font-size: .75rem; line-height: 1.125rem; font-variant-numeric: tabular-nums; white-space: nowrap; padding-inline: 4px; color: var(--text); background: var(--surface); border-radius: var(--radius);}

@@ -26,12 +26,14 @@ type DeferredVideoProps = {
   frameBackground?: string;
   previewTime?: number;
   edgeFill?: boolean;
+  /** Film with sound that starts muted; mute and full screen turn the sound on. */
+  startMuted?: boolean;
 };
 
 export default function DeferredVideo({
   source, poster, label, className, width, height,
   loop = true, autoplay = true, controls = false, active = true, paused = false,
-  userStarted = false, showToggle = true, longFilm = false, durationSeconds, mediaStyle, frameBackground, previewTime, edgeFill=false,
+  userStarted = false, showToggle = true, longFilm = false, durationSeconds, mediaStyle, frameBackground, previewTime, edgeFill=false, startMuted=false,
 }: DeferredVideoProps) {
   const sources = videoSources(source).map(item=>({...item,src:withBasePath(item.src)}));
   const file = sources[0].src;
@@ -55,9 +57,10 @@ export default function DeferredVideo({
         data-user-started={userStarted ? "true" : "false"}
         data-original-source={withBasePath(source)}
         data-video-label={label}
+        data-start-muted={startMuted ? "true" : undefined}
         aria-label={label}
         loop={longFilm ? false : loop}
-        muted={autoplay && !longFilm}
+        muted={(autoplay && !longFilm) || startMuted}
         playsInline
         controls={controls}
         suppressHydrationWarning
@@ -73,7 +76,8 @@ export default function DeferredVideo({
         <Button type="button" variant="secondary" size="icon-sm" className="native-film-start" data-native-film-play aria-label={`Play ${label}`}>
           <Play aria-hidden="true" />
         </Button>
-        <FilmControls label={label} durationSeconds={durationSeconds}/>
+        <FilmControls label={label} durationSeconds={durationSeconds} startMuted={startMuted}/>
+        {startMuted && <FilmControls label={label} durationSeconds={durationSeconds} startMuted compact/>}
       </> : !controls && showToggle && <div className="media-controls">
         <MediaToggle label={label} />
       </div>}

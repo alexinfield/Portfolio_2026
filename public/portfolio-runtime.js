@@ -202,6 +202,16 @@
     states.set(video, { loaded: Boolean(video.querySelector("source[src]")), visible: !visibleObserver, userPaused: false, userStarted: false });
     const frame = video.closest("[data-video-frame]");
     initializeVideoEdges(video);
+    if (video.dataset.startMuted === "true") {
+      // Films with sound start muted (React does not reflect muted on hydration).
+      // Native or Compass full screen turns the sound on; the mute buttons toggle it.
+      video.defaultMuted = true;
+      video.muted = true;
+      video.addEventListener("webkitbeginfullscreen", () => { video.muted = false; });
+      document.addEventListener("fullscreenchange", () => {
+        if (document.fullscreenElement && (document.fullscreenElement === video || document.fullscreenElement.contains(video))) video.muted = false;
+      });
+    }
     if (frame.hasAttribute("data-long-film")) {
       const nativeControls = () => {
         const native = coarseFilm.matches;

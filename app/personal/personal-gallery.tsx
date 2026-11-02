@@ -77,7 +77,7 @@ export default function PersonalGallery({media,title,visible,framing,description
     <div className="portfolio-gallery-stage" style={{aspectRatio:4/3}} onTouchStart={begin} onTouchEnd={end} onTouchCancel={()=>{touch.current=null;suppressClick.current=true;}}>
       {media.map((item,index)=><div className="portfolio-gallery-slide" role="group" aria-label={`${index+1} of ${media.length}`} aria-hidden={index!==active} inert={index!==active} hidden={index!==active} key={item.id} style={{background:(item.framing??framing).background}}>
         {item.kind==="video"?<DeferredVideo className="personal-video" source={personalAsset(item.src)} poster={item.poster?personalAsset(item.poster.src):undefined}
-          label={item.alt} width={item.width} height={item.height} active={visible && index===active} loop longFilm={(item.duration_seconds??0)>=60} durationSeconds={item.duration_seconds} mediaStyle={personalMediaStyle(item,item.framing??framing)} frameBackground={(item.framing??framing).background} edgeFill={(item.framing??framing).fill==="edge-extend"}/>:<PersonalImage media={item} framing={item.framing??framing} />}
+          label={item.alt} width={item.width} height={item.height} active={visible && index===active} loop longFilm={(item.duration_seconds??0)>=60} durationSeconds={item.duration_seconds} mediaStyle={personalMediaStyle(item,item.framing??framing)} frameBackground={(item.framing??framing).background} edgeFill={(item.framing??framing).fill==="edge-extend"} startMuted={item.has_audio===true}/>:<PersonalImage media={item} framing={item.framing??framing} />}
       </div>)}
       {description && <>
         <Button type="button" variant="ghost" className="gallery-description-toggle" data-gallery-description-toggle data-press-surface

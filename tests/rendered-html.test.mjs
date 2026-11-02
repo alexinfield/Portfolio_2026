@@ -271,7 +271,7 @@ test("Personal frames carry reviewed positions and background-matched padding me
   assert.equal(packageData.items.find(item=>item.id==="desk-pen").framing.background,"#F8F8F8");
   assert.equal(packageData.items.find(item=>item.id.includes("neighborhood")).framing.fit,"pad");
   const html=await exported("personal/index.html");assert.match(html,/property="og:image" content="https:\/\/alexinfield.com\/assets\/personal\/media\/stool-/);
-  const telefoni=html.match(/<video\b[^>]*data-original-source="[^"]*telefoni[^"]*"[^>]*>/)[0];assert.match(telefoni,/data-demand-only="true"/);assert.doesNotMatch(telefoni,/data-autoplay-video/);assert.match(telefoni,/preload="none"/);
+  const telefoni=html.match(/<video\b[^>]*data-original-source="[^"]*telefoni[^"]*"[^>]*>/)[0];assert.match(telefoni,/data-original-source="[^"]*p041-telefoni-01-audio\.mp4"/);assert.match(telefoni,/data-start-muted="true"/);assert.match(telefoni,/data-demand-only="true"/);assert.doesNotMatch(telefoni,/data-autoplay-video/);assert.match(telefoni,/preload="none"/);
 });
 
 test("approved 1.1.0 package and unchanged 1.0.0 rollback tarball are retained",async()=>{
@@ -336,4 +336,40 @@ test("hidden BioMaking and the old Telefoni name never reach the public export",
   await access(new URL("../public/assets/personal/media/p016-biomaking-gelatin-wrap-materials-study-01-w768.webp",import.meta.url));
   await access(new URL("../public/assets/personal/media/p041-telefoni-01-poster-w1280.webp",import.meta.url));
   for(const path of await files())assert.doesNotMatch(path,/p041-telefoni-01-poster-w/,path);
+});
+
+test("Video 2018 ships with its sound track and starts muted with mute and full-screen controls",async()=>{
+  const film=await readFile(new URL("../public/assets/personal/media/p041-telefoni-01-audio.mp4",import.meta.url));
+  const moov=film.indexOf("moov"),mdat=film.indexOf("mdat");
+  assert.ok(moov>0&&moov<mdat,"fast-start: moov before mdat");
+  const header=film.subarray(moov,mdat).toString("latin1");
+  assert.match(header,/soun/);assert.match(header,/mp4a/);assert.match(header,/vide/);
+  const item=packageData.items.find(entry=>entry.id==="p041-telefoni");
+  assert.equal(item.gallery[0].has_audio,true);
+  assert.ok((packageData.retired_media??[]).includes("media/p041-telefoni-01.mp4"));
+  for(const path of await files())assert.doesNotMatch(path,/p041-telefoni-01\.mp4$/,path);
+  const html=documentOnly(await exported("personal/index.html"));
+  const frame=html.match(/<div[^>]*data-long-film="true"[^>]*>(?:(?!<\/video>)[\s\S])*data-start-muted="true"[\s\S]*?data-film-quick-controls/);
+  assert.ok(frame,"start-muted film renders compact phone controls");
+  assert.match(html,/aria-label="Unmute An edited sequence/);
+  assert.match(html,/aria-label="Enter fullscreen: An edited sequence/);
+  const runtime=await read("public/portfolio-runtime.js");
+  assert.match(runtime,/webkitbeginfullscreen/);assert.match(runtime,/video\.muted = true/);
+});
+
+test("every exported page references the runtime and analytics scripts by their current content hash",async()=>{
+  const version=async name=>createHash("sha256").update(await readFile(new URL(`../gh-pages/${name}`,import.meta.url))).digest("hex").slice(0,8);
+  const runtime=await version("portfolio-runtime.js"),analytics=await version("portfolio-analytics.js");
+  const html=(await files()).filter(path=>path.endsWith(".html"));
+  assert.ok(html.length>=12);
+  let runtimeRefs=0;
+  for(const path of html){
+    const body=await exported(path);
+    for(const match of body.matchAll(/portfolio-(runtime|analytics)\.js(\?v=[0-9a-f]+)?/g)){
+      assert.equal(match[2],`?v=${match[1]==="runtime"?runtime:analytics}`,`${path}: ${match[0]}`);
+      if(match[1]==="runtime")runtimeRefs++;
+    }
+    assert.match(body,new RegExp(`portfolio-runtime\\.js\\?v=${runtime}`),path);
+  }
+  assert.ok(runtimeRefs>=html.length);
 });

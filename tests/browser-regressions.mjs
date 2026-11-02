@@ -4,6 +4,7 @@ import {join} from "node:path";
 import {runBrowserRegressions as runCritiqueRegressions} from "./critique-browser.mjs";
 import {runNativeFilmRegressions,configureTelefoniCodecFixture} from "./native-film-browser.mjs";
 import {runCaseStackRegressions} from "./case-stack-browser.mjs";
+import {runTelefoniSoundRegressions} from "./telefoni-sound-browser.mjs";
 
 // Keep the ce35959 regression coverage alongside the critique-specific checks.
 // Filters are deliberately hidden by the approved design; their retained flag
@@ -103,5 +104,6 @@ export async function runBrowserRegressions(browser,baseURL,options={}) {
     ...await runCritiqueRegressions(browser,baseURL,options),
     ...await runPreservedRegressions(browser,baseURL,options),
     ...await runCaseStackRegressions(browser,baseURL),
+    ...await runTelefoniSoundRegressions(browser,baseURL),
   ];
 }
