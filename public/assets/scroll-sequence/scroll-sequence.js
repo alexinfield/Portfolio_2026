@@ -11,6 +11,9 @@
  *   3 requests at a time. Frames further away are released, so decoded memory stays at a window
  *   instead of the whole sequence. Each scroll position draws the nearest frame it has, so nothing
  *   goes blank.
+ * - In the page flow (the site's case pages; no sticky track, no extra page height): the scrub runs
+ *   over the block's own travel, from its top entering the bottom of the viewport to its bottom
+ *   leaving under the header, eased at both ends. A sticky stage keeps the lab's track mapping.
  * iOS: one canvas, backing store capped at the frame's own pixel size and devicePixelRatio 2;
  * frames are decoded <img> elements, not createImageBitmap (WebKit bug 229825). */
 (() => {
@@ -29,7 +32,7 @@
     const conn = navigator.connection || {}, lite = conn.saveData || /2g/.test(conn.effectiveType || "");
     const every = lite ? 2 : 1; // Save-Data and 2G: every other full frame
     let set, fmt, sprite, gen = 0, full = [], low = [], start = 0, range = 1, cur = 0, shown = null;
-    let ticking = false, last = 0, begun = false, live = false, armed = false, active = 0, dir = 1, prev = 0, done = false;
+    let ticking = false, last = 0, begun = false, live = false, armed = false, active = 0, dir = 1, prev = 0, done = false, flow = false;
     const pending = new Set();
 
     const posterIn = () => {
@@ -55,8 +58,17 @@
       if (!set) return;
       const fit = choose();
       if (fit !== set && fit.w > set.w && set !== cfg.sets.portrait) { load(fit); return; } // upgrade, never downgrade
-      start = root.getBoundingClientRect().top + scrollY - (parseFloat(getComputedStyle(stage).top) || 0);
-      range = Math.max(1, root.offsetHeight - stage.offsetHeight);
+      const top = root.getBoundingClientRect().top + scrollY;
+      flow = getComputedStyle(stage).position !== "sticky";
+      if (flow) { // in the page flow: scrub over the block's own travel through the viewport
+        const header = parseFloat(getComputedStyle(root).getPropertyValue("--ss-top")) || 0;
+        const maxY = Math.max(0, document.documentElement.scrollHeight - innerHeight);
+        start = Math.min(maxY, Math.max(0, top - innerHeight)); // its top enters the bottom of the viewport
+        range = Math.max(1, Math.min(maxY, top + root.offsetHeight - header) - start); // its bottom leaves under the header
+      } else { // sticky track (the lab layout)
+        start = top - (parseFloat(getComputedStyle(stage).top) || 0);
+        range = Math.max(1, root.offsetHeight - stage.offsetHeight);
+      }
       const dpr = Math.min(devicePixelRatio || 1, 2);
       const w = Math.max(1, Math.min(set.w, Math.round(frame.getBoundingClientRect().width * dpr)));
       const h = Math.round(w * set.h / set.w);
@@ -86,7 +98,10 @@
       if (!live) { live = true; root.classList.add("is-live"); }
     }
 
-    function progress() { return Math.min(1, Math.max(0, (scrollY - start) / range)) * (n - 1); }
+    function progress() {
+      const p = Math.min(1, Math.max(0, (scrollY - start) / range));
+      return (flow ? p * p * (3 - 2 * p) : p) * (n - 1); // in flow: eased, so it settles at both ends
+    }
 
     function tick(now) {
       ticking = false;
@@ -181,6 +196,8 @@
       addEventListener("scroll", () => { if (!armed) { armed = true; fill(); } request(); }, { passive: true });
       new ResizeObserver(measure).observe(frame);
       new ResizeObserver(measure).observe(root);
+      addEventListener("resize", measure); // the viewport height sets the in-flow travel
+      new ResizeObserver(measure).observe(document.body); // content above can move the block
       // Rotation swaps sets: wait for the <picture> to load the other poster, then reload frames.
       if (cfg.sets.portrait) PORTRAIT.addEventListener("change", () => { gen++; root.classList.remove("is-ready", "is-loaded"); poster.addEventListener("load", () => load(), { once: true }); });
     }

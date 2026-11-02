@@ -231,22 +231,17 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
  .portfolio-root [data-slot="button"]:not(.portfolio-skip-link), .portfolio-root .portfolio-card-link, .portfolio-root .portfolio-gallery-stage {transform: none!important; scale: none!important; transition: none!important;}
 }
 
-/* Scroll sequences sit in the case stack edge to edge; the stage sticks just below the header. */
+/* Scroll sequences sit in the case stack edge to edge, as blocks in the page flow. */
 .portfolio-case-stack .case-sequence {display: block; width: 100%; margin: 0;}
 .ss {--ss-top: var(--portfolio-header-height);}
-/* Case sequences keep the film's own 16:9 box at full width on every screen (Alex, Nov 2),
-   never a cropped viewport fill; the lab module is unchanged and /lab/ keeps its own layout.
-   Same seam guard as the other case media: the frame is 4 px wider and 6 px shorter than its
-   natural box, centred, and object-fit: cover trims 2 px each side and 3 px top and bottom.
-   While the scroll scrubs it, the box pins centred in the space below the header (the opening
-   one at the header's edge, where it already sits); the scrub distance stays 300vh. Reduced
-   motion and no JS show the same box as one still in the flow of the page. */
+/* Case sequences are the film's own 16:9 box at full width on every screen (Alex, Nov 2): a normal
+   block in the flow with the next panel directly beneath it, as the old film was. No sticky track,
+   no extra page height: scroll-sequence.js scrubs over the block's own travel through the viewport.
+   The lab module's layout and /lab/ are unchanged. Same seam guard as the other case media: the
+   frame is 4 px wider and 6 px shorter than its natural box, centred, and object-fit: cover trims
+   2 px each side and 3 px top and bottom. Reduced motion and no JS show the same box as a still. */
 .case-sequence {--sequence-height: calc((100cqw + 4px) * .5625 - 6px);}
-.case-sequence .ss-stage {height: auto; container-type: normal;}
+.case-sequence .ss {height: auto;}
+.case-sequence .ss-stage {position: relative; top: auto; height: auto; container-type: normal;}
 .case-sequence .ss-frame {position: relative; left: auto; top: auto; transform: none; width: calc(100% + 4px); max-width: none; margin-inline: -2px; height: var(--sequence-height); aspect-ratio: auto;}
 .case-sequence :is(.ss-poster img, .ss-still img, canvas) {object-fit: cover; object-position: 50% 50%;}
-@media (prefers-reduced-motion: no-preference) and (scripting: enabled) {
- .case-sequence .ss {height: calc(300vh + var(--sequence-height));}
- .case-sequence .ss-stage {top: calc((100vh + var(--portfolio-header-height) - var(--sequence-height)) / 2); top: calc((100svh + var(--portfolio-header-height) - var(--sequence-height)) / 2);}
- .portfolio-case-stack > .case-panel:first-child .case-sequence .ss-stage {top: var(--portfolio-header-height);}
-}
