@@ -129,7 +129,7 @@ test("all six cases preserve the complete ordered image content and descriptions
     assert.match(html,/aria-label="Case navigation"/);
     assert.doesNotMatch(html,/<footer/);
     if(!CASE_TEXT_ENABLED)assert.doesNotMatch(html,/class="case-text"/);
-    for(const item of registry[slug]){await access(new URL(`../public${item.source}`,import.meta.url));if(item.poster)await access(new URL(`../public${item.poster}`,import.meta.url));}
+    for(const item of registry[slug].filter(item=>item.kind!=="sequence")){await access(new URL(`../public${item.source}`,import.meta.url));if(item.poster)await access(new URL(`../public${item.poster}`,import.meta.url));}
   }
 });
 
@@ -411,7 +411,7 @@ test("Luma opens and Molekule Go panel 19 plays as scroll sequences with version
   const js=await version("assets/scroll-sequence/scroll-sequence.js"),css=await version("assets/scroll-sequence/scroll-sequence.css");
   for(const [slug,stackIndex] of [["luma",0],["molekule-go",null]]){
     const html=documentOnly(await exported(`projects/${slug}/index.html`));
-    const sections=[...html.matchAll(/<div class="case-sequence"><section class="ss"[\s\S]*?<\/section><\/div>/g)].map(m=>m[0]);
+    const sections=[...html.matchAll(/<div class="case-sequence"><section class="ss[^"]*"[\s\S]*?<\/section><\/div>/g)].map(m=>m[0]);
     assert.equal(sections.length,1,slug);
     const section=sections[0];
     if(stackIndex===0)assert.match(html,/<div class="portfolio-case-stack"><div class="case-panel"><div class="case-sequence">/);
@@ -422,7 +422,7 @@ test("Luma opens and Molekule Go panel 19 plays as scroll sequences with version
     assert.match(html,new RegExp(`scroll-sequence\\.js\\?v=${js}`));assert.match(html,new RegExp(`scroll-sequence\\.css\\?v=${css}`));
     const config=JSON.parse(section.match(/<script type="application\/json" class="ss-config">([\s\S]*?)<\/script>/)[1]);
     assert.equal(config.count,90);
-    for(const [name,set] of Object.entries(config.sets)){
+    for(const set of Object.values(config.sets)){
       const dir=set.path.replace(/^(\.\.\/)+/,"");
       for(const fmt of config.formats){
         for(const n of [1,45,90])await access(new URL(`../gh-pages/${dir}/${fmt}/${String(n).padStart(3,"0")}.${fmt}`,import.meta.url));
