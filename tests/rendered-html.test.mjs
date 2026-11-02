@@ -14,7 +14,8 @@ const text = html => html.replace(/<[^>]+>/g,"").trim();
 const caseSource = await read("app/case-text.tsx");
 const CASE_TEXT_ENABLED = /export const CASE_TEXT_ENABLED = true\b/.test(caseSource);
 const packageData = JSON.parse(await read("lib/personal.json"));
-const overrides = {stool:"Kerf Stool","wall-mounts":"CNC Portrait Relief"};
+const overrides = {stool:"Kerf Stool","wall-mounts":"CNC Portrait Relief","p041-telefoni":"Video 2018"};
+const visibleItems = packageData.items.filter(item=>!item.hidden);
 
 async function render(path) {
   const app=(await import(new URL("../dist/server/index.js",import.meta.url))).default;
@@ -76,10 +77,12 @@ test("Info contains the exact approved text, artwork and one secondary Contact m
 test("Personal exports exactly the package order, owner titles and existing case links",async()=>{
   const html=documentOnly(await exported("personal/index.html"));
   const ids=[...html.matchAll(/data-personal-id="([^"]+)"/g)].map(match=>match[1]);
-  assert.equal(ids.length,16);
-  assert.deepEqual(ids,packageData.items.map(item=>item.id));
+  assert.equal(ids.length,15);
+  assert.deepEqual(ids,visibleItems.map(item=>item.id));
+  assert.equal(ids.indexOf("p025-warp-paper-light-and-shadow-relief")+1,ids.indexOf("mycelium"));
   const headings=[...html.matchAll(/<h2\b[^>]*>([\s\S]*?)<\/h2>/g)].map(match=>text(match[1]));
-  assert.deepEqual(headings,packageData.items.map(item=>overrides[item.id]??item.title));
+  assert.deepEqual(headings,visibleItems.map(item=>overrides[item.id]??item.title));
+  assert.ok(headings.includes("Video 2018"));
   assert.match(html,/href="\.\.\/projects\/mode\/\?from=personal"/);
   assert.match(html,/href="\.\.\/projects\/niche\/\?from=personal"/);
   assert.doesNotMatch(html,/>null<|>undefined<|JuiceBox|data-year="null"/);
@@ -313,6 +316,20 @@ test("404 offers just one Work action and Personal uses genuine descriptions wit
   assert.doesNotMatch(missing,/Contact|mailto:/);
   const personal=documentOnly(await exported("personal/index.html"));
   assert.doesNotMatch(personal,/portfolio-about-label|portfolio-card-notes|>About</);
-  assert.equal((personal.match(/class="portfolio-description-strip"/g)||[]).length,packageData.items.filter(item=>item.short_text&&!item.link).length);
+  assert.equal((personal.match(/class="portfolio-description-strip"/g)||[]).length,visibleItems.filter(item=>item.short_text&&!item.link).length);
   assert.match(personal,/aria-expanded="false"[^>]*aria-controls="desk-pen-description"/);
+});
+
+test("hidden BioMaking and the old Telefoni name never reach the public export",async()=>{
+  const hidden=packageData.items.filter(item=>item.hidden).map(item=>item.id);
+  assert.deepEqual(hidden,["p016-biomaking-gelatin-wrap-materials-study"]);
+  for(const path of await files()){
+    assert.doesNotMatch(path,/biomaking/i,path);
+    if(/\.(html|js|css|json|xml|txt)$/.test(path)){
+      const body=await exported(path);
+      assert.doesNotMatch(body,/biomaking|gelatin/i,path);
+      assert.doesNotMatch(body,/Telefoni/,path);
+    }
+  }
+  await access(new URL("../public/assets/personal/media/p016-biomaking-gelatin-wrap-materials-study-01-w768.webp",import.meta.url));
 });

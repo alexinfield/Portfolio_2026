@@ -1,7 +1,7 @@
 "use client";
 import { useState, useSyncExternalStore } from "react";
 import { Button, Card, Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../compass";
-import { type PersonalProject } from "@/lib/personal";
+import { type PersonalProject } from "@/lib/personal-media";
 import ProjectCard from "../project-card";
 import PersonalGallery, { PersonalImage } from "./personal-gallery";
 

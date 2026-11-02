@@ -10,7 +10,9 @@ The supplied case-study image panels retain their content.
   portfolio exception to the general design-system appearance policy.
 - Work: Molekule Go, Ping, Hyphae Light, Luma; name-only captions without
   underlines at rest or on hover and one quiet Personal action. No footer email.
-- Personal: the verified 16-entry allowlist, existing Folio/Niche case links,
+- Personal: the verified allowlist (15 shown; BioMaking hidden Nov 1 with its
+  record and media kept but never exported; Telefoni shown as "Video 2018";
+  Warp sits immediately before Mycelium), existing Folio/Niche case links,
   manual galleries and retained AND filter logic behind one hidden-UI flag.
   Uniform 4:3 frames; per-slide positions and source-derived edge extension
   preserve whole objects. Genuine descriptions reveal only in bottom image
@@ -36,6 +38,14 @@ The supplied case-study image panels retain their content.
   focus does not open a description. Telefoni stays paused on its poster until
   demand. Actual H.264 decoding requires a supporting browser; tests label the
   existing WebM fixture used for Telefoni UI coverage when H.264 is unavailable.
+- Type: Funktional Grotesk uses font-display: block and the Regular/Medium
+  faces are preloaded, so no fallback face is ever painted on first load.
+- Case media runs edge to edge (no side padding) and stacks with no gap, border
+  or radius. Many authored panels have translucent or off-colour outermost
+  pixels, so each case medium trims 3 px top/bottom and 2 px each side with
+  object-fit: cover (no transforms or clip paths); Hyphae's side-by-side rows
+  size columns by aspect ratio so both halves share one height. A browser check
+  measures zero gaps and scans every boundary for seam rows.
 - Cases start with authored media at the header bottom and retain an accessible
   hidden heading/metadata. Bottom Previous/Back/Next stay inside Work or Personal
   and omit endpoints. Explicit query origin plus a consumed session entry allow

@@ -30,6 +30,16 @@ await rm(output, { recursive: true, force: true });
 await cp(join(root, "dist/client"), output, { recursive: true });
 for(const name of ["_headers",".assetsignore",".vite"])await rm(join(output,name),{recursive:true,force:true});
 
+// Hidden Personal entries keep their record and media in the repository, but
+// media used only by hidden entries is never published.
+const personalPackage = JSON.parse(await readFile(join(root, "lib/personal.json"), "utf8"));
+const mediaSources = item => [item.cover, ...item.gallery].flatMap(function sources(media) {
+  return [media.src, ...(media.variants ?? []).map(variant => variant.src), ...(media.poster ? sources(media.poster) : [])];
+});
+const publishedMedia = new Set(personalPackage.items.filter(item => !item.hidden).flatMap(mediaSources));
+const withheldMedia = [...new Set(personalPackage.items.filter(item => item.hidden).flatMap(mediaSources))].filter(source => !publishedMedia.has(source));
+for (const source of withheldMedia) await rm(join(output, "assets/personal", source), { force: true });
+
 // Vite emits imported fonts beside the generated stylesheet but keeps a
 // root-relative /assets URL. Make those generated URLs stylesheet-relative so
 // the same build works on both the custom domain and GitHub's repository path.

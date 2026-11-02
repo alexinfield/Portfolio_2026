@@ -59,13 +59,31 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
 .portfolio-artwork img {width: 100%;}
 .text-muted {color: var(--secondary);}
 .portfolio-not-found {display: grid; justify-items: start; gap: var(--group); padding-block: var(--section);}
-/* Cases retain image content and source order; composition uses Compass spacing. */
-.portfolio-case-stack {display: grid; gap: var(--group);}
+/* Cases retain image content and source order. The authored panels run edge to
+   edge and stack with no gap, border, radius or gutter on any side: the case
+   page has no side padding and every media box is a block with no margin. */
+.portfolio-shell.portfolio-case-page {padding-inline: 0;}
+.portfolio-case-stack {display: grid; grid-template-columns: minmax(0,1fr); gap: 0; container-type: inline-size; overflow-x: clip;}
 .case-panel {display: contents;}
-.portfolio-case-stack > img, .case-composite, .case-video {width: 100%; border-radius: var(--radius); overflow: hidden;}
-.case-video video {width: 100%; height: auto; object-fit: contain;}
-.case-composite {display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--group); align-items: center;}
+.portfolio-case-stack > img, .case-composite, .case-video, .case-film {width: 100%; margin: 0; border: 0; border-radius: 0; overflow: hidden;}
+.portfolio-case-stack :is(img, video) {display: block; width: 100%; margin: 0; border: 0; border-radius: 0;}
+.case-video video {height: auto; object-fit: contain;}
+/* Seam guard. Many authored panels have a translucent or off-colour outermost
+   pixel row/column (Webflow-era exports), which lets the black page show through
+   as a hairline wherever two panels meet. Each medium's box is 6 px shorter and
+   4 px wider than its natural size, centred, so object-fit: cover trims 3 px top
+   and bottom and 2 px each side; every visible edge is an opaque interior pixel.
+   No transforms or clip paths: the boxes stay pixel-snapped. */
+.portfolio-case-stack :is(.case-media, .case-video video) {width: calc(100% + 4px); max-width: none; margin-inline: -2px; height: calc((100cqw + 4px) * var(--media-ratio, .5625) - 6px); object-fit: cover; object-position: 50% 50%;}
+/* Side-by-side panels share one row height: each column's fr equals its
+   media's aspect ratio (set inline), so neither side leaves an empty band. */
+.case-composite {display: grid; grid-template-columns: var(--composite-columns, repeat(2,minmax(0,1fr))); gap: 0; align-items: stretch;}
 .case-composite > img, .case-composite > div {width: 100%; min-width: 0;}
+@media (min-width:768px) {
+ .portfolio-case-stack .case-composite {width: calc(100% + 4px); max-width: none; margin-inline: -2px; height: calc((100cqw + 4px) * var(--composite-ratio) - 6px); grid-template-rows: minmax(0,1fr);}
+ .portfolio-case-stack .case-composite :is(.case-media, .case-video, .case-video video) {width: 100%; margin-inline: 0; height: 100%; object-fit: cover;}
+}
+.portfolio-case-navigation, .case-text {padding-inline: 18px;}
 .portfolio-case-navigation {display: flex; justify-content: center; align-items: center; gap: var(--inline); margin-top: var(--section);}
 .case-text {font: 400 1rem/1.5 var(--font); color: var(--secondary);}
 .case-text :is(p,ul,dl) {margin-block: var(--group);}
@@ -132,7 +150,7 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
 .film-timeline [role="slider"] {min-width: 20px; min-height: 20px;}
 .film-time {font-size: .75rem; line-height: 1.125rem; font-variant-numeric: tabular-nums; white-space: nowrap; padding-inline: 4px; color: var(--text); background: var(--surface); border-radius: var(--radius);}
 [data-long-film]:fullscreen {display: grid; align-items: center; width: 100vw; height: 100dvh; background: var(--canvas); border-radius: 0;}
-[data-long-film]:fullscreen video {width: 100%; height: 100%; object-fit: contain!important;}
+[data-long-film]:fullscreen video {width: 100%; height: 100%; margin: 0; object-fit: contain!important;}
 
 .portfolio-image, .personal-video {display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;}
 .portfolio-gallery-slide {display: flex; align-items: center; justify-content: center;}

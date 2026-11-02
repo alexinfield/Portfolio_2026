@@ -3,7 +3,7 @@ import { useCallback, useRef, useState, type KeyboardEvent, type TouchEvent } fr
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "../compass";
 import DeferredVideo from "../deferred-video";
-import { personalAsset, personalMediaStyle, type PersonalMedia, type PersonalFraming } from "@/lib/personal";
+import { personalAsset, personalMediaStyle, type PersonalMedia, type PersonalFraming } from "@/lib/personal-media";
 
 export function PersonalImage({media, eager=false, retry=true, framing, sizes="(max-width: 767px) 100vw, (max-width: 1199px) 50vw, 33vw"}: {media: PersonalMedia; eager?: boolean; retry?: boolean; framing?: PersonalFraming; sizes?: string}) {
   const [failed,setFailed] = useState(false);

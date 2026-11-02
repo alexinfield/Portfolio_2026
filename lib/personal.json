@@ -686,6 +686,120 @@
       }
     },
     {
+      "id": "p025-warp-paper-light-and-shadow-relief",
+      "title": "Warp",
+      "year": null,
+      "category": "Fabrication",
+      "link": null,
+      "cover": {
+        "kind": "image",
+        "id": "p025-warp-paper-light-and-shadow-relief-01",
+        "src": "media/p025-warp-paper-light-and-shadow-relief-01-w1280.webp",
+        "width": 1280,
+        "height": 1280,
+        "alt": "A square field of triangular paper fins with a denser central pattern and directional shadows.",
+        "variants": [
+          {
+            "src": "media/p025-warp-paper-light-and-shadow-relief-01-w640.webp",
+            "width": 640,
+            "height": 640,
+            "bytes": 87946
+          },
+          {
+            "src": "media/p025-warp-paper-light-and-shadow-relief-01-w1280.webp",
+            "width": 1280,
+            "height": 1280,
+            "bytes": 214128
+          },
+          {
+            "src": "media/p025-warp-paper-light-and-shadow-relief-01-w1600.webp",
+            "width": 1600,
+            "height": 1600,
+            "bytes": 379258
+          }
+        ],
+        "framing": {
+          "fit": "cover",
+          "object_position": "50% 50%",
+          "background": "#888783"
+        }
+      },
+      "gallery": [
+        {
+          "kind": "image",
+          "id": "p025-warp-paper-light-and-shadow-relief-01",
+          "src": "media/p025-warp-paper-light-and-shadow-relief-01-w1280.webp",
+          "width": 1280,
+          "height": 1280,
+          "alt": "A square field of triangular paper fins with a denser central pattern and directional shadows.",
+          "variants": [
+            {
+              "src": "media/p025-warp-paper-light-and-shadow-relief-01-w640.webp",
+              "width": 640,
+              "height": 640,
+              "bytes": 87946
+            },
+            {
+              "src": "media/p025-warp-paper-light-and-shadow-relief-01-w1280.webp",
+              "width": 1280,
+              "height": 1280,
+              "bytes": 214128
+            },
+            {
+              "src": "media/p025-warp-paper-light-and-shadow-relief-01-w1600.webp",
+              "width": 1600,
+              "height": 1600,
+              "bytes": 379258
+            }
+          ],
+          "framing": {
+            "fit": "cover",
+            "object_position": "50% 50%",
+            "background": "#888783"
+          }
+        },
+        {
+          "kind": "image",
+          "id": "p025-warp-paper-light-and-shadow-relief-02",
+          "src": "media/p025-warp-paper-light-and-shadow-relief-02-w1280.webp",
+          "width": 1280,
+          "height": 1322,
+          "alt": "A close angled view of triangular paper fins arranged in a radiating pattern with dark shadows.",
+          "variants": [
+            {
+              "src": "media/p025-warp-paper-light-and-shadow-relief-02-w640.webp",
+              "width": 640,
+              "height": 661,
+              "bytes": 104956
+            },
+            {
+              "src": "media/p025-warp-paper-light-and-shadow-relief-02-w1280.webp",
+              "width": 1280,
+              "height": 1322,
+              "bytes": 241762
+            },
+            {
+              "src": "media/p025-warp-paper-light-and-shadow-relief-02-w1549.webp",
+              "width": 1549,
+              "height": 1600,
+              "bytes": 361032
+            }
+          ],
+          "framing": {
+            "fit": "cover",
+            "object_position": "50% 50%",
+            "background": "#888783"
+          }
+        }
+      ],
+      "short_text": "Paper, light and shadow.",
+      "framing": {
+        "fit": "cover",
+        "object_position": "50% 50%",
+        "background": "#888783"
+      }
+    },
+    {
       "id": "mycelium",
       "title": "Mycelium",
       "year": null,
@@ -1136,7 +1250,8 @@
         "fit": "cover",
         "object_position": "50% 58%",
         "background": "#626760"
-      }
+      },
+      "hidden": true
     },
     {
       "id": "p019-neighborhood-cnc-relief-map-study",
@@ -1236,120 +1351,6 @@
         "object_position": "50% 50%",
         "background": "linear-gradient(180deg, #BCC1B4 0%, #C6CDC1 12.5%, #CCD3C5 25%, #D1DACE 37.5%, #D4DCCD 50%, #D5DDCE 62.5%, #D6DFD3 75%, #D4DBCD 87.5%, #D0D6CD 100%) left top / 50% 100% no-repeat, linear-gradient(180deg, #A3A79C 0%, #ACAFA7 12.5%, #B1B7AE 25%, #B6BDAF 37.5%, #B7BDB4 50%, #B6BCB3 62.5%, #B2B8B0 75%, #AEB4AB 87.5%, #ABAEA6 100%) right top / 50% 100% no-repeat",
         "fill": "edge-extend"
-      }
-    },
-    {
-      "id": "p025-warp-paper-light-and-shadow-relief",
-      "title": "Warp",
-      "year": null,
-      "category": "Fabrication",
-      "link": null,
-      "cover": {
-        "kind": "image",
-        "id": "p025-warp-paper-light-and-shadow-relief-01",
-        "src": "media/p025-warp-paper-light-and-shadow-relief-01-w1280.webp",
-        "width": 1280,
-        "height": 1280,
-        "alt": "A square field of triangular paper fins with a denser central pattern and directional shadows.",
-        "variants": [
-          {
-            "src": "media/p025-warp-paper-light-and-shadow-relief-01-w640.webp",
-            "width": 640,
-            "height": 640,
-            "bytes": 87946
-          },
-          {
-            "src": "media/p025-warp-paper-light-and-shadow-relief-01-w1280.webp",
-            "width": 1280,
-            "height": 1280,
-            "bytes": 214128
-          },
-          {
-            "src": "media/p025-warp-paper-light-and-shadow-relief-01-w1600.webp",
-            "width": 1600,
-            "height": 1600,
-            "bytes": 379258
-          }
-        ],
-        "framing": {
-          "fit": "cover",
-          "object_position": "50% 50%",
-          "background": "#888783"
-        }
-      },
-      "gallery": [
-        {
-          "kind": "image",
-          "id": "p025-warp-paper-light-and-shadow-relief-01",
-          "src": "media/p025-warp-paper-light-and-shadow-relief-01-w1280.webp",
-          "width": 1280,
-          "height": 1280,
-          "alt": "A square field of triangular paper fins with a denser central pattern and directional shadows.",
-          "variants": [
-            {
-              "src": "media/p025-warp-paper-light-and-shadow-relief-01-w640.webp",
-              "width": 640,
-              "height": 640,
-              "bytes": 87946
-            },
-            {
-              "src": "media/p025-warp-paper-light-and-shadow-relief-01-w1280.webp",
-              "width": 1280,
-              "height": 1280,
-              "bytes": 214128
-            },
-            {
-              "src": "media/p025-warp-paper-light-and-shadow-relief-01-w1600.webp",
-              "width": 1600,
-              "height": 1600,
-              "bytes": 379258
-            }
-          ],
-          "framing": {
-            "fit": "cover",
-            "object_position": "50% 50%",
-            "background": "#888783"
-          }
-        },
-        {
-          "kind": "image",
-          "id": "p025-warp-paper-light-and-shadow-relief-02",
-          "src": "media/p025-warp-paper-light-and-shadow-relief-02-w1280.webp",
-          "width": 1280,
-          "height": 1322,
-          "alt": "A close angled view of triangular paper fins arranged in a radiating pattern with dark shadows.",
-          "variants": [
-            {
-              "src": "media/p025-warp-paper-light-and-shadow-relief-02-w640.webp",
-              "width": 640,
-              "height": 661,
-              "bytes": 104956
-            },
-            {
-              "src": "media/p025-warp-paper-light-and-shadow-relief-02-w1280.webp",
-              "width": 1280,
-              "height": 1322,
-              "bytes": 241762
-            },
-            {
-              "src": "media/p025-warp-paper-light-and-shadow-relief-02-w1549.webp",
-              "width": 1549,
-              "height": 1600,
-              "bytes": 361032
-            }
-          ],
-          "framing": {
-            "fit": "cover",
-            "object_position": "50% 50%",
-            "background": "#888783"
-          }
-        }
-      ],
-      "short_text": "Paper, light and shadow.",
-      "framing": {
-        "fit": "cover",
-        "object_position": "50% 50%",
-        "background": "#888783"
       }
     },
     {
@@ -1806,7 +1807,7 @@
         "src": "media/p041-telefoni-01-poster-w1280.webp",
         "width": 1280,
         "height": 720,
-        "alt": "The word Telefoni in white on a dark gray video title frame.",
+        "alt": "Title frame of Video 2018, white lettering on dark gray.",
         "variants": [
           {
             "src": "media/p041-telefoni-01-poster-w640.webp",
@@ -1844,7 +1845,7 @@
             "src": "media/p041-telefoni-01-poster-w1280.webp",
             "width": 1280,
             "height": 720,
-            "alt": "The word Telefoni in white on a dark gray video title frame.",
+            "alt": "Title frame of Video 2018, white lettering on dark gray.",
             "variants": [
               {
                 "src": "media/p041-telefoni-01-poster-w640.webp",

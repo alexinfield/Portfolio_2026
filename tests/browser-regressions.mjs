@@ -3,6 +3,7 @@ import {mkdir} from "node:fs/promises";
 import {join} from "node:path";
 import {runBrowserRegressions as runCritiqueRegressions} from "./critique-browser.mjs";
 import {runNativeFilmRegressions,configureTelefoniCodecFixture} from "./native-film-browser.mjs";
+import {runCaseStackRegressions} from "./case-stack-browser.mjs";
 
 // Keep the ce35959 regression coverage alongside the critique-specific checks.
 // Filters are deliberately hidden by the approved design; their retained flag
@@ -88,8 +89,8 @@ export async function runPreservedRegressions(browser,baseURL,{artifacts}={}) {
   const noJS=await browser.newContext({javaScriptEnabled:false,viewport:{width:393,height:852}});
   try{
     await noJS.route('**/*',route=>new URL(route.request().url()).origin===origin?route.continue():route.abort());
-    await check('no-JS Personal retains sixteen entries and a working Folio case link',async()=>{
-      const p=await noJS.newPage();await p.goto(baseURL+'/personal/');assert.equal(await p.locator('[data-personal-id]').count(),16);
+    await check('no-JS Personal retains fifteen entries and a working Folio case link',async()=>{
+      const p=await noJS.newPage();await p.goto(baseURL+'/personal/');assert.equal(await p.locator('[data-personal-id]').count(),15);
       await p.getByRole('link',{name:'Folio',exact:true}).click();await p.waitForURL(baseURL+'/projects/mode/?from=personal');
     });
   }finally{await noJS.close();}
@@ -101,5 +102,6 @@ export async function runBrowserRegressions(browser,baseURL,options={}) {
     ...await runNativeFilmRegressions(browser,baseURL,options),
     ...await runCritiqueRegressions(browser,baseURL,options),
     ...await runPreservedRegressions(browser,baseURL,options),
+    ...await runCaseStackRegressions(browser,baseURL),
   ];
 }

@@ -15,6 +15,10 @@ import {
 
 type MediaItem = ReturnType<typeof getProjectMedia>[number];
 
+// Each case medium carries its intrinsic ratio; CSS uses it to trim the authored
+// assets' translucent or off-colour outer pixels so stacked panels meet seamlessly.
+const mediaRatio = (width: number, height: number) => ({"--media-ratio": String(height / width)}) as React.CSSProperties;
+
 function ProjectVideo({
   item,
   slug,
@@ -33,6 +37,7 @@ function ProjectVideo({
       loop={!(slug === "luma" && index === 0)}
       width={item.width}
       height={item.height}
+      mediaStyle={mediaRatio(item.width, item.height)}
     />
   );
 }
@@ -57,6 +62,8 @@ function ProjectMedia({
       width={item.width}
       height={item.height}
       sizes="100vw"
+      className="case-media"
+      style={mediaRatio(item.width, item.height)}
       loading={index === 0 ? "eager" : "lazy"}
       fetchPriority={index === 0 ? "high" : "auto"}
       decoding={index === 0 ? "sync" : "async"}
@@ -69,7 +76,7 @@ function HyphaeComposite({ image, video }: {
   video: MediaItem;
 }) {
   return (
-    <div className="case-composite">
+    <div className="case-composite" style={{"--composite-columns": `minmax(0,${image.width / image.height}fr) minmax(0,${video.width / video.height}fr)`, "--composite-ratio": String(1 / (image.width / image.height + video.width / video.height))} as React.CSSProperties}>
       <ResponsiveImage
         src={image.source}
         alt={casePanel(image.source)?.alt ?? ""}
@@ -78,7 +85,8 @@ function HyphaeComposite({ image, video }: {
         sizes="100vw"
         loading="lazy"
         decoding="async"
-        className="case-image"
+        className="case-image case-media"
+        style={mediaRatio(image.width, image.height)}
       />
       <div className="case-composite-video">
         <DeferredVideo
@@ -88,6 +96,7 @@ function HyphaeComposite({ image, video }: {
           label={casePanel(video.source)?.alt ?? "Hyphae video"}
           width={video.width}
           height={video.height}
+          mediaStyle={mediaRatio(video.width, video.height)}
           previewTime={video.source.includes("growth-sim") ? 8 : undefined}
         />
       </div>
@@ -103,6 +112,8 @@ function HyphaePresentation({ media }: { media: MediaItem[] }) {
         alt={casePanel(media[0].source)?.alt ?? ""}
         width={media[0].width}
         height={media[0].height}
+        className="case-media"
+        style={mediaRatio(media[0].width, media[0].height)}
         sizes="100vw"
         loading="eager"
         fetchPriority="high"
@@ -113,6 +124,8 @@ function HyphaePresentation({ media }: { media: MediaItem[] }) {
         alt={casePanel(media[1].source)?.alt ?? ""}
         width={media[1].width}
         height={media[1].height}
+        className="case-media"
+        style={mediaRatio(media[1].width, media[1].height)}
         sizes="100vw"
         loading="lazy"
         decoding="async"
@@ -128,6 +141,7 @@ function HyphaePresentation({ media }: { media: MediaItem[] }) {
           durationSeconds={86}
           width={1280}
           height={720}
+          mediaStyle={mediaRatio(1280, 720)}
           autoplay={false}
           loop={false}
         />
@@ -142,7 +156,8 @@ function HyphaePresentation({ media }: { media: MediaItem[] }) {
           sizes="100vw"
           loading="lazy"
           decoding="async"
-          className="case-image"
+          className="case-image case-media"
+          style={mediaRatio(item.width, item.height)}
         />
         <CaseText source={item.source} />
         </div>
@@ -159,7 +174,8 @@ function HyphaePresentation({ media }: { media: MediaItem[] }) {
           sizes="100vw"
           loading="lazy"
           decoding="async"
-          className="case-image"
+          className="case-image case-media"
+          style={mediaRatio(item.width, item.height)}
         />
         <CaseText source={item.source} />
         </div>
@@ -175,7 +191,8 @@ function HyphaePresentation({ media }: { media: MediaItem[] }) {
           sizes="100vw"
           loading="lazy"
           decoding="async"
-          className="case-image"
+          className="case-image case-media"
+          style={mediaRatio(item.width, item.height)}
         />
         <CaseText source={item.source} />
         </div>
