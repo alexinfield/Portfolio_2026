@@ -406,9 +406,12 @@ test("Luma opens and Molekule Go panel 19 plays as scroll sequences with version
     assert.match(section,/<img src="[^"]*sequence-[0-9a-f]{8}\/landscape\/jpg\/001\.jpg"[^>]*fetchpriority="high"/);
     assert.match(section,/<noscript><picture class="ss-still">/);
     assert.doesNotMatch(section,/--ss-lqip|class="ss-lqip"/);
+    // 16:9 landscape frames at every size: no portrait crop on phones.
+    assert.doesNotMatch(section,/portrait|ss-fade/);
     assert.match(html,new RegExp(`scroll-sequence\\.js\\?v=${js}`));assert.match(html,new RegExp(`scroll-sequence\\.css\\?v=${css}`));
     const config=JSON.parse(section.match(/<script type="application\/json" class="ss-config">([\s\S]*?)<\/script>/)[1]);
     assert.equal(config.count,90);
+    assert.deepEqual(Object.keys(config.sets),["landscape"]);assert.equal(config.sets.landscape.w/config.sets.landscape.h,16/9);
     for(const set of Object.values(config.sets)){
       const dir=set.path.replace(/^(\.\.\/)+/,"");
       for(const fmt of config.formats){
