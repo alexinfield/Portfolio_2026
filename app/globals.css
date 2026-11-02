@@ -220,4 +220,4 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
    element's own background until the real image or poster covers it. It is clipped
    to the element's box, so it never bleeds or seams; transparent images have none. */
 [data-lqip] {background-image: var(--lqip); background-size: cover; background-position: center; background-repeat: no-repeat;}
-:fullscreen [data-lqip], [data-lqip]:fullscreen {background-image: none;}
+:fullscreen [data-lqip], [data-lqip]:fullscreen, [data-lqip][data-lqip-done] {background-image: none;}

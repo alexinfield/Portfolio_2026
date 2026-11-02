@@ -395,4 +395,6 @@ test("every rendered image and video poster carries a blurred low-res placeholde
   }
   const css=(await Promise.all((await readdir(new URL("../gh-pages/assets/",import.meta.url))).filter(name=>name.endsWith(".css")).map(name=>exported("assets/"+name)))).join("\n");
   assert.match(css,/\[data-lqip\]\{background-image:var\(--lqip\)/);
+  assert.match(css,/\[data-lqip\]\[data-lqip-done\]/);
+  const runtime=await read("public/portfolio-runtime.js");assert.match(runtime,/lqipDone = "true"/);
 });

@@ -3,6 +3,19 @@
   const states = new Map();
   const coarseFilm = window.matchMedia("(max-width: 767px) and (pointer: coarse)");
 
+  // Low-res placeholders are only needed until the real pixels arrive; dropping them after
+  // load keeps anti-aliased rounded corners exactly as they were without a placeholder.
+  const placeholderDone = (element) => { element.dataset.lqipDone = "true"; };
+  document.querySelectorAll("img[data-lqip]").forEach((image) => {
+    if (image.complete && image.naturalWidth) placeholderDone(image);
+    else image.addEventListener("load", () => placeholderDone(image), { once: true });
+  });
+  document.querySelectorAll("video[data-lqip][poster]").forEach((video) => {
+    const probe = new Image();
+    probe.onload = () => placeholderDone(video);
+    probe.src = video.poster;
+  });
+
   const header = document.querySelector(".portfolio-header");
   const measureHeader = () => {
     if (header) document.documentElement.style.setProperty("--portfolio-header-height", `${header.getBoundingClientRect().height}px`);
