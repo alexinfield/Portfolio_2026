@@ -5,6 +5,7 @@ import CaseNavigation from "@/app/case-navigation";
 import ResponsiveImage from "@/app/responsive-image";
 import CaseText, { casePanel } from "@/app/case-text";
 import DeferredVideo from "@/app/deferred-video";
+import { lqipFor } from "@/lib/lqip";
 import { socialMetadata, projectShareImage } from "@/lib/social-metadata";
 import {
   getProject,
@@ -33,6 +34,7 @@ function ProjectVideo({
       className="case-video"
       source={item.source}
       poster={item.poster}
+      posterLqip={lqipFor(item.poster)}
       label={casePanel(item.source)?.alt ?? "Project video"}
       loop={!(slug === "luma" && index === 0)}
       width={item.width}
@@ -93,6 +95,7 @@ function HyphaeComposite({ image, video }: {
           className="case-video"
           source={video.source}
           poster={video.poster}
+          posterLqip={lqipFor(video.poster)}
           label={casePanel(video.source)?.alt ?? "Hyphae video"}
           width={video.width}
           height={video.height}
@@ -136,6 +139,7 @@ function HyphaePresentation({ media }: { media: MediaItem[] }) {
           className="case-video"
           source="/assets/hyphae/media/hyphae-light-film.mp4"
           poster="/assets/hyphae/media/hyphae-light-film-poster.jpg"
+          posterLqip={lqipFor("/assets/hyphae/media/hyphae-light-film-poster.jpg")}
           label="Hyphae Light film"
           longFilm
           durationSeconds={86}

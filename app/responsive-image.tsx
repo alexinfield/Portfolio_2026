@@ -1,5 +1,6 @@
 import type { ImgHTMLAttributes } from "react";
 import { withBasePath } from "../lib/base-path";
+import { lqipProps } from "../lib/lqip";
 
 const responsiveWidths = [768, 960, 1600, 2600] as const;
 const supportedSource = /\.(?:avif|jpe?g|png|webp)$/i;
@@ -45,6 +46,7 @@ export default function ResponsiveImage({
     // eslint-disable-next-line @next/next/no-img-element
     <img
       {...props}
+      {...lqipProps(src, props.style)}
       alt={alt}
       src={source}
       width={width}

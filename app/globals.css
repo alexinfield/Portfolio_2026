@@ -215,3 +215,9 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
 @media (prefers-reduced-motion:reduce) {
  .portfolio-root [data-slot="button"]:not(.portfolio-skip-link), .portfolio-root .portfolio-card-link, .portfolio-root .portfolio-gallery-stage {transform: none!important; scale: none!important; transition: none!important;}
 }
+
+/* Low-res placeholders (Alex, Nov 2): a pre-blurred ~24 px image painted as the media
+   element's own background until the real image or poster covers it. It is clipped
+   to the element's box, so it never bleeds or seams; transparent images have none. */
+[data-lqip] {background-image: var(--lqip); background-size: cover; background-position: center; background-repeat: no-repeat;}
+:fullscreen [data-lqip], [data-lqip]:fullscreen {background-image: none;}

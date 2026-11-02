@@ -9,6 +9,8 @@ export type PersonalMedia = {
   duration_seconds?: number;
   has_audio?: boolean;
   framing?: PersonalFraming;
+  /** Pre-blurred low-res placeholder (data URI), attached on the server. */
+  lqip?: string;
 };
 export type PersonalProject = {
   id: string; title: string; year: number | null; category: string | null; link: string | null;
@@ -17,6 +19,7 @@ export type PersonalProject = {
   hidden?: boolean;
 };
 export const personalAsset = (source: string) => `../assets/personal/${source}`;
+export const lqipStyle = (lqip?: string) => (lqip ? {"--lqip": `url(${lqip})`} as CSSProperties : undefined);
 
 export function personalMediaStyle(media:PersonalMedia, framing:PersonalFraming):CSSProperties {
   const ratio=media.width/media.height, target=4/3, padded=framing.fit==="pad";

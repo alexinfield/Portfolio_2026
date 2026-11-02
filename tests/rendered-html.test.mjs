@@ -373,3 +373,26 @@ test("every exported page references the runtime and analytics scripts by their 
   }
   assert.ok(runtimeRefs>=html.length);
 });
+
+test("every rendered image and video poster carries a blurred low-res placeholder; inline bytes stay small",async t=>{
+  const lqip=JSON.parse(await read("lib/lqip.json"));
+  const skipped=new Set(Object.keys(lqip.skipped));
+  for(const path of pages){
+    const html=documentOnly(await exported(path));
+    let bytes=0,images=0,missing=[];
+    for(const [tag] of html.matchAll(/<(?:img|video)\b[^>]*>/g)){
+      if(/^<video/.test(tag)&&!/\sposter=/.test(tag))continue;
+      images++;
+      const src=(tag.match(/\s(?:src|poster)="([^"]+)"/)||[])[1]??"";
+      const placeholder=tag.match(/--lqip:url\((data:image\/webp;base64,[A-Za-z0-9+/=]+)\)/);
+      if(placeholder){assert.match(tag,/\sdata-lqip=""/,path);bytes+=placeholder[1].length;continue;}
+      const key=src.replace(/^(\.\.\/)+|^\.\//,"/").replace(/^\/?(?=assets)/,"/");
+      if(![...skipped].some(s=>key.endsWith(s.replace(/^\//,""))))missing.push(src);
+    }
+    assert.deepEqual(missing,[],`${path}: media without placeholder`);
+    t.diagnostic(`${path}: ${images} media, ${bytes} inline placeholder bytes`);
+    assert.ok(bytes<40000,`${path}: ${bytes} placeholder bytes`);
+  }
+  const css=(await Promise.all((await readdir(new URL("../gh-pages/assets/",import.meta.url))).filter(name=>name.endsWith(".css")).map(name=>exported("assets/"+name)))).join("\n");
+  assert.match(css,/\[data-lqip\]\{background-image:var\(--lqip\)/);
+});
