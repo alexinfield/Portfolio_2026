@@ -6,13 +6,22 @@
   // Low-res placeholders are only needed until the real pixels arrive; dropping them after
   // load keeps anti-aliased rounded corners exactly as they were without a placeholder.
   const placeholderDone = (element) => { element.dataset.lqipDone = "true"; };
+  // Media that arrives later gets a short focus pull, only inside clipped cards (Home, Personal);
+  // case stacks and reduced motion swap instantly.
+  const reveal = (element) => {
+    if (motion.matches || !element.closest(".portfolio-work-card, .portfolio-image, .personal-video")) return placeholderDone(element);
+    const finish = () => { delete element.dataset.lqipReveal; placeholderDone(element); };
+    element.addEventListener("animationend", finish, { once: true });
+    setTimeout(finish, 700);
+    element.dataset.lqipReveal = "";
+  };
   document.querySelectorAll("img[data-lqip]").forEach((image) => {
     if (image.complete && image.naturalWidth) placeholderDone(image);
-    else image.addEventListener("load", () => placeholderDone(image), { once: true });
+    else image.addEventListener("load", () => reveal(image), { once: true });
   });
   document.querySelectorAll("video[data-lqip][poster]").forEach((video) => {
     const probe = new Image();
-    probe.onload = () => placeholderDone(video);
+    probe.onload = () => reveal(video);
     probe.src = video.poster;
   });
 

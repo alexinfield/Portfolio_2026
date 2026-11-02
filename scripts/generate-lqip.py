@@ -75,7 +75,7 @@ def placeholder(image):
            f"<feColorMatrix values='{color_matrix()}'/>"
            "<feComponentTransfer><feFuncA type='discrete' tableValues='1'/></feComponentTransfer></filter>"
            f"<image width='{WIDTH}' height='{height}' filter='url(#b)' href='data:image/webp;base64,{webp}'/></svg>")
-    return 'data:image/svg+xml,' + svg.replace('%', '%25').replace('#', '%23').replace('<', '%3C').replace('>', '%3E')
+    return 'data:image/svg+xml,' + svg.replace('%', '%25').replace('#', '%23').replace('<', '%3C').replace('>', '%3E').replace("'", '%27')
 
 def main():
     result, skipped = {}, {}
