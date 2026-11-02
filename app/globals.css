@@ -128,10 +128,25 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
 .portfolio-root .gallery-description-toggle[data-slot="button"] {position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; border: 0; padding: 0; background: transparent!important; border-radius: var(--radius); cursor: pointer; transform: none!important; scale: none!important;}
 .portfolio-root .gallery-description-toggle:focus-visible {outline-offset: -4px;}
 .portfolio-description-strip {position: absolute; z-index: 4; left: 0; right: 0; bottom: 0; padding: 10px 12px; background: #fffffff2; color: var(--text); font-size: .875rem; line-height: 1.25rem; pointer-events: none; visibility: hidden; opacity: 0;}
-.portfolio-gallery:has(.gallery-pagination) .portfolio-description-strip {bottom: 36px;}
 .portfolio-gallery[data-description-open="true"] .portfolio-description-strip {visibility: visible; opacity: 1;}
 @supports ((backdrop-filter: blur(16px)) or (-webkit-backdrop-filter: blur(16px))) {
  .portfolio-description-strip {background: #fffc; -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);}
+}
+/* The description and the media controls know about each other (Alex, Nov 2). The description
+   is a bottom panel; with dots it reaches the card's foot, so the dots and count sit inside it.
+   While it shows, every control anchored to the card's bottom (play, scrubber, time, mute, full
+   screen) rises by the panel's measured height (--description-lift, set by the gallery), keeping
+   its own 8 px inset, and the side arrows re-centre on the media left visible. Panel and controls
+   move together over 240 ms; under Reduce Motion they move instantly. */
+.portfolio-gallery:has(.gallery-pagination) .portfolio-description-strip {bottom: 0; padding-bottom: 36px;}
+.portfolio-gallery-stage {--lift: 0px;}
+.portfolio-gallery[data-description-open="true"] .portfolio-gallery-stage {--lift: var(--description-lift, 0px);}
+.portfolio-description-strip {transform: translateY(var(--description-lift, 100%)); transition: transform .24s cubic-bezier(.2,.8,.2,1), opacity .24s cubic-bezier(.2,.8,.2,1), visibility 0s linear .24s;}
+.portfolio-gallery[data-description-open="true"] .portfolio-description-strip {transform: none; transition-delay: 0s;}
+.portfolio-gallery-stage .media-controls:not(.film-quick-controls) {transform: translateY(calc(-1 * var(--lift))); transition: transform .24s cubic-bezier(.2,.8,.2,1);}
+.portfolio-gallery-stage .media-controls.gallery-navigation {transform: translateY(calc(-50% - var(--lift) / 2));}
+@media (prefers-reduced-motion:reduce) {
+ .portfolio-description-strip, .portfolio-gallery-stage .media-controls {transition: none;}
 }
 .gallery-pagination {position: absolute; z-index: 4; bottom: 0; left: 0; right: 0; height: 36px; display: flex; align-items: center; justify-content: center; gap: 10px; pointer-events: none;}
 .gallery-dots, .gallery-count {display: flex; align-items: center; justify-content: center; gap: 5px; height: 22px; padding-inline: 7px; background: #fffffff2; color: #171717; border-radius: var(--radius);}
