@@ -1833,11 +1833,11 @@
         {
           "kind": "video",
           "id": "p041-telefoni-01",
-          "src": "media/p041-telefoni-01.mp4",
+          "src": "media/p041-telefoni-01-audio.mp4",
           "width": 960,
           "height": 540,
           "duration_seconds": 281.5,
-          "has_audio": false,
+          "has_audio": true,
           "alt": "An edited sequence of title cards, people using telephones and scenes from film footage.",
           "poster": {
             "kind": "image",
@@ -1879,7 +1879,8 @@
     }
   ],
   "retired_media": [
+    "media/p041-telefoni-01-poster-w1280.webp",
     "media/p041-telefoni-01-poster-w640.webp",
-    "media/p041-telefoni-01-poster-w1280.webp"
+    "media/p041-telefoni-01.mp4"
   ]
 }

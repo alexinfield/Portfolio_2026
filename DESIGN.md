@@ -35,8 +35,9 @@ The supplied case-study image panels retain their content.
   Long-film source URLs are present with preload="none" and no autoplay, so
   native Play never depends on pointer events reaching page script. Native
   control rows stay outside the Personal description hit target. Media-control
-  focus does not open a description. Telefoni stays paused on its poster until
-  demand. Actual H.264 decoding requires a supporting browser; tests label the
+  focus does not open a description. Video 2018 (Telefoni) stays paused on its
+  poster until demand and starts muted; its mute and full-screen buttons turn
+  the sound on (iPhone uses the video element's own full screen). Actual H.264 decoding requires a supporting browser; tests label the
   existing WebM fixture used for Telefoni UI coverage when H.264 is unavailable.
 - Type: Funktional Grotesk uses font-display: block and the Regular/Medium
   faces are preloaded, so no fallback face is ever painted on first load.
