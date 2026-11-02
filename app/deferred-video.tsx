@@ -50,7 +50,7 @@ export default function DeferredVideo({
       </>}
       <video
         data-lqip={posterLqip ? "" : undefined}
-        style={{...mediaStyle,...(posterLqip?{"--lqip":`url(${posterLqip})`}:{}),...(edgeFill?{maskImage:`linear-gradient(${portrait?90:180}deg, transparent, #000 12px, #000 calc(100% - 12px), transparent)`}:{})}}
+        style={{...mediaStyle,...(posterLqip?{"--lqip":`url("${posterLqip}")`}:{}),...(edgeFill?{maskImage:`linear-gradient(${portrait?90:180}deg, transparent, #000 12px, #000 calc(100% - 12px), transparent)`}:{})}}
         data-lazy-video
         data-preview-time={previewTime}
         data-autoplay-video={autoplay && !longFilm ? "true" : undefined}

@@ -386,7 +386,7 @@ test("every rendered image and video poster carries a blurred low-res placeholde
       if(/^<video/.test(tag)&&!/\sposter=/.test(tag))continue;
       images++;
       const src=(tag.match(/\s(?:src|poster)="([^"]+)"/)||[])[1]??"";
-      const placeholder=tag.match(/--lqip:url\((data:image\/webp;base64,[A-Za-z0-9+/=]+)\)/);
+      const placeholder=tag.match(/--lqip:url\(&quot;(data:image\/svg\+xml,[^&]*?feGaussianBlur[^&]*?data:image\/webp;base64,[A-Za-z0-9+/=]+[^&]*?)&quot;\)/);
       if(placeholder){assert.match(tag,/\sdata-lqip=""/,path);bytes+=placeholder[1].length;continue;}
       const key=src.replace(/^(\.\.\/)+|^\.\//,"/").replace(/^\/?(?=assets)/,"/");
       if(![...skipped].some(s=>key.endsWith(s.replace(/^\//,""))))missing.push(src);
@@ -396,8 +396,8 @@ test("every rendered image and video poster carries a blurred low-res placeholde
     assert.ok(bytes<40000,`${path}: ${bytes} placeholder bytes`);
   }
   const css=(await Promise.all((await readdir(new URL("../gh-pages/assets/",import.meta.url))).filter(name=>name.endsWith(".css")).map(name=>exported("assets/"+name)))).join("\n");
-  assert.match(css,/\[data-lqip\]\{background-image:var\(--lqip\)/);
-  assert.match(css,/\[data-lqip\]\[data-lqip-done\]/);
+  assert.match(css,/\[data-lqip\]:not\(\[data-lqip-done\]\)\{background:var\(--lqip-grain\)/);
+  assert.match(css,/\[data-lqip\]\[data-lqip-done\]\{background:none;box-shadow:none\}/);
   const runtime=await read("public/portfolio-runtime.js");assert.match(runtime,/lqipDone = "true"/);
 });
 

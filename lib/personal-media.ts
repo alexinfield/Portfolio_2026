@@ -19,7 +19,7 @@ export type PersonalProject = {
   hidden?: boolean;
 };
 export const personalAsset = (source: string) => `../assets/personal/${source}`;
-export const lqipStyle = (lqip?: string) => (lqip ? {"--lqip": `url(${lqip})`} as CSSProperties : undefined);
+export const lqipStyle = (lqip?: string) => (lqip ? {"--lqip": `url("${lqip}")`} as CSSProperties : undefined);
 
 export function personalMediaStyle(media:PersonalMedia, framing:PersonalFraming):CSSProperties {
   const ratio=media.width/media.height, target=4/3, padded=framing.fit==="pad";
