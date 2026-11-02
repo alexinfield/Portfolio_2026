@@ -75,6 +75,14 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
    and bottom and 2 px each side; every visible edge is an opaque interior pixel.
    No transforms or clip paths: the boxes stay pixel-snapped. */
 .portfolio-case-stack :is(.case-media, .case-video video) {width: calc(100% + 4px); max-width: none; margin-inline: -2px; height: calc((100cqw + 4px) * var(--media-ratio, .5625) - 6px); object-fit: cover; object-position: 50% 50%;}
+/* Videos paint through their own layer and can leave an edge device row
+   unpainted at fractional positions (a black line between two films). Each
+   stacked video bleeds 1 px under its neighbours; layout is unchanged because
+   the negative margins cancel the extra height. Wrappers stay unclipped and
+   the stack clips the side overscan. */
+.portfolio-case-stack :is(.case-video, .case-film, .case-composite) {overflow: visible;}
+.portfolio-case-stack .case-video {display: flow-root;}
+.portfolio-case-stack .case-video video {height: calc((100cqw + 4px) * var(--media-ratio, .5625) - 4px); margin-block: -1px;}
 /* Side-by-side panels share one row height: each column's fr equals its
    media's aspect ratio (set inline), so neither side leaves an empty band. */
 .case-composite {display: grid; grid-template-columns: var(--composite-columns, repeat(2,minmax(0,1fr))); gap: 0; align-items: stretch;}
@@ -82,6 +90,7 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
 @media (min-width:768px) {
  .portfolio-case-stack .case-composite {width: calc(100% + 4px); max-width: none; margin-inline: -2px; height: calc((100cqw + 4px) * var(--composite-ratio) - 6px); grid-template-rows: minmax(0,1fr);}
  .portfolio-case-stack .case-composite :is(.case-media, .case-video, .case-video video) {width: 100%; margin-inline: 0; height: 100%; object-fit: cover;}
+ .portfolio-case-stack .case-composite .case-video video {height: calc(100% + 2px); margin-block: -1px;}
 }
 .portfolio-case-navigation, .case-text {padding-inline: 18px;}
 .portfolio-case-navigation {display: flex; justify-content: center; align-items: center; gap: var(--inline); margin-top: var(--section);}

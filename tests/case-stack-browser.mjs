@@ -7,11 +7,11 @@ import assert from "node:assert/strict";
 // those rows match each other.
 const caseSlugs = ["molekule-go", "ping", "luma", "niche", "hyphae", "mode"];
 const geometryWidths = [393, 1024, 1440];
-const pixelCases = ["molekule-go", "mode"], pixelWidths = [393, 1440], pixelScales = [1, 2];
+const pixelCases = ["molekule-go", "ping", "mode"], pixelWidths = [393, 1440], pixelScales = [1, 2];
 
 const measure = () => {
   const vw = document.documentElement.clientWidth, header = document.querySelector(".portfolio-header").getBoundingClientRect().bottom;
-  const boxes = [...document.querySelectorAll(".portfolio-case-stack img, .portfolio-case-stack video")]
+  const boxes = [...document.querySelectorAll(".portfolio-case-stack img, .portfolio-case-stack .case-video")]
     .filter(element => element.getClientRects().length && !element.closest("[hidden],noscript"))
     .map(element => { const r = element.getBoundingClientRect(); const style = getComputedStyle(element);
       return {top: r.top + scrollY, bottom: r.bottom + scrollY, left: r.left, right: r.right, border: style.borderTopWidth + style.borderBottomWidth, radius: style.borderTopLeftRadius, margin: style.marginTop + style.marginBottom}; });
