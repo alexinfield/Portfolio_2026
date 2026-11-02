@@ -3,8 +3,8 @@ site renders (case panels, home covers, Info artwork, video posters, Personal me
 
 Offline step (Pillow with WebP), re-run after adding or replacing images:
     python3 scripts/generate-lqip.py
-Each placeholder is decoded from the smallest existing variant of its image, resized to 24 px wide,
-saved as WebP (q40) inside an SVG that blurs, dims and desaturates it at display resolution. Images with real
+Each placeholder is decoded from the smallest existing variant of its image, resized to 32 px wide,
+dimmed and desaturated, saved as WebP (q40) inside an SVG that blurs it at display resolution. Images with real
 transparency inside the frame get no placeholder, so a loaded image always paints exactly as before.
 """
 import base64, io, json, re
@@ -14,7 +14,7 @@ from PIL import Image, ImageFilter
 ROOT = Path(__file__).resolve().parent.parent
 PUBLIC = ROOT / 'public'
 RASTER = re.compile(r'''/assets/[^"'`\s)]+?\.(?:png|jpe?g|webp|avif|gif)''', re.I)
-WIDTH = 24
+WIDTH = 32
 
 def used_sources():
     found = set()
@@ -50,29 +50,28 @@ def has_interior_alpha(image):
     low = sum(count for value, count in enumerate(inner.histogram()) if value < 250)
     return low > inner.size[0] * inner.size[1] * 0.002
 
-SATURATION, BRIGHTNESS, BLUR = 0.72, 0.84, 1.6
+SATURATION, BRIGHTNESS, BLUR = 0.72, 0.84, 2.2
 
 def color_matrix(s=SATURATION, b=BRIGHTNESS):
-    """Saturate then dim, as one feColorMatrix (Rec. 709 luma)."""
+    """Saturate then dim (Rec. 709 luma), as a Pillow RGB matrix. Baked into the pixels: a linear
+    matrix commutes with the blur, so this matches grading after the blur without SVG bytes."""
     lr, lg, lb = 0.2126, 0.7152, 0.0722
     rows = [[lr + (1 - lr) * s, lg - lg * s, lb - lb * s],
             [lr - lr * s, lg + (1 - lg) * s, lb - lb * s],
             [lr - lr * s, lg - lg * s, lb + (1 - lb) * s]]
-    fmt = lambda v: (f'{v * b:.2f}'.rstrip('0').rstrip('.') or '0').replace('0.', '.', 1) if v * b < 1 else f'{v * b:.2f}'
-    return ' '.join(' '.join(fmt(v) for v in row) + ' 0 0' for row in rows) + ' 0 0 0 1 0'
+    return tuple(v for row in rows for v in [*(x * b for x in row), 0])
 
 def placeholder(image):
-    """A 24 px WebP inside an SVG that blurs it at display resolution, so it never shows blocks
+    """A 32 px WebP inside an SVG that blurs it at display resolution, so it never shows blocks
     at any size; dimmed and desaturated so it reads as loading on the dark site; alpha clamped
     so the blurred edges stay solid to the box edge."""
     rgb = image.convert('RGB')
     height = max(1, round(WIDTH * rgb.height / rgb.width))
-    small = rgb.resize((WIDTH, height), Image.LANCZOS)
+    small = rgb.resize((WIDTH, height), Image.LANCZOS).convert('RGB', color_matrix())
     out = io.BytesIO(); small.save(out, 'WEBP', quality=40, method=6)
     webp = base64.b64encode(out.getvalue()).decode()
     svg = (f"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 {WIDTH} {height}'>"
            f"<filter id='b' color-interpolation-filters='sRGB'><feGaussianBlur stdDeviation='{BLUR}'/>"
-           f"<feColorMatrix values='{color_matrix()}'/>"
            "<feComponentTransfer><feFuncA type='discrete' tableValues='1'/></feComponentTransfer></filter>"
            f"<image width='{WIDTH}' height='{height}' filter='url(#b)' href='data:image/webp;base64,{webp}'/></svg>")
     return 'data:image/svg+xml,' + svg.replace('%', '%25').replace('#', '%23').replace('<', '%3C').replace('>', '%3E').replace("'", '%27')

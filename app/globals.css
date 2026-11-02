@@ -219,7 +219,7 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
 /* Loading placeholders (Alex, Nov 2): no blank holes on slow connections, styled as a calm
    dark glass. Each media element paints its own placeholder until its pixels arrive, so it is
    clipped to the element's box and needs no wrapper.
-   - --lqip: a 24 px image inside an SVG that blurs it at display resolution (never blocky),
+   - --lqip: a 32 px image inside an SVG that blurs it at display resolution (never blocky),
      dimmed and desaturated so it reads as "loading", alpha clamped so its edges stay solid.
    - grain: one shared noise tile that hides banding in the smooth blur.
    - cards (Home, Personal) add the glass: a curved specular from the top-left, soft depth at the
@@ -239,11 +239,22 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
 }
 /* The light Personal page lifts the dimmed field slightly so it does not read heavy. */
 html[data-theme="light"] {--lqip-lift: linear-gradient(rgb(255 255 255 / .12), rgb(255 255 255 / .12));}
-/* Reveal inside clipped cards: a short focus pull (the card clips the blur fringe). Case stacks
-   swap instantly so neighbouring panels never see a fringe; reduced motion is always instant. */
-@keyframes lqip-focus {from {filter: blur(12px) saturate(.8) brightness(.9); transform: scale(1.04);} to {filter: none; transform: none;}}
-[data-lqip-reveal] {animation: lqip-focus .26s cubic-bezier(.2,.7,.2,1) both;}
-@media (prefers-reduced-motion: reduce) {[data-lqip-reveal] {animation: none;}}
+/* Reveal on Home cards: the card (already the cover's clipping frame, same box) paints the
+   glass, the cover stays hidden from first paint and fades in over 250 ms once decoded
+   (runtime data-lqip-show), then the card drops the glass (data-lqip-done). Only with
+   scripting and motion allowed; otherwise the cover paints its own placeholder and swaps
+   instantly, as Personal and the edge-to-edge case stacks always do. If the runtime never
+   arrives, the cover shows after 12 s (lqip-failsafe). Opacity only: no filter, no layout. */
+@keyframes lqip-failsafe {to {opacity: 1;}}
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+ .portfolio-work-card[data-lqip-frame]:not([data-lqip-done]) {
+  background: var(--lqip-sheen), var(--lqip-depth), var(--lqip-lift), var(--lqip-grain) 0 0 / 160px 160px repeat, var(--lqip) center / cover no-repeat !important;
+  box-shadow: inset 1px 1px 0 rgb(255 255 255 / .16), inset -1px -1px 0 rgb(0 0 0 / .22), inset 0 0 0 1px rgb(255 255 255 / .05), inset 0 0 28px rgb(255 255 255 / .05);
+ }
+ .portfolio-work-card[data-lqip-frame]:not([data-lqip-done]) > img[data-lqip] {background: none; box-shadow: none; opacity: 0; animation: lqip-failsafe 0s 12s forwards;}
+ html[data-lqip-live] .portfolio-work-card[data-lqip-frame] > img[data-lqip] {animation: none;}
+ .portfolio-work-card[data-lqip-frame][data-lqip-show] > img[data-lqip] {opacity: 1; transition: opacity .25s cubic-bezier(.2,.7,.2,1);}
+}
 :fullscreen [data-lqip], [data-lqip]:fullscreen, [data-lqip][data-lqip-done] {background: none; box-shadow: none;}
 
 /* Scroll sequences sit in the case stack edge to edge; the stage sticks just below the header. */

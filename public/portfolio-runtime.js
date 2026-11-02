@@ -6,22 +6,31 @@
   // Low-res placeholders are only needed until the real pixels arrive; dropping them after
   // load keeps anti-aliased rounded corners exactly as they were without a placeholder.
   const placeholderDone = (element) => { element.dataset.lqipDone = "true"; };
-  // Media that arrives later gets a short focus pull, only inside clipped cards (Home, Personal);
-  // case stacks and reduced motion swap instantly.
-  const reveal = (element) => {
-    if (motion.matches || !element.closest(".portfolio-work-card, .portfolio-image, .personal-video")) return placeholderDone(element);
-    const finish = () => { delete element.dataset.lqipReveal; placeholderDone(element); };
-    element.addEventListener("animationend", finish, { once: true });
-    setTimeout(finish, 700);
-    element.dataset.lqipReveal = "";
-  };
+  // Home cards: CSS hides the cover over the card's glass from first paint; once the cover is
+  // decoded it fades in (data-lqip-show, 250 ms), then the glass drops. A cover whose CSS
+  // failsafe (12 s from first style) has already fired, or any cover under reduced motion or
+  // without the hiding CSS, gets no fade: show at once, drop the glass on load.
+  const hidden = (image) => !motion.matches && Boolean(image?.getAnimations?.().some((a) => a.animationName === "lqip-failsafe" && a.playState !== "finished"));
+  const frames = [...document.querySelectorAll("[data-lqip-frame]")].map((frame) => [frame, frame.querySelector("img[data-lqip]")]).map(([frame, image]) => [frame, image, hidden(image)]);
+  if (frames.some(([, , fade]) => fade)) document.documentElement.dataset.lqipLive = "";
+  frames.forEach(([frame, image, fade]) => {
+    const finish = () => { placeholderDone(frame); if (image) placeholderDone(image); };
+    const show = () => { frame.dataset.lqipShow = ""; };
+    if (!image) return finish();
+    if (!fade) show();
+    const ready = () => { show(); if (fade) setTimeout(finish, 320); else finish(); };
+    if (image.complete && image.naturalWidth) return ready();
+    image.addEventListener("load", () => (image.decode ? image.decode().catch(() => {}) : Promise.resolve()).then(ready), { once: true });
+    image.addEventListener("error", show, { once: true });
+  });
   document.querySelectorAll("img[data-lqip]").forEach((image) => {
+    if (image.closest("[data-lqip-frame]")) return;
     if (image.complete && image.naturalWidth) placeholderDone(image);
-    else image.addEventListener("load", () => reveal(image), { once: true });
+    else image.addEventListener("load", () => placeholderDone(image), { once: true });
   });
   document.querySelectorAll("video[data-lqip][poster]").forEach((video) => {
     const probe = new Image();
-    probe.onload = () => reveal(video);
+    probe.onload = () => placeholderDone(video);
     probe.src = video.poster;
   });
 

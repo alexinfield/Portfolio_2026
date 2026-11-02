@@ -381,14 +381,20 @@ test("every rendered image and video poster carries a blurred low-res placeholde
   const skipped=new Set(Object.keys(lqip.skipped));
   for(const path of pages){
     const html=documentOnly(await exported(path));
-    let bytes=0,images=0,missing=[];
-    for(const [tag] of withoutSequences(html).matchAll(/<(?:img|video)\b[^>]*>/g)){
+    let bytes=0,images=0,missing=[],frame=false;
+    for(const [tag] of withoutSequences(html).matchAll(/<(?:img|video|div)\b[^>]*>/g)){
+      if(/^<div/.test(tag)){
+        // Home cards: the card frame carries the placeholder; its cover inherits it.
+        if(/\sdata-lqip-frame=""/.test(tag)){const p=tag.match(/--lqip:url\(&quot;(data:image\/svg\+xml,[^&]*?)&quot;\)/);assert.ok(p,`${path}: frame without placeholder`);assert.match(p[1],/feGaussianBlur/);bytes+=p[1].length;frame=true;}
+        continue;
+      }
       if(/^<video/.test(tag)&&!/\sposter=/.test(tag))continue;
       images++;
       const src=(tag.match(/\s(?:src|poster)="([^"]+)"/)||[])[1]??"";
       const placeholder=tag.match(/--lqip:url\(&quot;(data:image\/svg\+xml,[^&]*?)&quot;\)/);
       if(placeholder){assert.match(placeholder[1],/feGaussianBlur/,path);assert.match(placeholder[1],/data:image\/webp;base64,[A-Za-z0-9+/=]+/,path);assert.doesNotMatch(placeholder[1],/'/,path);}
       if(placeholder){assert.match(tag,/\sdata-lqip=""/,path);bytes+=placeholder[1].length;continue;}
+      if(frame&&/^<img/.test(tag)&&/\sdata-lqip=""/.test(tag)){frame=false;continue;}
       const key=src.replace(/^(\.\.\/)+|^\.\//,"/").replace(/^\/?(?=assets)/,"/");
       if(![...skipped].some(s=>key.endsWith(s.replace(/^\//,""))))missing.push(src);
     }
@@ -398,9 +404,14 @@ test("every rendered image and video poster carries a blurred low-res placeholde
   }
   const css=(await Promise.all((await readdir(new URL("../gh-pages/assets/",import.meta.url))).filter(name=>name.endsWith(".css")).map(name=>exported("assets/"+name)))).join("\n");
   assert.match(css,/\[data-lqip\]:not\(\[data-lqip-done\]\)\{background:var\(--lqip-grain\)/);
-  assert.match(css,/\[data-lqip\]\[data-lqip-done\]\{background:none;box-shadow:none\}/);
-  const runtime=await read("public/portfolio-runtime.js");assert.match(runtime,/lqipDone = "true"/);assert.match(runtime,/motion\.matches \|\| !element\.closest/);
-  assert.match(css,/@media \(prefers-reduced-motion:reduce\)\{\[data-lqip-reveal\]\{animation:none\}\}/);
+  assert.match(css,/\[data-lqip\]\[data-lqip-done\]\)?\{(?:box-shadow:none;background:(?:0 0|none)|background:(?:0 0|none);box-shadow:none)\}/);
+  // Home cards fade only with scripting and motion allowed, opacity only, with a failsafe.
+  assert.match(css,/@media \(scripting:\s?enabled\) and \(prefers-reduced-motion:\s?no-preference\)/);
+  assert.match(css,/lqip-failsafe/);assert.doesNotMatch(css,/lqip-focus|data-lqip-reveal/);
+  // The placeholder table is server-only: no client chunk may bundle it.
+  for(const name of (await readdir(new URL("../gh-pages/assets/",import.meta.url))).filter(name=>name.endsWith(".js")))assert.doesNotMatch(await exported("assets/"+name),/feGaussianBlur/,name);
+  const runtime=await read("public/portfolio-runtime.js");assert.match(runtime,/lqipDone = "true"/);
+  assert.match(runtime,/a\.animationName === "lqip-failsafe" && a\.playState !== "finished"/);assert.match(runtime,/frame\.dataset\.lqipShow = ""/);
 });
 
 test("Luma opens and Molekule Go panel 19 plays as scroll sequences with versioned module, poster, still and frames",async()=>{
