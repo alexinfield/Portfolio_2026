@@ -1,0 +1,1885 @@
+{
+  "schema_version": 1,
+  "items": [
+    {
+      "id": "folio",
+      "title": "Folio",
+      "year": 2023,
+      "category": "Furniture",
+      "link": "/projects/mode",
+      "cover": {
+        "kind": "image",
+        "id": "folio-01",
+        "src": "media/folio-01-w1280.webp",
+        "width": 1280,
+        "height": 848,
+        "alt": "A light-colored wooden table with open shelves and angled legs, photographed against a dark backdrop.",
+        "variants": [
+          {
+            "src": "media/folio-01-w640.webp",
+            "width": 640,
+            "height": 424,
+            "bytes": 7612
+          },
+          {
+            "src": "media/folio-01-w1280.webp",
+            "width": 1280,
+            "height": 848,
+            "bytes": 18124
+          },
+          {
+            "src": "media/folio-01-w1920.webp",
+            "width": 1920,
+            "height": 1272,
+            "bytes": 31012
+          }
+        ],
+        "framing": {
+          "fit": "cover",
+          "object_position": "50% 53%",
+          "background": "#000000"
+        }
+      },
+      "gallery": [],
+      "short_text": null,
+      "framing": {
+        "fit": "cover",
+        "object_position": "50% 53%",
+        "background": "#000000"
+      }
+    },
+    {
+      "id": "niche",
+      "title": "Niche",
+      "year": 2024,
+      "category": "Furniture",
+      "link": "/projects/niche",
+      "cover": {
+        "kind": "image",
+        "id": "niche-01",
+        "src": "media/niche-01-w1280.webp",
+        "width": 1280,
+        "height": 720,
+        "alt": "A rounded enclosure with a pale exterior and a translucent front panel, rendered on a gray background.",
+        "variants": [
+          {
+            "src": "media/niche-01-w640.webp",
+            "width": 640,
+            "height": 360,
+            "bytes": 3104
+          },
+          {
+            "src": "media/niche-01-w1280.webp",
+            "width": 1280,
+            "height": 720,
+            "bytes": 8620
+          },
+          {
+            "src": "media/niche-01-w1920.webp",
+            "width": 1920,
+            "height": 1080,
+            "bytes": 18338
+          }
+        ],
+        "framing": {
+          "fit": "cover",
+          "object_position": "50% 50%",
+          "background": "#D9D9D9"
+        }
+      },
+      "gallery": [],
+      "short_text": null,
+      "framing": {
+        "fit": "cover",
+        "object_position": "50% 50%",
+        "background": "#D9D9D9"
+      }
+    },
+    {
+      "id": "server-rack",
+      "title": "Server Rack",
+      "year": 2026,
+      "category": "Product design",
+      "link": null,
+      "cover": {
+        "kind": "image",
+        "id": "server-rack-01",
+        "src": "media/server-rack-01-w1280.webp",
+        "width": 1280,
+        "height": 880,
+        "alt": "Gray digital model of a vented rectangular enclosure with an open upper bay and stacked front panels.",
+        "variants": [
+          {
+            "src": "media/server-rack-01-w640.webp",
+            "width": 640,
+            "height": 440,
+            "bytes": 21840
+          },
+          {
+            "src": "media/server-rack-01-w1280.webp",
+            "width": 1280,
+            "height": 880,
+            "bytes": 49516
+          },
+          {
+            "src": "media/server-rack-01-w1600.webp",
+            "width": 1600,
+            "height": 1100,
+            "bytes": 64092
+          }
+        ],
+        "framing": {
+          "fit": "pad",
+          "object_position": "50% 50%",
+          "background": "#B7B7B7",
+          "fill": "edge-extend"
+        }
+      },
+      "gallery": [
+        {
+          "kind": "image",
+          "id": "server-rack-01",
+          "src": "media/server-rack-01-w1280.webp",
+          "width": 1280,
+          "height": 880,
+          "alt": "Gray digital model of a vented rectangular enclosure with an open upper bay and stacked front panels.",
+          "variants": [
+            {
+              "src": "media/server-rack-01-w640.webp",
+              "width": 640,
+              "height": 440,
+              "bytes": 21840
+            },
+            {
+              "src": "media/server-rack-01-w1280.webp",
+              "width": 1280,
+              "height": 880,
+              "bytes": 49516
+            },
+            {
+              "src": "media/server-rack-01-w1600.webp",
+              "width": 1600,
+              "height": 1100,
+              "bytes": 64092
+            }
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#B7B7B7",
+            "fill": "edge-extend"
+          }
+        },
+        {
+          "kind": "image",
+          "id": "server-rack-02",
+          "src": "media/server-rack-02-w1280.webp",
+          "width": 1280,
+          "height": 880,
+          "alt": "Exploded digital view separating two front panels, a tray, rails and small rectangular components.",
+          "variants": [
+            {
+              "src": "media/server-rack-02-w640.webp",
+              "width": 640,
+              "height": 440,
+              "bytes": 16890
+            },
+            {
+              "src": "media/server-rack-02-w1280.webp",
+              "width": 1280,
+              "height": 880,
+              "bytes": 38034
+            },
+            {
+              "src": "media/server-rack-02-w1600.webp",
+              "width": 1600,
+              "height": 1100,
+              "bytes": 48892
+            }
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#B3B3B3",
+            "fill": "edge-extend"
+          }
+        },
+        {
+          "kind": "image",
+          "id": "server-rack-03",
+          "src": "media/server-rack-03-w1280.webp",
+          "width": 1280,
+          "height": 914,
+          "alt": "White digital model of a vented rectangular enclosure with open bays and front panels.",
+          "variants": [
+            {
+              "src": "media/server-rack-03-w640.webp",
+              "width": 640,
+              "height": 457,
+              "bytes": 13086
+            },
+            {
+              "src": "media/server-rack-03-w1280.webp",
+              "width": 1280,
+              "height": 914,
+              "bytes": 35926
+            },
+            {
+              "src": "media/server-rack-03-w1400.webp",
+              "width": 1400,
+              "height": 1000,
+              "bytes": 42492
+            }
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#FFFFFF",
+            "fill": "edge-extend"
+          }
+        },
+        {
+          "kind": "image",
+          "id": "server-rack-04",
+          "src": "media/server-rack-04-w960.webp",
+          "width": 960,
+          "height": 1280,
+          "alt": "Two narrow rectangular frames and several small dark pieces on a gridded cutting mat.",
+          "variants": [
+            {
+              "src": "media/server-rack-04-w640.webp",
+              "width": 640,
+              "height": 853,
+              "bytes": 119836
+            },
+            {
+              "src": "media/server-rack-04-w960.webp",
+              "width": 960,
+              "height": 1280,
+              "bytes": 198186
+            }
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#9A9A9A",
+            "fill": "edge-extend"
+          }
+        }
+      ],
+      "short_text": null,
+      "framing": {
+        "fit": "pad",
+        "object_position": "50% 50%",
+        "background": "#B7B7B7",
+        "fill": "edge-extend"
+      }
+    },
+    {
+      "id": "stool",
+      "title": "Stool",
+      "year": 2024,
+      "category": "Furniture",
+      "link": null,
+      "cover": {
+        "kind": "image",
+        "id": "stool-01",
+        "src": "media/stool-01-w1280.webp",
+        "width": 1280,
+        "height": 1127,
+        "alt": "An angular wooden stool with rounded top corners and rows of slots, photographed against a dark background.",
+        "variants": [
+          {
+            "src": "media/stool-01-w640.webp",
+            "width": 640,
+            "height": 563,
+            "bytes": 18434
+          },
+          {
+            "src": "media/stool-01-w1280.webp",
+            "width": 1280,
+            "height": 1127,
+            "bytes": 61786
+          },
+          {
+            "src": "media/stool-01-w1920.webp",
+            "width": 1920,
+            "height": 1690,
+            "bytes": 117250
+          }
+        ],
+        "framing": {
+          "fit": "pad",
+          "object_position": "50% 50%",
+          "background": "#090B0F",
+          "fill": "edge-extend"
+        }
+      },
+      "gallery": [
+        {
+          "kind": "image",
+          "id": "stool-01",
+          "src": "media/stool-01-w1280.webp",
+          "width": 1280,
+          "height": 1127,
+          "alt": "An angular wooden stool with rounded top corners and rows of slots, photographed against a dark background.",
+          "variants": [
+            {
+              "src": "media/stool-01-w640.webp",
+              "width": 640,
+              "height": 563,
+              "bytes": 18434
+            },
+            {
+              "src": "media/stool-01-w1280.webp",
+              "width": 1280,
+              "height": 1127,
+              "bytes": 61786
+            },
+            {
+              "src": "media/stool-01-w1920.webp",
+              "width": 1920,
+              "height": 1690,
+              "bytes": 117250
+            }
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#090B0F",
+            "fill": "edge-extend"
+          }
+        },
+        {
+          "kind": "image",
+          "id": "stool-02",
+          "src": "media/stool-02-w1280.webp",
+          "width": 1280,
+          "height": 1280,
+          "alt": "A nearly straight-on view of a slotted wooden stool against a dark background.",
+          "variants": [
+            {
+              "src": "media/stool-02-w640.webp",
+              "width": 640,
+              "height": 640,
+              "bytes": 15600
+            },
+            {
+              "src": "media/stool-02-w1280.webp",
+              "width": 1280,
+              "height": 1280,
+              "bytes": 49872
+            },
+            {
+              "src": "media/stool-02-w1920.webp",
+              "width": 1920,
+              "height": 1920,
+              "bytes": 96606
+            }
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#212121",
+            "fill": "edge-extend"
+          }
+        },
+        {
+          "kind": "image",
+          "id": "stool-03",
+          "src": "media/stool-03-w1280.webp",
+          "width": 1280,
+          "height": 848,
+          "alt": "An angled view through the open center of a slotted wooden stool against a dark background.",
+          "variants": [
+            {
+              "src": "media/stool-03-w640.webp",
+              "width": 640,
+              "height": 424,
+              "bytes": 13016
+            },
+            {
+              "src": "media/stool-03-w1280.webp",
+              "width": 1280,
+              "height": 848,
+              "bytes": 31800
+            },
+            {
+              "src": "media/stool-03-w1600.webp",
+              "width": 1600,
+              "height": 1060,
+              "bytes": 50036
+            }
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#000000",
+            "fill": "edge-extend"
+          }
+        }
+      ],
+      "short_text": null,
+      "framing": {
+        "fit": "pad",
+        "object_position": "50% 50%",
+        "background": "#090B0F",
+        "fill": "edge-extend"
+      }
+    },
+    {
+      "id": "desk-pen",
+      "title": "Desk Pen",
+      "year": 2025,
+      "category": "Product design",
+      "link": null,
+      "cover": {
+        "kind": "image",
+        "id": "desk-pen-01",
+        "src": "media/desk-pen-01-w1280.webp",
+        "width": 1280,
+        "height": 2276,
+        "alt": "A slim dark pen-shaped form standing vertically against a light background.",
+        "variants": [
+          {
+            "src": "media/desk-pen-01-w640.webp",
+            "width": 640,
+            "height": 1138,
+            "bytes": 2920
+          },
+          {
+            "src": "media/desk-pen-01-w1280.webp",
+            "width": 1280,
+            "height": 2276,
+            "bytes": 8814
+          },
+          {
+            "src": "media/desk-pen-01-w1920.webp",
+            "width": 1920,
+            "height": 3414,
+            "bytes": 17350
+          }
+        ],
+        "framing": {
+          "fit": "pad",
+          "object_position": "50% 50%",
+          "background": "#F8F8F8",
+          "fill": "edge-extend"
+        }
+      },
+      "gallery": [
+        {
+          "kind": "image",
+          "id": "desk-pen-01",
+          "src": "media/desk-pen-01-w1280.webp",
+          "width": 1280,
+          "height": 2276,
+          "alt": "A slim dark pen-shaped form standing vertically against a light background.",
+          "variants": [
+            {
+              "src": "media/desk-pen-01-w640.webp",
+              "width": 640,
+              "height": 1138,
+              "bytes": 2920
+            },
+            {
+              "src": "media/desk-pen-01-w1280.webp",
+              "width": 1280,
+              "height": 2276,
+              "bytes": 8814
+            },
+            {
+              "src": "media/desk-pen-01-w1920.webp",
+              "width": 1920,
+              "height": 3414,
+              "bytes": 17350
+            }
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#F8F8F8",
+            "fill": "edge-extend"
+          }
+        },
+        {
+          "kind": "video",
+          "id": "desk-pen-02",
+          "src": "media/desk-pen-02.mp4",
+          "width": 1280,
+          "height": 1280,
+          "duration_seconds": 3.033333,
+          "has_audio": false,
+          "alt": "A digitally rendered pen-shaped form lifts above and returns toward a rounded base.",
+          "poster": {
+            "kind": "image",
+            "id": "desk-pen-02-poster",
+            "src": "media/desk-pen-02-poster-w720.webp",
+            "width": 720,
+            "height": 720,
+            "alt": "A rendered dark pen-shaped form positioned above a rounded base on a black background.",
+            "variants": [
+              {
+                "src": "media/desk-pen-02-poster-w640.webp",
+                "width": 640,
+                "height": 640,
+                "bytes": 1660
+              },
+              {
+                "src": "media/desk-pen-02-poster-w720.webp",
+                "width": 720,
+                "height": 720,
+                "bytes": 1980
+              }
+            ]
+          },
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#010101",
+            "fill": "edge-extend"
+          }
+        },
+        {
+          "kind": "video",
+          "id": "desk-pen-03",
+          "src": "media/desk-pen-03.mp4",
+          "width": 1280,
+          "height": 1280,
+          "duration_seconds": 6.033333,
+          "has_audio": false,
+          "alt": "A close digital view moves along a slim dark pen-shaped form.",
+          "poster": {
+            "kind": "image",
+            "id": "desk-pen-03-poster",
+            "src": "media/desk-pen-03-poster-w720.webp",
+            "width": 720,
+            "height": 720,
+            "alt": "A close rendered view of a slim dark pen-shaped form on a black background.",
+            "variants": [
+              {
+                "src": "media/desk-pen-03-poster-w640.webp",
+                "width": 640,
+                "height": 640,
+                "bytes": 1528
+              },
+              {
+                "src": "media/desk-pen-03-poster-w720.webp",
+                "width": 720,
+                "height": 720,
+                "bytes": 1822
+              }
+            ]
+          },
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#010101",
+            "fill": "edge-extend"
+          }
+        },
+        {
+          "kind": "video",
+          "id": "desk-pen-04",
+          "src": "media/desk-pen-04.mp4",
+          "width": 1280,
+          "height": 720,
+          "duration_seconds": 9.5,
+          "has_audio": false,
+          "alt": "A cylindrical workpiece turns between the chuck and tailstock of a workshop lathe.",
+          "poster": {
+            "kind": "image",
+            "id": "desk-pen-04-poster",
+            "src": "media/desk-pen-04-poster-w1280.webp",
+            "width": 1280,
+            "height": 720,
+            "alt": "A cylindrical workpiece held between the chuck and tailstock of a workshop lathe.",
+            "variants": [
+              {
+                "src": "media/desk-pen-04-poster-w640.webp",
+                "width": 640,
+                "height": 360,
+                "bytes": 33104
+              },
+              {
+                "src": "media/desk-pen-04-poster-w1280.webp",
+                "width": 1280,
+                "height": 720,
+                "bytes": 72226
+              }
+            ]
+          },
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#AEAEAE",
+            "fill": "edge-extend"
+          }
+        },
+        {
+          "kind": "image",
+          "id": "desk-pen-05",
+          "src": "media/desk-pen-05-w404.webp",
+          "width": 404,
+          "height": 720,
+          "alt": "A slim reflective pen-shaped object stands in a rounded base beside a workshop machine.",
+          "variants": [
+            {
+              "src": "media/desk-pen-05-w404.webp",
+              "width": 404,
+              "height": 720,
+              "bytes": 17872
+            }
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#7B7B7B",
+            "fill": "edge-extend"
+          }
+        },
+        {
+          "kind": "video",
+          "id": "desk-pen-06",
+          "src": "media/desk-pen-06.mp4",
+          "width": 720,
+          "height": 1280,
+          "duration_seconds": 9.733008,
+          "has_audio": false,
+          "alt": "A hand lifts a reflective pen-shaped object out of a rounded base and returns it.",
+          "poster": {
+            "kind": "image",
+            "id": "desk-pen-06-poster",
+            "src": "media/desk-pen-06-poster-w720.webp",
+            "width": 720,
+            "height": 1280,
+            "alt": "A reflective pen-shaped object standing in a rounded base beside a workshop machine.",
+            "variants": [
+              {
+                "src": "media/desk-pen-06-poster-w640.webp",
+                "width": 640,
+                "height": 1138,
+                "bytes": 27988
+              },
+              {
+                "src": "media/desk-pen-06-poster-w720.webp",
+                "width": 720,
+                "height": 1280,
+                "bytes": 32046
+              }
+            ]
+          },
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#818181",
+            "fill": "edge-extend"
+          }
+        }
+      ],
+      "short_text": "Desk Pen explores a simple pen form through sketches, digital studies and a physical prototype.",
+      "framing": {
+        "fit": "pad",
+        "object_position": "50% 50%",
+        "background": "#F8F8F8",
+        "fill": "edge-extend"
+      }
+    },
+    {
+      "id": "p025-warp-paper-light-and-shadow-relief",
+      "title": "Warp",
+      "year": null,
+      "category": "Fabrication",
+      "link": null,
+      "cover": {
+        "kind": "image",
+        "id": "p025-warp-paper-light-and-shadow-relief-01",
+        "src": "media/p025-warp-paper-light-and-shadow-relief-01-w1280.webp",
+        "width": 1280,
+        "height": 1280,
+        "alt": "A square field of triangular paper fins with a denser central pattern and directional shadows.",
+        "variants": [
+          {
+            "src": "media/p025-warp-paper-light-and-shadow-relief-01-w640.webp",
+            "width": 640,
+            "height": 640,
+            "bytes": 87946
+          },
+          {
+            "src": "media/p025-warp-paper-light-and-shadow-relief-01-w1280.webp",
+            "width": 1280,
+            "height": 1280,
+            "bytes": 214128
+          },
+          {
+            "src": "media/p025-warp-paper-light-and-shadow-relief-01-w1600.webp",
+            "width": 1600,
+            "height": 1600,
+            "bytes": 379258
+          }
+        ],
+        "framing": {
+          "fit": "cover",
+          "object_position": "50% 50%",
+          "background": "#888783"
+        }
+      },
+      "gallery": [
+        {
+          "kind": "image",
+          "id": "p025-warp-paper-light-and-shadow-relief-01",
+          "src": "media/p025-warp-paper-light-and-shadow-relief-01-w1280.webp",
+          "width": 1280,
+          "height": 1280,
+          "alt": "A square field of triangular paper fins with a denser central pattern and directional shadows.",
+          "variants": [
+            {
+              "src": "media/p025-warp-paper-light-and-shadow-relief-01-w640.webp",
+              "width": 640,
+              "height": 640,
+              "bytes": 87946
+            },
+            {
+              "src": "media/p025-warp-paper-light-and-shadow-relief-01-w1280.webp",
+              "width": 1280,
+              "height": 1280,
+              "bytes": 214128
+            },
+            {
+              "src": "media/p025-warp-paper-light-and-shadow-relief-01-w1600.webp",
+              "width": 1600,
+              "height": 1600,
+              "bytes": 379258
+            }
+          ],
+          "framing": {
+            "fit": "cover",
+            "object_position": "50% 50%",
+            "background": "#888783"
+          }
+        },
+        {
+          "kind": "image",
+          "id": "p025-warp-paper-light-and-shadow-relief-02",
+          "src": "media/p025-warp-paper-light-and-shadow-relief-02-w1280.webp",
+          "width": 1280,
+          "height": 1322,
+          "alt": "A close angled view of triangular paper fins arranged in a radiating pattern with dark shadows.",
+          "variants": [
+            {
+              "src": "media/p025-warp-paper-light-and-shadow-relief-02-w640.webp",
+              "width": 640,
+              "height": 661,
+              "bytes": 104956
+            },
+            {
+              "src": "media/p025-warp-paper-light-and-shadow-relief-02-w1280.webp",
+              "width": 1280,
+              "height": 1322,
+              "bytes": 241762
+            },
+            {
+              "src": "media/p025-warp-paper-light-and-shadow-relief-02-w1549.webp",
+              "width": 1549,
+              "height": 1600,
+              "bytes": 361032
+            }
+          ],
+          "framing": {
+            "fit": "cover",
+            "object_position": "50% 50%",
+            "background": "#888783"
+          }
+        }
+      ],
+      "short_text": "Paper, light and shadow.",
+      "framing": {
+        "fit": "cover",
+        "object_position": "50% 50%",
+        "background": "#888783"
+      }
+    },
+    {
+      "id": "mycelium",
+      "title": "Mycelium",
+      "year": null,
+      "category": "Materials",
+      "link": null,
+      "cover": {
+        "kind": "image",
+        "id": "mycelium-01",
+        "src": "media/mycelium-01-w1200.webp",
+        "width": 1200,
+        "height": 1600,
+        "alt": "Close-up of an off-white fibrous surface with concentric grooves and tan flecks.",
+        "variants": [
+          {
+            "src": "media/mycelium-01-w640.webp",
+            "width": 640,
+            "height": 853,
+            "bytes": 51052
+          },
+          {
+            "src": "media/mycelium-01-w1200.webp",
+            "width": 1200,
+            "height": 1600,
+            "bytes": 162644
+          }
+        ],
+        "framing": {
+          "fit": "cover",
+          "object_position": "50% 50%",
+          "background": "#96958F"
+        }
+      },
+      "gallery": [
+        {
+          "kind": "image",
+          "id": "mycelium-01",
+          "src": "media/mycelium-01-w1200.webp",
+          "width": 1200,
+          "height": 1600,
+          "alt": "Close-up of an off-white fibrous surface with concentric grooves and tan flecks.",
+          "variants": [
+            {
+              "src": "media/mycelium-01-w640.webp",
+              "width": 640,
+              "height": 853,
+              "bytes": 51052
+            },
+            {
+              "src": "media/mycelium-01-w1200.webp",
+              "width": 1200,
+              "height": 1600,
+              "bytes": 162644
+            }
+          ],
+          "framing": {
+            "fit": "cover",
+            "object_position": "50% 50%",
+            "background": "#96958F"
+          }
+        },
+        {
+          "kind": "image",
+          "id": "mycelium-02",
+          "src": "media/mycelium-02-w1280.webp",
+          "width": 1280,
+          "height": 1480,
+          "alt": "Two thick off-white panels with ridged surfaces standing upright on a workbench.",
+          "variants": [
+            {
+              "src": "media/mycelium-02-w640.webp",
+              "width": 640,
+              "height": 740,
+              "bytes": 64614
+            },
+            {
+              "src": "media/mycelium-02-w1280.webp",
+              "width": 1280,
+              "height": 1480,
+              "bytes": 177418
+            },
+            {
+              "src": "media/mycelium-02-w1384.webp",
+              "width": 1384,
+              "height": 1600,
+              "bytes": 273786
+            }
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#96958F",
+            "fill": "edge-extend"
+          }
+        },
+        {
+          "kind": "image",
+          "id": "mycelium-03",
+          "src": "media/mycelium-03-w1280.webp",
+          "width": 1280,
+          "height": 1242,
+          "alt": "Three cut blocks of off-white fibrous material showing textured surfaces and interiors.",
+          "variants": [
+            {
+              "src": "media/mycelium-03-w640.webp",
+              "width": 640,
+              "height": 621,
+              "bytes": 35298
+            },
+            {
+              "src": "media/mycelium-03-w1280.webp",
+              "width": 1280,
+              "height": 1242,
+              "bytes": 87896
+            },
+            {
+              "src": "media/mycelium-03-w1600.webp",
+              "width": 1600,
+              "height": 1552,
+              "bytes": 139244
+            }
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#96958F",
+            "fill": "edge-extend"
+          }
+        }
+      ],
+      "short_text": null,
+      "framing": {
+        "fit": "cover",
+        "object_position": "50% 50%",
+        "background": "#96958F"
+      }
+    },
+    {
+      "id": "reusable-wall-hooks",
+      "title": "Reusable Wall Hooks",
+      "year": null,
+      "category": "Product design",
+      "link": null,
+      "cover": {
+        "kind": "image",
+        "id": "reusable-wall-hooks-01",
+        "src": "media/reusable-wall-hooks-01-w1280.webp",
+        "width": 1280,
+        "height": 720,
+        "alt": "Two digital views of a pale hook-shaped assembly with two detached dark prongs.",
+        "variants": [
+          {
+            "src": "media/reusable-wall-hooks-01-w640.webp",
+            "width": 640,
+            "height": 360,
+            "bytes": 4646
+          },
+          {
+            "src": "media/reusable-wall-hooks-01-w1280.webp",
+            "width": 1280,
+            "height": 720,
+            "bytes": 23132
+          },
+          {
+            "src": "media/reusable-wall-hooks-01-w1600.webp",
+            "width": 1600,
+            "height": 900,
+            "bytes": 95338
+          }
+        ],
+        "framing": {
+          "fit": "pad",
+          "object_position": "50% 50%",
+          "background": "#A9A09F",
+          "fill": "edge-extend"
+        }
+      },
+      "gallery": [
+        {
+          "kind": "image",
+          "id": "reusable-wall-hooks-01",
+          "src": "media/reusable-wall-hooks-01-w1280.webp",
+          "width": 1280,
+          "height": 720,
+          "alt": "Two digital views of a pale hook-shaped assembly with two detached dark prongs.",
+          "variants": [
+            {
+              "src": "media/reusable-wall-hooks-01-w640.webp",
+              "width": 640,
+              "height": 360,
+              "bytes": 4646
+            },
+            {
+              "src": "media/reusable-wall-hooks-01-w1280.webp",
+              "width": 1280,
+              "height": 720,
+              "bytes": 23132
+            },
+            {
+              "src": "media/reusable-wall-hooks-01-w1600.webp",
+              "width": 1600,
+              "height": 900,
+              "bytes": 95338
+            }
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#A9A09F",
+            "fill": "edge-extend"
+          }
+        },
+        {
+          "kind": "image",
+          "id": "reusable-wall-hooks-02",
+          "src": "media/reusable-wall-hooks-02-w900.webp",
+          "width": 900,
+          "height": 900,
+          "alt": "A digital perspective view of a pale hook-shaped assembly against a matching background.",
+          "variants": [
+            {
+              "src": "media/reusable-wall-hooks-02-w640.webp",
+              "width": 640,
+              "height": 640,
+              "bytes": 5798
+            },
+            {
+              "src": "media/reusable-wall-hooks-02-w900.webp",
+              "width": 900,
+              "height": 900,
+              "bytes": 45984
+            }
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#A9A09F",
+            "fill": "edge-extend"
+          }
+        },
+        {
+          "kind": "image",
+          "id": "reusable-wall-hooks-03",
+          "src": "media/reusable-wall-hooks-03-w1280.webp",
+          "width": 1280,
+          "height": 850,
+          "alt": "An exploded line drawing separating a curved cover, central mount and two thin prongs.",
+          "variants": [
+            {
+              "src": "media/reusable-wall-hooks-03-w640.webp",
+              "width": 640,
+              "height": 425,
+              "bytes": 6496
+            },
+            {
+              "src": "media/reusable-wall-hooks-03-w1280.webp",
+              "width": 1280,
+              "height": 850,
+              "bytes": 18218
+            },
+            {
+              "src": "media/reusable-wall-hooks-03-w1600.webp",
+              "width": 1600,
+              "height": 1063,
+              "bytes": 29698
+            }
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#A9A09F",
+            "fill": "edge-extend"
+          }
+        },
+        {
+          "kind": "image",
+          "id": "reusable-wall-hooks-04",
+          "src": "media/reusable-wall-hooks-04-w1280.webp",
+          "width": 1280,
+          "height": 720,
+          "alt": "Four rendered hook-shaped assemblies in white, gray, dark gray and green.",
+          "variants": [
+            {
+              "src": "media/reusable-wall-hooks-04-w640.webp",
+              "width": 640,
+              "height": 360,
+              "bytes": 3856
+            },
+            {
+              "src": "media/reusable-wall-hooks-04-w1280.webp",
+              "width": 1280,
+              "height": 720,
+              "bytes": 12236
+            },
+            {
+              "src": "media/reusable-wall-hooks-04-w1600.webp",
+              "width": 1600,
+              "height": 900,
+              "bytes": 51574
+            }
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#A9A09F",
+            "fill": "edge-extend"
+          }
+        }
+      ],
+      "short_text": "Wall hook · mechanism concept",
+      "framing": {
+        "fit": "cover",
+        "object_position": "50% 50%",
+        "background": "#A9A09F"
+      }
+    },
+    {
+      "id": "p016-biomaking-gelatin-wrap-materials-study",
+      "title": "BioMaking",
+      "year": 2024,
+      "category": "Materials",
+      "link": null,
+      "cover": {
+        "kind": "image",
+        "id": "p016-biomaking-gelatin-wrap-materials-study-01",
+        "src": "media/p016-biomaking-gelatin-wrap-materials-study-01-w768.webp",
+        "width": 768,
+        "height": 1024,
+        "alt": "A small amber-colored wrapped object on a dark gray work surface.",
+        "variants": [
+          {
+            "src": "media/p016-biomaking-gelatin-wrap-materials-study-01-w640.webp",
+            "width": 640,
+            "height": 853,
+            "bytes": 13426
+          },
+          {
+            "src": "media/p016-biomaking-gelatin-wrap-materials-study-01-w768.webp",
+            "width": 768,
+            "height": 1024,
+            "bytes": 24776
+          }
+        ],
+        "framing": {
+          "fit": "cover",
+          "object_position": "50% 58%",
+          "background": "#626760"
+        }
+      },
+      "gallery": [
+        {
+          "kind": "image",
+          "id": "p016-biomaking-gelatin-wrap-materials-study-01",
+          "src": "media/p016-biomaking-gelatin-wrap-materials-study-01-w768.webp",
+          "width": 768,
+          "height": 1024,
+          "alt": "A small amber-colored wrapped object on a dark gray work surface.",
+          "variants": [
+            {
+              "src": "media/p016-biomaking-gelatin-wrap-materials-study-01-w640.webp",
+              "width": 640,
+              "height": 853,
+              "bytes": 13426
+            },
+            {
+              "src": "media/p016-biomaking-gelatin-wrap-materials-study-01-w768.webp",
+              "width": 768,
+              "height": 1024,
+              "bytes": 24776
+            }
+          ],
+          "framing": {
+            "fit": "cover",
+            "object_position": "50% 58%",
+            "background": "#626760"
+          }
+        },
+        {
+          "kind": "image",
+          "id": "p016-biomaking-gelatin-wrap-materials-study-02",
+          "src": "media/p016-biomaking-gelatin-wrap-materials-study-02-w1280.webp",
+          "width": 1280,
+          "height": 265,
+          "alt": "Three colored recipe panels with ingredient lists and small sample photographs.",
+          "variants": [
+            {
+              "src": "media/p016-biomaking-gelatin-wrap-materials-study-02-w640.webp",
+              "width": 640,
+              "height": 132,
+              "bytes": 9034
+            },
+            {
+              "src": "media/p016-biomaking-gelatin-wrap-materials-study-02-w1280.webp",
+              "width": 1280,
+              "height": 265,
+              "bytes": 21636
+            },
+            {
+              "src": "media/p016-biomaking-gelatin-wrap-materials-study-02-w1488.webp",
+              "width": 1488,
+              "height": 308,
+              "bytes": 30556
+            }
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 58%",
+            "background": "#626760",
+            "fill": "edge-extend"
+          }
+        },
+        {
+          "kind": "image",
+          "id": "p016-biomaking-gelatin-wrap-materials-study-03",
+          "src": "media/p016-biomaking-gelatin-wrap-materials-study-03-w1280.webp",
+          "width": 1280,
+          "height": 221,
+          "alt": "Recipe panels headed Marigold foam and Madder solid beside yellow and red sample photographs.",
+          "variants": [
+            {
+              "src": "media/p016-biomaking-gelatin-wrap-materials-study-03-w640.webp",
+              "width": 640,
+              "height": 111,
+              "bytes": 9658
+            },
+            {
+              "src": "media/p016-biomaking-gelatin-wrap-materials-study-03-w1280.webp",
+              "width": 1280,
+              "height": 221,
+              "bytes": 24514
+            },
+            {
+              "src": "media/p016-biomaking-gelatin-wrap-materials-study-03-w1424.webp",
+              "width": 1424,
+              "height": 246,
+              "bytes": 33186
+            }
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 58%",
+            "background": "#626760",
+            "fill": "edge-extend"
+          }
+        }
+      ],
+      "short_text": "Gelatin-wrap and natural-dye material experiments.",
+      "framing": {
+        "fit": "cover",
+        "object_position": "50% 58%",
+        "background": "#626760"
+      },
+      "hidden": true
+    },
+    {
+      "id": "p019-neighborhood-cnc-relief-map-study",
+      "title": "Neighborhood",
+      "year": 2024,
+      "category": "Fabrication",
+      "link": null,
+      "cover": {
+        "kind": "image",
+        "id": "p019-neighborhood-cnc-relief-map-study-01",
+        "src": "media/p019-neighborhood-cnc-relief-map-study-01-w1200.webp",
+        "width": 1200,
+        "height": 1600,
+        "alt": "A rectangular relief panel with contour and street-like lines, standing on a light table.",
+        "variants": [
+          {
+            "src": "media/p019-neighborhood-cnc-relief-map-study-01-w640.webp",
+            "width": 640,
+            "height": 853,
+            "bytes": 11998
+          },
+          {
+            "src": "media/p019-neighborhood-cnc-relief-map-study-01-w1200.webp",
+            "width": 1200,
+            "height": 1600,
+            "bytes": 49842
+          }
+        ],
+        "framing": {
+          "fit": "pad",
+          "object_position": "50% 50%",
+          "background": "linear-gradient(180deg, #BCC1B4 0%, #C6CDC1 12.5%, #CCD3C5 25%, #D1DACE 37.5%, #D4DCCD 50%, #D5DDCE 62.5%, #D6DFD3 75%, #D4DBCD 87.5%, #D0D6CD 100%) left top / 50% 100% no-repeat, linear-gradient(180deg, #A3A79C 0%, #ACAFA7 12.5%, #B1B7AE 25%, #B6BDAF 37.5%, #B7BDB4 50%, #B6BCB3 62.5%, #B2B8B0 75%, #AEB4AB 87.5%, #ABAEA6 100%) right top / 50% 100% no-repeat",
+          "fill": "edge-extend"
+        }
+      },
+      "gallery": [
+        {
+          "kind": "image",
+          "id": "p019-neighborhood-cnc-relief-map-study-01",
+          "src": "media/p019-neighborhood-cnc-relief-map-study-01-w1200.webp",
+          "width": 1200,
+          "height": 1600,
+          "alt": "A rectangular relief panel with contour and street-like lines, standing on a light table.",
+          "variants": [
+            {
+              "src": "media/p019-neighborhood-cnc-relief-map-study-01-w640.webp",
+              "width": 640,
+              "height": 853,
+              "bytes": 11998
+            },
+            {
+              "src": "media/p019-neighborhood-cnc-relief-map-study-01-w1200.webp",
+              "width": 1200,
+              "height": 1600,
+              "bytes": 49842
+            }
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "linear-gradient(180deg, #BCC1B4 0%, #C6CDC1 12.5%, #CCD3C5 25%, #D1DACE 37.5%, #D4DCCD 50%, #D5DDCE 62.5%, #D6DFD3 75%, #D4DBCD 87.5%, #D0D6CD 100%) left top / 50% 100% no-repeat, linear-gradient(180deg, #A3A79C 0%, #ACAFA7 12.5%, #B1B7AE 25%, #B6BDAF 37.5%, #B7BDB4 50%, #B6BCB3 62.5%, #B2B8B0 75%, #AEB4AB 87.5%, #ABAEA6 100%) right top / 50% 100% no-repeat",
+            "fill": "edge-extend"
+          }
+        },
+        {
+          "kind": "image",
+          "id": "p019-neighborhood-cnc-relief-map-study-02",
+          "src": "media/p019-neighborhood-cnc-relief-map-study-02-w1200.webp",
+          "width": 1200,
+          "height": 1600,
+          "alt": "A rectangular relief panel with contour and street-like lines, lying at an angle on a light table.",
+          "variants": [
+            {
+              "src": "media/p019-neighborhood-cnc-relief-map-study-02-w640.webp",
+              "width": 640,
+              "height": 853,
+              "bytes": 8048
+            },
+            {
+              "src": "media/p019-neighborhood-cnc-relief-map-study-02-w1200.webp",
+              "width": 1200,
+              "height": 1600,
+              "bytes": 26680
+            }
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#A7A7A7",
+            "fill": "edge-extend"
+          }
+        }
+      ],
+      "short_text": "A CNC relief-map study.",
+      "framing": {
+        "fit": "pad",
+        "object_position": "50% 50%",
+        "background": "linear-gradient(180deg, #BCC1B4 0%, #C6CDC1 12.5%, #CCD3C5 25%, #D1DACE 37.5%, #D4DCCD 50%, #D5DDCE 62.5%, #D6DFD3 75%, #D4DBCD 87.5%, #D0D6CD 100%) left top / 50% 100% no-repeat, linear-gradient(180deg, #A3A79C 0%, #ACAFA7 12.5%, #B1B7AE 25%, #B6BDAF 37.5%, #B7BDB4 50%, #B6BCB3 62.5%, #B2B8B0 75%, #AEB4AB 87.5%, #ABAEA6 100%) right top / 50% 100% no-repeat",
+        "fill": "edge-extend"
+      }
+    },
+    {
+      "id": "book",
+      "title": "Book",
+      "year": null,
+      "category": "Product design",
+      "link": null,
+      "cover": {
+        "kind": "image",
+        "id": "book-01",
+        "src": "media/book-01-w1280.webp",
+        "width": 1280,
+        "height": 1280,
+        "alt": "A square wooden panel divided into a grid of triangular openings and sloping faces.",
+        "variants": [
+          {
+            "src": "media/book-01-w640.webp",
+            "width": 640,
+            "height": 640,
+            "bytes": 33628
+          },
+          {
+            "src": "media/book-01-w1280.webp",
+            "width": 1280,
+            "height": 1280,
+            "bytes": 84004
+          },
+          {
+            "src": "media/book-01-w1920.webp",
+            "width": 1920,
+            "height": 1920,
+            "bytes": 137746
+          }
+        ],
+        "framing": {
+          "fit": "pad",
+          "object_position": "50% 50%",
+          "background": "#000000",
+          "fill": "edge-extend"
+        }
+      },
+      "gallery": [
+        {
+          "kind": "image",
+          "id": "book-01",
+          "src": "media/book-01-w1280.webp",
+          "width": 1280,
+          "height": 1280,
+          "alt": "A square wooden panel divided into a grid of triangular openings and sloping faces.",
+          "variants": [
+            {
+              "src": "media/book-01-w640.webp",
+              "width": 640,
+              "height": 640,
+              "bytes": 33628
+            },
+            {
+              "src": "media/book-01-w1280.webp",
+              "width": 1280,
+              "height": 1280,
+              "bytes": 84004
+            },
+            {
+              "src": "media/book-01-w1920.webp",
+              "width": 1920,
+              "height": 1920,
+              "bytes": 137746
+            }
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#000000",
+            "fill": "edge-extend"
+          }
+        }
+      ],
+      "short_text": null,
+      "framing": {
+        "fit": "cover",
+        "object_position": "50% 50%",
+        "background": "#000000"
+      }
+    },
+    {
+      "id": "wall-mounts",
+      "title": "Wall mounts",
+      "year": null,
+      "category": "Fabrication",
+      "link": null,
+      "cover": {
+        "kind": "image",
+        "id": "wall-mounts-01",
+        "src": "media/wall-mounts-01-w480.webp",
+        "width": 480,
+        "height": 640,
+        "alt": "A portrait relief on a rectangular block beneath a CNC router spindle.",
+        "variants": [
+          {
+            "src": "media/wall-mounts-01-w480.webp",
+            "width": 480,
+            "height": 640,
+            "bytes": 41570
+          }
+        ],
+        "framing": {
+          "fit": "pad",
+          "object_position": "50% 72%",
+          "background": "#88817A",
+          "fill": "edge-extend"
+        }
+      },
+      "gallery": [
+        {
+          "kind": "image",
+          "id": "wall-mounts-01",
+          "src": "media/wall-mounts-01-w480.webp",
+          "width": 480,
+          "height": 640,
+          "alt": "A portrait relief on a rectangular block beneath a CNC router spindle.",
+          "variants": [
+            {
+              "src": "media/wall-mounts-01-w480.webp",
+              "width": 480,
+              "height": 640,
+              "bytes": 41570
+            }
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 72%",
+            "background": "#88817A",
+            "fill": "edge-extend"
+          }
+        }
+      ],
+      "short_text": null,
+      "framing": {
+        "fit": "cover",
+        "object_position": "50% 72%",
+        "background": "#88817A"
+      }
+    },
+    {
+      "id": "off-campus",
+      "title": "Off Campus",
+      "year": null,
+      "category": "Digital design",
+      "link": null,
+      "cover": {
+        "kind": "image",
+        "id": "off-campus-01",
+        "src": "media/off-campus-01-w1280.webp",
+        "width": 1280,
+        "height": 720,
+        "alt": "Two angled phone mockups showing a rental listing and a map beside the words Off Campus.",
+        "variants": [
+          {
+            "src": "media/off-campus-01-w640.webp",
+            "width": 640,
+            "height": 360,
+            "bytes": 22402
+          },
+          {
+            "src": "media/off-campus-01-w1280.webp",
+            "width": 1280,
+            "height": 720,
+            "bytes": 53068
+          },
+          {
+            "src": "media/off-campus-01-w1600.webp",
+            "width": 1600,
+            "height": 900,
+            "bytes": 80348
+          }
+        ],
+        "framing": {
+          "fit": "pad",
+          "object_position": "50% 50%",
+          "background": "#FFFFFF",
+          "fill": "edge-extend"
+        }
+      },
+      "gallery": [
+        {
+          "kind": "image",
+          "id": "off-campus-01",
+          "src": "media/off-campus-01-w1280.webp",
+          "width": 1280,
+          "height": 720,
+          "alt": "Two angled phone mockups showing a rental listing and a map beside the words Off Campus.",
+          "variants": [
+            {
+              "src": "media/off-campus-01-w640.webp",
+              "width": 640,
+              "height": 360,
+              "bytes": 22402
+            },
+            {
+              "src": "media/off-campus-01-w1280.webp",
+              "width": 1280,
+              "height": 720,
+              "bytes": 53068
+            },
+            {
+              "src": "media/off-campus-01-w1600.webp",
+              "width": 1600,
+              "height": 900,
+              "bytes": 80348
+            }
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#FFFFFF",
+            "fill": "edge-extend"
+          }
+        },
+        {
+          "kind": "image",
+          "id": "off-campus-02",
+          "src": "media/off-campus-02-w1280.webp",
+          "width": 1280,
+          "height": 720,
+          "alt": "Four phone screens beneath the headings Search, Listing, Compare and Messages.",
+          "variants": [
+            {
+              "src": "media/off-campus-02-w640.webp",
+              "width": 640,
+              "height": 360,
+              "bytes": 16122
+            },
+            {
+              "src": "media/off-campus-02-w1280.webp",
+              "width": 1280,
+              "height": 720,
+              "bytes": 40224
+            },
+            {
+              "src": "media/off-campus-02-w1600.webp",
+              "width": 1600,
+              "height": 900,
+              "bytes": 61338
+            }
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#FFFFFF",
+            "fill": "edge-extend"
+          }
+        }
+      ],
+      "short_text": "Housing-search interface study",
+      "framing": {
+        "fit": "pad",
+        "object_position": "50% 50%",
+        "background": "#FFFFFF",
+        "fill": "edge-extend"
+      }
+    },
+    {
+      "id": "p021-gravity-synth-bouncing-ball-musical-interface",
+      "title": "Gravity Synth",
+      "year": null,
+      "category": "Digital design",
+      "link": null,
+      "cover": {
+        "kind": "image",
+        "id": "p021-gravity-synth-bouncing-ball-musical-interface-01-poster",
+        "src": "media/p021-gravity-synth-bouncing-ball-musical-interface-01-poster-w822.webp",
+        "width": 822,
+        "height": 1280,
+        "alt": "Colored circles on a black field beneath the chord label Cmaj7.",
+        "variants": [
+          {
+            "src": "media/p021-gravity-synth-bouncing-ball-musical-interface-01-poster-w640.webp",
+            "width": 640,
+            "height": 997,
+            "bytes": 3432
+          },
+          {
+            "src": "media/p021-gravity-synth-bouncing-ball-musical-interface-01-poster-w822.webp",
+            "width": 822,
+            "height": 1280,
+            "bytes": 4786
+          }
+        ],
+        "framing": {
+          "fit": "pad",
+          "object_position": "50% 50%",
+          "background": "#010103",
+          "fill": "edge-extend"
+        }
+      },
+      "gallery": [
+        {
+          "kind": "video",
+          "id": "p021-gravity-synth-bouncing-ball-musical-interface-01",
+          "src": "media/p021-gravity-synth-bouncing-ball-musical-interface-01.mp4",
+          "width": 822,
+          "height": 1280,
+          "duration_seconds": 21.133008,
+          "has_audio": false,
+          "alt": "Colored circles move on a black field beneath a changing chord label.",
+          "poster": {
+            "kind": "image",
+            "id": "p021-gravity-synth-bouncing-ball-musical-interface-01-poster",
+            "src": "media/p021-gravity-synth-bouncing-ball-musical-interface-01-poster-w822.webp",
+            "width": 822,
+            "height": 1280,
+            "alt": "Colored circles on a black field beneath the chord label Cmaj7.",
+            "variants": [
+              {
+                "src": "media/p021-gravity-synth-bouncing-ball-musical-interface-01-poster-w640.webp",
+                "width": 640,
+                "height": 997,
+                "bytes": 3432
+              },
+              {
+                "src": "media/p021-gravity-synth-bouncing-ball-musical-interface-01-poster-w822.webp",
+                "width": 822,
+                "height": 1280,
+                "bytes": 4786
+              }
+            ]
+          },
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#020202",
+            "fill": "edge-extend"
+          }
+        }
+      ],
+      "short_text": "Bouncing-ball musical interface study.",
+      "framing": {
+        "fit": "pad",
+        "object_position": "50% 50%",
+        "background": "#010103",
+        "fill": "edge-extend"
+      }
+    },
+    {
+      "id": "p024-contrast-exploratory-photoshop-series",
+      "title": "Contrast",
+      "year": null,
+      "category": "Graphic design",
+      "link": null,
+      "cover": {
+        "kind": "image",
+        "id": "p024-contrast-exploratory-photoshop-series-01",
+        "src": "media/p024-contrast-exploratory-photoshop-series-01-w1236.webp",
+        "width": 1236,
+        "height": 1600,
+        "alt": "A dense black-and-white rectilinear grid of overlapping vertical and horizontal bands.",
+        "variants": [
+          {
+            "src": "media/p024-contrast-exploratory-photoshop-series-01-w640.webp",
+            "width": 640,
+            "height": 828,
+            "bytes": 224408
+          },
+          {
+            "src": "media/p024-contrast-exploratory-photoshop-series-01-w1236.webp",
+            "width": 1236,
+            "height": 1600,
+            "bytes": 938932
+          }
+        ],
+        "framing": {
+          "fit": "pad",
+          "object_position": "50% 50%",
+          "background": "#010101",
+          "fill": "edge-extend"
+        }
+      },
+      "gallery": [
+        {
+          "kind": "image",
+          "id": "p024-contrast-exploratory-photoshop-series-01",
+          "src": "media/p024-contrast-exploratory-photoshop-series-01-w1236.webp",
+          "width": 1236,
+          "height": 1600,
+          "alt": "A dense black-and-white rectilinear grid of overlapping vertical and horizontal bands.",
+          "variants": [
+            {
+              "src": "media/p024-contrast-exploratory-photoshop-series-01-w640.webp",
+              "width": 640,
+              "height": 828,
+              "bytes": 224408
+            },
+            {
+              "src": "media/p024-contrast-exploratory-photoshop-series-01-w1236.webp",
+              "width": 1236,
+              "height": 1600,
+              "bytes": 938932
+            }
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#010101",
+            "fill": "edge-extend"
+          }
+        },
+        {
+          "kind": "image",
+          "id": "p024-contrast-exploratory-photoshop-series-02",
+          "src": "media/p024-contrast-exploratory-photoshop-series-02-w1236.webp",
+          "width": 1236,
+          "height": 1600,
+          "alt": "Black-and-white marbled lines interrupted by stretched vertical shapes.",
+          "variants": [
+            {
+              "src": "media/p024-contrast-exploratory-photoshop-series-02-w640.webp",
+              "width": 640,
+              "height": 828,
+              "bytes": 193614
+            },
+            {
+              "src": "media/p024-contrast-exploratory-photoshop-series-02-w1236.webp",
+              "width": 1236,
+              "height": 1600,
+              "bytes": 654582
+            }
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#585858",
+            "fill": "edge-extend"
+          }
+        }
+      ],
+      "short_text": "Exploratory image and texture studies.",
+      "framing": {
+        "fit": "pad",
+        "object_position": "50% 50%",
+        "background": "#010101",
+        "fill": "edge-extend"
+      }
+    },
+    {
+      "id": "p041-telefoni",
+      "title": "Telefoni",
+      "year": 2019,
+      "category": "Motion",
+      "link": null,
+      "cover": {
+        "kind": "image",
+        "id": "p041-telefoni-01-poster-140s",
+        "src": "media/p041-telefoni-01-poster-140s-w1280.webp",
+        "width": 1280,
+        "height": 720,
+        "alt": "A boy in a white shirt talking on a corded telephone, a black-and-white frame from the film.",
+        "variants": [
+          {
+            "src": "media/p041-telefoni-01-poster-140s-w640.webp",
+            "width": 640,
+            "height": 360,
+            "bytes": 7306
+          },
+          {
+            "src": "media/p041-telefoni-01-poster-140s-w1280.webp",
+            "width": 1280,
+            "height": 720,
+            "bytes": 15622
+          }
+        ],
+        "framing": {
+          "fit": "pad",
+          "object_position": "50% 50%",
+          "background": "#000000",
+          "fill": "edge-extend"
+        }
+      },
+      "gallery": [
+        {
+          "kind": "video",
+          "id": "p041-telefoni-01",
+          "src": "media/p041-telefoni-01.mp4",
+          "width": 960,
+          "height": 540,
+          "duration_seconds": 281.5,
+          "has_audio": false,
+          "alt": "An edited sequence of title cards, people using telephones and scenes from film footage.",
+          "poster": {
+            "kind": "image",
+            "id": "p041-telefoni-01-poster-140s",
+            "src": "media/p041-telefoni-01-poster-140s-w1280.webp",
+            "width": 1280,
+            "height": 720,
+            "alt": "A boy in a white shirt talking on a corded telephone, a black-and-white frame from the film.",
+            "variants": [
+              {
+                "src": "media/p041-telefoni-01-poster-140s-w640.webp",
+                "width": 640,
+                "height": 360,
+                "bytes": 7306
+              },
+              {
+                "src": "media/p041-telefoni-01-poster-140s-w1280.webp",
+                "width": 1280,
+                "height": 720,
+                "bytes": 15622
+              }
+            ]
+          },
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#000000",
+            "fill": "edge-extend"
+          }
+        }
+      ],
+      "short_text": "An archive montage and edit.",
+      "framing": {
+        "fit": "pad",
+        "object_position": "50% 50%",
+        "background": "#000000",
+        "fill": "edge-extend"
+      }
+    }
+  ],
+  "retired_media": [
+    "media/p041-telefoni-01-poster-w640.webp",
+    "media/p041-telefoni-01-poster-w1280.webp"
+  ]
+}

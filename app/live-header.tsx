@@ -1,56 +1,24 @@
-/* eslint-disable @next/next/no-html-link-for-pages -- static Pages export requires native navigation */
+import { withBasePath } from "../lib/base-path";
+import { Button } from "./compass";
+import { LockKeyhole } from "lucide-react";
 
-type LiveHeaderProps = {
-  current?: "work" | "info";
-  light?: boolean;
-};
-
-const lightVariant = "w-variant-22095cef-840e-b01c-9554-e30a92fa6748";
-
-export default function LiveHeader({ current, light = false }: LiveHeaderProps) {
-  const variant = light ? ` ${lightVariant}` : "";
-
-  return (
-    <header className={`header${variant}`}>
-      <div className="div-block-35">
-        <h1 className={`heading${variant}`}>
-          <a
-            href="/"
-            aria-current={current === "work" ? "page" : undefined}
-            className={`link primary-link${variant}${current === "work" ? " w--current" : ""}`}
-          >
-            Alex Infield
-          </a>
-        </h1>
-      </div>
-      <div className="div-block-36">
-        <ul className={`list-2 w-list-unstyled${variant}`} aria-hidden="true" />
-        <ul className={`list-2 w-list-unstyled${variant}`}>
-          <li>
-            <a
-              href="/"
-              aria-current={current === "work" ? "page" : undefined}
-              className={`five link${variant}${current === "work" ? " w--current" : ""}`}
-            >
-              Work
-            </a>
-          </li>
-          <li>
-            <a
-              href="/info"
-              aria-current={current === "info" ? "page" : undefined}
-              className={`five link${variant}${current === "info" ? " w--current" : ""}`}
-            >
-              Info
-            </a>
-          </li>
-          <li>
-            <a href="mailto:alex@infield.net" className={`five link${variant}`}>
-              Contact
-            </a>
-          </li>
-        </ul>
+export default function LiveHeader({ current, base = "/" }: { current?: "work" | "personal" | "info"; base?: string }) {
+  return <>
+    <Button asChild variant="secondary" size="sm" className="portfolio-skip-link"><a href="#main-content">Skip to content</a></Button>
+    <header className="portfolio-header">
+      <div className="portfolio-header-content portfolio-shell">
+        <Button asChild size="sm" variant="secondary" data-plain="" className="portfolio-wordmark"><a href={withBasePath(base)}>Alex Infield</a></Button>
+        <nav className="portfolio-nav" aria-label="Primary">
+          <Button asChild size="sm" variant="secondary" className="portfolio-nav-item" data-plain={current === "work" ? undefined : ""}><a href={withBasePath(base)} aria-current={current === "work" ? "page" : undefined}>Work</a></Button>
+          <Button asChild size="sm" variant="secondary" className="portfolio-nav-item" data-plain={current === "personal" ? undefined : ""}><a href={withBasePath(`${base}personal/`)} aria-current={current === "personal" ? "page" : undefined}>Personal</a></Button>
+          <Button type="button" size="sm" variant="secondary" data-plain="" data-unavailable-toggle
+            aria-disabled="true" aria-describedby="unavailable-status" aria-expanded="false">Professional</Button>
+          <Button asChild size="sm" variant="secondary" className="portfolio-nav-item" data-plain={current === "info" ? undefined : ""}><a href={withBasePath(`${base}info/`)} aria-current={current === "info" ? "page" : undefined}>Info</a></Button>
+        </nav>
       </div>
     </header>
-  );
+    <span id="unavailable-status" className="portfolio-unavailable-message" role="tooltip" hidden>
+      <LockKeyhole aria-hidden="true" />Professional — unavailable for now
+    </span>
+  </>;
 }

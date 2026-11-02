@@ -1,170 +1,213 @@
-@font-face {
-  font-family: "Funktionalgrotesk";
-  src: url("/assets/home/media/6709e471672707c0cf4e6fa4_FunktionalGrotesk-Light.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 300;
-  font-display: swap;
+/* Portfolio composition on the approved Compass 1.0 tokens. No Webflow UI. */
+* {box-sizing: border-box;}
+html {min-width: 320px; --portfolio-header-height: 60px; scroll-padding-top: calc(var(--portfolio-header-height) + 8px);}
+html, body {margin: 0; background: var(--canvas); color: var(--text);}
+body {font: 400 1rem/1.5 var(--font), system-ui, sans-serif; font-synthesis: none; -webkit-font-smoothing: antialiased;}
+button, input, select {font: inherit;}
+a {color: inherit; text-underline-offset: .2em;}
+::selection {background: var(--selected); color: var(--text);}
+:root {scrollbar-color: var(--secondary) var(--canvas);}
+h1, h2, h3, p {margin: 0;}
+h1 {font-size: 2.125rem; line-height: 2.5625rem; font-weight: 500; letter-spacing: -.012em;}
+h2 {font-weight: 500;}
+img, video {display: block; max-width: 100%; height: auto;}
+.portfolio-root {min-width: 0; min-height: 100dvh; background: var(--canvas); color: var(--text); overflow-wrap: anywhere;}
+.portfolio-shell {width: 100%; padding-inline: 18px; margin-inline: auto;}
+.portfolio-header {position: fixed; inset: 0 0 auto; z-index: 100; background: #000000f5; overflow-x: auto; overscroll-behavior-x: contain; scroll-padding-inline: 6px;}
+html[data-theme="light"] .portfolio-header {background: #fffffff5;}
+@supports ((backdrop-filter: blur(24px)) or (-webkit-backdrop-filter: blur(24px))) {
+ .portfolio-header {background: #000000d9; -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);}
+ html[data-theme="light"] .portfolio-header {background: #fffc;}
 }
-
-@font-face {
-  font-family: "Funktionalgrotesk";
-  src: url("/assets/home/media/6709e4711141238c6075e88b_FunktionalGrotesk-Regular.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
+.portfolio-header-content {display: flex; align-items: center; gap: var(--inline); min-width: max-content; padding-block: var(--inline); font: 500 .875rem/1.3125rem var(--font);}
+.portfolio-nav {display: flex; align-items: center; gap: var(--inline); margin-left: auto;}
+.portfolio-header [data-slot="button"] {font: inherit; flex-shrink: 0;}
+.portfolio-header [disabled] {color: var(--disabled); opacity: 1; cursor: default;}
+.portfolio-header [data-unavailable-toggle] {color: var(--secondary); cursor: default;}
+.portfolio-unavailable-message {position: fixed; z-index: 101; top: calc(var(--portfolio-header-height) + 8px); right: 18px; max-width: calc(100vw - 20px); display: flex; align-items: center; gap: var(--inline); padding: 10px 12px; border-radius: var(--radius); background: var(--surface); color: var(--text); font-size: .875rem; box-shadow: 0 4px 16px #0003;}
+.portfolio-unavailable-message svg {width: 16px; height: 16px; flex-shrink: 0;}
+.portfolio-boundary [data-button-kind] {min-width: 44px; min-height: 44px;}
+.portfolio-boundary [data-button-kind="icon"] {width: 44px; height: 44px;}
+.portfolio-root [data-slot="button"], .portfolio-root [data-slot="select-trigger"], .portfolio-root [data-slot="toggle-group-item"] {border-radius: var(--radius);}
+.portfolio-boundary [data-plain] {background: transparent;}
+.portfolio-boundary [data-plain]:not(:disabled):not([aria-disabled="true"]):is(:hover,:active) {background: var(--soft); color: var(--text);}
+.portfolio-boundary [data-slot="toggle-group-item"], .portfolio-boundary [data-slot="select-trigger"], .compass-scope [data-slot="select-item"] {min-height: 44px;}
+.portfolio-boundary [data-slot="toggle-group-item"] {min-width: 44px;}
+.portfolio-root :is(a, button, summary, [tabindex="0"]):focus-visible {outline: var(--focus-width) solid var(--focus); outline-offset: var(--focus-gap); box-shadow: none; border-radius: var(--focus-radius);}
+.portfolio-root [role="option"]:focus-visible {outline: var(--focus-width) solid var(--focus); outline-offset: calc(-1 * var(--focus-gap));}
+.portfolio-skip-link {position: fixed!important; z-index: 102; top: var(--inline); left: var(--inline); transform: translateY(-200%);}
+.portfolio-skip-link:focus {transform: none;}
+#main-content {scroll-margin-top: calc(var(--portfolio-header-height) + 8px);}
+.portfolio-main {min-height: 60vh; padding-block: calc(var(--portfolio-header-height) + var(--group)) var(--section);}
+.portfolio-main:has(.portfolio-personal-front), .portfolio-case-page {padding-top: var(--portfolio-header-height);}
+.portfolio-actions {display: flex; flex-wrap: wrap; align-items: center; gap: var(--inline);}
+.portfolio-work-grid, .portfolio-personal-front {display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); column-gap: 10px; row-gap: var(--group);}
+.portfolio-work-link {position: relative; min-width: 0;}
+.portfolio-work-card, .portfolio-personal-card {padding: 0; gap: 0; background: var(--canvas)!important; border: 0; box-shadow: none; overflow: hidden;}
+.portfolio-work-card img {width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: var(--radius);}
+.portfolio-card-label {display: flex; align-items: center; min-height: 44px;}
+/* The public Compass link paints the control; this adapter lays out a stable
+   image/caption card rather than an inline text button. */
+.portfolio-root .portfolio-card-link[data-slot="button"] {display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; width: 100%; max-width: none; height: auto; padding: 0; border: 0; gap: 0; text-align: left; white-space: normal;}
+.portfolio-root .portfolio-card-link:is(:link,:visited,:hover,:active,:focus), .portfolio-root .portfolio-card-link h2 {text-decoration: none!important;}
+.portfolio-root .portfolio-card-link > [data-slot="card"] {width: 100%; max-width: none;}
+.portfolio-personal-link {display: flex; justify-content: center; margin-top: var(--section);}
+.portfolio-info-page {display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--group); align-items: center;}
+.portfolio-info-copy {display: flex; flex-direction: column; align-items: flex-start; gap: var(--group); padding-block: var(--group);}
+.portfolio-intro {font-size: 1.75rem; line-height: 2.125rem; max-width: 35ch;}
+.portfolio-artwork {overflow: hidden; border-radius: var(--radius);}
+.portfolio-artwork img {width: 100%;}
+.text-muted {color: var(--secondary);}
+.portfolio-not-found {display: grid; justify-items: start; gap: var(--group); padding-block: var(--section);}
+/* Cases retain image content and source order. The authored panels run edge to
+   edge and stack with no gap, border, radius or gutter on any side: the case
+   page has no side padding and every media box is a block with no margin. */
+.portfolio-shell.portfolio-case-page {padding-inline: 0;}
+.portfolio-case-stack {display: grid; grid-template-columns: minmax(0,1fr); gap: 0; container-type: inline-size; overflow-x: clip;}
+.case-panel {display: contents;}
+.portfolio-case-stack > img, .case-composite, .case-video, .case-film {width: 100%; margin: 0; border: 0; border-radius: 0; overflow: hidden;}
+.portfolio-case-stack :is(img, video) {display: block; width: 100%; margin: 0; border: 0; border-radius: 0;}
+.case-video video {height: auto; object-fit: contain;}
+/* Seam guard. Many authored panels have a translucent or off-colour outermost
+   pixel row/column (Webflow-era exports), which lets the black page show through
+   as a hairline wherever two panels meet. Each medium's box is 6 px shorter and
+   4 px wider than its natural size, centred, so object-fit: cover trims 3 px top
+   and bottom and 2 px each side; every visible edge is an opaque interior pixel.
+   No transforms or clip paths: the boxes stay pixel-snapped. */
+.portfolio-case-stack :is(.case-media, .case-video video) {width: calc(100% + 4px); max-width: none; margin-inline: -2px; height: calc((100cqw + 4px) * var(--media-ratio, .5625) - 6px); object-fit: cover; object-position: 50% 50%;}
+/* Videos paint through their own layer and can leave an edge device row
+   unpainted at fractional positions (a black line between two films). Each
+   stacked video bleeds 1 px under its neighbours; layout is unchanged because
+   the negative margins cancel the extra height. Wrappers stay unclipped and
+   the stack clips the side overscan. */
+.portfolio-case-stack :is(.case-video, .case-film, .case-composite) {overflow: visible;}
+.portfolio-case-stack .case-video {display: flow-root;}
+.portfolio-case-stack .case-video video {height: calc((100cqw + 4px) * var(--media-ratio, .5625) - 4px); margin-block: -1px;}
+/* An opening film starts exactly at the header's bottom edge: no upward bleed. */
+.portfolio-case-stack > :first-child .case-video video, .portfolio-case-stack > .case-video:first-child video {height: calc((100cqw + 4px) * var(--media-ratio, .5625) - 5px); margin-top: 0;}
+/* Side-by-side panels share one row height: each column's fr equals its
+   media's aspect ratio (set inline), so neither side leaves an empty band. */
+.case-composite {display: grid; grid-template-columns: var(--composite-columns, repeat(2,minmax(0,1fr))); gap: 0; align-items: stretch;}
+.case-composite > img, .case-composite > div {width: 100%; min-width: 0;}
+@media (min-width:768px) {
+ .portfolio-case-stack .case-composite {width: calc(100% + 4px); max-width: none; margin-inline: -2px; height: calc((100cqw + 4px) * var(--composite-ratio) - 6px); grid-template-rows: minmax(0,1fr);}
+ .portfolio-case-stack .case-composite :is(.case-media, .case-video, .case-video video) {width: 100%; margin-inline: 0; height: 100%; object-fit: cover;}
+ .portfolio-case-stack .case-composite .case-video video {height: calc(100% + 2px); margin-block: -1px;}
 }
-
-@font-face {
-  font-family: "Funktionalgrotesk";
-  src: url("/assets/home/media/6709e4713af7da131946bb76_FunktionalGrotesk-Medium.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
+.portfolio-case-navigation, .case-text {padding-inline: 18px;}
+.portfolio-case-navigation {display: flex; justify-content: center; align-items: center; gap: var(--inline); margin-top: var(--section);}
+.case-text {font: 400 1rem/1.5 var(--font); color: var(--secondary);}
+.case-text :is(p,ul,dl) {margin-block: var(--group);}
+/* The kit supplies control fills, typography and geometry; this adapter only
+   positions/reveals them and switches the two stable Lucide glyphs. */
+[data-video-frame], [data-media-reveal] {position: relative;}
+.media-controls {position: absolute; z-index: 3; bottom: var(--inline); left: var(--inline); display: flex; gap: var(--inline); opacity: 0; pointer-events: none;}
+[data-media-reveal]:hover .media-controls, [data-media-reveal]:focus-within .media-controls, [data-controls-revealed="true"] .media-controls {opacity: 1; pointer-events: auto;}
+[data-video-toggle][data-playing="false"] [data-pause-icon], [data-video-toggle][data-playing="true"] [data-play-icon] {display: none;}
+.media-status, .media-noscript {position: absolute; top: var(--inline); left: var(--inline); right: var(--inline); z-index: 4; padding: var(--inline); background: var(--surface); color: var(--text); font-size: .875rem; line-height: 1.25rem;}
+[hidden] {display: none!important;}
+.portfolio-filters {display: flex; flex-wrap: wrap; align-items: center; gap: var(--inline); margin-bottom: var(--group);}
+.portfolio-filter-trigger {width: auto; min-width: 8rem;}
+.portfolio-filter-options {max-width: calc(100vw - 2rem);}
+.portfolio-filter-options [data-slot="select-item"] {white-space: normal; overflow-wrap: anywhere;}
+.portfolio-filter-empty {display: grid; justify-items: start; gap: var(--group); padding-block: var(--section);}
+.portfolio-personal-front {margin-bottom: var(--group);}
+.portfolio-personal-front .portfolio-image {aspect-ratio: 4/3; height: auto; overflow: hidden;}
+.portfolio-personal-front .portfolio-image img {width: 100%; height: 100%; object-fit: cover;}
+.portfolio-personal-grid {display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); column-gap: 10px; row-gap: var(--group); align-items: start;}
+.portfolio-project {min-width: 0; scroll-margin-top: 6rem;}
+.portfolio-project-title {font-size: .875rem; line-height: 1.25rem;}
+.portfolio-gallery {position: relative;}
+.portfolio-gallery-stage {position: relative; width: 100%; background: var(--canvas); border-radius: var(--radius); overflow: hidden; touch-action: pan-y pinch-zoom;}
+.portfolio-gallery-slide {position: absolute; inset: 0; width: 100%; height: 100%;}
+.portfolio-gallery-slide > div, .personal-video {width: 100%; height: 100%;}
+.portfolio-gallery-slide img, .portfolio-gallery-slide video {width: 100%; height: 100%; object-fit: cover;}
+.gallery-navigation {left: var(--inline); right: var(--inline); top: 50%; bottom: auto; transform: translateY(-50%); justify-content: space-between; pointer-events: none!important; z-index: 5;}
+.gallery-navigation button {pointer-events: none;}
+.portfolio-gallery:is(:hover,:focus-within) .gallery-navigation button, .portfolio-gallery[data-controls-revealed="true"] .gallery-navigation button {pointer-events: auto;}
+.portfolio-root .gallery-description-toggle[data-slot="button"] {position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; border: 0; padding: 0; background: transparent!important; border-radius: var(--radius); cursor: pointer; transform: none!important; scale: none!important;}
+.portfolio-root .gallery-description-toggle:focus-visible {outline-offset: -4px;}
+.portfolio-description-strip {position: absolute; z-index: 4; left: 0; right: 0; bottom: 0; padding: 10px 12px; background: #fffffff2; color: var(--text); font-size: .875rem; line-height: 1.25rem; pointer-events: none; visibility: hidden; opacity: 0;}
+.portfolio-gallery:has(.gallery-pagination) .portfolio-description-strip {bottom: 36px;}
+.portfolio-gallery[data-description-open="true"] .portfolio-description-strip {visibility: visible; opacity: 1;}
+@supports ((backdrop-filter: blur(16px)) or (-webkit-backdrop-filter: blur(16px))) {
+ .portfolio-description-strip {background: #fffc; -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);}
 }
-
-html,
-body {
-  min-width: 320px;
-  background: #000;
+.gallery-pagination {position: absolute; z-index: 4; bottom: 0; left: 0; right: 0; height: 36px; display: flex; align-items: center; justify-content: center; gap: 10px; pointer-events: none;}
+.gallery-dots, .gallery-count {display: flex; align-items: center; justify-content: center; gap: 5px; height: 22px; padding-inline: 7px; background: #fffffff2; color: #171717; border-radius: var(--radius);}
+.gallery-count {font-size: .6875rem; line-height: 1; font-variant-numeric: tabular-nums;}
+.gallery-dot {width: 4px; height: 4px; border-radius: 50%; background: #aaa;}
+.gallery-dot[data-active="true"] {background: #171717;}
+.portfolio-gallery .media-controls [data-slot="button"] {border-radius: calc(var(--radius) - 1px);}
+.portfolio-media-caption {min-height: 44px; display: flex; align-items: center; font-size: .875rem; line-height: 1.25rem; color: var(--secondary);}
+.portfolio-image-failure {position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: var(--inline); background: var(--canvas); color: var(--text); padding: var(--group);}
+@media (max-width:1199px) {.portfolio-personal-grid {grid-template-columns: repeat(2,minmax(0,1fr));}}
+@media (max-width:767px) {
+ .portfolio-header-content {font-size: .75rem; line-height: 1.125rem; gap: 4px;}
+ .portfolio-nav {gap: 4px;}
+ .portfolio-nav [data-slot="button"] {padding-inline: 6px;}
+ .portfolio-wordmark {padding-inline: 4px;}
+ .portfolio-work-grid, .portfolio-personal-front, .portfolio-personal-grid, .portfolio-info-page, .case-composite {grid-template-columns: minmax(0,1fr);}
+ .portfolio-intro {font-size: 1.25rem; line-height: 1.5rem;}
+ .portfolio-info-copy {padding-top: 0;}
 }
+@media (max-width:640px) {.portfolio-shell {padding-inline: 10px;}}
+@media (prefers-reduced-motion:reduce) {html {scroll-behavior: auto;} *, *::before, *::after {scroll-behavior: auto!important;}}
 
-body {
-  overflow-x: hidden;
+/* Narrative films use the public Compass slider and icon buttons. */
+.film-controls {right: var(--inline); display: grid; grid-template-columns: 44px minmax(64px,1fr) auto 44px 44px; align-items: center; gap: 4px;}
+.native-film-start {position: absolute; z-index: 6; top: 8px; left: 8px; display: none;}
+.film-timeline {min-width: 0; min-height: 44px;}
+.film-timeline [role="slider"] {min-width: 20px; min-height: 20px;}
+.film-time {font-size: .75rem; line-height: 1.125rem; font-variant-numeric: tabular-nums; white-space: nowrap; padding-inline: 4px; color: var(--text); background: var(--surface); border-radius: var(--radius);}
+[data-long-film]:fullscreen {display: grid; align-items: center; width: 100vw; height: 100dvh; background: var(--canvas); border-radius: 0;}
+[data-long-film]:fullscreen video {width: 100%; height: 100%; margin: 0; object-fit: contain!important;}
+
+.portfolio-image, .personal-video {display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;}
+.portfolio-gallery-slide {display: flex; align-items: center; justify-content: center;}
+
+/* Extend the same decoded image's outermost columns into its padding. Mirroring
+   keeps the boundary pixel adjacent to the original edge; 12 px feather/underlap closes
+   fractional layout gaps. The foreground source and object are unchanged. */
+.portfolio-image {position: relative;}
+.portfolio-edge-fill {position: absolute; top: 0; bottom: 0; pointer-events: none; background-repeat: no-repeat; transform: scaleX(-1); filter: blur(2px); z-index: 0;}
+.portfolio-edge-left {left: 0; background-position: left top;}
+.portfolio-edge-right {right: 0; background-position: right top;}
+.portfolio-edge-top, .portfolio-edge-bottom {left: 0; right: 0; width: 100%; transform: scaleY(-1);}
+.portfolio-edge-top {top: 0; bottom: auto; background-position: left top;}
+.portfolio-edge-bottom {top: auto; bottom: 0; background-position: left bottom;}
+.portfolio-image > img {position: relative; z-index: 1;}
+.portfolio-video-edge {position: absolute; pointer-events: none; background-repeat: no-repeat; background-size: 100% 100%; filter: blur(2px); z-index: 0;}
+.portfolio-video-edge-left, .portfolio-video-edge-right {top: 0; bottom: 0;}
+.portfolio-video-edge-left {left: 0;}
+.portfolio-video-edge-right {right: 0;}
+.portfolio-video-edge-top, .portfolio-video-edge-bottom {left: 0; right: 0;}
+.portfolio-video-edge-top {top: 0;}
+.portfolio-video-edge-bottom {bottom: 0;}
+.personal-video video {position: relative; z-index: 1;}
+
+.portfolio-image-failure {z-index: 2;}
+
+/* Override the kit's stronger active scale with the approved press-only cue.
+   Touch presses use the runtime's gesture-aware marker so swipes never scale. */
+.portfolio-root [data-slot="button"]:not(.portfolio-skip-link) {scale: none!important; transform: none; transition: transform 180ms cubic-bezier(.2,.8,.2,1.12);}
+.portfolio-root .portfolio-card-link, .portfolio-gallery-stage {transition: transform 200ms cubic-bezier(.2,.8,.2,1.12);}
+.portfolio-root [data-slot="button"][data-pressed="true"] {transform: scale(.965);}
+.portfolio-root .portfolio-card-link[data-pressed="true"], .portfolio-gallery-stage[data-pressed="true"] {transform: scale(.988);}
+@media (hover: hover) and (pointer: fine) {
+ .portfolio-root [data-slot="button"]:not(:disabled):not([aria-disabled="true"]):not([data-press-surface]):not(.portfolio-card-link):not(.portfolio-skip-link):active {transform: scale(.965);}
+ .portfolio-root .portfolio-card-link:active {transform: scale(.988);}
 }
-
-/* Keep intrinsic media proportions when width/height attributes reserve layout space. */
-img,
-video {
-  height: auto;
+@media (max-width:767px) and (pointer:coarse) {
+ [data-long-film] .film-controls {display: none;}
+ [data-long-film]:not([data-native-film-started="true"]) .native-film-start {display: inline-flex;}
 }
-
-main.home-body,
-main.info,
-main.body-molekule,
-main.luma-body,
-main.niche-body,
-main.hyphae-body,
-main.body-6,
-main.play-body {
-  width: 100%;
-  min-height: 100vh;
-}
-
-main.home-body > .header,
-main.info > .header,
-main.body-molekule > .header,
-main.luma-body > .header,
-main.niche-body > .header,
-main.hyphae-body > .header,
-main.body-6 > .header,
-main.play-body > .header {
-  width: 100%;
-}
-
-/* Responsive sources must not make intrinsic image widths expand CSS grid tracks. */
-main.home-body > .grid > a,
-main.info > .grid-2 > * {
-  min-width: 0;
-}
-
-main.home-body .content-2 > img,
-main.info > .grid-2 > img {
-  width: 100%;
-}
-
-/*
- * The source stylesheet positions background videos at z-index: -100. On the live site the
- * project class lives on <body>; here it lives on <main>, so the video would
- * otherwise fall behind the main element's black background. Keep the source
- * stacking order, but contain it inside each transparent video frame.
- */
-main.body-molekule .w-background-video,
-main.luma-body .w-background-video,
-main.niche-body .w-background-video,
-main.hyphae-body .w-background-video,
-main.body-6 .w-background-video {
-  isolation: isolate;
-}
-
-.info-spacer {
-  order: -9999;
-  place-self: center;
-}
-
-.hyphae-vimeo,
-.hyphae-vimeo-frame {
-  width: 100%;
-}
-
-.hyphae-vimeo-frame {
-  aspect-ratio: 16 / 9;
-  position: relative;
-}
-
-.hyphae-vimeo-frame iframe,
-.hyphae-vimeo-frame > video {
-  display: block;
-  border: 0;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  inset: 0;
-}
-
-.hyphae-vimeo-frame > video {
-  background: #000;
-  object-fit: cover;
-}
-
-.exact-carousel {
-  position: relative;
-  overflow: hidden;
-}
-
-.exact-carousel-slide {
-  opacity: 0;
-  visibility: hidden;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  inset: 0;
-}
-
-.exact-carousel-slide.is-active {
-  opacity: 1;
-  visibility: visible;
-}
-
-.exact-carousel-slide img,
-.exact-carousel-slide video {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.exact-carousel-slide .div-block-37 .image-43-copy {
-  width: auto;
-  max-width: 100%;
-  object-fit: contain;
-}
-
-main.play-body .exact-hidden-label {
-  opacity: 0;
-  transition: opacity 180ms ease;
-}
-
-main.play-body .exact-hover-card:hover > .exact-hidden-label,
-main.play-body .exact-hover-card:focus-within > .exact-hidden-label {
-  opacity: 1;
-}
-
-.exact-label-pair {
-  width: 100%;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  main.play-body .exact-hidden-label {
-    transition: none;
-  }
+[data-native-film="true"] .film-controls {display: none;}
+[data-native-film="true"]:not([data-native-film-started="true"]) .native-film-start {display: inline-flex;}
+/* Telefoni is a 16:9 film padded in a 4:3 card. Native chrome includes both
+   the action row and scrubber. Keep that full area clear of the description. */
+.portfolio-gallery:has([data-native-film="true"]) .gallery-description-toggle {bottom: calc(12.5% + 80px); height: calc(87.5% - 80px);}
+.portfolio-gallery:has([data-native-film="true"]) .portfolio-description-strip {bottom: calc(12.5% + 80px);}
+@media (prefers-reduced-motion:reduce) {
+ .portfolio-root [data-slot="button"]:not(.portfolio-skip-link), .portfolio-root .portfolio-card-link, .portfolio-root .portfolio-gallery-stage {transform: none!important; scale: none!important; transition: none!important;}
 }
