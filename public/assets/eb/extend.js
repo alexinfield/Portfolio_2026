@@ -2,9 +2,12 @@
    colour field, fades it in once decoded, and lets the field drift only while it waits on screen. */
 (function () {
   var d = document.documentElement;
+  // On screen (with a 120 px margin) from the box itself: WebKit reports Home's cards, which sit
+  // inside a link, as never intersecting, so isIntersecting alone would never start their drift.
+  function near(r) { return r.width > 0 && r.bottom > -120 && r.top < innerHeight + 120; }
   var io = window.IntersectionObserver ? new IntersectionObserver(function (es) {
-    es.forEach(function (e) { e.target.toggleAttribute("data-eb-vis", e.isIntersecting); });
-  }, {rootMargin: "120px"}) : null;
+    es.forEach(function (e) { e.target.toggleAttribute("data-eb-vis", e.isIntersecting || near(e.boundingClientRect)); });
+  }, {rootMargin: "120px", threshold: [0, 0.01, 0.5, 1]}) : null;
 
   function setup(m) {
     if (m.__eb) return; m.__eb = 1;
@@ -38,7 +41,7 @@
       var i = new Image(); i.onload = i.onerror = fin; i.src = p;
       if (i.complete && i.naturalWidth) { finished = true; h.setAttribute("data-eb", "done"); return; }
     }
-    if (io && !finished) io.observe(h);
+    if (!finished) { if (near(h.getBoundingClientRect())) h.setAttribute("data-eb-vis", ""); if (io) io.observe(h); }
     setTimeout(fin, 15000);   // never leave media hidden
   }
   document.querySelectorAll("[data-eb-media]").forEach(setup);
