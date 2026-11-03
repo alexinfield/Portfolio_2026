@@ -178,9 +178,7 @@ function staticHtml(html, route) {
     result = result.replace(/(<picture class="ss-poster">[\s\S]*?<img\b[^>]*?)fetchpriority="high"/,
       '$1loading="lazy" fetchpriority="low"');
     result = result.replace(/(<img\b[^>]*?)decoding="sync"/, '$1decoding="async"');
-    // Decode the critical cover while parsing the head. Fonts keep their
-    // normal CSS discovery and swap behavior rather than competing preloads.
-    result = result.replace(/<link\b(?=[^>]*rel="preload")(?=[^>]*as="font")[^>]*>/gi, '');
+    // Keep the approved font preloads so the header is ready at first paint.
     const hero = /<link\b(?=[^>]*rel="preload")(?=[^>]*as="image")(?=[^>]*fetchPriority="high")[^>]*>/i.exec(result);
     if (hero) {
       const larger = hero[0].replace(relativeRoot(route)+moleculeCover.slice(1)+' 768w, ', '').replace('<link ', '<link media="(min-width: 960px)" ');
