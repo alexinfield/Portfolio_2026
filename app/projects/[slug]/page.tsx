@@ -94,7 +94,7 @@ function HyphaeComposite({ image, video }: {
         width={image.width}
         height={image.height}
         sizes="100vw"
-        loading="eager"
+        loading="lazy"
         decoding="async"
         className="case-image case-media"
         style={mediaRatio(image.width, image.height)}
@@ -138,7 +138,7 @@ function HyphaePresentation({ media }: { media: MediaItem[] }) {
         className="case-media"
         style={mediaRatio(media[1].width, media[1].height)}
         sizes="100vw"
-        loading="lazy"
+        loading="eager"
         decoding="async"
       />
       <CaseText source={media[1].source} />
