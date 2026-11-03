@@ -259,3 +259,15 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
 .portfolio-privacy summary, .portfolio-privacy label {min-height: 44px; display: flex; align-items: center; gap: var(--inline); cursor: pointer;}
 .portfolio-privacy p {margin-block: var(--inline);}
 .portfolio-privacy input {accent-color: var(--text);}
+
+/* A native body-first skip anchor stays in Safari's sequential focus order,
+   including before client boundaries hydrate. Header materials are unchanged. */
+.portfolio-skip-link {display:inline-flex;align-items:center;min-height:44px;padding:8px 12px;background:var(--surface);color:var(--text);border-radius:var(--radius);text-decoration:none}
+.portfolio-skip-link:focus-visible {outline:2px solid var(--focus);outline-offset:2px}
+/* Still-image raster layers bleed one CSS pixel into the following panel while
+   their layout footprint stays constant. No upward bleed on the opening image. */
+.portfolio-case-stack .case-media {height:calc((100cqw + 4px) * var(--media-ratio, .5625) - 5px);margin-bottom:-1px}
+.portfolio-case-stack .case-composite .case-media {height:calc(100% + 1px);margin-bottom:-1px}
+.portfolio-case-stack > .case-panel:first-child {display:flow-root}
+.portfolio-case-stack > .case-panel:first-child > .case-media {margin-top:0}
+.portfolio-case-stack .case-panel {display:flow-root}

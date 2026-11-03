@@ -47,3 +47,12 @@
  .compass-personal-gallery .personal-video .media-controls,.compass-personal-gallery .native-film-start {display:none!important}
 }
 @media (prefers-reduced-motion:reduce) {.compass-personal-gallery .personal-carousel-controls {transition:none}}
+
+/* Parsed noscript children identify scripting-disabled documents even when a
+   browser does not expose the scripting media feature. Reserve the file links. */
+.personal-masonry:has(#original-tracks > noscript > nav) {--tracks-extra:132px}
+#original-tracks > noscript:has(> nav) {display:block;height:132px}
+#original-tracks > noscript .tracks-file-links a {height:44px;box-sizing:border-box}
+.personal-masonry > .masonry-card {container-type:inline-size}
+.personal-masonry .portfolio-gallery-boundary {height:calc(100cqw / var(--personal-aspect));flex:none;overflow:clip}
+.personal-masonry .portfolio-gallery-boundary > .compass-personal-gallery {height:100%}

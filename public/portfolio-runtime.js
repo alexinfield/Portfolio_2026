@@ -5,9 +5,11 @@
 
   const header = document.querySelector(".portfolio-header");
   const measureHeader = () => {
+    if(document.fonts && document.fonts.status !== "loaded")return;
     if (header) document.documentElement.style.setProperty("--portfolio-header-height", `${header.getBoundingClientRect().height}px`);
   };
   measureHeader();
+  document.fonts?.ready.then(measureHeader);
   if (header && "ResizeObserver" in window) new ResizeObserver(measureHeader).observe(header);
 
   // A focusable unavailable action discloses its state, without a content route.

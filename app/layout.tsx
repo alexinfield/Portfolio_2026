@@ -36,6 +36,7 @@ export default function RootLayout({
 
       </head>
       <body>
+        <a href="#main-content" tabIndex={0} className="portfolio-skip-link">Skip to content</a>
         {children}
         <script src={withBasePath("/portfolio-runtime.js")} defer />
         <footer className="portfolio-shell portfolio-privacy">
