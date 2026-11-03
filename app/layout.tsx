@@ -40,8 +40,8 @@ export default function RootLayout({
         <script src={withBasePath("/portfolio-runtime.js")} defer />
         <footer className="portfolio-shell portfolio-privacy">
           <details><summary>Privacy settings</summary><p>Google Analytics and Microsoft Clarity help me understand visits and how the site is used. Both are optional and stay off until you allow them.</p>
-            <label><input type="checkbox" data-analytics-consent /> Allow analytics and session recording</label>
-            <p data-analytics-status role="status">Analytics is off.</p>
+            <label><input type="checkbox" data-analytics-consent suppressHydrationWarning /> Allow analytics and session recording</label>
+            <p data-analytics-status role="status" suppressHydrationWarning>Analytics is off.</p>
           </details>
         </footer>
         <script src={withBasePath("/portfolio-analytics.js")} data-ga-id={googleAnalyticsId} data-clarity-id={clarityProjectId} defer />
