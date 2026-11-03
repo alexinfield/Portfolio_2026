@@ -56,7 +56,7 @@ test("home has exactly the four approved name-only captions in order",async()=>{
   assert.deepEqual(captions,["Molekule Go","Ping","Hyphae Light","Luma"]);
   assert.equal((html.match(/>Personal work →<\/a>/g)||[]).length,1);
   assert.match(html,/href="\.\/personal\/"/);
-  assert.doesNotMatch(html,/<footer|mailto:/);
+  assert.doesNotMatch(html,/mailto:/);
   assert.doesNotMatch(html,/I'm Alex|I&#x27;m Alex|ASCII|Grow a flower|portfolio-gallery/);
   assert.match(html,/hero-hand-w768\.webp 768w/);
   assert.match(html,/sizes="\(max-width: 767px\) 100vw, 50vw"/);
@@ -77,6 +77,9 @@ test("every real page has the same Compass nav, disabled Professional and landma
     assert.match(html,/href="#main-content"[^>]*>Skip to content/);
     assert.match(html,/<main\b[^>]*id="main-content"[^>]*tabindex="-1"/);
     assert.equal((html.match(/<h1\b/g)||[]).length,1,path);
+    const footers=[...html.matchAll(/<footer\b[^>]*>[\s\S]*?<\/footer>/g)];
+    assert.equal(footers.length,path==="404.html"?0:1,path);
+    if(footers.length){assert.match(footers[0][0],/class="[^"]*portfolio-privacy/);assert.match(footers[0][0],/<summary>Privacy settings<\/summary>/);assert.equal((footers[0][0].match(/data-analytics-consent/g)||[]).length,1);}
     assert.doesNotMatch(html,/data-theme-toggle|portfolio-theme\.js|portfolio-compass-theme|Appearance/);
     const palette=path.startsWith("personal/")?"light":"dark";assert.match(html,new RegExp(`<html[^>]*data-theme="${palette}"`));
   }
@@ -85,11 +88,12 @@ test("every real page has the same Compass nav, disabled Professional and landma
 test("Info contains the exact approved text, artwork and one secondary Contact mailto button",async()=>{
   const html=documentOnly(await exported("info/index.html"));
   assert.match(html,/I&#x27;m Alex Infield, an industrial designer based in Brooklyn, New York\. My work spans product visualization, CAD, prototyping and fabrication for consumer goods, furniture and lighting\./);
-  assert.match(html,/IMG_0019\.png/);
+  assert.match(html,/IMG_0019-w(?:768|960|1600)\.webp/);
+  assert.doesNotMatch(html,/\ssrc="[^"]*IMG_0019\.png/);
   assert.match(html,/mailto:alex@infield.net/);
   assert.equal((html.match(/href="mailto:alex@infield.net"/g)||[]).length,1);
   assert.match(html,/<a\b(?=[^>]*data-variant="secondary")(?=[^>]*href="mailto:alex@infield.net")[^>]*>Contact<\/a>/);
-  assert.doesNotMatch(html,/<footer|Appearance|data-slot="toggle-group"/);
+  assert.doesNotMatch(html,/Appearance|data-slot="toggle-group"/);
   assert.doesNotMatch(html,/résumé|resume|flower|garden/i);
 });
 
