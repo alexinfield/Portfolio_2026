@@ -57,9 +57,8 @@
     }
 
     function measure() {
-      if (!set) return;
-      const fit = choose();
-      if (fit !== set && fit.w > set.w && set !== cfg.sets.portrait) { load(fit); return; } // upgrade, never downgrade
+      const fit = set && choose();
+      if (set && fit !== set && fit.w > set.w && set !== cfg.sets.portrait) { load(fit); return; } // upgrade, never downgrade
       const top = root.getBoundingClientRect().top + scrollY;
       flow = getComputedStyle(stage).position !== "sticky";
       if (track && !RM.matches) {
@@ -87,6 +86,7 @@
         start = top - (parseFloat(getComputedStyle(stage).top) || 0);
         range = Math.max(1, root.offsetHeight - stage.offsetHeight);
       }
+      if (!set) return; // geometry is eager; image loading remains near-viewport only
       const dpr = Math.min(devicePixelRatio || 1, 2);
       const w = Math.max(1, Math.min(set.w, Math.round(frame.getBoundingClientRect().width * dpr)));
       const h = Math.round(w * set.h / set.w);
@@ -231,9 +231,14 @@
     const watch = () => { if (!RM.matches) io.observe(root); };
     RM.addEventListener("change", () => {
       if (RM.matches && track) track.classList.remove("is-sequence-pinned");
-      else if (begun) measure();
+      else if (track || begun) measure();
       watch();
     });
+    if (track) {
+      measure();
+      new ResizeObserver(measure).observe(strip);
+      addEventListener("resize", measure);
+    }
     watch();
   }
 
