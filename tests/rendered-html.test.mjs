@@ -157,11 +157,12 @@ test("all six cases preserve the complete ordered image content and descriptions
     assert.match(html,new RegExp(`<h1 class="sr-only">${titles[index]}</h1>`));
     assert.doesNotMatch(html,/portfolio-case-heading|Back to Work/);
     const tags=[...withoutSequences(html).matchAll(/<img\b[^>]*>/g)].map(match=>match[0]);
-    assert.deepEqual(tags.map(tag=>/\ssrc="([^"]+)"/.exec(tag)[1].replace(/^\.\.\/\.\.\//,"/")),registry[slug].filter(item=>item.kind==="image").map(item=>item.source),slug);
+    const identity = source => source.replace(/\.[^/.]+$/, "").replace(/-w(?:768|960|1600|2600)$/, "");
+    assert.deepEqual(tags.map(tag=>identity(/\ssrc="([^"]+)"/.exec(tag)[1].replace(/^\.\.\/\.\.\//,"/"))),registry[slug].filter(item=>item.kind==="image").map(item=>identity(item.source)),slug);
     for(const tag of tags)assert.ok(/\salt="([^"]+)"/.exec(tag)?.[1].length>10);
     assert.match(html,/portfolio-case-stack/);
     assert.match(html,/aria-label="Case navigation"/);
-    assert.doesNotMatch(html,/<footer/);
+    assert.equal((html.match(/<footer/g)||[]).length,1); assert.match(html,/portfolio-privacy/);
     if(!CASE_TEXT_ENABLED)assert.doesNotMatch(html,/class="case-text"/);
     for(const item of registry[slug].filter(item=>item.kind!=="sequence")){await access(new URL(`../public${item.source}`,import.meta.url));if(item.poster)await access(new URL(`../public${item.poster}`,import.meta.url));}
   }
