@@ -33,7 +33,7 @@
     const track = strip?.parentElement.classList.contains("case-scroll-track") ? strip.parentElement : null;
     const conn = navigator.connection || {}, lite = conn.saveData || /2g/.test(conn.effectiveType || "");
     const every = lite ? 2 : 1; // Save-Data and 2G: every other full frame
-    let set, fmt, sprite, gen = 0, full = [], low = [], start = 0, range = 1, cur = 0, shown = null;
+    let set, fmt, sprite, gen = 0, full = [], low = [], start = 0, range = 1, cur = 0, shown = null, painted = null;
     let ticking = false, last = 0, begun = false, live = false, armed = false, active = 0, dir = 1, prev = 0, done = false, flow = false;
     const pending = new Set();
 
@@ -106,13 +106,19 @@
     }
 
     function paint() {
-      const img = pick(Math.round(cur));
+      const index = Math.round(cur);
+      const img = index === 0 ? full[0] : index === n - 1 ? (full[index] || low[index] || pick(index)) : pick(index);
       if (!img || img === shown) return;
+      const next = img > 0 ? Math.min(n - 1, (img - 1) * step) : full.indexOf(img);
+      // A closer decode must not briefly run the visible animation backwards.
+      if (painted !== null && (dir > 0 ? next < painted : next > painted)) return;
       if (img > 0) { // a slot in the low-res sprite (1-based)
         const j = img - 1;
         ctx.drawImage(sprite, (j % set.cols) * set.lw, Math.floor(j / set.cols) * set.lh, set.lw, set.lh, 0, 0, canvas.width, canvas.height);
       } else ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       shown = img;
+      painted = next;
+      root.dataset.paintedFrame = String(next);
       if (!live) { live = true; root.classList.add("is-live"); }
     }
 
@@ -182,7 +188,7 @@
     function load(next) {
       gen++;
       active = 0; pending.clear(); done = false;
-      full = []; low = []; shown = null; sprite = null;
+      full = []; low = []; shown = null; painted = null; sprite = null;
       set = next || choose();
       const m = /\.(avif|webp|jpe?g)(\?|$)/.exec(poster.currentSrc || "");
       fmt = m ? (m[1][0] === "j" ? "jpg" : m[1]) : cfg.formats[cfg.formats.length - 1];
