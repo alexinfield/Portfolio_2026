@@ -152,14 +152,14 @@ test("Personal carousel SSR and Original Tracks retain a usable deferred fallbac
   assert.equal(manifest.icons[0].src,"./icons/tracks.svg");
 });
 
-test("Molekule phone cover embeds exact cleared pixels once and retains larger candidates",async()=>{
+test("Molekule phone cover embeds exact cleared pixels and retains its field and larger candidates",async()=>{
   const html=documentOnly(await exported('projects/molekule-go/index.html'));
   const inline=[...html.matchAll(/data:image\/webp;base64,([A-Za-z0-9+/=]+) 768w/g)];
-  assert.equal(inline.length,1,'do not duplicate the cover in the preload');
+  assert.equal(inline.length,1,'the document carries the cover once');
   const registry=JSON.parse(await read('lib/project-media.json'));
   const cover=registry['molekule-go'][0].source.replace(/\.[^.]+$/, '-w768.webp');
   assert.deepEqual(Buffer.from(inline[0][1],'base64'),await readFile(new URL('../public'+cover,import.meta.url)));
-  assert.match(html,/<link media="\(min-width: 768px\)"[^>]*as="image"/);
+  assert.match(html,/<img data-eb-native="" data-eb-media=""[^>]*fetchpriority="high"/i);
   assert.match(html,/-w1600\.webp 1600w/);
 });
 test("all six cases preserve the complete ordered image content and descriptions",async()=>{

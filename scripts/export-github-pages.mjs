@@ -173,18 +173,18 @@ function staticHtml(html, route) {
   );
 
   if (route === "/projects/molekule-go") {
-    result = result.replaceAll(relativeRoot(route)+moleculeCover.slice(1), moleculeCoverInline);
     // Panel 19 is many screens below the opening photograph. Its poster
     // must not compete with the actual first-screen LCP image.
     result = result.replace(/(<picture class="ss-poster">[\s\S]*?<img\b[^>]*?)fetchpriority="high"/,
       '$1loading="lazy" fetchpriority="low"');
     result = result.replace(/(<img\b[^>]*?)decoding="sync"/, '$1decoding="async"');
-    // The phone cover is already in the document: avoid duplicating its
-    // base64 payload in a preload. Larger viewports keep a network preload.
+    // Decode the critical cover while parsing the head. Fonts keep their
+    // normal CSS discovery and swap behavior rather than competing preloads.
+    result = result.replace(/<link\b(?=[^>]*rel="preload")(?=[^>]*as="font")[^>]*>/gi, '');
     const hero = /<link\b(?=[^>]*rel="preload")(?=[^>]*as="image")(?=[^>]*fetchPriority="high")[^>]*>/i.exec(result);
     if (hero) {
-      const desktopPreload = hero[0].replace(moleculeCoverInline, relativeRoot(route)+moleculeCover.slice(1)).replace('<link ', '<link media="(min-width: 768px)" ');
-      result = result.replace(hero[0], '').replace(/(<head>\s*<meta[^>]*charset[^>]*>)/i, '$1'+desktopPreload);
+      const larger = hero[0].replace(relativeRoot(route)+moleculeCover.slice(1)+' 768w, ', '').replace('<link ', '<link media="(min-width: 960px)" ');
+      result = result.replace(hero[0], '').replace(/(<head>\s*<meta[^>]*charset[^>]*>)/i, '$1'+larger);
     }
   }
   result = versionScripts(result);
@@ -214,7 +214,13 @@ async function renderRoute(route) {
   );
 
   if (!response.ok) throw new Error(`Failed to render ${route}: ${response.status}`);
-  const html = withExtendBlur(staticHtml(await response.text(), route), route);
+  let html = withExtendBlur(staticHtml(await response.text(), route), route);
+  // Derive the approved Extend field from the original cleared path first.
+  if (route === "/projects/molekule-go") {
+    html = html.replaceAll(relativeRoot(route)+moleculeCover.slice(1), moleculeCoverInline)
+      .replace(/<div\b(?=[^>]*class="case-panel")[^>]*>/, tag=>tag.replace('<div ', '<div data-eb="done" '))
+      .replace(/<img\b/, '<img data-eb-native=""');
+  }
   const path = route === "/" ? join(output, "index.html") : join(output, route.slice(1), "index.html");
   await mkdir(dirname(path), { recursive: true });
   await writeFile(path, html);

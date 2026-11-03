@@ -10,6 +10,7 @@
   }, {rootMargin: "120px", threshold: [0, 0.01, 0.5, 1]}) : null;
 
   function setup(m) {
+    if (m.hasAttribute("data-eb-native")) return;
     if (m.__eb) return; m.__eb = 1;
     var h = m.parentElement;
     if (!h || !h.hasAttribute("data-eb-host")) return;
