@@ -229,7 +229,7 @@ test("all video players use Compass icons; long films add timeline, mute and ful
 test("404 retains a same-document skip target, one robots tag and no inherited URL or analytics",async()=>{
   assert.equal((await render("/missing/deep/route")).status,404);
   const html=await exported("404.html");
-  assert.doesNotMatch(html,/<base\b|rel="canonical"|property="og:url"|googletagmanager|clarity|portfolio-analytics/);
+  assert.doesNotMatch(html,/<base\b|rel="canonical"|property="og:url"|<script[^>]*(?:googletagmanager|clarity|portfolio-analytics)/);
   assert.match(html,/href="#main-content"/);
   assert.equal((html.match(/name="robots"/g)||[]).length,1);
   assert.match(html,/<title>Page not found — Alex Infield<\/title>/);
@@ -253,12 +253,12 @@ test("redirects and aliases have real targets and Compass fallback controls",asy
   }
 });
 
-test("hydration is retained only for Personal and the Hyphae film; preview remains noindex",async()=>{
-  for(const path of ["personal/index.html","projects/hyphae/index.html"]){const html=await exported(path);assert.match(html,/__VINEXT_RSC_|id="_R_"/);}
-  for(const path of ["index.html","info/index.html",...slugs.filter(slug=>slug!=="hyphae").map(slug=>`projects/${slug}/index.html`),"404.html"]){assert.doesNotMatch(await exported(path),/__VINEXT_RSC_|id="_R_"/);}
-  for(const path of pages)assert.match(await exported(path),/name="robots" content="noindex,nofollow"/);
-  assert.equal(await exported("robots.txt"),"User-agent: *\nDisallow: /\n");
-  const sitemap=await exported("sitemap.xml");assert.match(sitemap,/<loc>https:\/\/alexinfield.com\/personal<\/loc>/);assert.doesNotMatch(sitemap,/\/etc|\/play|\/professional/);
+test("hydration is retained only for Hyphae; indexing follows export flag",async()=>{
+  for(const path of ["projects/hyphae/index.html"]){const html=await exported(path);assert.match(html,/__VINEXT_RSC_|id="_R_"/);}
+  for(const path of ["index.html","personal/index.html","info/index.html",...slugs.filter(slug=>slug!=="hyphae").map(slug=>`projects/${slug}/index.html`),"404.html"]){assert.doesNotMatch(await exported(path),/__VINEXT_RSC_|id="_R_"/);}
+  for(const path of pages)assert.equal(/name="robots" content="noindex,nofollow"/.test(await exported(path)),process.env.PORTFOLIO_ALLOW_INDEXING !== "true");
+  assert.equal(await exported("robots.txt"),process.env.PORTFOLIO_ALLOW_INDEXING === "true" ? "User-agent: *\nAllow: /\nSitemap: https://alexinfield.com/sitemap.xml\n" : "User-agent: *\nDisallow: /\n");
+  const sitemap=await exported("sitemap.xml");assert.match(sitemap,/<loc>https:\/\/alexinfield.com\/personal\/<\/loc>/);assert.doesNotMatch(sitemap,/\/etc|\/play|\/professional/);
   const workflow=await read(".github/workflows/deploy-pages.yml");assert.match(workflow,/actions\/deploy-pages@v4/);assert.match(workflow,/PORTFOLIO_ALLOW_INDEXING: "true"/);
 });
 
@@ -298,7 +298,7 @@ test("favicon is a plain white dot on black",async()=>{
 });
 
 test("analytics identity is preserved on content pages, with no duplicate tags",async()=>{
-  for(const path of pages){const html=await exported(path);assert.equal((html.match(/<script[^>]*src="https:\/\/www.googletagmanager.com\/gtag\/js/g)||[]).length,1);assert.match(html,/G-C6H8Q9R5B5/);assert.match(html,/xz6mz3a8cb/);assert.match(html,/portfolio-analytics.js/);assert.doesNotMatch(html,/G-171WY5DL4E/);}
+  for(const path of pages){const html=await exported(path);assert.equal((html.match(/<script[^>]*src="https:\/\/www.googletagmanager.com\/gtag\/js/g)||[]).length,0);assert.match(html,/G-C6H8Q9R5B5/);assert.match(html,/xz6mz3a8cb/);assert.match(html,/portfolio-analytics.js/);assert.doesNotMatch(html,/G-171WY5DL4E/);}
   const runtime=await read("public/portfolio-analytics.js");assert.match(runtime,/portfolio_project_open/);assert.doesNotMatch(runtime,/recruiter|employer|company_name|email_address/i);
 });
 
