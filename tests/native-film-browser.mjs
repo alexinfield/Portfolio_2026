@@ -65,7 +65,13 @@ export async function runNativeFilmRegressions(browser,baseURL,{artifacts}={}) {
         await video.evaluate(video=>{video.nativePointerEvents=0;video.addEventListener('pointerdown',()=>video.nativePointerEvents++);});
         const nativeBox=await video.boundingBox();
         const paused=await state();
-        await page.touchscreen.tap(nativeBox.x+24,nativeBox.y+nativeBox.height-50);
+        if(browser.browserType().name()==='webkit'){
+          // WebKit's paused native overlay uses a central Play glyph, unlike
+          // Chromium's lower-left control. A second tap reveals then activates it.
+          await page.touchscreen.tap(nativeBox.x+nativeBox.width/2,nativeBox.y+nativeBox.height/2);
+          await page.waitForTimeout(350);
+          if(await video.evaluate(v=>v.paused))await page.touchscreen.tap(nativeBox.x+nativeBox.width/2,nativeBox.y+nativeBox.height/2);
+        }else await page.touchscreen.tap(nativeBox.x+24,nativeBox.y+nativeBox.height-50);
         await page.waitForFunction(({selector,time})=>{const video=document.querySelector(selector);return video&&!video.paused&&video.readyState>=2&&video.currentTime>time+.15;},{selector:film==='hyphae'?'.case-film video':'#p041-telefoni video',time:paused.time});
         outcome.pauseSetup='programmatic pause; native Play glyph resumes';outcome.nativeResume=await state();
         outcome.nativeResumePagePointerEvents=await video.evaluate(video=>video.nativePointerEvents);

@@ -3,12 +3,12 @@ export async function runSequenceGapRegressions(launch,baseURL,{engine,artifacts
 const out=artifacts,server={origin:baseURL},rows=[];await mkdir(out,{recursive:true});
 const measure=()=>{const s=document.querySelector('.case-sequence'),r=s.getBoundingClientRect(),panel=s.closest('.case-panel');
   const vis=e=>e&&e.getClientRects().length&&!e.closest('noscript');
-  const mediaBox=el=>{if(!el)return null;const m=[...el.querySelectorAll('img,video,.case-sequence,.case-composite')].filter(vis);const pick=m.find(()=>true);return pick?(pick.closest('.case-video,.case-composite')||pick):null;};
+  const mediaBox=el=>{if(!el)return null;const m=[...el.querySelectorAll('img,video,.case-sequence,.case-composite')].filter(vis);const pick=m.find(()=>true);return pick?(pick.closest('.case-video,.case-composite,.case-panel')||pick):null;};
   const prevPanel=panel?.previousElementSibling,nextPanel=panel?.nextElementSibling;
   let above;
-  if(prevPanel){const ms=[...prevPanel.querySelectorAll('img,video,.case-composite')].filter(vis).map(e=>e.closest('.case-video,.case-composite')||e);const b=Math.max(...ms.map(e=>e.getBoundingClientRect().bottom));above={prev:'panel',gap:+(r.top-b).toFixed(2)};}
+  if(prevPanel){const ms=[...prevPanel.querySelectorAll('img,video,.case-composite')].filter(vis).map(e=>e.closest('.case-video,.case-composite,.case-panel')||e);const b=Math.max(...ms.map(e=>e.getBoundingClientRect().bottom));above={prev:'panel',gap:+(r.top-b).toFixed(2)};}
   // the header is fixed: compare document positions (the block's top in the page vs the header's height)
-  else above={prev:'header',gap:+(r.top+scrollY-document.querySelector('.portfolio-header').getBoundingClientRect().bottom).toFixed(2)};
+  else above={prev:'header',gap:+(r.top+(s.closest('.is-sequence-pinned')?0:scrollY)-document.querySelector('.portfolio-header').getBoundingClientRect().bottom).toFixed(2)};
   const nb=mediaBox(nextPanel);
   return {gapAbove:above.gap,prev:above.prev,gapBelow:nb?+(nb.getBoundingClientRect().top-r.bottom).toFixed(2):null,blockH:+r.height.toFixed(2),frameH:+s.querySelector('.ss-stage').getBoundingClientRect().height.toFixed(2),expectedH:+((document.documentElement.clientWidth+4)*.5625-6).toFixed(2)};};
 for(const [vpName,vp,dpr] of [['phone-393',{width:393,height:852},2],['desktop-1440',{width:1440,height:900},1]])for(const theme of ['light','dark'])for(const motion of ['no-preference','reduce']){

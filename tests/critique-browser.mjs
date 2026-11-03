@@ -174,7 +174,7 @@ export async function runBrowserRegressions(browser,baseURL,{artifacts,include}=
         assert.equal(state.paused,true);assert.ok(state.sources.every(source=>source!==null));
         assert.equal(await video.getAttribute('preload'),'none');assert.equal(await video.evaluate(video=>video.controls),false);
         if(device==='phone'){
-          const bounds=await page.evaluate(()=>{const video=document.querySelector('#p041-telefoni video'),v=video.getBoundingClientRect(),toggle=document.querySelector('#p041-telefoni [data-gallery-description-toggle]').getBoundingClientRect();return{toggleBottom:toggle.bottom,controlsTop:v.bottom-44,targetIsVideo:document.elementFromPoint(v.left+24,v.bottom-20)===video};});
+          const bounds=await page.evaluate(()=>{const video=document.querySelector('#p041-telefoni video'),v=video.getBoundingClientRect(),toggle=document.querySelector('#p041-telefoni [data-native-film-play]').getBoundingClientRect();return{toggleBottom:toggle.bottom,controlsTop:v.bottom-44,targetIsVideo:document.elementFromPoint(v.left+24,v.bottom-20)===video};});
           assert.ok(bounds.toggleBottom<=bounds.controlsTop+.5,JSON.stringify(bounds));assert.ok(bounds.targetIsVideo);
         }
       });
