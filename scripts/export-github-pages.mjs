@@ -166,6 +166,16 @@ function staticHtml(html, route) {
     `<link rel="canonical" href="${siteOrigin}${canonicalPath}"/>${robots}</head>`,
   );
 
+  if (route === "/projects/molekule-go") {
+    // Panel 19 is many screens below the opening photograph. Its poster
+    // must not compete with the actual first-screen LCP image.
+    result = result.replace(/(<picture class="ss-poster">[\s\S]*?<img\b[^>]*?)fetchpriority="high"/,
+      '$1loading="lazy" fetchpriority="low"');
+    result = result.replace(/(<img\b[^>]*?)decoding="sync"/, '$1decoding="async"');
+    // Discover the opening responsive image before font preloads.
+    const hero = /<link\b(?=[^>]*rel="preload")(?=[^>]*as="image")(?=[^>]*fetchPriority="high")[^>]*>/i.exec(result);
+    if (hero) result = result.replace(hero[0], '').replace(/(<head>\s*<meta[^>]*charset[^>]*>)/i, '$1'+hero[0]);
+  }
   result = versionScripts(result);
   if (route === "/personal") {
     // Native server-rendered cards paint before React starts enhancing them.

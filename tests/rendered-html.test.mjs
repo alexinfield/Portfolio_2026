@@ -443,7 +443,8 @@ test("Luma opens and Molekule Go panel 19 plays as scroll sequences with version
     const section=sections[0];
     if(stackIndex===0)assert.match(html,/<div class="portfolio-case-stack"><div class="case-scroll-track"><div class="case-pin-strip"><div class="case-panel"><div class="case-sequence">/);
     assert.match(section,/role="img" aria-label="[^"]{30,}"/);
-    assert.match(section,/<img\b[^>]*\ssrc="[^"]*sequence-[0-9a-f]{8}\/landscape\/jpg\/001\.jpg"[^>]*fetchpriority="high"/);
+    assert.match(section,/<img\b[^>]*\ssrc="[^"]*sequence-[0-9a-f]{8}\/landscape\/jpg\/001\.jpg"/);
+    assert.match(section,slug === "luma" ? /fetchpriority="high"/ : /loading="lazy" fetchpriority="low"/);
     assert.match(section,/<noscript><picture\b[^>]*\sclass="ss-still"/);
     assert.doesNotMatch(section,/--ss-lqip|class="ss-lqip"/);
     // 16:9 landscape frames at every size: no portrait crop on phones.
