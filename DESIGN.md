@@ -1,5 +1,15 @@
 # Portfolio design
 
+Alex's November 3 review of draft v28 requires the Luma and Molekule Go
+sequences to pin while scrubbing, with neighbouring content touching them.
+The case strip now sticks as a continuous unit for 125svh of native scroll.
+Luma opens against the header; Molekule Go enters fully and pins against the
+viewport bottom, with preceding panels filling the space above. The sequence
+blocks retain their full-width 16:9 geometry and seam trim. Stable viewport
+units keep toolbar expansion out of the scrub mapping. Reduce Motion and
+no-JS stills remain in flow. Evidence and the viewport matrix are in the
+external `golive-261101/report-pr14-pin.md` handoff.
+
 Alex's approved October 28 critique spec owns this refinement of the October 27
 image-led portfolio: Funktional Grotesk,
 large original imagery, grayscale UI, borderless surfaces and 5 px corners.

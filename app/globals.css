@@ -245,3 +245,10 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
 .case-sequence .ss-stage {position: relative; top: auto; height: auto; container-type: normal;}
 .case-sequence .ss-frame {position: relative; left: auto; top: auto; transform: none; width: calc(100% + 4px); max-width: none; margin-inline: -2px; height: var(--sequence-height); aspect-ratio: auto;}
 .case-sequence :is(.ss-poster img, .ss-still img, canvas) {object-fit: cover; object-position: 50% 50%;}
+/* The complete strip sticks: the title and neighbouring panels remain flush with the
+   16:9 sequence even on portrait phones. The outer track supplies only scrub travel.
+   No JS and Reduce Motion never activate it. Stable viewport units avoid toolbar jumps. */
+@media (prefers-reduced-motion: no-preference) {
+ .case-scroll-track.is-sequence-pinned {height: calc(var(--case-strip-height) + 125vh); height: calc(var(--case-strip-height) + 125svh);}
+ .is-sequence-pinned > .portfolio-case-stack {position: sticky; top: var(--case-pin-top, var(--portfolio-header-height));}
+}

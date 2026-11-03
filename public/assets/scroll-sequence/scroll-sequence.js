@@ -29,6 +29,8 @@
     const stage = root.querySelector(".ss-stage"), frame = root.querySelector(".ss-frame");
     const poster = root.querySelector(".ss-poster img"), canvas = root.querySelector("canvas");
     const n = cfg.count, step = cfg.lowStep || 4;
+    const strip = root.closest(".portfolio-case-stack");
+    const track = strip?.parentElement.classList.contains("case-scroll-track") ? strip.parentElement : null;
     const conn = navigator.connection || {}, lite = conn.saveData || /2g/.test(conn.effectiveType || "");
     const every = lite ? 2 : 1; // Save-Data and 2G: every other full frame
     let set, fmt, sprite, gen = 0, full = [], low = [], start = 0, range = 1, cur = 0, shown = null;
@@ -60,7 +62,21 @@
       if (fit !== set && fit.w > set.w && set !== cfg.sets.portrait) { load(fit); return; } // upgrade, never downgrade
       const top = root.getBoundingClientRect().top + scrollY;
       flow = getComputedStyle(stage).position !== "sticky";
-      if (flow) { // in the page flow: scrub over the block's own travel through the viewport
+      if (track && !RM.matches) {
+        // Pin the continuous case strip, including real neighbours. Extra scroll distance
+        // belongs outside the strip, never between its panels. svh stays stable as iOS
+        // toolbars expand/collapse; neither the pin point nor its duration uses innerHeight.
+        const offset = root.getBoundingClientRect().top - strip.getBoundingClientRect().top;
+        const header = parseFloat(getComputedStyle(root).getPropertyValue("--ss-top")) || 0;
+        track.style.setProperty("--case-strip-height", `${strip.offsetHeight}px`);
+        track.classList.add("is-sequence-pinned");
+        range = Math.max(1, track.offsetHeight - strip.offsetHeight);
+        // Opening hero stays against the header. Later sequences enter fully before
+        // pinning, with their preceding panels filling the rest of a portrait screen.
+        const pin = offset < 1 ? header : Math.max(header, range / 1.25 - frame.offsetHeight);
+        strip.style.setProperty("--case-pin-top", `${pin - offset}px`);
+        start = track.getBoundingClientRect().top + scrollY + offset - pin;
+      } else if (flow) { // in the page flow: scrub over the block's own travel through the viewport
         const header = parseFloat(getComputedStyle(root).getPropertyValue("--ss-top")) || 0;
         const maxY = Math.max(0, document.documentElement.scrollHeight - innerHeight);
         start = Math.min(maxY, Math.max(0, top - innerHeight)); // its top enters the bottom of the viewport
@@ -110,7 +126,11 @@
       const dt = last ? Math.min(64, now - last) : 16.7; // frame-rate-independent easing
       last = now;
       cur += (target - cur) * (1 - Math.pow(0.7, dt / 16.7));
+      if (track && (target === 0 || target === n - 1)) cur = target;
       if (Math.abs(target - cur) < 0.05) cur = target;
+      root.dataset.frameIndex = String(Math.round(cur));
+      root.dataset.scrubStart = String(start);
+      root.dataset.scrubRange = String(range);
       paint();
       fill();
       if (cur !== target) request(); else last = 0;
@@ -197,6 +217,7 @@
       addEventListener("scroll", () => { if (!armed) { armed = true; fill(); } request(); }, { passive: true });
       new ResizeObserver(measure).observe(frame);
       new ResizeObserver(measure).observe(root);
+      if (strip) new ResizeObserver(measure).observe(strip);
       addEventListener("resize", measure); // the viewport height sets the in-flow travel
       new ResizeObserver(measure).observe(document.body); // content above can move the block
       // Rotation swaps sets: wait for the <picture> to load the other poster, then reload frames.
@@ -206,7 +227,11 @@
     // Start (poster + sprite) only when the sequence is within a screen of the viewport.
     const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { io.disconnect(); begin(); } }, { rootMargin: "100% 0px" });
     const watch = () => { if (!RM.matches) io.observe(root); };
-    RM.addEventListener("change", watch);
+    RM.addEventListener("change", () => {
+      if (RM.matches && track) track.classList.remove("is-sequence-pinned");
+      else if (begun) measure();
+      watch();
+    });
     watch();
   }
 

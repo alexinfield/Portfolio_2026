@@ -259,7 +259,9 @@ export default async function ProjectPage({
   return (
     <SiteShell casePage>
       <h1 className="sr-only">{project.title}</h1>
-      <div className="portfolio-case-stack">{presentation}</div>
+      <div className="case-scroll-track">
+        <div className="portfolio-case-stack">{presentation}</div>
+      </div>
       <CaseNavigation slug={projectSlug} />
       {media.some(item => item.kind === "sequence") && <>
         <link rel="stylesheet" href={withBasePath("/assets/scroll-sequence/scroll-sequence.css")} precedence="default" />
