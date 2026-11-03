@@ -2,6 +2,7 @@ import { readFile, readdir, lstat, mkdtemp, writeFile, rm } from 'node:fs/promis
 import { resolve, relative, join } from 'node:path';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import { secureHtml } from './meta-security.mjs';
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const blocked = /professional|_professional-preview|__portfolio(?:-storage)?\/|portfolio[-_]private[-_]canary|(?:"|')audience(?:"|')\s*:\s*(?:"|')private/i;
 const routes = ['index.html','etc/index.html','personal/index.html','info/index.html', ...['ping','molekule-go','luma','niche','hyphae','mode','pillar','furniture'].map(x=>`projects/${x}/index.html`),'play/index.html','404.html'];
@@ -86,6 +87,14 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
     const root=resolve(fileURLToPath(new URL('../',import.meta.url)));
     await sourceBoundary(root);
     const manifest=JSON.parse(await readFile(new URL('public-assets.json',import.meta.url)));
+    // Public HTML receives the same final CSP pass as generated routes. Bind
+    // its original bytes first, then allow only that deterministic transform.
+    for (const [name, expected] of Object.entries(manifest.files)) {
+      if (!name.endsWith('.html')) continue;
+      const original = await readFile(join(root,'public',name));
+      if (sha(original) !== expected) throw new Error('Public HTML source hash differs');
+      manifest.files[name] = sha(Buffer.from(secureHtml(original.toString('utf8'))));
+    }
     const assets=await readdir(join(root,'dist/client/assets'));
     const clientFiles=new Set(assets.map(x=>'assets/'+x));
     console.log(JSON.stringify({publicBoundary:await checkBoundary(join(root,'gh-pages'),manifest,clientFiles)}));

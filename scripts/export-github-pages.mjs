@@ -102,7 +102,8 @@ function withExtendBlur(html, route) {
   const at = basePath ? `${basePath}/assets/eb/` : `${relativeRoot(route)}assets/eb/`;
   return out
     .replace("</head>", `<link rel="stylesheet" href="${at}extend.css?v=${scriptVersions["extend.css"]}"/></head>`)
-    .replace("</body>", `<script src="${at}extend.js?v=${scriptVersions["extend.js"]}" defer=""></script></body>`);
+    // Discover the reveal controller before the body and its hydration work.
+    .replace(/(<head>\s*<meta[^>]*charset[^>]*>)/i, `$1<script src="${at}extend.js?v=${scriptVersions["extend.js"]}" defer=""></script>`);
 }
 
 function relativeRoot(route) {
@@ -166,6 +167,13 @@ function staticHtml(html, route) {
   );
 
   result = versionScripts(result);
+  if (route === "/personal") {
+    // Native server-rendered cards paint before React starts enhancing them.
+    // Keep the bootstrap and all film/player handlers; focus/pointer input can
+    // request enhancement immediately while a slow image is still loading.
+    result = result.replace(/(<script\s+id="_R_">)([\s\S]*?)(<\/script>)/, (_m, open, boot, close) =>
+      `${open}(()=>{let started=false;const start=()=>{if(started)return;started=true;${boot}};addEventListener("pointerdown",start,{once:true,capture:true});addEventListener("focusin",start,{once:true,capture:true});addEventListener("load",()=>requestAnimationFrame(()=>requestAnimationFrame(start)),{once:true});})();${close}`);
+  }
   const palette = route === "/personal" ? "light" : "dark";
   result = result.replace(/(<html\b[^>]*class=")[^"]*(")/, `$1${palette === "dark" ? "dark" : ""}$2`)
     .replace(/(<html\b[^>]*data-theme=")[^"]*(")/, `$1${palette}$2`)

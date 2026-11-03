@@ -2,6 +2,11 @@ import { createHash } from 'node:crypto';
 
 // Run after every HTML rewrite, including redirect scripts and RSC payloads.
 export function secureHtml(html) {
+  // Public companion documents may use HTML's implicit head. Materialize it
+  // before placing a meta policy so it also precedes resource discovery.
+  if (!/<head[\s>]/i.test(html)) {
+    html = html.replace(/(<html\b[^>]*>)/i, '$1<head>').replace(/<body\b/i, '</head><body');
+  }
   html = html.replace(/<meta\b(?=[^>]*http-equiv="Content-Security-Policy")[^>]*>/gi, '');
   const hashes = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
     .filter(([,attrs,body]) => !/\bsrc\s*=/i.test(attrs) && body)
