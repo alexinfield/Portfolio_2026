@@ -13,7 +13,9 @@
     "start": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext start",
     "test": "npm run build:github && node --test tests/rendered-html.test.mjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern gh-pages",
-    "test:browser": "node tests/browser-regressions.mjs"
+    "test:browser": "node tests/run-release-checks.mjs",
+    "test:consent": "node tests/run-release-checks.mjs --suite consent",
+    "test:personal": "node tests/run-release-checks.mjs --suite personal"
   },
   "dependencies": {
     "@alex-infield/compass-augmentation": "file:vendor/alex-infield-compass-augmentation-1.2.1.tgz",

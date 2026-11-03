@@ -47,8 +47,8 @@ export async function runPreservedRegressions(browser,baseURL,{artifacts,include
       for(const id of ['desk-pen','p019-neighborhood-cnc-relief-map-study']){
         const image=page.locator(`#${id} img`).first();await image.scrollIntoViewIfNeeded();
         await page.waitForFunction(id=>{const image=document.querySelector(`#${id} img`);return image?.complete&&image.naturalWidth>0&&[...document.querySelectorAll(`#${id} [data-slot=carousel-slide]:first-child .portfolio-edge-fill`)].every(fill=>getComputedStyle(fill).backgroundImage!=='none');},id);
-        const ratio=await image.evaluate(element=>{const r=element.getBoundingClientRect();return{rendered:r.width/r.height,source:Number(element.getAttribute('width'))/Number(element.getAttribute('height'))};});
-        assert.ok(Math.abs(ratio.rendered-ratio.source)<.01);assert.equal(await page.locator(`#${id} [data-slot=carousel-slide]`).first().locator('.portfolio-edge-fill').count(),2);
+        const ratio=await image.evaluate(element=>{const r=element.getBoundingClientRect();return{rendered:r.width/r.height,source:Number(element.getAttribute('width'))/Number(element.getAttribute('height')),frame:Number(element.closest('[data-frame-aspect]').dataset.frameAspect)};});
+        assert.ok(Math.abs(ratio.rendered-ratio.source)<.01);assert.equal(await page.locator(`#${id} [data-slot=carousel-slide]`).first().locator('.portfolio-edge-fill').count(),Math.abs(ratio.source-ratio.frame)>.001?2:0);
       }
       const link=page.locator('#folio a');await link.hover();assert.equal(await link.evaluate(element=>getComputedStyle(element).textDecorationLine),'none');
     });
