@@ -10,6 +10,12 @@ const root = fileURLToPath(new URL("../", import.meta.url));
 const output = join(root, process.env.PORTFOLIO_EXPORT_DIR || "gh-pages");
 const siteOrigin = (process.env.PORTFOLIO_SITE_ORIGIN ?? "https://alexinfield.com").replace(/\/+$/, "");
 const allowIndexing = process.env.PORTFOLIO_ALLOW_INDEXING === "true";
+// Embed the exact cleared phone derivative in the document. This removes a
+// separate critical image request without changing a pixel or the desktop set.
+const moleculeCover = JSON.parse(await readFile(join(root,"lib/project-media.json"),"utf8"))["molekule-go"][0].source.replace(/\.[^.]+$/, "-w768.webp");
+const moleculeCoverBytes = await readFile(join(root,"public",moleculeCover));
+if (moleculeCoverBytes.length > 60000) throw Error("Critical phone cover exceeds inline budget");
+const moleculeCoverInline = `data:image/webp;base64,${moleculeCoverBytes.toString("base64")}`;
 const basePath = process.env.PORTFOLIO_BASE_PATH ?? "";
 if (!["", "/next"].includes(basePath) || (basePath && allowIndexing)) throw new Error("Invalid private export configuration");
 const mount = value => !basePath || value === basePath || value.startsWith(basePath+"/") ? value : basePath+value;
@@ -167,14 +173,19 @@ function staticHtml(html, route) {
   );
 
   if (route === "/projects/molekule-go") {
+    result = result.replaceAll(relativeRoot(route)+moleculeCover.slice(1), moleculeCoverInline);
     // Panel 19 is many screens below the opening photograph. Its poster
     // must not compete with the actual first-screen LCP image.
     result = result.replace(/(<picture class="ss-poster">[\s\S]*?<img\b[^>]*?)fetchpriority="high"/,
       '$1loading="lazy" fetchpriority="low"');
     result = result.replace(/(<img\b[^>]*?)decoding="sync"/, '$1decoding="async"');
-    // Discover the opening responsive image before font preloads.
+    // The phone cover is already in the document: avoid duplicating its
+    // base64 payload in a preload. Larger viewports keep a network preload.
     const hero = /<link\b(?=[^>]*rel="preload")(?=[^>]*as="image")(?=[^>]*fetchPriority="high")[^>]*>/i.exec(result);
-    if (hero) result = result.replace(hero[0], '').replace(/(<head>\s*<meta[^>]*charset[^>]*>)/i, '$1'+hero[0]);
+    if (hero) {
+      const desktopPreload = hero[0].replace(moleculeCoverInline, relativeRoot(route)+moleculeCover.slice(1)).replace('<link ', '<link media="(min-width: 768px)" ');
+      result = result.replace(hero[0], '').replace(/(<head>\s*<meta[^>]*charset[^>]*>)/i, '$1'+desktopPreload);
+    }
   }
   result = versionScripts(result);
   if (route === "/personal") {
