@@ -131,7 +131,8 @@
     function fill() {
       if (!armed || !set || (!sprite && !root.classList.contains("is-ready"))) return; // after the sprite pass
       const c = Math.round(cur), g = gen;
-      full.forEach((img, i) => { if (img !== poster && Math.abs(i - c) > KEEP) delete full[i]; }); // release
+      // release: drop the frame and detach its source, so its decoded pixels go now, not at the next GC
+      full.forEach((img, i) => { if (img !== poster && Math.abs(i - c) > KEEP) { delete full[i]; if (img !== shown) img.removeAttribute("src"); } });
       const list = wanted();
       for (const i of list) {
         if (active >= CONCURRENT) break;
@@ -142,7 +143,7 @@
         img.src = url(i);
         img.decode().then(() => {
           if (g !== gen) return;
-          if (Math.abs(i - Math.round(cur)) <= KEEP) { full[i] = img; request(); }
+          if (Math.abs(i - Math.round(cur)) <= KEEP) { full[i] = img; request(); } else img.removeAttribute("src"); // scrolled past
         }, () => {}).finally(() => {
           if (g !== gen) return;
           active--; pending.delete(i);
