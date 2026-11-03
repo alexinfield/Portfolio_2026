@@ -170,9 +170,9 @@ test("all six cases preserve the complete ordered image content and descriptions
     const html=documentOnly(await exported(`projects/${slug}/index.html`));
     assert.match(html,new RegExp(`<h1 class="sr-only">${titles[index]}</h1>`));
     assert.doesNotMatch(html,/portfolio-case-heading|Back to Work/);
-    const tags=[...withoutSequences(html).matchAll(/<img\b[^>]*>/g)].map(match=>match[0]);
+    const tags=[...withoutSequences(html).replace(/<noscript\b[^>]*>[\s\S]*?<\/noscript>/g,'').matchAll(/<img\b[^>]*>/g)].map(match=>match[0]);
     const identity = source => source.replace(/\.[^/.]+$/, "").replace(/-w(?:768|960|1600|2600)$/, "");
-    assert.deepEqual(tags.map(tag=>identity(/\ssrc="([^"]+)"/.exec(tag)[1].replace(/^\.\.\/\.\.\//,"/"))),registry[slug].filter(item=>item.kind==="image").map(item=>identity(item.source)),slug);
+    assert.deepEqual(tags.map(tag=>identity(/\s(?:src|data-critical-src)="([^"]+)"/.exec(tag)[1].replace(/^\.\.\/\.\.\//,"/"))),registry[slug].filter(item=>item.kind==="image").map(item=>identity(item.source)),slug);
     for(const tag of tags)assert.ok(/\salt="([^"]+)"/.exec(tag)?.[1].length>10);
     assert.match(html,/portfolio-case-stack/);
     assert.match(html,/aria-label="Case navigation"/);

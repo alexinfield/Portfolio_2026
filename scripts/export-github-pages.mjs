@@ -218,6 +218,18 @@ async function renderRoute(route) {
     html = html.replaceAll(relativeRoot(route)+moleculeCover.slice(1), moleculeCoverInline)
       .replace(/<div\b(?=[^>]*class="case-panel")[^>]*>/, tag=>tag.replace('<div ', '<div data-eb="done" '))
       .replace(/<img\b/, '<img data-eb-native=""');
+    // Start lower panel requests only after the opening cover has had a paint
+    // opportunity. Native lazy loading otherwise fetches large panels well
+    // beyond the viewport while the critical cover is still being presented.
+    let cover = true;
+    html = html.replace(/<img\b(?=[^>]*class="[^"]*case-media)[^>]*>/g, tag => {
+      if (cover) { cover = false; return tag; }
+      const deferred = tag.replace(/\ssrcset="([^"]*)"/, ' data-critical-srcset="$1"').replace(/\ssrc="([^"]*)"/, ' data-critical-src="$1"');
+      const fallback = tag.replace(/\sdata-eb-media=""/, '').replace(/style="([^"]*)"/, 'style="$1;position:relative;z-index:1;opacity:1"');
+      return deferred + `<noscript style="display:contents">${fallback}</noscript>`;
+    }).replace(/<div\b(?=[^>]*class="case-panel")[^>]*>/g, tag => tag.includes('data-eb="done"') ? tag : tag.replace('<div ', '<div data-eb="wait" '));
+    html = html.replace(/<body\b[^>]*>/, '$&<noscript><style>img[data-critical-src]{display:none!important}</style></noscript>');
+    html = html.replace('</body>', `<script>(()=>{const restore=()=>{for(const image of document.querySelectorAll('img[data-critical-src]')){const set=image.getAttribute('data-critical-srcset');if(set)image.setAttribute('srcset',set);image.setAttribute('src',image.getAttribute('data-critical-src'));image.removeAttribute('data-critical-src');image.removeAttribute('data-critical-srcset');}};const start=()=>{const cover=document.querySelector('img[data-eb-native]');Promise.resolve(cover?.decode?.()).catch(()=>{}).then(()=>requestAnimationFrame(()=>requestAnimationFrame(restore)));};if(document.readyState!=='loading')start();else addEventListener('DOMContentLoaded',start,{once:true});})();</script></body>`);
   }
   const path = route === "/" ? join(output, "index.html") : join(output, route.slice(1), "index.html");
   await mkdir(dirname(path), { recursive: true });
