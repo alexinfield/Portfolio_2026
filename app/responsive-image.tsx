@@ -36,7 +36,6 @@ export default function ResponsiveImage({
         ...candidates.map(
           (candidateWidth) => `${candidatePath(source, candidateWidth)} ${candidateWidth}w`,
         ),
-        ...(width <= 2600 ? [`${source} ${width}w`] : []),
       ].join(", ")
     : undefined;
 
