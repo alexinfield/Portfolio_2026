@@ -1,6 +1,6 @@
 # Alex Infield portfolio
 
-Source for [alexinfield.com](https://alexinfield.com), a static portfolio hosted on GitHub Pages. Palettes are fixed: Personal is light and every other page is dark. The current refresh uses the pinned Compass 1.1.0 package, the approved 16-entry Personal collection and the existing six image-based cases. See [DESIGN.md](DESIGN.md) for the accepted design.
+Source for [alexinfield.com](https://alexinfield.com), a static portfolio hosted on GitHub Pages. Palettes are fixed: Personal is light and every other page is dark. This draft branch pins reviewed Compass 1.2.1 for seamless Personal galleries and adds Original Tracks, a player card loaded on tap. Its three recordings and native audio fallback come from `public/beats/tracks.json`; new entries need no React changes. The existing collection and six cases remain. See [DESIGN.md](DESIGN.md). No PR, push or deployment is part of this draft.
 
 ## Local development
 
@@ -16,7 +16,7 @@ npm test
 npm run lint
 ```
 
-Browser verification runs on Infield with `node tests/verify-browser.mjs <export> <evidence> [preview-export]`, using existing Playwright and Chromium paths in `PORTFOLIO_PLAYWRIGHT_MODULE` and `PORTFOLIO_CHROMIUM_PATH`; it installs nothing.
+Builds and browser verification for this draft run on Outfield through the shared heavy-job gate. The existing browser helpers use Playwright and Chromium paths in `PORTFOLIO_PLAYWRIGHT_MODULE` and `PORTFOLIO_CHROMIUM_PATH`; they install nothing. `PORTFOLIO_DRAFT_LINK_MEDIA=true` reduces local flash writes by reusing immutable media during export; default release builds retain normal copying.
 
 The site is built from the React source in `app/`, the small project registry in
 `lib/`, and the self-hosted production media in `public/assets/`. Pushing

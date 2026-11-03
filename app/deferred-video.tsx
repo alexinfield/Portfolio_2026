@@ -16,6 +16,8 @@ type DeferredVideoProps = {
   loop?: boolean;
   autoplay?: boolean;
   controls?: boolean;
+  /** Keep native source URLs stable across carousel enhancement. */
+  nativeFallback?: boolean;
   active?: boolean;
   paused?: boolean;
   userStarted?: boolean;
@@ -32,7 +34,7 @@ type DeferredVideoProps = {
 
 export default function DeferredVideo({
   source, poster, label, className, width, height,
-  loop = true, autoplay = true, controls = false, active = true, paused = false,
+  loop = true, autoplay = true, controls = false, nativeFallback = false, active = true, paused = false,
   userStarted = false, showToggle = true, longFilm = false, durationSeconds, mediaStyle, frameBackground, previewTime, edgeFill=false, startMuted=false,
 }: DeferredVideoProps) {
   const sources = videoSources(source).map(item=>({...item,src:withBasePath(item.src)}));
@@ -49,6 +51,7 @@ export default function DeferredVideo({
       <video
         style={{...mediaStyle,...(edgeFill?{maskImage:`linear-gradient(${portrait?90:180}deg, transparent, #000 12px, #000 calc(100% - 12px), transparent)`}:{})}}
         data-lazy-video
+        data-native-fallback={nativeFallback || undefined}
         data-preview-time={previewTime}
         data-autoplay-video={autoplay && !longFilm ? "true" : undefined}
         data-demand-only={longFilm ? "true" : undefined}
@@ -69,7 +72,7 @@ export default function DeferredVideo({
         width={width}
         height={height}
       >
-        {sources.map((item) => <source src={longFilm ? item.src : undefined} data-src={item.src} type={item.type} key={item.src} />)}
+        {sources.map((item) => <source src={longFilm || nativeFallback ? item.src : undefined} data-src={item.src} type={item.type} key={item.src} />)}
         <p>Video unavailable in this browser. <Button asChild variant="link" size="sm"><a href={file}>Open video file</a></Button></p>
       </video>
       {longFilm ? <>

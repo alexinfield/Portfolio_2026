@@ -1,0 +1,45 @@
+.compass-personal-gallery .ac-carousel {position:relative}
+.compass-personal-gallery {--lift:0px}
+.compass-personal-gallery[data-description-open="true"] {--lift:var(--description-lift,0px)}
+.compass-personal-gallery .personal-video .media-controls:not(.film-quick-controls) {transform:translateY(calc(-1 * var(--lift)));transition:transform .24s cubic-bezier(.2,.8,.2,1)}
+.compass-personal-gallery .ac-carousel-viewport {border-radius:var(--radius)}
+.compass-personal-gallery [data-slot="carousel-slide"] > .portfolio-image,
+.compass-personal-gallery [data-slot="carousel-slide"] > .personal-video {width:100%;height:100%}
+.compass-personal-gallery .portfolio-image img,
+.compass-personal-gallery .personal-video video {width:100%;height:100%}
+.compass-personal-gallery .personal-carousel-controls {position:absolute;left:var(--inline);right:var(--inline);bottom:var(--inline);z-index:5;justify-content:space-between;pointer-events:none}
+.compass-personal-gallery .personal-carousel-controls > :not(button) {pointer-events:auto;background:var(--canvas);border-radius:var(--radius)}
+.compass-personal-gallery .ac-carousel-dots {margin:0 auto}
+/* Preserve Compass's 12 px dot pitch and its 44 px extended hit area. */
+.compass-personal-gallery .ac-carousel-dots [data-slot="button"] {width:12px;height:12px;min-width:12px;min-height:12px;padding:0;border-radius:50%}
+.compass-personal-gallery .personal-carousel-controls > button {opacity:0;pointer-events:none;transition:opacity .12s}
+.compass-personal-gallery:is(:hover,:focus-within) .personal-carousel-controls > button {opacity:1;pointer-events:auto}
+.compass-personal-gallery:has(.ac-carousel-viewport:not([data-enhanced])) .personal-carousel-controls {visibility:hidden}
+.compass-personal-gallery .personal-description-button {position:absolute;right:var(--inline);top:var(--inline);z-index:4}
+.compass-personal-gallery:has([data-native-film="true"]) .personal-description-button {right:112px}
+.compass-personal-gallery .portfolio-description-strip {bottom:0;padding-bottom:64px;pointer-events:none}
+.compass-personal-gallery[data-description-open="true"] .personal-carousel-controls {bottom:calc(var(--description-lift) + 8px)}
+.beats-card {aspect-ratio:4/3;background:var(--canvas);overflow:hidden;position:relative}
+.beats-card iframe {width:100%;height:100%;border:0;display:block}
+.beats-card[data-open="true"] {aspect-ratio:auto;height:clamp(520px,100vw,620px)}
+.beats-close {position:absolute;top:8px;right:8px;z-index:2}
+.portfolio-root .beats-open[data-slot="button"] {width:100%;height:100%;padding:12px;display:flex;flex-direction:column;gap:8px;background:transparent;white-space:normal}
+.beats-open img {height:calc(100% - 30px);width:auto;max-width:100%;object-fit:contain}
+.beats-open span {font-size:13px;line-height:18px}
+.beats-fallback {padding:16px;list-style:none}
+.beats-fallback li {margin-bottom:16px}
+.beats-fallback audio {width:100%;display:block}
+.beats-file-actions {display:flex;gap:16px}
+.beats-file-actions a {min-height:44px;display:inline-flex;align-items:center;text-decoration:underline;font-size:15px;line-height:20px}
+.personal-description-fallback {font-size:15px;line-height:20px;padding:8px}
+@media (hover:none) {.compass-personal-gallery .personal-carousel-controls > button {opacity:1;pointer-events:auto}}
+@media (scripting:none) {
+ .beats-card {display:none}
+ .compass-personal-gallery .personal-carousel-controls,.personal-description-button {display:none!important}
+ .compass-personal-gallery .personal-video .media-controls,.compass-personal-gallery .native-film-start {display:none!important}
+}
+@media (scripting:enabled) {
+ .portfolio-gallery-boundary {aspect-ratio:4/3}
+ .compass-personal-gallery {aspect-ratio:4/3;content-visibility:auto}
+}
+@media (prefers-reduced-motion:reduce) {.compass-personal-gallery .personal-carousel-controls,.compass-personal-gallery .personal-video .media-controls {transition:none}}

@@ -1,0 +1,2 @@
+:host{display:block;width:520px;height:600px;outline:none;font-synthesis:none}.surface::before,.shell::before,.reflection-fallback{display:none!important}.ipod-container{-webkit-box-reflect:none!important}.row .value{font-size:inherit}.key{outline-offset:4px}
+:host(:focus-visible) .shell{outline:2px solid #737373;outline-offset:4px}

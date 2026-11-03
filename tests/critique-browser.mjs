@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import {mkdir} from "node:fs/promises";
 import {join} from "node:path";
 
-export async function runBrowserRegressions(browser,baseURL,{artifacts}={}) {
+export async function runBrowserRegressions(browser,baseURL,{artifacts,include}={}) {
   const results=[];
   const origin=new URL(baseURL).origin;
   if(artifacts)await mkdir(artifacts,{recursive:true});
@@ -15,6 +15,7 @@ export async function runBrowserRegressions(browser,baseURL,{artifacts}={}) {
     page.on("console",message=>{if(message.type()==="error"&&!/Failed to load resource|net::ERR_FAILED/.test(message.text()))errors.push(message.text());});
     const goto=async route=>{await page.goto(baseURL+route,{waitUntil:"load"});await page.evaluate(()=>document.fonts.ready);if(route.startsWith("/personal"))await page.waitForFunction(()=>document.querySelector("[data-personal-ready]")?.dataset.personalReady==="true");};
     const check=async(name,action)=>{
+      if(include&&!include.test(name))return;
       try{const detail=await action();results.push({device,name,pass:true,...(detail?{detail}:{})});console.log(`${device} PASS: ${name}`);}
       catch(error){results.push({device,name,pass:false,error:error.message.slice(0,1800)});console.log(`${device} FAIL: ${name}: ${error.message.slice(0,240)}`);if(artifacts)await page.screenshot({path:join(artifacts,`${device}-failure-${results.length}.png`)}).catch(()=>{});}
     };
@@ -78,8 +79,10 @@ export async function runBrowserRegressions(browser,baseURL,{artifacts}={}) {
       await check("Personal has fifteen uniform frames, hidden filters and no permanent About labels",async()=>{
         await goto("/personal/");assert.equal(await page.locator("[data-personal-id]").count(),15);
         assert.equal(await page.getByRole("combobox").count(),0);assert.equal(await page.locator("details,.portfolio-about-label").count(),0);
-        const boxes=await page.locator(".portfolio-personal-front .portfolio-image,.portfolio-gallery-stage").evaluateAll(items=>items.map(item=>{const r=item.getBoundingClientRect();return{w:r.width,h:r.height};}));
-        assert.ok(boxes.every(box=>Math.abs(box.w/box.h-4/3)<.01));
+        const boxes=await page.locator(".portfolio-personal-front .portfolio-image,.portfolio-gallery-boundary").evaluateAll(items=>items.map(item=>{const r=item.getBoundingClientRect();return{w:r.width,h:r.height};}));
+        assert.ok(boxes.every(box=>Math.abs(box.w/box.h-4/3)<.01),JSON.stringify(boxes));
+        const rendered=await page.locator('.ac-carousel-viewport').evaluateAll(items=>items.map(item=>{const r=item.getBoundingClientRect();return{w:r.width,h:r.height};}).filter(box=>box.w>0&&box.h>0));
+        assert.ok(rendered.length>0&&rendered.every(box=>Math.abs(box.w/box.h-4/3)<.01),JSON.stringify(rendered));
       });
       await check("description strips respond to hover, focus, activation and Escape without covering pagination",async()=>{
         await goto("/personal/");const gallery=page.locator("#desk-pen .portfolio-gallery"),button=gallery.locator("[data-gallery-description-toggle]"),strip=gallery.locator(".portfolio-description-strip");
@@ -89,32 +92,32 @@ export async function runBrowserRegressions(browser,baseURL,{artifacts}={}) {
         else await button.tap();
         await page.waitForFunction(()=>document.querySelector('#desk-pen [data-gallery-description-toggle]').getAttribute('aria-expanded')==='true');
         await page.waitForTimeout(400);
-        const bounds=await gallery.evaluate(element=>{const frame=element.querySelector('.portfolio-gallery-stage').getBoundingClientRect(),panel=element.querySelector('.portfolio-description-strip'),strip=panel.getBoundingClientRect(),range=document.createRange();range.selectNodeContents(panel);const text=range.getBoundingClientRect(),dots=element.querySelector('.gallery-pagination').getBoundingClientRect();
-          const controls=[...element.querySelectorAll('.portfolio-gallery-slide:not([hidden]) .media-controls button')].filter(button=>button.getClientRects().length).map(button=>button.getBoundingClientRect().bottom);
+        const bounds=await gallery.evaluate(element=>{const frame=element.querySelector('.ac-carousel-viewport').getBoundingClientRect(),panel=element.querySelector('.portfolio-description-strip'),strip=panel.getBoundingClientRect(),range=document.createRange();range.selectNodeContents(panel);const text=range.getBoundingClientRect(),dots=element.querySelector('[data-slot=carousel-controls]').getBoundingClientRect();
+          const controls=[...element.querySelectorAll('[data-slot=carousel-slide]:not([inert]) .media-controls button')].filter(button=>button.getClientRects().length).map(button=>button.getBoundingClientRect().bottom);
           return{frame:{top:frame.top,bottom:frame.bottom},strip:{top:strip.top,bottom:strip.bottom},text:{bottom:text.bottom},dots:{top:dots.top,bottom:dots.bottom},controls};});
-        // The panel runs to the card's foot with the dots inside it, below its text; controls sit above it.
-        assert.ok(bounds.strip.top>=bounds.frame.top&&bounds.text.bottom<=bounds.dots.top+.5&&bounds.dots.top>=bounds.strip.top&&bounds.dots.bottom<=bounds.frame.bottom+.5,JSON.stringify(bounds));
+        // Compass controls sit above the description panel; all text stays inside the frame.
+        assert.ok(bounds.strip.top>=bounds.frame.top&&bounds.text.bottom<=bounds.strip.bottom+.5&&bounds.dots.bottom<=bounds.strip.top-7.5,JSON.stringify(bounds));
         assert.ok(bounds.controls.every(bottom=>bottom<=bounds.strip.top-7.5),JSON.stringify(bounds));
-        assert.equal(await gallery.locator('.gallery-navigation').evaluate(element=>getComputedStyle(element).opacity),'1');
+        assert.equal(await gallery.locator('[data-slot=carousel-controls]').evaluate(element=>getComputedStyle(element).opacity),'1');
         if(device==='phone'){await button.tap();assert.equal(await button.getAttribute('aria-expanded'),'false');await button.tap();}
         await page.keyboard.press("Escape");assert.equal(await button.getAttribute("aria-expanded"),"false");
         if(artifacts){if(device==='desktop')await gallery.hover();else await button.tap();await gallery.screenshot({path:join(artifacts,`description-${device}.png`)});}
       });
-      await check("gallery keyboard, persistent dots/count and single-image navigation",async()=>{
+      await check("gallery keyboard, persistent pagination/live count and single-image navigation",async()=>{
         await goto("/personal/");const gallery=page.locator("#desk-pen .portfolio-gallery"),button=gallery.locator("[data-gallery-description-toggle]");await button.focus();
-        await page.keyboard.press("ArrowRight");await gallery.getByRole("group",{name:"2 of 6",exact:true}).waitFor({state:"visible"});assert.equal(await gallery.locator(".gallery-count").textContent(),"2 / 6");
-        await page.keyboard.press("Home");assert.equal(await gallery.locator(".gallery-count").textContent(),"1 / 6");
-        assert.equal(await page.locator("#book .gallery-pagination,#book .gallery-navigation").count(),0);
-        await page.evaluate(()=>document.activeElement?.blur());await page.mouse.move(0,0);assert.equal(await gallery.locator(".gallery-pagination").isVisible(),true);
+        await page.keyboard.press("ArrowRight");await gallery.getByRole("group",{name:"2 of 6",exact:true}).waitFor({state:"visible"});assert.equal(await gallery.locator(".ac-carousel-sr").textContent(),"2 of 6");
+        await page.keyboard.press("Home");assert.equal(await gallery.locator(".ac-carousel-sr").textContent(),"1 of 6");
+        assert.equal(await page.locator("#book [data-slot=carousel-controls],#book [data-slot=carousel-controls]").count(),0);
+        await page.evaluate(()=>document.activeElement?.blur());await page.mouse.move(0,0);assert.equal(await gallery.locator("[data-slot=carousel-controls]").isVisible(),true);
       });
       if(device==="phone")await check("real touch swipe changes a slide without toggling description; tap does not change slide; scroll does neither",async()=>{
         await goto("/personal/");const gallery=page.locator("#desk-pen .portfolio-gallery"),button=gallery.locator("[data-gallery-description-toggle]");await gallery.scrollIntoViewIfNeeded();
-        const box=await button.boundingBox(),x=box.x+box.width*.7,y=box.y+box.height*.4;
+        const box=await gallery.locator('.ac-carousel-viewport').boundingBox(),x=box.x+box.width*.7,y=box.y+box.height*.4;
         const session=await context.newCDPSession(page);
         async function gesture(dx,dy){await session.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y}]});await page.waitForTimeout(30);await session.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+dx/2,y:y+dy/2}]});await page.waitForTimeout(30);await session.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+dx,y:y+dy}]});await session.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await page.waitForTimeout(100);}
         await gesture(-100,0);await gallery.getByRole("group",{name:"2 of 6",exact:true}).waitFor({state:"visible"});assert.equal(await button.getAttribute('aria-expanded'),'false');
-        await button.tap();await page.waitForFunction(()=>document.querySelector('#desk-pen [data-gallery-description-toggle]').getAttribute('aria-expanded')==='true');assert.equal(await gallery.locator('.gallery-count').textContent(),'2 / 6');
-        await button.tap();await page.waitForFunction(()=>document.querySelector('#desk-pen [data-gallery-description-toggle]').getAttribute('aria-expanded')==='false');await gesture(0,-70);assert.equal(await button.getAttribute('aria-expanded'),'false');assert.equal(await gallery.locator('.gallery-count').textContent(),'2 / 6');
+        await button.tap();await page.waitForFunction(()=>document.querySelector('#desk-pen [data-gallery-description-toggle]').getAttribute('aria-expanded')==='true');assert.equal(await gallery.locator('.ac-carousel-sr').textContent(),'2 of 6');
+        await button.tap();await page.waitForFunction(()=>document.querySelector('#desk-pen [data-gallery-description-toggle]').getAttribute('aria-expanded')==='false');await gesture(0,-70);assert.equal(await button.getAttribute('aria-expanded'),'false');assert.equal(await gallery.locator('.ac-carousel-sr').textContent(),'2 of 6');
         assert.equal(await gallery.locator('[data-pressed="true"]').count(),0);await session.detach();
       });
       await check("Folio and Niche picture/caption links open their actual cases; Back restores Personal",async()=>{

@@ -3,6 +3,7 @@ import { dirname, join } from "node:path";
 import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { applyExtendBlur } from "./extend-blur.mjs";
+import { copyDraftTree } from "./draft-media-copy.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const output = join(root, process.env.PORTFOLIO_EXPORT_DIR || "gh-pages");
@@ -29,7 +30,10 @@ const workerUrl = new URL(`../dist/server/index.js?export=${Date.now()}`, import
 const { default: worker } = await import(workerUrl.href);
 
 await rm(output, { recursive: true, force: true });
-await cp(join(root, "dist/client"), output, { recursive: true });
+if (process.env.PORTFOLIO_DRAFT_LINK_MEDIA === "true") {
+  await copyDraftTree(join(root, "public"), join(root, "dist/client"));
+  await copyDraftTree(join(root, "dist/client"), output);
+} else await cp(join(root, "dist/client"), output, { recursive: true });
 for(const name of ["_headers",".assetsignore",".vite"])await rm(join(output,name),{recursive:true,force:true});
 
 // Hidden Personal entries keep their record and media in the repository, but

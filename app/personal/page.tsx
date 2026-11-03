@@ -2,6 +2,7 @@ import { socialMetadata } from "@/lib/social-metadata";
 import { personalProjects } from "@/lib/personal";
 import SiteShell from "../site-shell";
 import PersonalCollection from "./personal-collection";
+import "./carousel.css";
 const share = personalProjects.find(item=>item.id==="stool")!.cover;
 export const metadata = socialMetadata("Personal", "Personal work by Alex Infield.", "/personal", {
   url: `/assets/personal/${share.src}`, width: share.width, height: share.height, alt: share.alt,

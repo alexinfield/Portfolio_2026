@@ -1,0 +1,82 @@
+{
+  "candidate": "Original Tracks",
+  "upstream": {
+    "name": "iPod Web Player",
+    "version": "0.3.1",
+    "commit": "fb1d084",
+    "licence": "LICENSE"
+  },
+  "shipped_font_binaries": [],
+  "assets": [
+    {
+      "path": "audio/covid-loops-v3-aphex.m4a",
+      "sha256": "7c05c1e13d2f1de769a9416d95bb8e377af56776a3e52238dc552499354df160",
+      "origin": "Alex Infield original recording, owner permission",
+      "licence": "Owner permission; all rights reserved",
+      "modifications": "Album metadata and new embedded cover; AAC stream copied"
+    },
+    {
+      "path": "audio/covid-loops.m4a",
+      "sha256": "6356c3233fc72991263c3ac5e965c74ce79bba1dad375c7949016ec3ea3d21b7",
+      "origin": "Alex Infield original recording, owner permission",
+      "licence": "Owner permission; all rights reserved",
+      "modifications": "Album metadata and new embedded cover; AAC stream copied"
+    },
+    {
+      "path": "audio/slv2-reduced-arranged.m4a",
+      "sha256": "0c02304815029bb4f78a3d653c657276b7ded659396b00237b46a6f70c5d445b",
+      "origin": "Alex Infield original recording, owner permission",
+      "licence": "Owner permission; all rights reserved",
+      "modifications": "Album metadata and new embedded cover; AAC stream copied"
+    },
+    {
+      "path": "covers/covid-loops-v3-aphex.jpg",
+      "sha256": "53ee0ae04b6886dd369ff864e147a1ae5b77802c889ae0baa8c7c92f5772f0a6",
+      "origin": "Candidate original artwork",
+      "licence": "Owner permission; all rights reserved",
+      "modifications": "Original waveform icon / DejaVu-rendered cover"
+    },
+    {
+      "path": "covers/covid-loops.jpg",
+      "sha256": "e23adca60da7c4433961959749bba8b6a1b7d9951b64a99b779b05fbbe3a47ac",
+      "origin": "Candidate original artwork",
+      "licence": "Owner permission; all rights reserved",
+      "modifications": "Original waveform icon / DejaVu-rendered cover"
+    },
+    {
+      "path": "covers/slv2-reduced-arranged.jpg",
+      "sha256": "f8e8fd6a901f8c75c2fb5c8256c2b82836805270911c056c817368abc4180060",
+      "origin": "Candidate original artwork",
+      "licence": "Owner permission; all rights reserved",
+      "modifications": "Original waveform icon / DejaVu-rendered cover"
+    },
+    {
+      "path": "icons/tracks-192.png",
+      "sha256": "04ec77f6da2eb9fb400438de6e8a9ea462e4dece3658ef283177c161e78b23ba",
+      "origin": "Candidate original artwork",
+      "licence": "MIT",
+      "modifications": "Original waveform icon / DejaVu-rendered cover"
+    },
+    {
+      "path": "icons/tracks-512.png",
+      "sha256": "d2f9096f2dc19e264a7974bb5dbac1ea53641e644e7cf418162157290b28fa51",
+      "origin": "Candidate original artwork",
+      "licence": "MIT",
+      "modifications": "Original waveform icon / DejaVu-rendered cover"
+    },
+    {
+      "path": "icons/tracks.svg",
+      "sha256": "dc2af64936c6e490204480f88312a1f8989cfcf172b68818982147e5ce6363af",
+      "origin": "Candidate original artwork",
+      "licence": "MIT",
+      "modifications": "Original waveform icon / DejaVu-rendered cover"
+    },
+    {
+      "path": "poster.webp",
+      "sha256": "2cff3fc6a7f14a58c71a10888557d999b2eb9c20841120a822f4a27b2e85c4a4",
+      "origin": "Chromium snapshot of the original candidate player",
+      "licence": "MIT",
+      "modifications": "Captured and encoded as WebP for the deferred card preview"
+    }
+  ]
+}

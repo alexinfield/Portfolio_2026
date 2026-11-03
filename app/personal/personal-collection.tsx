@@ -5,6 +5,8 @@ import { type PersonalProject } from "@/lib/personal-media";
 import ProjectCard from "../project-card";
 import PersonalGallery, { PersonalImage } from "./personal-gallery";
 
+import BeatsCard from "./beats-card";
+
 const subscribe = () => () => {};
 // The approved filter data and AND logic stay available behind one UI flag.
 export const PERSONAL_FILTERS_VISIBLE = false;
@@ -19,7 +21,7 @@ export default function PersonalCollection({ projects }: {projects: PersonalProj
   const reset = () => {setYear("all"); setCategory("all");};
   const renderProject = (item: PersonalProject, index: number) => <article className="portfolio-project" id={item.id} data-personal-id={item.id}
     data-year={item.year ?? undefined} data-category={item.category ?? undefined} key={item.id} hidden={!matches(item)}>
-    {item.link ? <ProjectCard href={`..${item.link}/`} title={item.title} collection="personal"><PersonalImage media={item.cover} eager={index<2} retry={false} framing={item.framing} sizes="(max-width: 767px) 100vw, 50vw" /></ProjectCard>
+    {item.link ? <ProjectCard href={`..${item.link}/`} title={item.title} collection="personal"><PersonalImage media={item.cover} eager={index<2} priority={index===0} retry={false} framing={item.framing} sizes="(max-width: 767px) 100vw, 50vw" /></ProjectCard>
       : <Card className="portfolio-personal-card"><PersonalGallery media={item.gallery.length ? item.gallery : [item.cover]} title={item.title} visible={matches(item)} framing={item.framing} description={item.short_text} id={item.id} /></Card>}
     {!item.link && <h2 className="portfolio-project-title portfolio-card-label">{item.title}</h2>}
   </article>;
@@ -30,9 +32,9 @@ export default function PersonalCollection({ projects }: {projects: PersonalProj
       {(year!=="all" || category!=="all") && <Button type="button" variant="secondary" data-plain="" onClick={reset}>Reset</Button>}
       <span className="sr-only" role="status" aria-live="polite">{count} projects shown</span>
     </div>}
-    <noscript><p className="text-sm text-muted">The complete collection is shown below. Enable JavaScript to browse additional images and descriptions.</p></noscript>
+    <noscript><p className="text-sm text-muted">The complete collection is shown below. Swipe or scroll each gallery to browse its images.</p></noscript>
     {count===0 && <div className="portfolio-filter-empty" role="status"><p>No projects match these filters.</p><Button type="button" variant="secondary" onClick={reset}>Show all projects</Button></div>}
     <div className="portfolio-personal-front" data-personal-ready={ready}>{projects.slice(0,2).map(renderProject)}</div>
-    <div className="portfolio-personal-grid">{projects.slice(2).map((item,index)=>renderProject(item,index+2))}</div>
+    <div className="portfolio-personal-grid">{projects.slice(2).map((item,index)=>renderProject(item,index+2))}<BeatsCard /></div>
   </>;
 }
