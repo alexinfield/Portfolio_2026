@@ -79,10 +79,8 @@
     }
     for(const script of scripts){script.remove();}scripts.clear();purge();reflect();
     if(persist)channel?.postMessage('denied');
-    if(started){
-      if(durable)location.reload();
-      else{const url=new URL(location.href);url.searchParams.set('analytics','off');history.replaceState(history.state,'',url.href);location.reload();}
-    }
+    if(!durable){const url=new URL(location.href);url.searchParams.set('analytics','off');history.replaceState(history.state,'',url.href);}
+    if(started)location.reload();
   };
   const inject=src=>{if(!allowed||locked||!readConsent())return;const script=document.createElement('script');script.async=true;script.src=src;scripts.add(script);document.head.append(script);};
   const start=epoch=>{
