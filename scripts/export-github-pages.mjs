@@ -213,6 +213,7 @@ const missingHtml = staticHtml(await missing.text(), "/404")
   .replace(/(<meta[^>]*(?:property="og:title"|name="twitter:title") content=")[^"]*/g, "$1Page not found — Alex Infield")
   // Preserve main's untracked-404 behavior: metadata repair adds no analytics scope.
   .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, script => /dataLayer|clarity|googletagmanager|portfolio-analytics/.test(script) ? "" : script)
+  .replace(/<footer\b[^>]*class="[^"]*portfolio-privacy[^"]*"[^>]*>[\s\S]*?<\/footer>/gi, "")
   .replace(/<title>[^<]*<\/title>/, "<title>Page not found — Alex Infield</title>")
   .replace(/<meta\b(?=[^>]*\bname=["']robots["'])[^>]*>/gi, "")
   .replace("</head>", '<meta name="robots" content="noindex,nofollow"/></head>');
