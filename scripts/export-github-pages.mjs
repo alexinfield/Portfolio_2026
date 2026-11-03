@@ -2,6 +2,7 @@ import { cp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
+import { applyExtendBlur } from "./extend-blur.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const output = join(root, process.env.PORTFOLIO_EXPORT_DIR || "gh-pages");
@@ -78,10 +79,26 @@ if (!basePath && relativePreloadHelpers === 0) {
 // Fixed script URLs are cached for up to 10 minutes on GitHub Pages; stamp each
 // reference with the exported file's content hash so HTML and scripts always match.
 const scriptVersions = {};
-for (const name of ["portfolio-runtime.js", "portfolio-analytics.js"]) {
-  scriptVersions[name] = createHash("sha256").update(await readFile(join(output, name))).digest("hex").slice(0, 8);
+for (const [name, path] of [["portfolio-runtime.js", "portfolio-runtime.js"], ["portfolio-analytics.js", "portfolio-analytics.js"], ["scroll-sequence.js", "assets/scroll-sequence/scroll-sequence.js"], ["scroll-sequence.css", "assets/scroll-sequence/scroll-sequence.css"], ["extend.js", "assets/eb/extend.js"], ["extend.css", "assets/eb/extend.css"]]) {
+  scriptVersions[name] = createHash("sha256").update(await readFile(join(output, path))).digest("hex").slice(0, 8);
 }
-const versionScripts = html => html.replace(/(portfolio-(?:runtime|analytics)\.js)(?=\\?["'])/g, name => `${name}?v=${scriptVersions[name]}`);
+const versionScripts = html => html.replace(/(portfolio-(?:runtime|analytics)\.js|scroll-sequence\.(?:js|css))(?=\\?["'])/g, name => `${name}?v=${scriptVersions[name]}`);
+
+// Extend blur fields (scripts/extend-fields/gen_fields.py writes lib/extend-fields.json offline).
+const extendFields = JSON.parse(await readFile(join(root, "lib/extend-fields.json"), "utf8").catch(() => "{}"));
+const extendReport = {pages: {}, missing: []};
+function withExtendBlur(html, route) {
+  const rel = route === "/" ? "index.html" : `${route.slice(1)}/index.html`;
+  const before = html;
+  const { html: out, stats } = applyExtendBlur(html, rel, output, extendFields, basePath);
+  extendReport.pages[rel] = stats;
+  extendReport.missing.push(...stats.missingKeys.map(key => `${rel} ${key}`));
+  if (!stats.media) return before;
+  const at = basePath ? `${basePath}/assets/eb/` : `${relativeRoot(route)}assets/eb/`;
+  return out
+    .replace("</head>", `<link rel="stylesheet" href="${at}extend.css?v=${scriptVersions["extend.css"]}"/></head>`)
+    .replace("</body>", `<script src="${at}extend.js?v=${scriptVersions["extend.js"]}" defer=""></script></body>`);
+}
 
 function relativeRoot(route) {
   if (route === "/" || route === "/404") return "./";
@@ -163,7 +180,7 @@ async function renderRoute(route) {
   );
 
   if (!response.ok) throw new Error(`Failed to render ${route}: ${response.status}`);
-  const html = staticHtml(await response.text(), route);
+  const html = withExtendBlur(staticHtml(await response.text(), route), route);
   const path = route === "/" ? join(output, "index.html") : join(output, route.slice(1), "index.html");
   await mkdir(dirname(path), { recursive: true });
   await writeFile(path, html);
@@ -212,6 +229,8 @@ for (const { route, target, relativeTarget } of redirects) {
 }
 
 await writeFile(join(output, ".nojekyll"), "");
+// Build record (not exported): which pages carry fields and any media whose field is missing.
+await writeFile(join(root, "dist/extend-blur.json"), JSON.stringify(extendReport, null, 1));
 if (!basePath) await writeFile(
   join(output, "sitemap.xml"),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${routes

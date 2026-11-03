@@ -5,6 +5,8 @@ import CaseNavigation from "@/app/case-navigation";
 import ResponsiveImage from "@/app/responsive-image";
 import CaseText, { casePanel } from "@/app/case-text";
 import DeferredVideo from "@/app/deferred-video";
+import { sequences } from "@/lib/sequences";
+import { withBasePath } from "@/lib/base-path";
 import { socialMetadata, projectShareImage } from "@/lib/social-metadata";
 import {
   getProject,
@@ -54,6 +56,7 @@ function ProjectMedia({
   if (item.kind === "video") {
     return <ProjectVideo item={item} slug={slug} index={index} />;
   }
+  if (item.kind === "sequence") return <CaseSequence name={item.sequence!} />;
 
   return (
     <ResponsiveImage
@@ -69,6 +72,14 @@ function ProjectMedia({
       decoding={index === 0 ? "sync" : "async"}
     />
   );
+}
+
+// Apple-style scroll-scrubbed frame sequence (public/assets/scroll-sequence). Edge to edge in the
+// case stack, no text over it; the first-frame poster is the first paint, and the module's
+// reduced-motion and no-JS still apply.
+function CaseSequence({ name }: { name: string }) {
+  const sequence = sequences[name];
+  return <div className="case-sequence" dangerouslySetInnerHTML={{ __html: sequence.html.replaceAll("{BASE}", withBasePath(sequence.base)) }} />;
 }
 
 function HyphaeComposite({ image, video }: {
@@ -244,12 +255,27 @@ export default async function ProjectPage({
       </div>
     ))
   );
+  const sequenceIndex = media.findIndex(item => item.kind === "sequence");
+  const pinStart = Math.max(0, sequenceIndex - 4);
+  const pinEnd = sequenceIndex + 5;
 
   return (
     <SiteShell casePage>
       <h1 className="sr-only">{project.title}</h1>
-      <div className="portfolio-case-stack">{presentation}</div>
+      <div className="portfolio-case-stack">
+        {sequenceIndex >= 0 && Array.isArray(presentation) ? <>
+          {presentation.slice(0, pinStart)}
+          <div className="case-scroll-track"><div className="case-pin-strip">
+            {presentation.slice(pinStart, pinEnd)}
+          </div></div>
+          {presentation.slice(pinEnd)}
+        </> : presentation}
+      </div>
       <CaseNavigation slug={projectSlug} />
+      {media.some(item => item.kind === "sequence") && <>
+        <link rel="stylesheet" href={withBasePath("/assets/scroll-sequence/scroll-sequence.css")} precedence="default" />
+        <script src={withBasePath("/assets/scroll-sequence/scroll-sequence.js")} defer />
+      </>}
     </SiteShell>
   );
 }

@@ -35,7 +35,7 @@ export async function runBrowserRegressions(browser,baseURL,{artifacts}={}) {
         for(const slug of ["molekule-go","ping","hyphae","luma","mode","niche"]){
           await goto(`/projects/${slug}/`);
           const bottom=await page.locator("header").evaluate(element=>element.getBoundingClientRect().bottom);
-          const top=await page.locator(".portfolio-case-stack img,.portfolio-case-stack video").first().evaluate(element=>element.getBoundingClientRect().top);
+          const top=await page.locator(".portfolio-case-stack .case-sequence,.portfolio-case-stack img:not(.ss img),.portfolio-case-stack video:not(.ss video)").first().evaluate(element=>element.getBoundingClientRect().top);
           assert.ok(Math.abs(top-bottom)<.6,`${slug}: ${top} vs ${bottom}`);
           assert.equal(await page.locator("h1").getAttribute("class"),"sr-only");
         }
@@ -88,8 +88,13 @@ export async function runBrowserRegressions(browser,baseURL,{artifacts}={}) {
         if(device==="desktop"){await gallery.hover();assert.equal(await button.getAttribute("aria-expanded"),"true");await page.mouse.move(0,0);await button.focus();}
         else await button.tap();
         await page.waitForFunction(()=>document.querySelector('#desk-pen [data-gallery-description-toggle]').getAttribute('aria-expanded')==='true');
-        const bounds=await gallery.evaluate(element=>{const frame=element.querySelector('.portfolio-gallery-stage').getBoundingClientRect(),strip=element.querySelector('.portfolio-description-strip').getBoundingClientRect(),dots=element.querySelector('.gallery-pagination').getBoundingClientRect();return{frame:{top:frame.top,bottom:frame.bottom},strip:{top:strip.top,bottom:strip.bottom},dots:{top:dots.top,bottom:dots.bottom}};});
-        assert.ok(bounds.strip.top>=bounds.frame.top&&bounds.strip.bottom<=bounds.dots.top+.5&&bounds.dots.bottom<=bounds.frame.bottom+.5);
+        await page.waitForTimeout(400);
+        const bounds=await gallery.evaluate(element=>{const frame=element.querySelector('.portfolio-gallery-stage').getBoundingClientRect(),panel=element.querySelector('.portfolio-description-strip'),strip=panel.getBoundingClientRect(),range=document.createRange();range.selectNodeContents(panel);const text=range.getBoundingClientRect(),dots=element.querySelector('.gallery-pagination').getBoundingClientRect();
+          const controls=[...element.querySelectorAll('.portfolio-gallery-slide:not([hidden]) .media-controls button')].filter(button=>button.getClientRects().length).map(button=>button.getBoundingClientRect().bottom);
+          return{frame:{top:frame.top,bottom:frame.bottom},strip:{top:strip.top,bottom:strip.bottom},text:{bottom:text.bottom},dots:{top:dots.top,bottom:dots.bottom},controls};});
+        // The panel runs to the card's foot with the dots inside it, below its text; controls sit above it.
+        assert.ok(bounds.strip.top>=bounds.frame.top&&bounds.text.bottom<=bounds.dots.top+.5&&bounds.dots.top>=bounds.strip.top&&bounds.dots.bottom<=bounds.frame.bottom+.5,JSON.stringify(bounds));
+        assert.ok(bounds.controls.every(bottom=>bottom<=bounds.strip.top-7.5),JSON.stringify(bounds));
         assert.equal(await gallery.locator('.gallery-navigation').evaluate(element=>getComputedStyle(element).opacity),'1');
         if(device==='phone'){await button.tap();assert.equal(await button.getAttribute('aria-expanded'),'false');await button.tap();}
         await page.keyboard.press("Escape");assert.equal(await button.getAttribute("aria-expanded"),"false");

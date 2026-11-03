@@ -1,0 +1,61 @@
+/* Extend blur (Alex approved, Nov 2): build-time colour fields after Apple Photos' Extend preview.
+   Per frame, inline: --eb-c (base colour) and --eb-img (the fitted mesh baked into a 32 px lossless
+   WebP). scripts/extend-blur.mjs marks the frames at export.
+   - [data-eb-host]: the media's own frame paints the field on ::before; the media fades in over it.
+   - [data-eb-fit]: a photo that doesn't fill its frame keeps the field and feathers into it.
+   - [data-eb-self]: media without a dedicated frame paints the field as its own background.
+   Gentle drift while loading only: transform on ::before, only while on screen, off with Reduce Motion. */
+
+:where([data-eb-host]) {position: relative;}
+/* Case panels are display:contents in the site CSS (no box to paint a field on). As hosts they
+   become plain blocks around a block image: same width (stack-relative), same cqw height. */
+.case-panel[data-eb-host] {display: block;}
+.case-panel[data-eb-host] > [data-eb-media] {display: block;}
+[data-eb-host] {isolation: isolate;}
+[data-eb-host]::before {
+ content: ""; position: absolute; inset: -6%; z-index: 0; pointer-events: none;
+ background: url(grain.png) 0 0/64px 64px repeat, var(--eb-img) 50% 50%/100% 100% no-repeat, var(--eb-c);
+}
+[data-eb-self] {
+ background: url(grain.png) 0 0/64px 64px repeat, var(--eb-img) 50% 50%/100% 100% no-repeat, var(--eb-c) !important;
+}
+:where([data-eb-host]) > :where([data-eb-media]) {position: relative;}
+[data-eb-host] > [data-eb-media] {z-index: 1;}
+[data-eb-host][data-eb="wait"], [data-eb-host][data-eb="in"], [data-eb-host][data-eb-fit] {overflow: clip;}
+
+/* Loading states (set by extend.js). Before the runtime runs, media waits hidden over its field;
+   if the runtime never arrives it shows after 4 s. Without scripting nothing is hidden. */
+@keyframes eb-show {to {opacity: 1;}}
+@media (scripting: enabled) {
+ [data-eb-host]:not([data-eb]) > [data-eb-media] {opacity: 0; animation: eb-show 0s 4s forwards;}
+}
+[data-eb-host][data-eb="wait"] > [data-eb-media] {opacity: 0;}
+[data-eb-host][data-eb="in"] > [data-eb-media] {opacity: 1; transition: opacity .5s cubic-bezier(.2,.7,.2,1);}
+[data-eb-host][data-eb="done"]:not([data-eb-fit])::before {content: none;}
+
+/* Gentle drift: 9 s each way, about 1.6% travel and 3% scale, starting from rest. It runs only while
+   the frame waits on screen (no animation, so no compositing layer, anywhere else). When the media
+   arrives the runtime hands the field's current transform to --eb-t and it eases back to rest
+   while the media fades in, so nothing jumps. */
+@keyframes eb-drift {
+ from {transform: none;}
+ to {transform: translate3d(1.6%, 1.1%, 0) scale(1.03);}
+}
+@media (prefers-reduced-motion: no-preference) {
+ [data-eb-host][data-eb="wait"][data-eb-vis]::before {animation: eb-drift 9s ease-in-out infinite alternate;}
+ [data-eb-host][data-eb="in"]::before {transform: var(--eb-t, none); transition: transform .5s cubic-bezier(.2,.7,.2,1);}
+}
+@media (prefers-reduced-motion: reduce) {
+ [data-eb-host][data-eb="in"] > [data-eb-media] {transition: none;}
+}
+
+/* Fit-fill: the field replaces the mirrored edge strips; the photo feathers in on its open axis
+   (--eb-f: 10% of its short side, as a share of that axis). */
+[data-eb-fit] > .portfolio-edge-fill, [data-eb-fit] > .portfolio-video-edge {display: none !important;}
+[data-eb-fit="x"] > [data-eb-media] {
+ -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--eb-f), #000 calc(100% - var(--eb-f)), transparent) !important;
+ mask-image: linear-gradient(90deg, transparent, #000 var(--eb-f), #000 calc(100% - var(--eb-f)), transparent) !important;}
+[data-eb-fit="y"] > [data-eb-media] {
+ -webkit-mask-image: linear-gradient(180deg, transparent, #000 var(--eb-f), #000 calc(100% - var(--eb-f)), transparent) !important;
+ mask-image: linear-gradient(180deg, transparent, #000 var(--eb-f), #000 calc(100% - var(--eb-f)), transparent) !important;}
+:fullscreen[data-eb-host]::before, :fullscreen [data-eb-host]::before {content: none;}

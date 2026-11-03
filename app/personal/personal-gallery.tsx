@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useRef, useState, type KeyboardEvent, type TouchEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type TouchEvent } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "../compass";
 import DeferredVideo from "../deferred-video";
@@ -47,6 +47,18 @@ export default function PersonalGallery({media,title,visible,framing,description
   const pinned=useRef(false);
   const touch=useRef<{x:number;y:number}|null>(null);
   const suppressClick=useRef(false);
+  const stage=useRef<HTMLDivElement>(null);
+  const strip=useRef<HTMLParagraphElement>(null);
+  // Controls rise above the description by its measured height (CSS --description-lift):
+  // from the card's foot to the panel's top edge, kept current as text wraps or cards resize.
+  useEffect(()=>{
+    const frame=stage.current,panel=strip.current;
+    if(!frame||!panel||typeof ResizeObserver==="undefined")return;
+    const measure=()=>frame.style.setProperty("--description-lift",`${Math.max(0,frame.clientHeight-panel.offsetTop)}px`);
+    measure();
+    const observer=new ResizeObserver(measure);observer.observe(panel);observer.observe(frame);
+    return ()=>observer.disconnect();
+  },[description]);
   const move=(delta:number)=>setActive(value=>(value+delta+media.length)%media.length);
 
   function key(event:KeyboardEvent<HTMLDivElement>) {
@@ -74,7 +86,7 @@ export default function PersonalGallery({media,title,visible,framing,description
     onPointerLeave={event=>{if(!pinned.current&&!event.currentTarget.contains(document.activeElement))setOpen(false);}}
     onFocus={event=>{if((event.target as HTMLElement).closest("[data-video-frame]"))return;if(description && ((event.target as HTMLElement).matches(":focus-visible") || matchMedia("(hover: hover)").matches))setOpen(true);}}
     onBlur={event=>{if(!event.currentTarget.contains(event.relatedTarget)&&!pinned.current)setOpen(false);}}>
-    <div className="portfolio-gallery-stage" style={{aspectRatio:4/3}} onTouchStart={begin} onTouchEnd={end} onTouchCancel={()=>{touch.current=null;suppressClick.current=true;}}>
+    <div ref={stage} className="portfolio-gallery-stage" style={{aspectRatio:4/3}} onTouchStart={begin} onTouchEnd={end} onTouchCancel={()=>{touch.current=null;suppressClick.current=true;}}>
       {media.map((item,index)=><div className="portfolio-gallery-slide" role="group" aria-label={`${index+1} of ${media.length}`} aria-hidden={index!==active} inert={index!==active} hidden={index!==active} key={item.id} style={{background:(item.framing??framing).background}}>
         {item.kind==="video"?<DeferredVideo className="personal-video" source={personalAsset(item.src)} poster={item.poster?personalAsset(item.poster.src):undefined}
           label={item.alt} width={item.width} height={item.height} active={visible && index===active} loop longFilm={(item.duration_seconds??0)>=60} durationSeconds={item.duration_seconds} mediaStyle={personalMediaStyle(item,item.framing??framing)} frameBackground={(item.framing??framing).background} edgeFill={(item.framing??framing).fill==="edge-extend"} startMuted={item.has_audio===true}/>:<PersonalImage media={item} framing={item.framing??framing} />}
@@ -83,7 +95,7 @@ export default function PersonalGallery({media,title,visible,framing,description
         <Button type="button" variant="ghost" className="gallery-description-toggle" data-gallery-description-toggle data-press-surface
           aria-label={`${open?"Hide":"Show"} description for ${title}`} aria-expanded={open} aria-controls={`${id}-description`}
           onClick={event=>{if(suppressClick.current){event.preventDefault();suppressClick.current=false;return;}const next=!open;pinned.current=next;setOpen(next);}} />
-        <p id={`${id}-description`} className="portfolio-description-strip" aria-hidden={!open}>{description}</p>
+        <p ref={strip} id={`${id}-description`} className="portfolio-description-strip" aria-hidden={!open}>{description}</p>
       </>}
       {media.length>1 && <div className="media-controls gallery-navigation">
         <Button type="button" variant="secondary" size="icon-sm" aria-label={`Previous image for ${title}`} onClick={()=>move(-1)}><ArrowLeft aria-hidden="true"/></Button>
