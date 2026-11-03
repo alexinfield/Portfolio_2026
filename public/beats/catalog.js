@@ -1,4 +1,4 @@
-/* SPDX-License-Identifier: MIT. Same-site static catalog; local imports stay private. */
+/* SPDX-License-Identifier: MIT. Same-site static recording catalog. */
 (function(scope){
   'use strict';
   function parseCatalog(value,base){

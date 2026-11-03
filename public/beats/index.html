@@ -36,17 +36,12 @@
       <p class="eyebrow"><span class="status-dot"></span><span data-i18n="eyebrow">你的音乐，随身而行。</span></p>
       <h1 id="page-title" data-i18n="headline">好音乐。<br>转动之间。</h1>
       <p class="intro-copy" data-i18n="description">熟悉的滚轮，熟悉的感觉。<br>Alex Infield 的 Original Tracks。</p>
-      <div class="import-actions">
-        <button id="import-files" class="primary-button" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg><span data-i18n="import">添加音乐</span></button>
-        <button id="import-folder" class="secondary-button" type="button" data-i18n="folder">选择文件夹</button>
-      </div>
-      <p class="import-note" data-i18n="privacy">也可以将音乐拖入这里。文件只留在这台设备上。</p>
       <div class="library-summary">
         <span class="library-icon" aria-hidden="true">♫</span>
         <div><p id="library-count">还没有音乐</p><p id="library-detail" data-i18n="emptyDetail">从你喜爱的第一首开始。</p></div>
         <button id="library-open" class="small-link" type="button" data-i18n="manage">管理</button>
       </div>
-      <button id="demo" class="demo-button" type="button"><span aria-hidden="true">▷</span> <span data-i18n="demo">先听一段演示</span><span class="demo-tag" data-i18n="original">原创合成音</span></button>
+      <button id="play-recordings" class="demo-button" type="button"><span aria-hidden="true">▷</span> <span data-i18n="play">播放录音</span><span class="demo-tag" data-i18n="original">Alex Infield</span></button>
     </section>
     <section id="stage" class="stage" aria-label="Original Tracks music player">
       <div class="stage-label"><span>Alex Infield</span><span class="label-rule"></span><span data-i18n="reimagined">经典，重新转动。</span></div>
@@ -55,10 +50,7 @@
     </section>
   </main>
   <footer class="footer"><span>LOCAL MUSIC · v0.3.1 <span id="offline-state"></span><span id="server-state" aria-live="polite"></span></span><span data-i18n="footer">一点怀旧，全部是你的音乐。</span><div class="footer-actions"><a class="small-link" href="./credits.html" data-i18n="compare">素材与许可</a><button id="install" class="small-link" type="button" data-i18n="install">添加到主屏幕</button></div><p class="authorship">An independent music player by Alex Infield. Not affiliated with or endorsed by Apple or Beats.<br><span lang="zh-CN">Alex Infield 独立制作的音乐播放器，与 Apple 或 Beats 无关联，亦未获其背书。</span></p></footer>
-  <div class="focus-controls"><button id="focus-import" class="icon-button" type="button" aria-label="添加音乐">＋</button><button id="focus-exit" class="icon-button" type="button" aria-label="退出沉浸模式">×</button></div>
-  <input id="files" type="file" accept="audio/*,.mp3,.m4a,.aac,.wav,.flac,.ogg,.opus,.webm,.aif,.aiff" multiple hidden>
-  <input id="folder" type="file" accept="audio/*" webkitdirectory multiple hidden>
-  <div id="drop-overlay" class="drop-overlay" hidden><div><span aria-hidden="true">↓</span><p data-i18n="drop">把音乐放在这里。</p></div></div>
+  <div class="focus-controls"><button id="focus-exit" class="icon-button" type="button" aria-label="退出沉浸模式">×</button></div>
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
   <dialog id="help-dialog">
     <div class="dialog-top"><p class="eyebrow">Original Tracks</p><button class="icon-button close-dialog" type="button" aria-label="Close">×</button></div>
@@ -68,9 +60,8 @@
   </dialog>
   <dialog id="library-dialog">
     <div class="dialog-top"><p class="eyebrow" data-i18n="library">本地曲库</p><button class="icon-button close-dialog" type="button" aria-label="Close">×</button></div>
-    <h2 id="manage-title">你的音乐。</h2><p id="storage-status" class="dialog-note"></p>
+    <h2 id="manage-title">你的音乐。</h2>
     <ul id="track-list" class="track-list"></ul>
-    <div class="library-bottom"><button id="add-more" class="secondary-button" type="button" data-i18n="addMore">继续添加</button><button id="clear-library" class="small-link danger" type="button" data-i18n="clear">清空曲库</button></div>
   </dialog>
   <noscript>This player needs JavaScript enabled. 此播放器需要启用 JavaScript。</noscript>
 </body>
