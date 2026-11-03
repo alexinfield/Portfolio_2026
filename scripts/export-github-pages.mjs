@@ -4,6 +4,7 @@ import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { applyExtendBlur } from "./extend-blur.mjs";
 import { copyDraftTree } from "./draft-media-copy.mjs";
+import { secureHtml } from "./meta-security.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const output = join(root, process.env.PORTFOLIO_EXPORT_DIR || "gh-pages");
@@ -249,6 +250,18 @@ await writeFile(
 );
 
 const generatedHome = await readFile(join(output, "index.html"), "utf8");
+async function secureTree(directory) {
+  for (const entry of await readdir(directory, {withFileTypes:true})) {
+    const path = join(directory, entry.name);
+    if (entry.isDirectory()) await secureTree(path);
+    else if (entry.name.endsWith('.html')) {
+      const html = await readFile(path, 'utf8');
+      if (/data-draft-review-panel|In review \(draft only\)|Slow loading/.test(html)) throw Error('Draft controls in export');
+      await writeFile(path, secureHtml(html));
+    }
+  }
+}
+await secureTree(output);
 if (generatedHome.includes("I want to see")) throw new Error("Legacy portfolio markup remains in export");
 
 console.log(`Exported ${routes.length} live routes and ${redirects.length} legacy redirects to ${output}`);
