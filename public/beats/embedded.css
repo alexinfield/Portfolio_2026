@@ -1,6 +1,0 @@
-.embedded body {background:transparent;min-height:0;overflow:hidden}
-.embedded .masthead,.embedded .intro,.embedded .stage-label,.embedded .wheel-hint,.embedded .footer {display:none}
-.embedded main {display:block;padding:0;margin:0;width:100%;max-width:none;min-height:0}
-.embedded .stage {display:flex;align-items:center;justify-content:center;width:100%;height:100vh;padding:0;margin:0;min-height:0}
-.embedded .device-space {margin:0!important;flex-shrink:0}
-.embedded .device-wrap:after {display:none}

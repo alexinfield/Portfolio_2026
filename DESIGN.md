@@ -26,10 +26,10 @@ The supplied case-study image panels retain their content.
   record and media kept but never exported; Telefoni shown as "Video 2018";
   Warp sits immediately before Mycelium), existing Folio/Niche case links,
   manual galleries and retained AND filter logic behind one hidden-UI flag.
-  Uniform 4:3 frames; per-slide positions and source-derived edge extension
-  preserve whole objects. Genuine descriptions reveal only in bottom image
-  strips on hover/focus, with tap toggle and separate swipe navigation on touch.
-  Dots/count persist below the strip; arrows reveal on hover/focus/touch.
+  Natural media heights and fixed column widths. Titles and descriptions sit
+  below media. Each carousel chooses its first or tallest slide aspect by the
+  least-crop score and reserves that frame through every swipe. Compass keeps
+  swipe, keyboard, dots and arrows; there is no equal-height or overlay-text rule.
 - Info: the approved Brooklyn introduction, one secondary Contact mailto Button
   beneath it and the existing artwork. The desktop text group is centered.
   No footer email, appearance control or résumé link.
@@ -85,63 +85,41 @@ image fills, Retry focus and explicit Telefoni playback. Phone film checks
 actually advance currentTime after one Play tap, twice on fresh loads under
 both motion preferences, then exercise native Play after a paused state.
 
-## Personal carousel draft — November 2–3
+## Personal, November 3 owner revision
 
-Experience surface. Alex chose Compass 1.2.1, seamless gap=0 and the existing
-4:3 photo framing. His later decision 24 chooses **Original Tracks** and a
-visibly original device treatment. References: the incumbent Personal cards
-and this document (retain composition); the reviewed kit HANDOFF (gesture and
-native fallback contract); the working lab (circular navigation and classic
-screen); and the November 2 look verdict (original materials, proportions,
-type, icons and descriptive title). Anti-reference: another custom swipe engine
-with features layered over the accepted cards.
+Experience surface. Alex explicitly reversed the charcoal restyle and equal-height
+cards. His supplied lab is the visual authority: white enclosure, metallic rim,
+blue LCD, ChicagoKare, original wheel and menu styling. No new visual direction
+or interview is needed; the supplied brief settles the product and UI choices.
 
-The kit owns swipe, motion, keyboard navigation, end resistance and selection.
-A small Info button replaces the full-frame description hit target. Descriptions
-and video controls retain their coordinated lift. Dots are visual indicators,
-as on the incumbent page; full 44px Prev/Next controls, keyboard and native swipe
-provide navigation. The exact reviewed TGZ stays unmodified.
+References:
+- `/home/infield/Scratch/personal/claude/261102-beats/lab-beats/`: exact device CSS,
+  SVG artwork, font and interaction. Exclude its surrounding page/import UI.
+- `261102-personal-carousel/screenshots/before-lab-phone-light.png`: supplied
+  original appearance witness; retain device surfaces, not its page header.
+- Existing Personal collection and source media/framing: retain content, case
+  links, font, fixed light palette and gallery behavior; change the equal heights.
+- Reviewed Compass 1.2.1 public carousel API: retain native fallback and gestures.
+Anti-reference: the discarded charcoal enclosure, neutral LCD, system screen
+font, opener/Close sheet and uniform 4:3 grid. Do not blend those treatments in.
 
-Each gallery preserves the kit's actual server markup as a native scroll list.
-Its own React root hydrates those nodes in place when visible, keeping a native
-selection made before enhancement. This avoids measuring offscreen carousels.
-No custom drag physics or recreated kit markup is introduced. JS-enabled cards
-reserve their 4:3 geometry and use automatic render containment; no-JS lists
-remain ordinary native scrollers. The page bootstrap must stay when combining
-with the Lighthouse branch's static-controller work.
+Implementation direction: one-column natural flow on phones; two/three columns
+with deterministic shortest-column placement from public media aspect and
+fixed caption line metrics. CSS reserves media ratios and server-derived column
+positions before first paint. DOM order remains the collection order. The same
+CSS works without JavaScript; no experimental masonry grid or hydration-time
+reparenting. Even 20px gutters, top alignment, no layout change on swipes.
 
-Original Tracks opens a same-origin player only after a tap, without autoplay.
-The initial preview matches the 4:3 grid; opening uses 520px height on phones,
-up to 620px on desktop. Close unloads the frame. public/beats/tracks.json is the
-catalog: three owner recordings now, later 6–10 through data/assets and rebuild,
-without React changes. Without JS, native audio controls and direct open/download
-links replace the inactive preview. No player code/audio is loaded initially.
+Original Tracks is one inline, tall card. The original 415×692 device and its
+reflection footprint are reserved in CSS. Only near-view code/font/catalog load;
+no audio source until Play. Public asset paths and component identifiers use
+Original Tracks names. Hosted-only recordings and full MIT notices remain.
 
-The original device is 520×600, flat charcoal, with a 280px ring, 120px centre,
-transport row below, neutral LCD and system monospace. There is no chrome,
-reflection, fake battery or Chicago-style bitmap face. The icon is an original
-waveform in SVG and PNG. New cover tiles use DejaVu Sans with its licence;
-music/covers remain outside upstream MIT under owner permission. Current local
-notices/inventories describe shipped assets; original lab inputs are preserved
-outside the export and the live lab is unchanged.
+Review plan: save the incumbent before captures at 393/1024/1440, render Draft 1
+in both engines and preferences, inspect against the original device and natural
+layout, write numbered findings here, fix them together for Draft 2, then repeat
+only the affected checks. Verify wheel touch/mouse/keyboard, native fallback,
+fixed swipe geometry, no overlaps/holes, CLS 0 and mobile LCP ≤2.5 s. Real-phone
+and Alex acceptance remain separate. PR #14 sticky/rebase work is not included.
 
-Review findings and revisions: (1) the full-frame description target intercepted
-swipes, replaced with Info; (2) a 4:3 open player made controls too small, so it
-expands on tap; (3) site-wide minimum button sizing clipped the kit's dots,
-restored to native pitch and centred; (4) the initial 620px phone opening was
-too empty, reduced to 520px; (5) stable native video URLs survive enhancement;
-(6) no-JS direct audio files cover browsers with unusable inline controls.
-Performance review removed offscreen measurements and dense interactive dots;
-the opener's accessible name includes its visible track count.
-
-Matrix: Chromium/WebKit, 393/1440, light/dark system preferences (Personal's
-approved palette remains light), reduced motion, no JS, native scroll handover,
-swipe and play clips. Linux WebKit is not physical iPhone Safari; Alex's visual
-acceptance and real-device playback remain separate.
-
-RC2-01: native frame focus before enhancement, region focus afterward. RC2-02:
-controls stay hidden until enhancement, with a scripting:none hide. RC2-03:
-Content and mapped slides remain direct children, no Fragments. RC2-04: Linux
-WebKit coverage, real Safari acceptance still separate. RC2-05: reviewed core
-4.07KB gzip JS + 1.02KB CSS (5.1KB combined versus original ~4KB target), recorded
-without a package fork or new dependency.
+Draft 1 findings / Draft 2 revisions: pending rendered review.

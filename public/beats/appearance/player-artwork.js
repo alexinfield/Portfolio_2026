@@ -1,2 +1,0 @@
-/* SPDX-License-Identifier: MIT. Original Tracks generic transport symbols. */
-window.PlayerArtwork=Object.freeze({menu:'Back',skip:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M18 5l-10 7 10 7Z"/></svg>',toggle:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5 9 7-9 7ZM17 5v14M21 5v14"/></svg>',indicatorPlay:'<svg viewBox="0 0 12 16"><path fill="currentColor" d="m1 1 10 7-10 7Z"/></svg>',indicatorPause:'<svg viewBox="0 0 12 16"><path stroke="currentColor" stroke-width="3" d="M3 1v14M9 1v14"/></svg>',battery:''});

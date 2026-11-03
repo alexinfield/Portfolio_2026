@@ -113,6 +113,7 @@ function mediaJobs(site, rel, html, basePath) {
     let fit = null, feather = null, mode = "cover", frame = [mw, mh], pos = [.5, .5];
     if (host && (pc.has("portfolio-image") || pc.has("personal-video"))) {
       frame = [4, 3];
+      for(let ancestor=host;ancestor&&ancestor.name!=="#root";ancestor=ancestor.parent){const aspect=parseFloat(attrs(ancestor)['data-frame-aspect']);if(aspect>0){frame=[aspect,1];break;}}
       const w = styleGet(style, "width"), h = styleGet(style, "height");
       if (w && w.endsWith("%") && parseFloat(w) < 99.9) fit = "x";
       else if (h && h.endsWith("%") && parseFloat(h) < 99.9) fit = "y";

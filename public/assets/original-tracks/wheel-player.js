@@ -1,17 +1,18 @@
 /* SPDX-License-Identifier: MIT. Original player, vector artwork and interaction. */
 (function () {
   'use strict';
+  const assetRoot=new URL('./',document.currentScript.src).href;
   const words = {
     en: { playlists:'Playlists', artists:'Artists', songs:'Songs', settings:'Settings', now:'Now Playing', empty:'No music yet', all:'All Songs', shuffle:'Shuffle', repeat:'Repeat', click:'Clicker', light:'Backlight', about:'About', on:'On', off:'Off', one:'One', reset:'Reset settings', unknown:'Unknown Artist', volume:'Volume', seek:'Playback progress', menu:'Back / MENU', select:'Select', previous:'Previous track', next:'Next track', toggle:'Play / pause', hint:'Use arrow keys, Enter, Escape, or turn the wheel.', of:'of' },
     zh: { playlists:'播放列表', artists:'艺人', songs:'歌曲', settings:'设置', now:'正在播放', empty:'暂无音乐', all:'所有歌曲', shuffle:'随机播放', repeat:'重复播放', click:'按键音', light:'屏幕背光', about:'关于', on:'开', off:'关', one:'单曲', reset:'重置设置', unknown:'未知歌手', volume:'音量', seek:'播放进度', menu:'返回 / MENU', select:'选择', previous:'上一首', next:'下一首', toggle:'播放 / 暂停', hint:'可用方向键、Enter、Escape，或沿圆环转动。', of:'/' }
   };
-  const css = `:host{display:block;width:520px;height:600px;outline:none}`;
+  const css = `:host{display:block;width:415px;height:692px;outline:none}`;
   class WheelPlayer extends HTMLElement {
     constructor() {
       super(); this.attachShadow({mode:'open'}); this._data={songs:[],artists:[],playlists:[]}; this.view={type:'root',index:0}; this.stack=[]; this.clicker=true; this.backlight=true; this.mode='seek';
-      this._player=new PlayerCore.Playback({onError:()=>window.dispatchEvent(new CustomEvent('ipod-playback-error'))});
+      this._player=new PlayerCore.Playback({onError:()=>window.dispatchEvent(new CustomEvent('recordings-playback-error'))});
       this._store={set:value=>{if(value.data)this._data=value.data;this.render();}};
-      this.shadowRoot.innerHTML=`<style>${css}</style><link rel="stylesheet" href="./appearance/player-materials.css"><link rel="stylesheet" href="./appearance/adapter.css"><div class="surface"><div class="shell ipod-container"><div class="bezel ipod-screen backlit"><div class="lcd menu-layer menu"><div class="titlebar menu-title"><span class="playing play-icon"></span><span class="title screen-title">Original Tracks</span><span class="battery battery-indicator" aria-hidden="true">${PlayerArtwork.battery}</span></div><div class="body screen-body"></div></div></div><div class="wheel click-wheel"><button class="key wheel-button menu-button" data-action="menu">${PlayerArtwork.menu}</button><button class="key wheel-button back-button" data-action="previous">${PlayerArtwork.skip}</button><button class="key wheel-button forward-button" data-action="next">${PlayerArtwork.skip}</button><button class="key wheel-button playpause-button" data-action="toggle">${PlayerArtwork.toggle}</button><div class="wheel-dividers" aria-hidden="true"></div><div class="scroll-wheel" aria-hidden="true"></div><button class="key select-button" data-action="select"></button></div></div></div>`;
+      this.shadowRoot.innerHTML=`<style>${css}</style><link rel="stylesheet" href="${assetRoot}appearance/player-materials.css?v=${window.OriginalTracksStyleVersions?.['appearance/player-materials.css']||'source'}"><link rel="stylesheet" href="${assetRoot}appearance/adapter.css?v=${window.OriginalTracksStyleVersions?.['appearance/adapter.css']||'source'}"><div class="surface"><div class="shell player-enclosure"><div class="bezel player-screen backlit"><div class="lcd menu-layer menu"><div class="titlebar menu-title"><span class="playing play-icon"></span><span class="title screen-title">Original Tracks</span><span class="battery battery-indicator" aria-label="Decorative battery icon">${PlayerArtwork.battery}</span></div><div class="body screen-body"></div></div></div><div class="wheel click-wheel"><button class="key wheel-button menu-button" data-action="menu">${PlayerArtwork.menu}</button><button class="key wheel-button back-button" data-action="previous">${PlayerArtwork.skip}</button><button class="key wheel-button forward-button" data-action="next">${PlayerArtwork.skip}</button><button class="key wheel-button playpause-button" data-action="toggle">${PlayerArtwork.toggle}</button><div class="wheel-dividers" aria-hidden="true"></div><div class="scroll-wheel" aria-hidden="true"></div><button class="key select-button" data-action="select"></button></div></div></div>`;
       this._player.audio.hidden=true;this.shadowRoot.append(this._player.audio);
       this.wheel=this.shadowRoot.querySelector('.wheel'); this.body=this.shadowRoot.querySelector('.body');
       if(!CSS.supports('-webkit-box-reflect','below 4px')){this.reflected=this.shadowRoot.querySelector('.shell').cloneNode(true);const reflection=document.createElement('div');reflection.className='reflection-fallback';reflection.setAttribute('aria-hidden','true');reflection.inert=true;for(const button of this.reflected.querySelectorAll('button')){button.disabled=true;button.tabIndex=-1;}reflection.append(this.reflected);this.shadowRoot.querySelector('.surface').append(reflection);}
@@ -28,7 +29,7 @@
     }
     connectedCallback(){if(!this.hasAttribute('tabindex'))this.tabIndex=0;this.setAttribute('role','group');this.render();}
     disconnectedCallback(){this.pointerEnd();this._unsubscribe();this._player.destroy();}
-    get iPodDataStore(){return this._store;}
+    get recordingsStore(){return this._store;}
     get localPlaybackStore(){return this._player;}
     showNowPlaying(){if(this.view.type!=='now')this.navigate('now');else this.render();}
     set locale(value){this._language=value?.language;this.render();}
@@ -84,8 +85,8 @@
       const items=this.list();this.view.index=PlayerCore.clamp(this.view.index,0,Math.max(0,items.length-1));
       if(!items.length){const empty=document.createElement('p');empty.className='empty';empty.textContent=t.empty;this.body.append(empty);this.syncReflection();return;}
       const list=document.createElement('div');list.className='list menu-items';this.body.append(list);
-      const start=Math.max(0,Math.min(this.view.index-4,items.length-5));
-      for(let index=start;index<Math.min(start+5,items.length);index++){
+      const start=Math.max(0,Math.min(this.view.index-4,items.length-6));
+      for(let index=start;index<Math.min(start+6,items.length);index++){
         const item=items[index],row=document.createElement('button'),name=document.createElement('span'),end=document.createElement('span');row.type='button';row.className='row menu-item'+(index===this.view.index?' selected':'');row.setAttribute('aria-current',index===this.view.index?'true':'false');name.className='name item-title';name.textContent=item.name;row.toggleAttribute('data-cjk-row',/[\u2e80-\u9fff\uf900-\ufaff]/.test(item.name+(item.value||'')));end.className=item.value?'value item-value':'chevron';end.textContent=item.value||'';end.setAttribute('aria-hidden',item.value?'false':'true');row.append(name,end);row.addEventListener('click',()=>{this.view.index=index;this.sound();item.run();});list.append(row);
       }
       this.syncReflection();
@@ -100,5 +101,5 @@
       this.body.querySelector('.fill').style.width=PlayerCore.clamp(ratio*100,0,100)+'%';const times=this.body.querySelector('.times');times.firstElementChild.textContent=volume?t.volume:PlayerCore.clock(state.currentPlaybackTime);times.lastElementChild.textContent=volume?Math.round(this._player.volume*100)+'%':'−'+PlayerCore.clock(duration-state.currentPlaybackTime);set('.mode',volume?t.volume:t.seek);this.updateIndicator();this.syncReflection();
     }
   }
-  customElements.define('web-music-ipod',WheelPlayer);
+  if(!customElements.get('original-tracks-player'))customElements.define('original-tracks-player',WheelPlayer);
 })();

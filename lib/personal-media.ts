@@ -18,8 +18,8 @@ export type PersonalProject = {
 };
 export const personalAsset = (source: string) => `../assets/personal/${source}`;
 
-export function personalMediaStyle(media:PersonalMedia, framing:PersonalFraming):CSSProperties {
-  const ratio=media.width/media.height, target=4/3, padded=framing.fit==="pad";
+export function personalMediaStyle(media:PersonalMedia, framing:PersonalFraming,target=4/3):CSSProperties {
+  const ratio=media.width/media.height, padded=framing.fit==="pad";
   return {objectFit:"cover",objectPosition:framing.object_position,
     width:padded&&ratio<target?`${ratio/target*100}%`:"100%",
     height:padded&&ratio>target?`${target/ratio*100}%`:"100%"};

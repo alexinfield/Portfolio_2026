@@ -142,14 +142,13 @@ test("Personal carousel SSR and Original Tracks retain a usable deferred fallbac
   assert.doesNotMatch(html,/aria-label="\d+ of 0"/);
   assert.doesNotMatch(html,/<iframe\b/);
   assert.match(html,/>Original Tracks<\/h2>/);
-  const catalog=JSON.parse(await read("public/beats/tracks.json"));
+  const catalog=JSON.parse(await read("public/assets/original-tracks/tracks.json"));
   const audios=[...html.matchAll(/<audio\b[^>]*>/g)].map(match=>match[0]);
-  assert.equal(audios.length,catalog.tracks.length);
-  for(const audio of audios){assert.match(audio,/controls/);assert.match(audio,/preload="none"/);assert.doesNotMatch(audio,/autoplay/);}
-  assert.match(html,/href="\.\.\/beats\/"/);
-  const manifest=JSON.parse(await read("public/beats/manifest.webmanifest"));
-  assert.equal(manifest.short_name,"Original Tracks");
-  assert.equal(manifest.icons[0].src,"./icons/tracks.svg");
+  assert.equal(audios.length,0,'no audio source exists until an explicit Play action');
+  for(const track of catalog.tracks)assert.ok(html.includes('/assets/original-tracks/'+track.url.replace(/^\.\//,'')),'no-JS recording link');
+  assert.match(html,/id="original-tracks"/);
+  assert.match(html,/class="tracks-stage"/);
+  assert.doesNotMatch(html,/Close player|Open Original Tracks|\.\.\/beats\//);
 });
 
 test("Molekule phone cover embeds exact cleared pixels and retains its field and larger candidates",async()=>{
@@ -368,8 +367,9 @@ test("404 offers just one Work action and Personal uses genuine descriptions wit
   assert.doesNotMatch(missing,/Contact|mailto:/);
   const personal=documentOnly(await exported("personal/index.html"));
   assert.doesNotMatch(personal,/portfolio-about-label|portfolio-card-notes|>About</);
-  assert.equal((personal.match(/class="portfolio-description-strip"/g)||[]).length,visibleItems.filter(item=>item.short_text&&!item.link).length);
-  assert.match(personal,/aria-expanded="false"[^>]*aria-controls="desk-pen-description"/);
+  assert.equal((personal.match(/class="personal-description"/g)||[]).length,visibleItems.filter(item=>item.short_text).length);
+  assert.doesNotMatch(personal,/desk-pen-description|portfolio-description-strip/);
+  assert.match(personal,/personal-masonry-shell/);
 });
 
 test("hidden BioMaking and the old Telefoni name never reach the public export",async()=>{
