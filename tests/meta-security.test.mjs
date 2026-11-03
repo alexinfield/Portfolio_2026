@@ -27,6 +27,7 @@ test('every export has a leading CSP, valid inline hashes, and no release-only d
       }
       assert.doesNotMatch(html,/data-draft-review-panel|In review \(draft only\)|Slow loading/);
       assert.doesNotMatch(html,/<script[^>]*src="https:\/\//);
+      assert.doesNotMatch(html,/<[a-z][^>]*\son[a-z]+\s*=/i,'event handlers use the external runtime');
     }
   }
   await visit(new URL('../gh-pages/',import.meta.url));
