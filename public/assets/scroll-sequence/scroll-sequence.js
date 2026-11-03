@@ -32,7 +32,8 @@
     const strip = root.closest(".case-pin-strip");
     const track = strip?.parentElement.classList.contains("case-scroll-track") ? strip.parentElement : null;
     const conn = navigator.connection || {}, lite = conn.saveData || /2g/.test(conn.effectiveType || "");
-    const every = lite ? 2 : 1; // Save-Data and 2G: every other full frame
+    const spriteOnly = lite || (navigator.deviceMemory && navigator.deviceMemory <= 4);
+    const every = 1;
     let set, fmt, sprite, gen = 0, full = [], low = [], start = 0, range = 1, cur = 0, shown = null, painted = null;
     let ticking = false, last = 0, begun = false, live = false, armed = false, active = 0, dir = 1, prev = 0, done = false, flow = false;
     const pending = new Set();
@@ -157,7 +158,7 @@
     }
 
     function fill() {
-      if (!armed || !set || (!sprite && !root.classList.contains("is-ready"))) return; // after the sprite pass
+      if (spriteOnly || RM.matches || !armed || !set || (!sprite && !root.classList.contains("is-ready"))) return;
       const c = Math.round(cur), g = gen;
       // release: drop the frame and detach its source, so its decoded pixels go now, not at the next GC
       full.forEach((img, i) => { if (img !== poster && Math.abs(i - c) > KEEP) { delete full[i]; if (img !== shown) img.removeAttribute("src"); } });
