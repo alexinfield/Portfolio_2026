@@ -253,3 +253,9 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
  .is-sequence-pinned > .case-pin-strip {position: sticky; top: var(--case-pin-top, var(--portfolio-header-height));}
 }
 .case-pin-strip {display: grid; grid-template-columns: minmax(0,1fr); gap: 0;}
+
+.portfolio-privacy {padding-block: var(--section); color: var(--muted); font-size: .8125rem; line-height: 1.125rem;}
+.portfolio-privacy details {max-width: 65ch;}
+.portfolio-privacy summary, .portfolio-privacy label {min-height: 44px; display: flex; align-items: center; gap: var(--inline); cursor: pointer;}
+.portfolio-privacy p {margin-block: var(--inline);}
+.portfolio-privacy input {accent-color: var(--text);}
