@@ -44,6 +44,22 @@
     if (!finished) { if (near(h.getBoundingClientRect())) h.setAttribute("data-eb-vis", ""); if (io) io.observe(h); }
     setTimeout(fin, 15000);   // never leave media hidden
   }
-  document.querySelectorAll("[data-eb-media]").forEach(setup);
+  var media = Array.from(document.querySelectorAll("[data-eb-media]"));
+  // Read boxes in one pass before setup writes any states. Long case pages
+  // otherwise alternate layout reads/writes for dozens of offscreen panels.
+  var immediate = media.filter(function (m) {
+    return near(m.parentElement.getBoundingClientRect());
+  });
+  if (window.IntersectionObserver) {
+    var pending = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (e.isIntersecting || near(e.boundingClientRect)) {
+          pending.unobserve(e.target); setup(e.target);
+        }
+      });
+    }, {rootMargin: "120px"});
+    media.forEach(function (m) { if (!immediate.includes(m)) pending.observe(m); });
+    immediate.forEach(setup);
+  } else media.forEach(setup);
   d.setAttribute("data-eb-live", "");
 })();
