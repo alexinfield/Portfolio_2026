@@ -8,12 +8,13 @@
   const owned = /^(?:_ga(?:_|$)|_gid$|_gat(?:_|$)|_gcl(?:_|$)|_gac(?:_|$)|_cl(?:ck|sk|tk)$|clarity(?:[:._-]|$)|google[_:-]?(?:analytics|tag)|gtm(?:[:._-]|$)|__utm[abczvt]$|AMP_TOKEN$|FP(?:LC|ID)$|CLID$|MUID$|ANONCHK$|MR$|SM$)/i;
   let allowed = false, started = false, locked = false, generation = 0;
   const scripts = new Set(), idleJobs = new Set(), timers = new Set();
-  const channel = typeof BroadcastChannel === 'function' ? new BroadcastChannel('portfolio-analytics-consent') : null;
+  let channel=null;try{if(typeof BroadcastChannel==='function')channel=new BroadcastChannel('portfolio-analytics-consent');}catch{/* storage events remain available */}
   const stored = () => {try {return localStorage.getItem(key);} catch {return null;}};
+  const revokedCookiePresent=()=>{try{return document.cookie.split(';').some(c=>c.trim().startsWith(revokedCookie+'=1'));}catch{return true;}};
   const readConsent = () => {
     try {
       return stored()==='granted' && sessionStorage.getItem(revokedKey)!=='1' &&
-        !document.cookie.split(';').some(c=>c.trim().startsWith(revokedCookie+'=1')) &&
+        !revokedCookiePresent() &&
         new URL(location.href).searchParams.get('analytics')!=='off';
     } catch {return false;}
   };
@@ -28,8 +29,8 @@
   const domains=()=>{const out=[''];const parts=location.hostname.split('.');while(parts.length>1){out.push(parts.join('.'),'.'+parts.join('.'));parts.shift();}return out;};
   const paths=()=>{const out=new Set(['/']);const parts=location.pathname.split('/').filter(Boolean);for(let i=1;i<=parts.length;i++){out.add('/'+parts.slice(0,i).join('/'));out.add('/'+parts.slice(0,i).join('/')+'/');}return out;};
   const purge=()=>{
-    const names=document.cookie.split(';').map(c=>c.split('=')[0].trim()).filter(name=>owned.test(name));
-    for(const name of names)for(const domain of domains())for(const path of paths())document.cookie=name+'=; Max-Age=0; path='+path+(domain?'; domain='+domain:'');
+    let names=[];try{names=document.cookie.split(';').map(c=>c.split('=')[0].trim()).filter(name=>owned.test(name));}catch{/* no cookie access */}
+    for(const name of names)for(const domain of domains())for(const path of paths())try{document.cookie=name+'=; Max-Age=0; path='+path+(domain?'; domain='+domain:'');}catch{/* denied startup repeats cleanup */}
     for(const type of ['localStorage','sessionStorage'])try{const storage=window[type];for(const name of Object.keys(storage))if(owned.test(name))storage.removeItem(name);}catch{/* unavailable storage stays off */}
     try{if(window.indexedDB?.databases)indexedDB.databases().then(dbs=>{for(const db of dbs)if(db.name&&owned.test(db.name))indexedDB.deleteDatabase(db.name);}).catch(()=>{});}catch{/* unavailable storage stays off */}
   };
@@ -54,7 +55,7 @@
     // queues are neutralized below and a denied reload purges storage again.
     const contexts=fence(window);locked=true;
     try{sessionStorage.setItem(revokedKey,'1');}catch{/* cookie and URL fallback below */}
-    document.cookie=revokedCookie+'=1; path=/; SameSite=Lax';
+    try{document.cookie=revokedCookie+'=1; path=/; SameSite=Lax';}catch{/* URL fallback below */}
     const durable=persist?save('denied'):stored()==='denied';
     for(const win of contexts){
       const google=win.gtag,clarity=win.clarity,queue=win.dataLayer,clarityQueue=clarity?.q;
@@ -69,7 +70,7 @@
     if(persist)channel?.postMessage('denied');
     if(started){
       if(durable)location.reload();
-      else{const url=new URL(location.href);url.searchParams.set('analytics','off');location.replace(url.href);}
+      else{const url=new URL(location.href);url.searchParams.set('analytics','off');history.replaceState(history.state,'',url.href);location.reload();}
     }
   };
   const inject=src=>{if(!allowed||locked||!readConsent())return;const script=document.createElement('script');script.async=true;script.src=src;scripts.add(script);document.head.append(script);};
@@ -91,14 +92,14 @@
     if(!value){withdraw();return;}
     if(!save('granted')){allowed=false;reflect();return;}
     try{sessionStorage.removeItem(revokedKey);}catch{/* remaining marker keeps this tab off */}
-    document.cookie=revokedCookie+'=; Max-Age=0; path=/; SameSite=Lax';
+    try{document.cookie=revokedCookie+'=; Max-Age=0; path=/; SameSite=Lax';}catch{allowed=false;reflect();return;}
     const url=new URL(location.href);if(url.searchParams.get('analytics')==='off'){url.searchParams.delete('analytics');history.replaceState(history.state,'',url.href);}
     allowed=readConsent();reflect();if(locked&&allowed)location.reload();else if(allowed)schedule();
   };
   setting?.addEventListener('change',()=>choose(setting.checked));
   addEventListener('storage',event=>{
     if(event.key!==key&&event.key!==null)return;
-    if(stored()==='granted'&&!document.cookie.split(';').some(c=>c.trim().startsWith(revokedCookie+'=1'))){try{sessionStorage.removeItem(revokedKey);}catch{/* fail closed */}allowed=readConsent();reflect();if(allowed&&locked)location.reload();else if(allowed)schedule();}
+    if(stored()==='granted'&&!revokedCookiePresent()){try{sessionStorage.removeItem(revokedKey);}catch{/* fail closed */}allowed=readConsent();reflect();if(allowed&&locked)location.reload();else if(allowed)schedule();}
     else withdraw(false);
   });
   channel?.addEventListener('message',event=>{if(event.data==='denied')withdraw(false);});
