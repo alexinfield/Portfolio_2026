@@ -4,7 +4,10 @@ const provider=host=>/(?:^|\.)(?:google-analytics\.com|analytics\.google\.com|go
 function sdk(type){return `(()=>{
  const type=${JSON.stringify(type)},ga=type!=='clarity',q=ga?(window.dataLayer||[]):(window.clarity?.q||[]);
  const saved={fetch:fetch.bind(window),beacon:navigator.sendBeacon.bind(navigator),XHR:XMLHttpRequest,Image,create:document.createElement.bind(document)};
- window.__sdk=window.__sdk||{};let allowed=[...q].some(a=>a[0]==='consent'&&a[2]?.analytics_storage==='granted'||a[0]==='consentv2'&&a[1]?.analytics_Storage==='granted');
+ window.__sdk=window.__sdk||{};let allowed=true;
+ // A late installer must see an explicit denial, even if its default is granted.
+ // Apply consent commands in order, rather than treating any old grant as final.
+ for(const a of q){if(a[0]==='consent'&&a[2]?.analytics_storage)allowed=a[2].analytics_storage==='granted';if(a[0]==='consentv2'&&a[1]?.analytics_Storage)allowed=a[1].analytics_Storage==='granted';}
  function send(phase){const query='?fixture='+type+'&phase='+phase;const base=ga?'https://www.google-analytics.com':'https://z.clarity.ms';
   saved.fetch(base+'/fetch'+query,{method:'POST',body:'synthetic',keepalive:true}).catch(()=>{});
   try{saved.beacon(base+'/beacon'+query,'synthetic');}catch{}
@@ -14,7 +17,7 @@ function sdk(type){return `(()=>{
  }
  const fn=(...a)=>{if(a[0]==='consent'&&a[2]?.analytics_storage==='denied'||a[0]==='consentv2'&&a[1]?.analytics_Storage==='denied'){allowed=false;window.__denials=window.__denials||[];window.__denials.push(type);send('denial');}};
  if(ga)window.gtag=fn;else window.clarity=fn;
- window.__sdk[type]={send,queue:q};
+ window.__sdk[type]={send,queue:q,initialAllowed:allowed};
  if(allowed){document.cookie=(ga?'_ga_fixture':'_clck')+'=synthetic; path=/';document.cookie='_ga_path_fixture=synthetic; path=/personal';localStorage.setItem('clarity:fixture','synthetic');sessionStorage.setItem('_cltk','synthetic');}
  send('loaded');setInterval(()=>send('timer'),70);
  addEventListener('beforeunload',()=>send('beforeunload'));addEventListener('pagehide',()=>{send('pagehide');try{document.cookie='_ga_unload_fixture=synthetic; path=/';}catch{}});
@@ -78,6 +81,7 @@ try {for(const name of cases.filter(n=>!only||n===only)){
   }
   if(name==='stale-grant')await page.evaluate(()=>dispatchEvent(new StorageEvent('storage',{key:'portfolio:analytics-consent:v1',newValue:'granted'})));
   await page.waitForTimeout(400);
+  if(name.startsWith('mid-')){const initial=await page.evaluate(type=>window.__sdk?.[type]?.initialAllowed,name==='mid-google'?'ga':'clarity');if(initial!==undefined)assert.equal(initial,false,'late installer must process denial before writing storage');report.checks.push('late installer receives denial or is canceled before execution');}
   assert.equal(hits.filter(h=>h.after).length,0,JSON.stringify(hits.filter(h=>h.after)));
   assert.equal(hits.filter(h=>h.query.includes('phase=denial')||h.query.includes('phase=beforeunload')||h.query.includes('phase=pagehide')).length,0,'denial/unload attempts must be blocked too');
   assert.ok(dialogs>0,'old provider document kept alive by canceling real beforeunload');

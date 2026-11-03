@@ -69,7 +69,13 @@
       try{google?.('consent','update',denied);}catch{/* teardown must continue */}
       try{clarity?.('consentv2',{ad_Storage:'denied',analytics_Storage:'denied'});}catch{/* teardown must continue */}
       try{if(queue)queue.length=0;if(clarityQueue)clarityQueue.length=0;}catch{/* cached queues are network-fenced */}
-      win.dataLayer=[];win.gtag=function(){};win.clarity=function(){};win.clarity.q=[];
+      // A loader already in flight may still execute after its tag is removed.
+      // Give that installer explicit denials, rather than an empty queue that
+      // could restore its default storage permission. Old grant arrays stay empty.
+      const googleDenied=[['consent','default',{...denied}],['consent','update',{...denied}]];
+      const clarityDeniedQueue=[['consentv2',{ad_Storage:'denied',analytics_Storage:'denied'}]];
+      googleDenied.push=()=>googleDenied.length;clarityDeniedQueue.push=()=>clarityDeniedQueue.length;
+      win.dataLayer=googleDenied;win.gtag=function(){};win.clarity=function(){};win.clarity.q=clarityDeniedQueue;
     }
     for(const script of scripts){script.remove();}scripts.clear();purge();reflect();
     if(persist)channel?.postMessage('denied');
