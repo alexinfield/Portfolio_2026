@@ -250,5 +250,6 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
    No JS and Reduce Motion never activate it. Stable viewport units avoid toolbar jumps. */
 @media (prefers-reduced-motion: no-preference) {
  .case-scroll-track.is-sequence-pinned {height: calc(var(--case-strip-height) + 125vh); height: calc(var(--case-strip-height) + 125svh);}
- .is-sequence-pinned > .portfolio-case-stack {position: sticky; top: var(--case-pin-top, var(--portfolio-header-height));}
+ .is-sequence-pinned > .case-pin-strip {position: sticky; top: var(--case-pin-top, var(--portfolio-header-height));}
 }
+.case-pin-strip {display: grid; grid-template-columns: minmax(0,1fr); gap: 0;}

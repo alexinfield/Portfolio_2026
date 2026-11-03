@@ -255,12 +255,21 @@ export default async function ProjectPage({
       </div>
     ))
   );
+  const sequenceIndex = media.findIndex(item => item.kind === "sequence");
+  const pinStart = Math.max(0, sequenceIndex - 4);
+  const pinEnd = sequenceIndex + 5;
 
   return (
     <SiteShell casePage>
       <h1 className="sr-only">{project.title}</h1>
-      <div className="case-scroll-track">
-        <div className="portfolio-case-stack">{presentation}</div>
+      <div className="portfolio-case-stack">
+        {sequenceIndex >= 0 && Array.isArray(presentation) ? <>
+          {presentation.slice(0, pinStart)}
+          <div className="case-scroll-track"><div className="case-pin-strip">
+            {presentation.slice(pinStart, pinEnd)}
+          </div></div>
+          {presentation.slice(pinEnd)}
+        </> : presentation}
       </div>
       <CaseNavigation slug={projectSlug} />
       {media.some(item => item.kind === "sequence") && <>

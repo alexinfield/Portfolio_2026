@@ -2,7 +2,9 @@
 
 Alex's November 3 review of draft v28 requires the Luma and Molekule Go
 sequences to pin while scrubbing, with neighbouring content touching them.
-The case strip now sticks as a continuous unit for 125svh of native scroll.
+The sequence and up to four real panels on either side now stick as a
+continuous strip for 125svh of native scroll. The rest of the case remains
+outside the sticky layer to keep its painted area bounded on WebKit.
 Luma opens against the header; Molekule Go enters fully and pins against the
 viewport bottom, with preceding panels filling the space above. The sequence
 blocks retain their full-width 16:9 geometry and seam trim. Stable viewport

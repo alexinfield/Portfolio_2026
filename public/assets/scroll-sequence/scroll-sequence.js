@@ -29,7 +29,7 @@
     const stage = root.querySelector(".ss-stage"), frame = root.querySelector(".ss-frame");
     const poster = root.querySelector(".ss-poster img"), canvas = root.querySelector("canvas");
     const n = cfg.count, step = cfg.lowStep || 4;
-    const strip = root.closest(".portfolio-case-stack");
+    const strip = root.closest(".case-pin-strip");
     const track = strip?.parentElement.classList.contains("case-scroll-track") ? strip.parentElement : null;
     const conn = navigator.connection || {}, lite = conn.saveData || /2g/.test(conn.effectiveType || "");
     const every = lite ? 2 : 1; // Save-Data and 2G: every other full frame
@@ -68,12 +68,14 @@
         // toolbars expand/collapse; neither the pin point nor its duration uses innerHeight.
         const offset = root.getBoundingClientRect().top - strip.getBoundingClientRect().top;
         const header = parseFloat(getComputedStyle(root).getPropertyValue("--ss-top")) || 0;
-        track.style.setProperty("--case-strip-height", `${strip.offsetHeight}px`);
+        const stripHeight = strip.getBoundingClientRect().height;
+        track.style.setProperty("--case-strip-height", `${stripHeight}px`);
         track.classList.add("is-sequence-pinned");
-        range = Math.max(1, track.offsetHeight - strip.offsetHeight);
+        range = Math.max(1, track.getBoundingClientRect().height - stripHeight);
         // Opening hero stays against the header. Later sequences enter fully before
         // pinning, with their preceding panels filling the rest of a portrait screen.
-        const pin = offset < 1 ? header : Math.max(header, range / 1.25 - frame.offsetHeight);
+        const opening = root.closest(".portfolio-case-stack").getBoundingClientRect().top === track.getBoundingClientRect().top && offset < 1;
+        const pin = opening ? header : Math.max(header, range / 1.25 - frame.offsetHeight);
         strip.style.setProperty("--case-pin-top", `${pin - offset}px`);
         start = track.getBoundingClientRect().top + scrollY + offset - pin;
       } else if (flow) { // in the page flow: scrub over the block's own travel through the viewport
