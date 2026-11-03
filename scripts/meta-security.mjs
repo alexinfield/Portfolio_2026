@@ -13,5 +13,6 @@ export function secureHtml(html) {
     "img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com https://www.google.com https://*.g.doubleclick.net https://*.clarity.ms https://c.bing.com",
     "style-src 'self' 'unsafe-inline'", "font-src 'self'", "media-src 'self'", "object-src 'none'", "base-uri 'self'", "form-action 'none'", "upgrade-insecure-requests",
   ].join('; ');
-  return html.replace(/<head>/i, `<head><meta http-equiv="Content-Security-Policy" content="${policy}"/>`);
+  return html.replace(/<head>(\s*<meta\b[^>]*\bcharset\s*=[^>]*>)?/i,
+    (_match, charset = '') => `<head>${charset}<meta http-equiv="Content-Security-Policy" content="${policy}"/>`);
 }

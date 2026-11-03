@@ -11,6 +11,14 @@ test('CSP hashes final executable bytes and rejects reuse after an edit',()=>{
   assert.ok(!secureHtml(input.replace('<ok>','changed')).includes(`'sha256-${hash}'`));
   assert.equal(secureHtml(secureHtml(input)),secureHtml(input));
 });
+test('long per-page policies preserve early UTF-8 and precede resource discovery',()=>{
+  const scripts=Array.from({length:30},(_,i)=>`<script>window.probe=${i}</script>`).join('');
+  const html=secureHtml(`<html><head><meta charset="utf-8"/><link rel="stylesheet" href="/site.css"/></head><body>${scripts}</body></html>`);
+  assert.ok(Buffer.byteLength(html.slice(0,html.indexOf('/>')+2))<1024);
+  assert.ok(html.indexOf('charset=')<html.indexOf('Content-Security-Policy'));
+  assert.ok(html.indexOf('Content-Security-Policy')<html.indexOf('<link'));
+  assert.equal(secureHtml(html),html);
+});
 test('every export has a leading CSP, valid inline hashes, and no release-only draft controls',async()=>{
   async function visit(url) {
     for(const entry of await readdir(url,{withFileTypes:true})) {
@@ -18,7 +26,8 @@ test('every export has a leading CSP, valid inline hashes, and no release-only d
       if(entry.isDirectory()){await visit(child);continue;}
       if(!entry.name.endsWith('.html'))continue;
       const html=await readFile(child,'utf8');
-      assert.match(html,/<head><meta http-equiv="Content-Security-Policy"/);
+      assert.match(html,/<head><meta\b[^>]*charset[^>]*><meta http-equiv="Content-Security-Policy"/i);
+      const charset=/<meta\s+charset=[^>]*>/i.exec(html);assert.ok(charset);assert.ok(Buffer.byteLength(html.slice(0,charset.index+charset[0].length))<=1024);
       const policy=html.match(/http-equiv="Content-Security-Policy" content="([^"]+)"/)[1];
       assert.doesNotMatch(policy,/script-src[^;]*'unsafe-inline'|frame-ancestors|report-uri/);
       for(const [,attrs,body] of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
