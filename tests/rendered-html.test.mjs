@@ -258,9 +258,9 @@ test("redirects and aliases have real targets and Compass fallback controls",asy
   }
 });
 
-test("hydration is retained only for Hyphae; indexing follows export flag",async()=>{
-  for(const path of ["projects/hyphae/index.html"]){const html=await exported(path);assert.match(html,/__VINEXT_RSC_|id="_R_"/);}
-  for(const path of ["index.html","personal/index.html","info/index.html",...slugs.filter(slug=>slug!=="hyphae").map(slug=>`projects/${slug}/index.html`),"404.html"]){assert.doesNotMatch(await exported(path),/__VINEXT_RSC_|id="_R_"/);}
+test("Personal and Hyphae keep Compass hydration; indexing follows export flag",async()=>{
+  for(const path of ["personal/index.html","projects/hyphae/index.html"]){const html=await exported(path);assert.match(html,/__VINEXT_RSC_|id="_R_"/);}
+  for(const path of ["index.html","info/index.html",...slugs.filter(slug=>slug!=="hyphae").map(slug=>`projects/${slug}/index.html`),"404.html"]){assert.doesNotMatch(await exported(path),/__VINEXT_RSC_|id="_R_"/);}
   for(const path of pages)assert.equal(/name="robots" content="noindex,nofollow"/.test(await exported(path)),process.env.PORTFOLIO_ALLOW_INDEXING !== "true");
   assert.equal(await exported("robots.txt"),process.env.PORTFOLIO_ALLOW_INDEXING === "true" ? "User-agent: *\nAllow: /\nSitemap: https://alexinfield.com/sitemap.xml\n" : "User-agent: *\nDisallow: /\n");
   const sitemap=await exported("sitemap.xml");assert.match(sitemap,/<loc>https:\/\/alexinfield.com\/personal\/<\/loc>/);assert.doesNotMatch(sitemap,/\/etc|\/play|\/professional/);
