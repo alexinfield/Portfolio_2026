@@ -56,7 +56,12 @@
     const contexts=fence(window);locked=true;
     try{sessionStorage.setItem(revokedKey,'1');}catch{/* cookie and URL fallback below */}
     try{document.cookie=revokedCookie+'=1; path=/; SameSite=Lax';}catch{/* URL fallback below */}
-    const durable=persist?save('denied'):stored()==='denied';
+    let durable=false;
+    if(persist){
+      durable=save('denied');
+      // Removing an old grant can still succeed when a quota blocks writes.
+      if(!durable)try{localStorage.removeItem(key);durable=localStorage.getItem(key)!=='granted';}catch{/* URL fallback below */}
+    }else try{durable=localStorage.getItem(key)!=='granted';}catch{/* URL fallback below */}
     for(const win of contexts){
       const google=win.gtag,clarity=win.clarity,queue=win.dataLayer,clarityQueue=clarity?.q;
       try{if(queue)queue.length=0;if(clarityQueue)clarityQueue.length=0;}catch{/* CSP remains the boundary */}
