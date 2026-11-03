@@ -1,7 +1,7 @@
 {
   "candidate": "Original Tracks",
   "upstream": {
-    "name": "iPod Web Player",
+    "name": "Web music-player code",
     "version": "0.3.1",
     "commit": "fb1d084",
     "licence": "LICENSE"

@@ -1,7 +1,7 @@
 @font-face{font-family:PlayerSans;src:local("Segoe UI"),local("PingFang SC"),local("Microsoft YaHei");font-display:swap}
 
 :root{
-  font-family:PlayerSans,-apple-system,BlinkMacSystemFont,"Segoe UI","iPodCJK",sans-serif;
+  font-family:PlayerSans,-apple-system,BlinkMacSystemFont,"Segoe UI","TracksCJK",sans-serif;
   font-size:100%;font-synthesis:none;color-scheme:light dark;
   --page-bg:#f3f3f3;--page-glow:#f3f3f3;--page-edge:#f3f3f3;
   --text:#252c23;--muted:#56624f;--subtle:#5f6b58;
