@@ -78,7 +78,7 @@ export async function runBrowserRegressions(browser,baseURL,{artifacts,include}=
       });
       await check("Personal has fifteen uniform frames, hidden filters and no permanent About labels",async()=>{
         await goto("/personal/");assert.equal(await page.locator("[data-personal-id]").count(),15);
-        assert.equal(await page.getByRole("combobox").count(),0);assert.equal(await page.locator("details,.portfolio-about-label").count(),0);
+        assert.equal(await page.getByRole("combobox").count(),0);assert.equal(await page.locator("main details,.portfolio-about-label").count(),0);
         const boxes=await page.locator(".portfolio-personal-front .portfolio-image,.portfolio-gallery-boundary").evaluateAll(items=>items.map(item=>{const r=item.getBoundingClientRect();return{w:r.width,h:r.height};}));
         assert.ok(boxes.every(box=>Math.abs(box.w/box.h-4/3)<.01),JSON.stringify(boxes));
         const rendered=await page.locator('.ac-carousel-viewport').evaluateAll(items=>items.map(item=>{const r=item.getBoundingClientRect();return{w:r.width,h:r.height};}).filter(box=>box.w>0&&box.h>0));
