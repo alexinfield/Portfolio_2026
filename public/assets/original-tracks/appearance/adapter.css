@@ -6,6 +6,7 @@
 .click-wheel{--select-button-pct:28.5714285714%;--scroll-wheel-pct:78.8571428571%}
 .key{color:inherit;outline-offset:3px}
 .key:focus-visible{outline:2px solid #646464}
+:host(:focus-visible)>.surface>.shell{outline:2px solid #646464;outline-offset:-12px}
 .titlebar .playing:empty{display:none}
 .playing svg{display:block;width:17px;height:20px}
 .menu-items .row{box-sizing:border-box;width:100%;height:30px;gap:0;text-align:start;line-height:26px;font-size:26px;pointer-events:auto}

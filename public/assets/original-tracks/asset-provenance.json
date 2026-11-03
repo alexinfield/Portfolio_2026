@@ -16,6 +16,6 @@
     "appearance/player-artwork.js": "8b8973fc9b97b418d07436f0b400d607b79e2067c413e533d4080287a090b621",
     "appearance/grain.svg": "304bbe7f9da1faa7e2e973ada81b77a49164f9037a6007e2d7ba67931306c438"
   },
-  "changes": "Original device materials, artwork and font; public identifiers and asset roots adapted. Connected initialization, hosted-only selection and explicit Play demand; no imports or generated recordings.",
+  "changes": "Original device materials, artwork and font; public identifiers and asset roots adapted. Connected initialization, hosted-only selection, explicit Play demand and keyboard-only focus. No imports or generated recordings.",
   "recordings": "Alex Infield; owner permission; all rights reserved"
 }

@@ -27,7 +27,7 @@ export default function OriginalTracksCard({style}:{style?:CSSProperties}){
     return()=>{canceled=true;observer.disconnect();element.removeEventListener('focusin',start);mounted?.destroy();};
   },[attempt]);
   const files=<nav className="tracks-file-links" aria-label="Original recordings">{catalog.tracks.map(track=><a key={track.id} href={withBasePath('/assets/original-tracks/'+track.url.replace(/^\.\//,''))}>Play {track.name}</a>)}</nav>;
-  return <article ref={card} id="original-tracks" className="portfolio-project masonry-card" style={style} tabIndex={0} aria-label="Original Tracks">
+  return <article ref={card} id="original-tracks" className="portfolio-project masonry-card" style={style} tabIndex={ready?-1:0} aria-label="Original Tracks">
     <Card className="portfolio-personal-card original-tracks-card">
       <div className="tracks-stage" data-ready={ready} aria-busy={!ready&&!error}>
         <div ref={host} className="tracks-mount"/>

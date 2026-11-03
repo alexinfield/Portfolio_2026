@@ -122,4 +122,27 @@ only the affected checks. Verify wheel touch/mouse/keyboard, native fallback,
 fixed swipe geometry, no overlaps/holes, CLS 0 and mobile LCP ≤2.5 s. Real-phone
 and Alex acceptance remain separate. PR #14 sticky/rebase work is not included.
 
-Draft 1 findings / Draft 2 revisions: pending rendered review.
+Draft 1 review (393, 1024, 1440; Chromium and WebKit; both appearances):
+
+1. The first functional build could not mount a dynamically created player:
+   its eager subscription rendered host attributes during construction. Fixed
+   in 9ac80fe by rendering only after connection. All 192 subsequent render
+   assertions passed, including fixed geometry, original materials/font, script
+   deferral, no audio before Play and CLS 0 where the API is available.
+2. The original Songs menu demanded audio on selection. 9ac80fe now prepares
+   a paused queue without a URL; only Play demands a recording. The full input
+   and network matrix must verify this after the render review.
+3. A ready card retained a redundant parent tab stop, and host keyboard focus
+   had no visible indicator. Draft 2 removes that parent stop after mounting
+   and uses a keyboard-only outline inside the original enclosure. Resting
+   materials, dimensions, font, wheel and menus stay unchanged.
+4. Full-page capture initially skipped offscreen galleries; those before images
+   were rejected and recaptured from the retained 569edc7 export. Capture code
+   forces paint only for evidence and waits for media. The player viewport also
+   needs explicit top alignment below the fixed header. Final full-page shots
+   must settle carousel controls after viewport expansion in WebKit.
+
+The inspected natural-height layout has even 20px gutters, no internal holes,
+top-aligned columns, below-media text and a balanced final group. No cosmetic
+restyle is warranted. The original supplied grain/material gradients and pixel
+font are intentional owner-pinned source assets, not a proposed decorative system.
