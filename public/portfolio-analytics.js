@@ -49,8 +49,9 @@
   const withdraw=(persist=true)=>{
     allowed=false;generation++;
     for(const job of idleJobs)window.cancelIdleCallback?.(job);idleJobs.clear();for(const job of timers)clearTimeout(job);timers.clear();
-    // This browser-enforced barrier precedes provider APIs, pending responses
-    // and unload. It also applies to native request functions cached by SDKs.
+    // Install the new-request barrier before provider APIs and unload, including
+    // cached native request functions. Earlier fetches are not retracted: their
+    // queues are neutralized below and a denied reload purges storage again.
     const contexts=fence(window);locked=true;
     try{sessionStorage.setItem(revokedKey,'1');}catch{/* cookie and URL fallback below */}
     document.cookie=revokedCookie+'=1; path=/; SameSite=Lax';
