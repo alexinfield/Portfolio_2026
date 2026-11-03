@@ -16,7 +16,7 @@ export function secureHtml(html) {
     `script-src 'self' ${[...new Set(hashes)].join(' ')} https://www.googletagmanager.com https://*.clarity.ms`,
     "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://www.google.com https://*.g.doubleclick.net https://*.clarity.ms https://c.bing.com",
     "img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com https://www.google.com https://*.g.doubleclick.net https://*.clarity.ms https://c.bing.com",
-    "style-src 'self' 'unsafe-inline'", "font-src 'self'", "media-src 'self'", "object-src 'none'", "base-uri 'self'", "form-action 'none'", "upgrade-insecure-requests",
+    "style-src 'self' 'unsafe-inline'", "font-src 'self'", "media-src 'self'", "worker-src 'none'", "frame-src 'self'", "object-src 'none'", "base-uri 'self'", "form-action 'none'", "upgrade-insecure-requests",
   ].join('; ');
   return html.replace(/<head>(\s*<meta\b[^>]*\bcharset\s*=[^>]*>)?/i,
     (_match, charset = '') => `<head>${charset}<meta http-equiv="Content-Security-Policy" content="${policy}"/>`);
