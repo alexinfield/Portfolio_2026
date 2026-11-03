@@ -143,13 +143,20 @@ export async function runBrowserRegressions(browser,baseURL,{artifacts,include}=
       });
       await check("press compression is restrained, release restores it, reduced motion prevents it",async()=>{
         await goto('/');const card=page.getByRole('link',{name:'Ping',exact:true});await card.scrollIntoViewIfNeeded();const box=await card.boundingBox();
-        if(device==='phone'){
+        if(device==='phone' && browser.browserType().name()==='chromium'){
           const session=await context.newCDPSession(page);await session.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:box.x+box.width/2,y:box.y+30}]});await page.waitForTimeout(170);
           const matrix=await card.evaluate(element=>getComputedStyle(element).transform);assert.notEqual(matrix,'none');assert.ok(Number(matrix.match(/matrix\(([^,]+)/)?.[1])>.97,matrix);
           await session.send('Input.dispatchTouchEvent',{type:'touchCancel',touchPoints:[]});await session.detach();
+        }else if(device==='phone'){
+          // WebKit has no CDP touch driver. Exercise the real DOM pointer listener;
+          // Chromium above retains native touch input, and real-phone acceptance stays separate.
+          await card.dispatchEvent('pointerdown',{pointerType:'touch',pointerId:1,button:0,clientX:box.x+box.width/2,clientY:box.y+30,isPrimary:true});await page.waitForTimeout(170);
+          const matrix=await card.evaluate(element=>getComputedStyle(element).transform);assert.notEqual(matrix,'none');assert.ok(Number(matrix.match(/matrix\(([^,]+)/)?.[1])>.97,matrix);
+          await card.dispatchEvent('pointercancel',{pointerType:'touch',pointerId:1});
         }else{await page.mouse.move(box.x+box.width/2,box.y+30);await page.mouse.down();await page.waitForTimeout(170);const matrix=await card.evaluate(element=>getComputedStyle(element).transform);assert.notEqual(matrix,'none');assert.ok(Number(matrix.match(/matrix\(([^,]+)/)?.[1])>.97,matrix);await page.mouse.move(0,0);await page.mouse.up();}
         await page.waitForTimeout(250);assert.ok(await card.evaluate(element=>{const value=getComputedStyle(element).transform;return value==='none'||new DOMMatrix(value).isIdentity;}));
         await page.emulateMedia({reducedMotion:'reduce'});await card.focus();await page.mouse.move(box.x+box.width/2,box.y+30);await page.mouse.down();await page.waitForTimeout(150);assert.ok(await card.evaluate(element=>{const value=getComputedStyle(element).transform;return value==='none'||new DOMMatrix(value).isIdentity;}));await page.mouse.move(0,0);await page.mouse.up();await page.emulateMedia({reducedMotion:'no-preference'});
+        return {touchDriver:device!=='phone'?'mouse':browser.browserType().name()==='chromium'?'native CDP touch':'DOM pointer events'};
       });
       await check("Hyphae uses native long-film controls on phone and Compass controls on desktop, with original MP4/WebM order",async()=>{
         await goto('/projects/hyphae/');const frame=page.locator('.case-film [data-video-frame]'),video=frame.locator('video');await frame.scrollIntoViewIfNeeded();
