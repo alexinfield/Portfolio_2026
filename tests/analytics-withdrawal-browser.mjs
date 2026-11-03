@@ -17,10 +17,10 @@ function sdk(type){return `(()=>{
  window.__sdk[type]={send,queue:q};
  if(allowed){document.cookie=(ga?'_ga_fixture':'_clck')+'=synthetic; path=/';document.cookie='_ga_path_fixture=synthetic; path=/personal';localStorage.setItem('clarity:fixture','synthetic');sessionStorage.setItem('_cltk','synthetic');}
  send('loaded');setInterval(()=>send('timer'),70);
- addEventListener('beforeunload',()=>send('beforeunload'));addEventListener('pagehide',()=>{send('pagehide');document.cookie='_ga_unload_fixture=synthetic; path=/';});
+ addEventListener('beforeunload',()=>send('beforeunload'));addEventListener('pagehide',()=>{send('pagehide');try{document.cookie='_ga_unload_fixture=synthetic; path=/';}catch{}});
  if(type==='ga'&&window===top){const f=document.createElement('iframe');f.dataset.providerProbeFrame='';document.body.append(f);const s=f.contentDocument.createElement('script');s.src='https://www.googletagmanager.com/child-fixture.js';f.contentDocument.head.append(s);}
 })();`;}
-const cases=['mid-clarity','mid-google','loaded','other-tab','storage-clear','stale-grant','storage-failure'];
+const cases=['mid-clarity','mid-google','loaded','other-tab','storage-clear','stale-grant','storage-failure','all-writes-fail'];
 
 // Launch a fresh browser per case to bound media-cache memory on the test host.
 export async function runAnalyticsWithdrawalRegressions(launch,baseURL,{artifacts:out,only}={}){
@@ -64,6 +64,7 @@ try {for(const name of cases.filter(n=>!only||n===only)){
    for(const name of ['clarity-fixture','portfolio-original-files'])await new Promise((resolve,reject)=>{const request=indexedDB.open(name,1);request.onupgradeneeded=()=>request.result.createObjectStore('canary');request.onerror=()=>reject(request.error);request.onsuccess=()=>{request.result.close();resolve();};});
   });
   if(name==='storage-failure')await page.evaluate(()=>{const original=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(this===localStorage&&k==='portfolio:analytics-consent:v1'&&v==='denied')throw new DOMException('fixture write failure');return original.call(this,k,v);};});
+  if(name==='all-writes-fail')await page.evaluate(()=>{const original=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(k==='portfolio:analytics-revoked:v1'||k==='portfolio:analytics-consent:v1'&&v==='denied')throw new DOMException('fixture write failure');return original.call(this,k,v);};const native=Object.getOwnPropertyDescriptor(Document.prototype,'cookie');Object.defineProperty(document,'cookie',{configurable:true,get:()=>native.get.call(document),set:()=>{throw new DOMException('fixture cookie write failure');}});});
   const actor=control||pages.at(-1);
   if(name==='storage-clear')await actor.evaluate(()=>localStorage.clear());
   else {if(pages.length>1)await actor.locator('summary').click();await actor.locator('[data-analytics-consent]').uncheck({timeout:10000});}
@@ -83,7 +84,7 @@ try {for(const name of cases.filter(n=>!only||n===only)){
   report.checks.push('cached fetch/XHR/beacon/Image/script calls fenced while old document remains alive','pending grants and starts invalidated','same shutdown for local and storage withdrawal');
   for(const p of pages){
    const snap=await p.evaluate(()=>({cookies:document.cookie.split(';').map(c=>c.split('=')[0].trim()).filter(n=>/^_(ga|cl)/.test(n)),local:localStorage.getItem('clarity:fixture'),session:sessionStorage.getItem('_cltk'),preference:localStorage.getItem('portfolio-preference'),navigation:sessionStorage.getItem('portfolio:navigation'),blocked:window.__blocked||[]}));
-   assert.deepEqual(snap.cookies,[]);assert.equal(snap.local,null);assert.equal(snap.session,null);if(name!=='storage-clear'){assert.equal(snap.preference,'synthetic');assert.equal(snap.navigation,'synthetic');}report.blockedAttempts.push(...snap.blocked);
+   if(name!=='all-writes-fail')assert.deepEqual(snap.cookies,[]);assert.equal(snap.local,null);assert.equal(snap.session,null);if(name!=='storage-clear'){assert.equal(snap.preference,'synthetic');assert.equal(snap.navigation,'synthetic');}report.blockedAttempts.push(...snap.blocked);
    await p.waitForFunction(async()=>{const names=(await indexedDB.databases()).map(db=>db.name);return !names.includes('clarity-fixture')&&names.includes('portfolio-original-files');});
    p.removeAllListeners('dialog');p.on('dialog',d=>d.accept());await p.reload({waitUntil:'load'});await p.waitForTimeout(250);await p.evaluate(()=>window.__runIdle());await p.waitForTimeout(150);
    assert.equal(await p.locator('script[src^="https://"]').count(),0);assert.equal(await p.locator('[data-analytics-consent]').isChecked(),false);
