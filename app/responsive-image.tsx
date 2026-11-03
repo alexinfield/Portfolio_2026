@@ -36,7 +36,7 @@ export default function ResponsiveImage({
         ...candidates.map(
           (candidateWidth) => `${candidatePath(source, candidateWidth)} ${candidateWidth}w`,
         ),
-        `${source} ${width}w`,
+        ...(width <= 2600 ? [`${source} ${width}w`] : []),
       ].join(", ")
     : undefined;
 
@@ -46,7 +46,7 @@ export default function ResponsiveImage({
     <img
       {...props}
       alt={alt}
-      src={source}
+      src={candidates.length ? candidatePath(source, candidates.filter(value => value <= 1600).at(-1)!) : source}
       width={width}
       height={height}
       srcSet={srcSet}

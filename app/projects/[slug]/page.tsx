@@ -67,7 +67,7 @@ function ProjectMedia({
       sizes="100vw"
       className="case-media"
       style={mediaRatio(item.width, item.height)}
-      loading={index === 0 ? "eager" : "lazy"}
+      loading={index < 2 ? "eager" : "lazy"}
       fetchPriority={index === 0 ? "high" : "auto"}
       decoding={index === 0 ? "sync" : "async"}
     />
@@ -94,7 +94,7 @@ function HyphaeComposite({ image, video }: {
         width={image.width}
         height={image.height}
         sizes="100vw"
-        loading="lazy"
+        loading="eager"
         decoding="async"
         className="case-image case-media"
         style={mediaRatio(image.width, image.height)}
