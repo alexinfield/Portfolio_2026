@@ -113,7 +113,7 @@ function relativeRoot(route) {
 
 function staticHtml(html, route) {
   const base = relativeRoot(route);
-  const canonicalPath = route === "/" ? "/" : route;
+  const canonicalPath = route === "/" ? "/" : route + "/";
   // Only the interactive shell pages hydrate. Cases/404 use the small static
   // appearance/media controller and retain native links without shipping React.
   const hydratedRoutes = new Set(["/personal", "/projects/hyphae"]);
@@ -227,7 +227,7 @@ for (const { route, target, relativeTarget } of redirects) {
     .replaceAll("Page not found", "Page moved")
     .replace(">404</p>", `>Continue to ${label}.</p>`)
     .replace(/(<div class="portfolio-actions">)([\s\S]*?)(<\/div>)/, (_match, open, actions, close) => open + actions.replace(/(<a\b[^>]*href=")[^"]*("[^>]*>)Work(<\/a>)/, `$1${relativeTarget}$2Continue to ${label}$3`) + close)
-    .replace("</head>", `<link rel="canonical" href="${siteOrigin}${target}"/><meta http-equiv="refresh" content="0;url=${relativeTarget}"></head>`)
+    .replace("</head>", `<link rel="canonical" href="${siteOrigin}${target}/"/><meta http-equiv="refresh" content="0;url=${relativeTarget}"></head>`)
     .replace("</body>", `<script>location.replace(new URL(${JSON.stringify(relativeTarget)},location.href).href)</script></body>`);
   await mkdir(dirname(path), { recursive: true });
   await writeFile(path, html);
@@ -239,7 +239,7 @@ await writeFile(join(root, "dist/extend-blur.json"), JSON.stringify(extendReport
 if (!basePath) await writeFile(
   join(output, "sitemap.xml"),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${routes
-    .map((route) => `  <url><loc>${siteOrigin}${route === "/" ? "/" : route}</loc></url>`)
+    .map((route) => `  <url><loc>${siteOrigin}${route === "/" ? "/" : route + "/"}</loc></url>`)
     .join("\n")}\n</urlset>\n`,
 );
 await writeFile(

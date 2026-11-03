@@ -26,7 +26,7 @@ export function socialMetadata(
       siteName: "Alex Infield",
       title,
       description,
-      url: new URL(route, "https://alexinfield.com").href,
+      url: new URL(route === "/" ? route : route.replace(/\/+$/, "") + "/", "https://alexinfield.com").href,
       images: [{ ...image, url: absoluteImage }],
     },
     twitter: {
