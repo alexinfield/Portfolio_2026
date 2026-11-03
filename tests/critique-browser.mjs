@@ -115,7 +115,9 @@ export async function runBrowserRegressions(browser,baseURL,{artifacts,include}=
         await gallery.locator('.ac-carousel-viewport[data-enhanced]').waitFor();
         const box=await gallery.locator('.ac-carousel-viewport').boundingBox(),x=box.x+box.width*.8,y=box.y+box.height*.4;
         const session=await context.newCDPSession(page);
-        async function gesture(dx,dy){await session.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y}]});for(let i=1;i<=12;i++){await session.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+dx*i/12,y:y+dy*i/12}]});await page.waitForTimeout(25);}await session.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await page.waitForTimeout(100);}
+        // Compass suppresses a release click for 400 ms after a drag. A new
+        // deliberate Info tap is tested after that documented gesture guard.
+        async function gesture(dx,dy){await session.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y}]});for(let i=1;i<=12;i++){await session.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+dx*i/12,y:y+dy*i/12}]});await page.waitForTimeout(25);}await session.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await page.waitForTimeout(450);}
         await gesture(-box.width*.6,0);await gallery.getByRole("group",{name:"2 of 6",exact:true}).waitFor({state:"visible"});assert.equal(await button.getAttribute('aria-expanded'),'false');
         await button.tap();await page.waitForFunction(()=>document.querySelector('#desk-pen [data-gallery-description-toggle]').getAttribute('aria-expanded')==='true');assert.equal(await gallery.locator('.ac-carousel-sr').textContent(),'2 of 6');
         await button.tap();await page.waitForFunction(()=>document.querySelector('#desk-pen [data-gallery-description-toggle]').getAttribute('aria-expanded')==='false');await gesture(0,-70);assert.equal(await button.getAttribute('aria-expanded'),'false');assert.equal(await gallery.locator('.ac-carousel-sr').textContent(),'2 of 6');
