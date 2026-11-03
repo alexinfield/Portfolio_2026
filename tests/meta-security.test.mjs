@@ -11,6 +11,14 @@ test('CSP hashes final executable bytes and rejects reuse after an edit',()=>{
   assert.ok(!secureHtml(input.replace('<ok>','changed')).includes(`'sha256-${hash}'`));
   assert.equal(secureHtml(secureHtml(input)),secureHtml(input));
 });
+test('companion HTML with an implicit head receives a leading policy',()=>{
+  const input='<!doctype html><html lang="en"><meta charset="utf-8"><title>Credits</title><body><script>window.credit=true</script></body></html>';
+  const html=secureHtml(input);
+  assert.match(html, /<head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy"/);
+  assert.ok(html.indexOf('Content-Security-Policy') < html.indexOf('<script'));
+  assert.ok(html.includes(createHash('sha256').update('window.credit=true').digest('base64')));
+  assert.equal(secureHtml(html),html);
+});
 test('long per-page policies preserve early UTF-8 and precede resource discovery',()=>{
   const scripts=Array.from({length:30},(_,i)=>`<script>window.probe=${i}</script>`).join('');
   const html=secureHtml(`<html><head><meta charset="utf-8"/><link rel="stylesheet" href="/site.css"/></head><body>${scripts}</body></html>`);
@@ -26,7 +34,7 @@ test('every export has a leading CSP, valid inline hashes, and no release-only d
       if(entry.isDirectory()){await visit(child);continue;}
       if(!entry.name.endsWith('.html'))continue;
       const html=await readFile(child,'utf8');
-      assert.match(html,/<head><meta\b[^>]*charset[^>]*><meta http-equiv="Content-Security-Policy"/i);
+      assert.match(html,/<head>\s*<meta\b[^>]*charset[^>]*><meta http-equiv="Content-Security-Policy"/i);
       const charset=/<meta\s+charset=[^>]*>/i.exec(html);assert.ok(charset);assert.ok(Buffer.byteLength(html.slice(0,charset.index+charset[0].length))<=1024);
       const policy=html.match(/http-equiv="Content-Security-Policy" content="([^"]+)"/)[1];
       assert.doesNotMatch(policy,/script-src[^;]*'unsafe-inline'|frame-ancestors|report-uri/);
