@@ -25,7 +25,7 @@
   class Playback {
     constructor({ AudioClass = scope.Audio, contextFactory, onError = () => {} } = {}) {
       this.audio = new AudioClass();
-      this.audio.preload = 'metadata';
+      this.audio.preload = 'none';
       this.audio.setAttribute('playsinline', '');
       this.queue = []; this.index = -1; this.volume = .8; this.shuffle = false; this.repeat = 'off';
       this.contextFactory = contextFactory || (() => new (scope.AudioContext || scope.webkitAudioContext)());
@@ -54,7 +54,14 @@
           this.gain.gain.value = this.volume;
         }
         if (this.context.state === 'suspended' || this.context.state === 'interrupted') this.context.resume().catch(() => {});
-      } catch (_) { try { this.audio.volume = this.volume; } catch (_) {} }
+      } catch { try { this.audio.volume = this.volume; } catch {} }
+    }
+    // Menu navigation prepares a paused queue without assigning a recording URL.
+    // The explicit Play action is the first network demand for a selected song.
+    select(queue, index = 0) {
+      if (!queue[index]) return;
+      this.generation++; this.audio.pause(); this.audio.removeAttribute('src'); this.audio.load();
+      this.queue = queue.slice(); this.index = index; this.emit();
     }
     play(queue, index = 0) {
       if (!queue.length || !queue[index]) return;
@@ -69,16 +76,16 @@
       catch (error) { this.onError(error); }
     }
     pause() { this.audio.pause(); }
-    toggle() { if (this.audio.paused || this.audio.ended) this.resume(); else this.pause(); }
+    toggle() { if (!this.audio.getAttribute('src') && this.queue[this.index]) this.play(this.queue, this.index); else if (this.audio.paused || this.audio.ended) this.resume(); else this.pause(); }
     skipNext() {
       if (!this.queue.length) return;
       let next = (this.index + 1) % this.queue.length;
       if (this.shuffle && this.queue.length > 1) next = (this.index + 1 + Math.floor(Math.random() * (this.queue.length - 1))) % this.queue.length;
-      this.play(this.queue, next);
+      if (this.audio.paused && !this.audio.ended) this.select(this.queue, next); else this.play(this.queue, next);
     }
-    skipPrevious() { if (this.audio.currentTime > 3) this.seek(0); else if (this.queue.length) this.play(this.queue, (this.index + this.queue.length - 1) % this.queue.length); }
+    skipPrevious() { if (this.audio.currentTime > 3) this.seek(0); else if (this.queue.length) { const previous = (this.index + this.queue.length - 1) % this.queue.length; if (this.audio.paused) this.select(this.queue, previous); else this.play(this.queue, previous); } }
     seek(value) { if (Number.isFinite(this.audio.duration)) { this.audio.currentTime = clamp(value, 0, this.audio.duration); this.emit(); } }
-    setVolume(value) { this.volume = clamp(value, 0, 1); if (this.gain) this.gain.gain.value = this.volume; else { try { this.audio.volume = this.volume; } catch (_) {} } this.emit(); }
+    setVolume(value) { this.volume = clamp(value, 0, 1); if (this.gain) this.gain.gain.value = this.volume; else { try { this.audio.volume = this.volume; } catch {} } this.emit(); }
     click() {
       this.resumeAudio(); if (!this.context || this.context.state !== 'running') return;
       try {
@@ -89,7 +96,7 @@
         }
         const source = this.context.createBufferSource(); source.buffer = this.clickBuffer;
         source.connect(this.context.destination); source.start();
-      } catch (_) {}
+      } catch {}
     }
     destroy() { this.generation++; this.audio.pause(); this.audio.removeAttribute('src'); this.audio.load(); this.listeners.clear(); if (this.context) this.context.close().catch(() => {}); }
   }

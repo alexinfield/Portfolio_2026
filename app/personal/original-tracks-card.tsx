@@ -31,7 +31,7 @@ export default function OriginalTracksCard({style}:{style?:CSSProperties}){
     <Card className="portfolio-personal-card original-tracks-card">
       <div className="tracks-stage" data-ready={ready} aria-busy={!ready&&!error}>
         <div ref={host} className="tracks-mount"/>
-        {!error?<picture className="tracks-poster"><source media="(prefers-color-scheme: dark)" srcSet={withBasePath('/assets/original-tracks/poster-dark.png')}/>{/* eslint-disable-next-line @next/next/no-img-element */}<img src={withBasePath('/assets/original-tracks/poster-light.png')} width="415" height="1042" alt="Original Tracks: white music player with a blue screen and circular wheel" loading="lazy"/></picture>:<div className="tracks-error"><p>Player unavailable.</p><Button type="button" variant="secondary" onClick={()=>{setError(false);setAttempt(n=>n+1);}}>Retry player</Button>{files}</div>}
+        {!error?<picture className="tracks-poster"><source media="(prefers-color-scheme: dark)" srcSet={withBasePath('/assets/original-tracks/poster-dark.png')}/><img src={withBasePath('/assets/original-tracks/poster-light.png')} width="415" height="1042" alt="Original Tracks: white music player with a blue screen and circular wheel" loading="lazy"/></picture>:<div className="tracks-error"><p>Player unavailable.</p><Button type="button" variant="secondary" onClick={()=>{setError(false);setAttempt(n=>n+1);}}>Retry player</Button>{files}</div>}
       </div>
     </Card>
     <div className="tracks-caption"><h2 className="portfolio-project-title portfolio-card-label">Original Tracks</h2><a href={withBasePath('/assets/original-tracks/NOTICE.txt')}>Licences</a></div>

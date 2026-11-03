@@ -16,7 +16,7 @@
       this._player.audio.hidden=true;this.shadowRoot.append(this._player.audio);
       this.wheel=this.shadowRoot.querySelector('.wheel'); this.body=this.shadowRoot.querySelector('.body');
       if(!CSS.supports('-webkit-box-reflect','below 4px')){this.reflected=this.shadowRoot.querySelector('.shell').cloneNode(true);const reflection=document.createElement('div');reflection.className='reflection-fallback';reflection.setAttribute('aria-hidden','true');reflection.inert=true;for(const button of this.reflected.querySelectorAll('button')){button.disabled=true;button.tabIndex=-1;}reflection.append(this.reflected);this.shadowRoot.querySelector('.surface').append(reflection);}
-      this._unsubscribe=this._player.subscribe(state=>{const before=this.playing;this.playing=state.isPlaying;this.state=state;if(this.view.type==='now')this.renderNow();else if(before!==this.playing)this.render();});
+      this._unsubscribe=this._player.subscribe(state=>{const before=this.playing;this.playing=state.isPlaying;this.state=state;if(!this.isConnected)return;if(this.view.type==='now')this.renderNow();else if(before!==this.playing)this.render();});
       this.wheel.addEventListener('click',event=>{const action=event.target.closest('button')?.dataset.action;if(!action)return;if(this.suppressClick){this.suppressClick=false;return;}this.action(action);});
       this.wheel.addEventListener('pointerdown',event=>this.pointerStart(event));
       this.wheel.addEventListener('pointermove',event=>this.pointerMove(event));
@@ -43,7 +43,7 @@
       if(this.view.type==='songs'){
         const group=[...d.artists,...d.playlists].find(item=>item.id===this.view.id);
         const songs=group?group.songIds.map(id=>d.songs.find(song=>song.id===id)).filter(Boolean):d.songs;
-        return songs.map((song,index)=>entry(song.name,()=>{p.play(songs,index);this.navigate('now');}));
+        return songs.map((song,index)=>entry(song.name,()=>{p.select(songs,index);this.navigate('now');}));
       }
       if(this.view.type==='settings')return [entry(t.shuffle,()=>{p.shuffle=!p.shuffle;this.render();},p.shuffle?t.on:t.off),entry(t.repeat,()=>{p.repeat=['off','all','one'][(['off','all','one'].indexOf(p.repeat)+1)%3];this.render();},t[p.repeat]),entry(t.click,()=>{this.clicker=!this.clicker;this.render();},this.clicker?t.on:t.off),entry(t.light,()=>{this.backlight=!this.backlight;this.render();},this.backlight?t.on:t.off),entry(t.about,()=>this.navigate('about')),entry(t.reset,()=>{p.shuffle=false;p.repeat='off';p.setVolume(.8);this.backlight=true;this.clicker=true;this.render();})];
       return [];
