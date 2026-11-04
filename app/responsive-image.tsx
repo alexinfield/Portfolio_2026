@@ -1,4 +1,5 @@
 import type { ImgHTMLAttributes } from "react";
+import detailedBoards from "@/lib/detailed-boards.json";
 import { withBasePath } from "../lib/base-path";
 
 const responsiveWidths = [768, 960, 1600, 2600] as const;
@@ -29,7 +30,7 @@ export default function ResponsiveImage({
 }: ResponsiveImageProps) {
   const source = withBasePath(src);
   const candidates = supportedSource.test(source)
-    ? responsiveWidths.filter((candidateWidth) => candidateWidth < width)
+    ? (detailedBoards.includes(src)?[...responsiveWidths,3840]:responsiveWidths).filter((candidateWidth) => candidateWidth < width)
     : [];
   const srcSet = candidates.length
     ? [

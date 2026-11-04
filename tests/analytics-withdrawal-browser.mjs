@@ -53,10 +53,10 @@ try {for(const name of cases.filter(n=>!only||n===only)){
  try {
   await page.goto(baseURL+'/personal/');await page.waitForFunction(()=>document.querySelector('[data-personal-ready]')?.dataset.personalReady==='true');
   await page.evaluate(()=>{document.cookie='portfolio-canary=synthetic; path=/';localStorage.setItem('portfolio-preference','synthetic');sessionStorage.setItem('portfolio:navigation','synthetic');});
-  assert.equal(hits.length,0);report.checks.push('default denied: zero provider requests');
-  await page.locator('summary').click();await page.locator('[data-analytics-consent]').check();assert.equal(hits.length,0);await page.evaluate(()=>window.__runIdle());
+  assert.equal(hits.length,0);assert.equal(await page.locator('[data-analytics-consent], [data-analytics-status], .portfolio-privacy').count(),0);report.checks.push('startup stays idle until load; no consent UI');
+  assert.equal(hits.length,0);await page.evaluate(()=>window.__runIdle());
   await page.waitForTimeout(500);
-  assert.ok(hits.some(h=>h.path==='/gtag/js')&&hits.some(h=>h.path.startsWith('/tag/')));report.checks.push('grant and idle insert both real-domain loaders');
+  assert.ok(hits.some(h=>h.path==='/gtag/js')&&hits.some(h=>h.path.startsWith('/tag/')));report.checks.push('default-on idle inserts both real-domain loaders');
   if(!name.startsWith('mid-'))await page.waitForFunction(()=>window.__sdk?.ga&&window.__sdk?.clarity);
   if(name==='other-tab'){
    const second=await context.newPage();watch(second);pages.push(second);await second.goto(baseURL+'/personal/');await second.evaluate(()=>window.__runIdle());await second.waitForFunction(()=>window.__sdk?.ga&&window.__sdk?.clarity);
@@ -70,7 +70,7 @@ try {for(const name of cases.filter(n=>!only||n===only)){
   if(name==='all-writes-fail')await page.evaluate(()=>{const original=Storage.prototype.setItem,remove=Storage.prototype.removeItem;Storage.prototype.setItem=function(k,v){if(k==='portfolio:analytics-revoked:v1'||k==='portfolio:analytics-consent:v1'&&v==='denied')throw new DOMException('fixture write failure');return original.call(this,k,v);};Storage.prototype.removeItem=function(k){if(k==='portfolio:analytics-consent:v1')throw new DOMException('fixture removal failure');return remove.call(this,k);};let proto=document,native;while(proto&&!native){native=Object.getOwnPropertyDescriptor(proto,'cookie');proto=Object.getPrototypeOf(proto);}Object.defineProperty(document,'cookie',{configurable:true,get:()=>native.get.call(document),set:()=>{throw new DOMException('fixture cookie write failure');}});});
   const actor=control||pages.at(-1);
   if(name==='storage-clear')await actor.evaluate(()=>localStorage.clear());
-  else {if(pages.length>1)await actor.locator('summary').click();await actor.locator('[data-analytics-consent]').uncheck({timeout:10000});}
+  else {await actor.evaluate(()=>window.portfolioAnalytics.withdraw());}
   for(const p of pages)await p.waitForFunction(()=>!!document.querySelector('[data-analytics-stop]'));
   denyPhase=true;
   hold=false;for(const resolve of held)resolve();
@@ -91,11 +91,11 @@ try {for(const name of cases.filter(n=>!only||n===only)){
    if(name!=='all-writes-fail')assert.deepEqual(snap.cookies,[]);assert.equal(snap.local,null);assert.equal(snap.session,null);if(name!=='storage-clear'){assert.equal(snap.preference,'synthetic');assert.equal(snap.navigation,'synthetic');}report.blockedAttempts.push(...snap.blocked);
    await p.waitForFunction(async()=>{const names=(await indexedDB.databases()).map(db=>db.name);return !names.includes('clarity-fixture')&&names.includes('portfolio-original-files');});
    p.removeAllListeners('dialog');p.on('dialog',d=>d.accept());await p.reload({waitUntil:'load'});await p.waitForTimeout(250);await p.evaluate(()=>window.__runIdle());await p.waitForTimeout(150);
-   assert.equal(await p.locator('script[src^="https://"]').count(),0);assert.equal(await p.locator('[data-analytics-consent]').isChecked(),false);
+   assert.equal(await p.locator('script[src^="https://"]').count(),0);assert.equal(await p.locator('[data-analytics-consent]').count(),0);
    assert.deepEqual(await p.evaluate(()=>document.cookie.split(';').map(c=>c.split('=')[0].trim()).filter(n=>/^_(ga|cl)/.test(n))),[],'unload-created cookies cleared by denied startup');
   }
   assert.equal(hits.filter(h=>h.after).length,0);report.checks.push('provider cookies/local/session/IndexedDB cleared; unrelated state preserved','real reload: zero provider scripts or requests');
-  if(name==='loaded'){denyPhase=false;await page.locator('summary').click();await page.locator('[data-analytics-consent]').check();await page.evaluate(()=>window.__runIdle());await page.waitForFunction(()=>window.__sdk?.ga&&window.__sdk?.clarity);report.checks.push('explicit reconsent restores legitimate provider startup');}
+  if(name==='loaded'){denyPhase=false;await page.evaluate(()=>window.portfolioAnalytics.enable());await page.evaluate(()=>window.__runIdle());await page.waitForFunction(()=>window.__sdk?.ga&&window.__sdk?.clarity);report.checks.push('explicit reconsent restores legitimate provider startup');}
   report.pass=true;
  }catch(error){report.error=error.stack;report.url=page.url();report.dialogs=dialogs;}
  finally{for(const resolve of held)resolve();report.hits=hits;await context.close();await browser.close();await writeFile(`${out}/consent-${engine}-${name}.json`,JSON.stringify(report,null,2));results.push(report);console.log(JSON.stringify({engine,name,pass:report.pass,checks:report.checks,error:report.error?.slice(0,700)}));}

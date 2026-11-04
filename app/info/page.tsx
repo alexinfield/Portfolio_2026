@@ -1,3 +1,4 @@
+import artwork from "@/lib/info-artwork.json";
 import type { Metadata } from "next";
 import { socialMetadata } from "@/lib/social-metadata";
 import SiteShell from "../site-shell";
@@ -23,7 +24,7 @@ export default function InfoPage() {
   </SiteShell>;
 }
 function CardArtwork() {
-  return <div className="portfolio-artwork"><ResponsiveImage src="/assets/info/media/67aca18a869f9276f4c0ef01_IMG_0019.png"
-    alt="White paper folded into a repeating grid of triangular shapes." width={2000} height={2000}
+  return <div className="portfolio-artwork"><ResponsiveImage src={artwork.src}
+    alt="White paper folded into a repeating grid of triangular shapes." width={artwork.width} height={artwork.height}
     sizes="(max-width: 767px) 100vw, 50vw" fetchPriority="high" decoding="sync" /></div>;
 }

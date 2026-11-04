@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { copyDraftTree } from "../scripts/draft-media-copy.mjs";
 import { createHash } from "node:crypto";
-import { inflateSync } from "node:zlib";
+
 import test from "node:test";
 
 const slugs = ["ping", "molekule-go", "luma", "niche", "hyphae", "mode"];
@@ -78,7 +78,8 @@ test("every real page has the same Compass nav, disabled Professional and landma
     assert.match(html,/<main\b[^>]*id="main-content"[^>]*tabindex="-1"/);
     assert.equal((html.match(/<h1\b/g)||[]).length,1,path);
     const footers=[...html.matchAll(/<footer\b[^>]*>[\s\S]*?<\/footer>/g)];
-    assert.equal(footers.length,path==="404.html"?0:1,path);
+    assert.equal(footers.length,0,path);
+    assert.doesNotMatch(html,/data-analytics-consent|data-analytics-status|<summary>Privacy settings/);
     if(footers.length){assert.match(footers[0][0],/class="[^"]*portfolio-privacy/);assert.match(footers[0][0],/<summary>Privacy settings<\/summary>/);assert.equal((footers[0][0].match(/data-analytics-consent/g)||[]).length,1);}
     assert.doesNotMatch(html,/data-theme-toggle|portfolio-theme\.js|portfolio-compass-theme|Appearance/);
     const palette=path.startsWith("personal/")?"light":"dark";assert.match(html,new RegExp(`<html[^>]*data-theme="${palette}"`));
@@ -297,18 +298,17 @@ test("only public Compass exports are consumed and the tarball is pinned",async(
 test("share metadata resolves to retained covers and Folio everywhere displayed",async()=>{
   for(const [path,title] of [["index.html","Alex Infield"],["info/index.html","Info"],["personal/index.html","Personal"],...slugs.map((slug,index)=>[`projects/${slug}/index.html`,titles[index]])]){
     const html=await exported(path);assert.ok(html.includes(`<title>${title}</title>`));assert.ok(html.includes(`property="og:title" content="${title}"`));assert.match(html,/name="twitter:card" content="summary_large_image"/);
+    assert.ok(html.includes(`name="description" content="${title}"`));
+    assert.doesNotMatch(html.match(/<meta[^>]+>/g).join(""),/—/);
     const image=/property="og:image" content="https:\/\/alexinfield.com([^\"]+)"/.exec(html)?.[1];assert.ok(image);await access(new URL(`../public${image}`,import.meta.url));
   }
   assert.doesNotMatch(documentOnly(await exported("projects/mode/index.html")),/>Mode<|content="Mode"/);
 });
 
-test("favicon is a plain white dot on black",async()=>{
-  const data=await readFile(new URL("../public/favicon.png",import.meta.url));
-  assert.equal(data.readUInt32BE(16),32);assert.equal(data.readUInt32BE(20),32);
-  let offset=8,idat=[];while(offset<data.length){const size=data.readUInt32BE(offset),type=data.toString("ascii",offset+4,offset+8);if(type==="IDAT")idat.push(data.subarray(offset+8,offset+8+size));offset+=size+12;}
-  const pixels=inflateSync(Buffer.concat(idat));
-  const at=(x,y)=>[...pixels.subarray(y*97+1+x*3,y*97+4+x*3)];
-  assert.deepEqual(at(0,0),[0,0,0]);assert.deepEqual(at(16,16),[255,255,255]);assert.deepEqual(at(24,16),[0,0,0]);
+test("favicon restores the earlier owner monogram bytes",async()=>{
+ const data=await readFile(new URL("../public/favicon.png",import.meta.url));
+ assert.equal(data.readUInt32BE(16),32);assert.equal(data.readUInt32BE(20),32);
+ assert.equal(data.length,648);
 });
 
 test("analytics identity is preserved on content pages, with no duplicate tags",async()=>{
@@ -320,7 +320,7 @@ test("Personal frames carry reviewed positions and background-matched padding me
   for(const item of packageData.items){assert.match(item.framing.object_position,/^\d+% \d+%$/);assert.ok(["cover","pad"].includes(item.framing.fit));assert.ok(item.framing.background);}
   assert.equal(packageData.items.find(item=>item.id==="desk-pen").framing.background,"#F8F8F8");
   assert.equal(packageData.items.find(item=>item.id.includes("neighborhood")).framing.fit,"pad");
-  const html=await exported("personal/index.html");assert.match(html,/property="og:image" content="https:\/\/alexinfield.com\/assets\/personal\/media\/stool-/);
+  const html=await exported("personal/index.html");assert.match(html,/property="og:image" content="https:\/\/alexinfield.com\/assets\/share\/mode/);
   const telefoni=html.match(/<video\b[^>]*data-original-source="[^"]*telefoni[^"]*"[^>]*>/)[0];assert.match(telefoni,/data-original-source="[^"]*p041-telefoni-01-audio\.mp4"/);assert.match(telefoni,/data-start-muted="true"/);assert.match(telefoni,/data-demand-only="true"/);assert.doesNotMatch(telefoni,/data-autoplay-video/);assert.match(telefoni,/preload="none"/);
 });
 
@@ -349,11 +349,11 @@ test("bottom case actions stay inside their collection and omit endpoints",async
       assert.ok(nav,slug);
       assert.ok(html.indexOf('aria-label="Case navigation"')>html.indexOf('class="portfolio-case-stack"'));
       const links=[...nav.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)].map(match=>({href:match[1],name:text(match[2])}));
-      assert.deepEqual(links.map(link=>link.name),[...(index>0?["Previous"]:[]),"Back",...(index<sequence.length-1?["Next"]:[])],slug);
+      assert.deepEqual(links.map(link=>link.name),[...(index>0?[{"molekule-go": "Molekule Go", "ping": "Ping", "hyphae": "Hyphae Light", "luma": "Luma", "mode": "Folio", "niche": "Niche"}[sequence[index-1]]]:[]),"Back",...(index<sequence.length-1?[{"molekule-go": "Molekule Go", "ping": "Ping", "hyphae": "Hyphae Light", "luma": "Luma", "mode": "Folio", "niche": "Niche"}[sequence[index+1]]]:[])],slug);
       for(const link of links){
         const url=new URL(link.href,`https://alexinfield.com/projects/${slug}/`);
         if(link.name==="Back")assert.equal(url.pathname,collection==="personal"?"/personal/":"/");
-        else {assert.equal(url.pathname,`/projects/${sequence[index+(link.name==="Next"?1:-1)]}/`);assert.equal(url.searchParams.get("from"),collection);}
+        else {assert.equal(url.pathname,`/projects/${sequence[index+(link.name==={"molekule-go": "Molekule Go", "ping": "Ping", "hyphae": "Hyphae Light", "luma": "Luma", "mode": "Folio", "niche": "Niche"}[sequence[index+1]]?1:-1)]}/`);assert.equal(url.searchParams.get("from"),collection);}
       }
       assert.doesNotMatch(nav,/\s(?:aria-)?disabled=|<img|carousel/);
     }

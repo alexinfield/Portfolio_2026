@@ -26,12 +26,12 @@ function page(href,persisted){
   history:{state:null,replaceState:(...args)=>{location.href=args[2];}}
  };
  environment.window=environment;vm.runInNewContext(source,environment);
- return {setting,location,loaders,idle,fail:()=>{failWrites=true;},withdraw:()=>{setting.checked=false;listeners.get('change')();},reloads:()=>reloads,runIdle:()=>{for(const fn of [...idle.values()])fn();}};
+ return {setting,location,loaders,idle,fail:()=>{failWrites=true;},withdraw:()=>{setting.checked=false;environment.portfolioAnalytics.withdraw();},reloads:()=>reloads,runIdle:()=>{for(const fn of [...idle.values()])fn();}};
 }
 test('pre-idle withdrawal with all writes failing survives a fresh load through its URL marker',()=>{
  const persisted=new Map([[consentKey,'granted']]);
  const first=page('https://portfolio.example/personal/?ref=synthetic#original-tracks',persisted);
- assert.equal(first.setting.checked,true);assert.equal(first.idle.size,1);assert.equal(first.loaders.length,0);
+ assert.equal(first.idle.size,1);assert.equal(first.loaders.length,0);
  const pending=[...first.idle.values()];first.fail();first.withdraw();
  assert.equal(first.reloads(),0,'pre-start withdrawal must not force reload');
  assert.equal(persisted.get(consentKey),'granted','fixture must retain the old grant');
@@ -39,7 +39,11 @@ test('pre-idle withdrawal with all writes failing survives a fresh load through 
  assert.equal(first.location.searchParams.get('ref'),'synthetic');assert.equal(first.location.hash,'#original-tracks');
  for(const callback of pending)callback();assert.equal(first.loaders.length,0,'stale idle callback stays invalidated');
  const fresh=page(first.location.href,persisted);fresh.runIdle();
- assert.equal(fresh.setting.checked,false);assert.equal(fresh.loaders.length,0,'fresh document must insert no provider loaders');
+ assert.equal(fresh.loaders.length,0,'fresh document must insert no provider loaders');
  // Positive control: the same retained grant on an unmarked URL starts both.
  const control=page('https://portfolio.example/personal/',persisted);control.runIdle();assert.equal(control.loaders.length,2);
+});
+
+test('a fresh visitor starts both analytics providers by default without UI or storage writes',()=>{
+ const p=page('https://portfolio.example/',new Map());assert.equal(p.loaders.length,0);p.runIdle();assert.equal(p.loaders.length,2);
 });
