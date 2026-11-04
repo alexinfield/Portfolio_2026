@@ -12,7 +12,7 @@ h1 {font-size: 2.125rem; line-height: 2.5625rem; font-weight: 500; letter-spacin
 h2 {font-weight: 500;}
 img, video {display: block; max-width: 100%; height: auto;}
 .portfolio-root {min-width: 0; min-height: 100dvh; background: var(--canvas); color: var(--text); overflow-wrap: anywhere;}
-.portfolio-shell {width: 100%; padding-inline: 18px; margin-inline: auto;}
+.portfolio-shell {width: 100%; padding-inline: 20px; margin-inline: auto;}
 .portfolio-header {position: fixed; inset: 0 0 auto; z-index: 100; background: #000000f5; overflow-x: auto; overscroll-behavior-x: contain; scroll-padding-inline: 6px;}
 html[data-theme="light"] .portfolio-header {background: #fffffff5;}
 @supports ((backdrop-filter: blur(24px)) or (-webkit-backdrop-filter: blur(24px))) {
@@ -42,9 +42,10 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
 .portfolio-skip-link:focus {transform: none;}
 #main-content {scroll-margin-top: calc(var(--portfolio-header-height) + 8px);}
 .portfolio-main {min-height: 60vh; padding-block: calc(var(--portfolio-header-height) + var(--group)) var(--section);}
+.portfolio-main:has(.portfolio-personal-link) {padding-bottom: 0;}
 .portfolio-main:has(.portfolio-personal-front), .portfolio-case-page {padding-top: var(--portfolio-header-height);}
 .portfolio-actions {display: flex; flex-wrap: wrap; align-items: center; gap: var(--inline);}
-.portfolio-work-grid, .portfolio-personal-front {display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); column-gap: 10px; row-gap: var(--group);}
+.portfolio-work-grid, .portfolio-personal-front {display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); column-gap: 20px; row-gap: var(--group);}
 .portfolio-work-link {position: relative; min-width: 0;}
 .portfolio-work-card, .portfolio-personal-card {padding: 0; gap: 0; background: var(--canvas)!important; border: 0; box-shadow: none; overflow: hidden;}
 .portfolio-work-card img {width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: var(--radius);}
@@ -54,7 +55,7 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
 .portfolio-root .portfolio-card-link[data-slot="button"] {display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; width: 100%; max-width: none; height: auto; padding: 0; border: 0; gap: 0; text-align: left; white-space: normal;}
 .portfolio-root .portfolio-card-link:is(:link,:visited,:hover,:active,:focus), .portfolio-root .portfolio-card-link h2 {text-decoration: none!important;}
 .portfolio-root .portfolio-card-link > [data-slot="card"] {width: 100%; max-width: none;}
-.portfolio-personal-link {display: flex; justify-content: center; margin-top: var(--section);}
+.portfolio-personal-link {display: flex; justify-content: center; margin-block: 24px;}
 .portfolio-info-page {display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--group); align-items: center;}
 .portfolio-info-copy {display: flex; flex-direction: column; align-items: flex-start; gap: var(--group); padding-block: var(--group);}
 .portfolio-intro {font-size: 1.75rem; line-height: 2.125rem; max-width: 35ch;}
@@ -97,7 +98,7 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
  .portfolio-case-stack .case-composite :is(.case-media, .case-video, .case-video video) {width: 100%; margin-inline: 0; height: 100%; object-fit: cover;}
  .portfolio-case-stack .case-composite .case-video video {height: calc(100% + 2px); margin-block: -1px;}
 }
-.portfolio-case-navigation, .case-text {padding-inline: 18px;}
+.portfolio-case-navigation, .case-text {padding-inline: 20px;}
 .portfolio-case-navigation {display: flex; justify-content: center; align-items: center; gap: var(--inline); margin-top: var(--section);}
 .case-text {font: 400 1rem/1.5 var(--font); color: var(--secondary);}
 .case-text :is(p,ul,dl) {margin-block: var(--group);}
@@ -117,7 +118,7 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
 .portfolio-personal-front {margin-bottom: var(--group);}
 .portfolio-personal-front .portfolio-image {aspect-ratio: 4/3; height: auto; overflow: hidden;}
 .portfolio-personal-front .portfolio-image img {width: 100%; height: 100%; object-fit: cover;}
-.portfolio-personal-grid {display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); column-gap: 10px; row-gap: var(--group); align-items: start;}
+.portfolio-personal-grid {display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); column-gap: 20px; row-gap: var(--group); align-items: start;}
 .portfolio-project {min-width: 0; scroll-margin-top: 6rem;}
 .portfolio-project-title {font-size: .875rem; line-height: 1.25rem;}
 .portfolio-gallery {position: relative;}

@@ -17,7 +17,7 @@ export default function LiveHeader({ current, base = "/" }: { current?: "work" |
       </div>
     </header>
     <span id="unavailable-status" className="portfolio-unavailable-message" role="tooltip" hidden>
-      <LockKeyhole aria-hidden="true" />Professional — unavailable for now
+      <LockKeyhole aria-hidden="true" />Professional work available upon request
     </span>
   </>;
 }
