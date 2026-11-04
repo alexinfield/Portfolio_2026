@@ -1,3 +1,15 @@
+Alex's November 4 answers govern this candidate: 10px phone and 20px
+desktop margins, 20px project gutters, 24px above and below the Personal
+link, and “Professional work available upon request” in its status message.
+Personal has 16px titles and no descriptions (answer 25 overrides 17–24;
+description sizing and wrapping are moot). Every gallery has an authored,
+fixed ratio in `lib/personal-layout.ts`; padded media keeps its full image.
+The final partial row follows source order without sorting by height.
+Original Tracks follows Gravity Synth, starts at 50% volume, and keeps the
+approved names, clicker, queue behavior and accessible help. Gallery position
+uses dots plus a visible “1 / n” count. These answers supersede conflicting
+historical layout notes below. Palettes remain Personal light, others dark.
+
 # Portfolio design
 
 Alex's November 3 review of draft v28 requires the Luma and Molekule Go

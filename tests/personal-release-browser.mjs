@@ -23,13 +23,16 @@ try{for(const width of widths)for(const theme of ['light','dark'])for(const moti
   const initial=await p.evaluate(geometry);check('reserved natural media ratios',initial.cards.every(e=>Math.abs(e.mediaW/e.mediaH-e.aspect)<.01),initial.cards.map(({id,aspect,mediaW,mediaH})=>({id,aspect,mediaW,mediaH})));
   check('titles below media',initial.cards.every(e=>Math.abs(e.captionTop-e.mediaBottom)<1));
   check('balanced top-aligned columns with 20 px gutters and no internal holes',gridOK(initial,width).ok,gridOK(initial,width));
-  check('all caption lines fit their columns',await p.locator('.personal-description span').evaluateAll(es=>es.every(e=>e.scrollWidth<=e.clientWidth)));
+  check('all Personal cards have titles only',await p.locator('.personal-description').count()===0&&await p.locator('.personal-masonry .portfolio-card-label').evaluateAll(es=>es.every(e=>getComputedStyle(e).fontSize==='16px')));
+  const ids=initial.cards.map(e=>e.id);
+  check('music follows Gravity Synth in source and visual order',ids[ids.indexOf('p021-gravity-synth-bouncing-ball-musical-interface')+1]==='original-tracks'&&initial.cards.every((e,i)=>!i||e.y>=initial.cards[i-1].y-.2));
   check('native film controls retained',await p.locator('[data-film-quick-controls]').count()>0&&await p.locator('video source:not([src])').count()===0);
   check('no player page, sheet, iframe or close action',await p.locator('iframe').count()===0&&await p.getByRole('button',{name:'Close player',exact:true}).count()===0);
   if(!capture){
    const carousel=p.locator('[data-slot=carousel]').filter({has:p.locator('[data-slot=carousel-slide][aria-label^="3 of"]')}).first();await carousel.scrollIntoViewIfNeeded();await carousel.locator('.ac-carousel-viewport[data-enhanced]').waitFor();await p.waitForTimeout(150);
    const before=await p.evaluate(geometry),next=carousel.getByRole('button',{name:/Next image for/});await next.focus();await next.click({force:true});await p.waitForTimeout(450);
    check('carousel next advances',/^2 of/.test(await carousel.locator('.ac-carousel-sr').innerText()));
+   check('visible position count follows navigation',/^2 \/ \d+$/.test(await carousel.locator('.personal-carousel-position').innerText()));
    const frame=await carousel.locator('.ac-carousel-viewport').boundingBox(),y=frame.y+Math.min(frame.height*.4,300);
    videoTimes.swipe=(Date.now()-startedAt)/1000;if(engine==='chromium'&&width===393){const d=await c.newCDPSession(p);await d.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:frame.x+frame.width*.8,y}]});for(let i=1;i<=12;i++){await d.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:frame.x+frame.width*(.8-.6*i/12),y}]});await p.waitForTimeout(20);}await d.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await d.detach();}
    else{await p.mouse.move(frame.x+frame.width*.8,y);await p.mouse.down();await p.mouse.move(frame.x+frame.width*.2,y,{steps:15});await p.mouse.up();}await p.waitForTimeout(450);
@@ -41,6 +44,7 @@ try{for(const width of widths)for(const theme of ['light','dark'])for(const moti
   await p.locator('#original-tracks').scrollIntoViewIfNeeded();await p.waitForFunction(()=>document.querySelector('.tracks-stage[data-ready=true],.tracks-error'));if(await p.locator('.tracks-error').count())throw Error('Player mount failed: '+errors.join('; '));await p.waitForTimeout(200);await p.locator('#original-tracks').evaluate(e=>scrollTo(0,e.getBoundingClientRect().top+scrollY-68));
   const player=p.locator('original-tracks-player'),look=await player.evaluate(e=>{const s=e.shadowRoot,box=n=>n.getBoundingClientRect();return {shell:box(s.querySelector('.shell')).width,wheel:box(s.querySelector('.wheel')).width,centre:box(s.querySelector('.select-button')).width,font:getComputedStyle(s.querySelector('.lcd')).fontFamily,shadow:getComputedStyle(s.querySelector('.shell')).boxShadow,text:s.querySelector('.surface').innerText};});
   check('original materials, wheel proportions and ChicagoKare',look.wheel/look.shell>.75&&look.centre/look.wheel>.2&&look.centre/look.wheel<.4&&look.font.includes('ChicagoKare')&&look.shadow!=='none'&&look.text.includes('Original Tracks'),look);
+  check('player starts at 50 percent volume',await player.evaluate(e=>e.localPlaybackStore.volume)===.5);
   check('no autoplay or recording fetched before Play',(await p.evaluate(nativeState))?.paused&&!requests.some(u=>/\.m4a(?:[?#]|$)/.test(u)));
   const mounted=await p.evaluate(geometry);check('inline mount preserves every card position and size',initial.cards.every((e,i)=>Math.abs(e.y-mounted.cards[i].y)<.2&&Math.abs(e.h-mounted.cards[i].h)<.2));
   await p.screenshot({path:out+'/'+tag+'-player.png'});

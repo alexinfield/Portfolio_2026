@@ -46,7 +46,7 @@ export async function runBrowserRegressions(browser,baseURL,{artifacts,include}=
       });
       await check("Professional discloses a lock through hover, keyboard focus and tap, without navigation",async()=>{
         await goto("/");
-        const button=page.getByRole("button",{name:"Professional",exact:true}),tip=page.locator("#unavailable-status");let url=page.url();
+        const button=page.getByRole("button",{name:"Professional",exact:true}),tip=page.locator("#unavailable-status");let url=page.url();assert.equal(await tip.textContent(),"Professional work available upon request");
         assert.equal(await button.getAttribute("aria-disabled"),"true");assert.equal(await button.evaluate(element=>element.disabled),false);
         if(device==="desktop"){
           await button.hover();await tip.waitFor({state:"visible"});assert.equal(await tip.locator("svg").count(),1);
@@ -83,7 +83,7 @@ export async function runBrowserRegressions(browser,baseURL,{artifacts,include}=
         assert.ok(boxes.every(box=>Math.abs(box.w/box.h-box.aspect)<.01),JSON.stringify(boxes));
         assert.equal(await page.locator('#original-tracks').count(),1);
       });
-      await check("descriptions stay below media through hover, focus and Escape without covering controls",async()=>{
+      await check("titles stay below media through hover, focus and Escape without covering controls",async()=>{
         await goto('/personal/');const card=page.locator('#desk-pen'),gallery=card.locator('.portfolio-gallery'),description=card.locator('.portfolio-card-label');await gallery.scrollIntoViewIfNeeded();await gallery.locator('.ac-carousel-viewport[data-enhanced]').waitFor();
         assert.equal(await gallery.locator('[data-gallery-description-toggle],.portfolio-description-strip').count(),0);assert.equal(await description.isVisible(),true);
         const position=()=>card.evaluate(e=>{const frame=e.querySelector('.ac-carousel-viewport').getBoundingClientRect(),text=e.querySelector('.portfolio-card-label').getBoundingClientRect();return{frameBottom:frame.bottom+scrollY,textTop:text.top+scrollY,height:e.getBoundingClientRect().height};});const before=await position();assert.ok(before.textTop>=before.frameBottom);
