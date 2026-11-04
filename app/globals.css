@@ -274,3 +274,6 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
 .portfolio-case-stack > .case-panel:first-child {display:flow-root}
 .portfolio-case-stack > .case-panel:first-child > .case-media {margin-top:0}
 .portfolio-case-stack .case-panel {display:flow-root}
+
+/* Snap Mode stills to whole CSS pixels to avoid WebKit overlap raster seams. */
+.portfolio-case-stack:has(img[src*="/mode/media/"]) img.case-media {height:round(nearest, calc((100cqw + 4px) * var(--media-ratio, .5625) - 6px), 1px)}
