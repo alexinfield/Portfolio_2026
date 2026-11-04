@@ -98,7 +98,7 @@ function Gallery({media,title,visible,framing,aspect,id}:GalleryProps) {
             label={item.alt} width={item.width} height={item.height} active={visible&&onscreen&&inView&&active} controls={!mounted} nativeFallback loop longFilm={(item.duration_seconds??0)>=60} durationSeconds={item.duration_seconds} mediaStyle={personalMediaStyle(item,item.framing??framing,aspect)} frameBackground={(item.framing??framing).background} edgeFill={(item.framing??framing).fill==="edge-extend"} startMuted={item.has_audio===true}/>:<PersonalImage media={item} framing={item.framing??framing} aspect={aspect} eager={(index===0&&["stool","desk-pen"].includes(id))||(near&&onscreen&&mounted)} />}
         </CarouselSlide>)}
       </CarouselContent>
-      {media.length>1&&<CarouselControls className="personal-carousel-controls"><CarouselPrevious aria-label={`Previous image for ${title}`}/><div className="personal-carousel-pagination">{onscreen&&<CarouselDots inert aria-hidden="true"/>}<GalleryPosition/></div><CarouselNext aria-label={`Next image for ${title}`}/></CarouselControls>}
+      {media.length>1&&<CarouselControls className="personal-carousel-controls"><CarouselPrevious aria-label={`Previous image for ${title}`}/><div className="personal-carousel-pagination"><div className="personal-carousel-dot-space">{onscreen&&<CarouselDots inert aria-hidden="true"/>}</div><GalleryPosition/></div><CarouselNext aria-label={`Next image for ${title}`}/></CarouselControls>}
     </Carousel>
   </div>;
 }

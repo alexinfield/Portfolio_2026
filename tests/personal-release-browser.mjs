@@ -1,7 +1,7 @@
 import {mkdir,writeFile} from 'node:fs/promises';
 import {paintCards,fullPageCapture} from './personal-capture.mjs';
 // Fresh browser per case bounds caches and keeps before-Play request checks cold.
-export async function runPersonalReleaseRegressions(launch,baseURL,{artifacts,engine,captureOnly=false,widths=[393,1024,1440]}={}){
+export async function runPersonalReleaseRegressions(launch,baseURL,{artifacts,engine,captureOnly=false,widths=[1440,393,1024]}={}){
  if(!artifacts||!engine)throw Error('artifacts and engine are required');
  const out=artifacts,capture=captureOnly,rows=[],server={origin:baseURL};await mkdir(out,{recursive:true});
 function geometry(){const root=document.querySelector('.personal-masonry'),rr=root.getBoundingClientRect();return {root:{width:rr.width,height:rr.height,top:rr.top+scrollY},cards:[...root.children].map(e=>{const r=e.getBoundingClientRect(),media=e.querySelector('.tracks-stage,.ac-carousel-viewport,.portfolio-image'),m=media.getBoundingClientRect(),text=e.querySelector('h2').getBoundingClientRect();return {id:e.id,x:r.x,y:r.y+scrollY,w:r.width,h:r.height,b:r.bottom+scrollY,mediaH:m.height,mediaW:m.width,captionTop:text.top+scrollY,mediaBottom:m.bottom+scrollY,aspect:Number(e.dataset.frameAspect)||415/1042};})};}

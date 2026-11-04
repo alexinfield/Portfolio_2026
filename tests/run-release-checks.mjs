@@ -27,11 +27,11 @@ try{for(const engine of engines){
   results.consent=await runAnalyticsWithdrawalRegressions(launch,server.origin,{artifacts:join(out,engine,'consent'),only:options.case});await save();if(!results.consent.every(r=>r.pass))throw Error('Analytics browser checks failed');
  }
 
- if(suite==='all'||suite==='preserved'){
-  const browser=await launch();try{results.browserVersion=browser.version();results.preserved=await runBrowserRegressions(browser,server.origin,{artifacts:join(out,engine,'preserved')});}finally{await browser.close();}await save();
- }
  if(suite==='all'||suite==='personal'){
   results.personal=await runPersonalReleaseRegressions(launch,server.origin,{engine,artifacts:join(out,engine,'personal'),captureOnly:options['capture-only']==='true'});await save();
+ }
+ if(suite==='all'||suite==='preserved'){
+  const browser=await launch();try{results.browserVersion=browser.version();results.preserved=await runBrowserRegressions(browser,server.origin,{artifacts:join(out,engine,'preserved')});}finally{await browser.close();}await save();
  }
  if(suite==='all'||suite==='gaps'){results.gaps=await runSequenceGapRegressions(launch,server.origin,{engine,artifacts:join(out,engine,'gaps')});await save();}
  if(suite==='all'||suite==='extend'){results.extend=await runExtendRegressions(launch,server.origin,{engine,artifacts:join(out,engine,'extend')});await save();}

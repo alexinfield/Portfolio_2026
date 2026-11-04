@@ -58,6 +58,8 @@
 .compass-personal-gallery .personal-carousel-controls {height:44px;align-items:center}
 .personal-carousel-pagination {display:flex;align-items:center;justify-content:center;gap:8px;padding:4px 8px;width:160px;flex-shrink:0;height:44px;min-height:44px}
 .personal-carousel-position {font-size:12px;line-height:20px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.personal-carousel-dot-space {display:flex;align-items:center;justify-content:center;flex:0 0 96px;width:96px;height:44px;overflow:clip}
+.personal-carousel-position {flex:0 0 32px;width:32px;text-align:center}
 
 .tracks-error {position:static;height:280px;min-height:280px;overflow:auto;padding:12px 0}
 .personal-masonry:has(.tracks-error) {--tracks-extra:280px}
