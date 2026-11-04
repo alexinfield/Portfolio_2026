@@ -84,9 +84,9 @@ export async function runBrowserRegressions(browser,baseURL,{artifacts,include}=
         assert.equal(await page.locator('#original-tracks').count(),1);
       });
       await check("descriptions stay below media through hover, focus and Escape without covering controls",async()=>{
-        await goto('/personal/');const card=page.locator('#desk-pen'),gallery=card.locator('.portfolio-gallery'),description=card.locator('.personal-description');await gallery.scrollIntoViewIfNeeded();await gallery.locator('.ac-carousel-viewport[data-enhanced]').waitFor();
+        await goto('/personal/');const card=page.locator('#desk-pen'),gallery=card.locator('.portfolio-gallery'),description=card.locator('.portfolio-card-label');await gallery.scrollIntoViewIfNeeded();await gallery.locator('.ac-carousel-viewport[data-enhanced]').waitFor();
         assert.equal(await gallery.locator('[data-gallery-description-toggle],.portfolio-description-strip').count(),0);assert.equal(await description.isVisible(),true);
-        const position=()=>card.evaluate(e=>{const frame=e.querySelector('.ac-carousel-viewport').getBoundingClientRect(),text=e.querySelector('.personal-description').getBoundingClientRect();return{frameBottom:frame.bottom+scrollY,textTop:text.top+scrollY,height:e.getBoundingClientRect().height};});const before=await position();assert.ok(before.textTop>=before.frameBottom);
+        const position=()=>card.evaluate(e=>{const frame=e.querySelector('.ac-carousel-viewport').getBoundingClientRect(),text=e.querySelector('.portfolio-card-label').getBoundingClientRect();return{frameBottom:frame.bottom+scrollY,textTop:text.top+scrollY,height:e.getBoundingClientRect().height};});const before=await position();assert.ok(before.textTop>=before.frameBottom);
         if(device==='desktop')await gallery.hover();await gallery.locator('[data-slot=carousel]').focus();await page.keyboard.press('Escape');const after=await position();assert.equal(after.height,before.height);assert.equal(after.textTop,before.textTop);assert.equal(await description.isVisible(),true);
         if(artifacts)await card.screenshot({path:join(artifacts,`description-${device}.png`)});
       });
@@ -103,7 +103,7 @@ export async function runBrowserRegressions(browser,baseURL,{artifacts,include}=
         const box=await gallery.locator('.ac-carousel-viewport').boundingBox(),x=box.x+box.width*.8,y=box.y+box.height*.4;
         const session=browser.browserType().name()==='chromium'?await context.newCDPSession(page):null;
         async function gesture(dx,dy){if(session){await session.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y}]});for(let i=1;i<=12;i++){await session.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+dx*i/12,y:y+dy*i/12}]});await page.waitForTimeout(25);}await session.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});}else{await page.mouse.move(x,y);await page.mouse.down();await page.mouse.move(x+dx,y+dy,{steps:12});await page.mouse.up();}await page.waitForTimeout(450);}
-        await gesture(-box.width*.6,0);await gallery.getByRole('group',{name:'2 of 6',exact:true}).waitFor({state:'visible'});await page.touchscreen.tap(x,y);assert.equal(await gallery.locator('.ac-carousel-sr').textContent(),'2 of 6');await gesture(0,-70);assert.equal(await gallery.locator('.ac-carousel-sr').textContent(),'2 of 6');assert.equal(await page.locator('#desk-pen .personal-description').isVisible(),true);
+        await gesture(-box.width*.6,0);await gallery.getByRole('group',{name:'2 of 6',exact:true}).waitFor({state:'visible'});await page.touchscreen.tap(x,y);assert.equal(await gallery.locator('.ac-carousel-sr').textContent(),'2 of 6');await gesture(0,-70);assert.equal(await gallery.locator('.ac-carousel-sr').textContent(),'2 of 6');assert.equal(await page.locator('#desk-pen .portfolio-card-label').isVisible(),true);
         assert.equal(await gallery.locator('[data-pressed="true"]').count(),0);await session?.detach();
       });
       await check("Folio and Niche picture/caption links open their actual cases; Back restores Personal",async()=>{

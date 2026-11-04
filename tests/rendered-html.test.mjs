@@ -360,14 +360,14 @@ test("bottom case actions stay inside their collection and omit endpoints",async
   }
 });
 
-test("404 offers just one Work action and Personal uses genuine descriptions without About labels",async()=>{
+test("404 offers just one Work action and Personal uses titles only without About labels",async()=>{
   const missing=documentOnly(await exported("404.html"));
   const actions=/<div class="portfolio-actions">([\s\S]*?)<\/div>/.exec(missing)[1];
   assert.deepEqual([...actions.matchAll(/<a\b[^>]*>([\s\S]*?)<\/a>/g)].map(match=>text(match[1])),["Work"]);
   assert.doesNotMatch(missing,/Contact|mailto:/);
   const personal=documentOnly(await exported("personal/index.html"));
   assert.doesNotMatch(personal,/portfolio-about-label|portfolio-card-notes|>About</);
-  assert.equal((personal.match(/class="personal-description"/g)||[]).length,visibleItems.filter(item=>item.short_text).length);
+  assert.equal((personal.match(/class="personal-description"/g)||[]).length,0);
   assert.doesNotMatch(personal,/desk-pen-description|portfolio-description-strip/);
   assert.match(personal,/personal-masonry-shell/);
 });
