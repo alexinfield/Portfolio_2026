@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { projectDefinitions } from "./portfolio";
 
 export function projectShareImage(project: (typeof projectDefinitions)[number]) {
-  const width = Math.min(1600, project.coverWidth);
+  const width = 1200;
   return {
-    url: project.coverWidth > 1600 ? project.cover.replace(/\.[^.]+$/, "-w1600.webp") : project.cover,
+    url: `/assets/share/${project.slug}.webp`,
     width,
-    height: Math.round(project.coverHeight * width / project.coverWidth),
+    height: 628,
     alt: project.coverAlt,
   };
 }
@@ -15,8 +15,9 @@ export function socialMetadata(
   title: string,
   description: string,
   route: string,
-  image: { url: string; width: number; height: number; alt: string } = projectShareImage(projectDefinitions[0]),
+  image: { url: string; width: number; height: number; alt: string } = projectShareImage(projectDefinitions[1]),
 ): Metadata {
+  description=title;
   const absoluteImage = new URL(image.url, "https://alexinfield.com").href;
   return {
     title,
