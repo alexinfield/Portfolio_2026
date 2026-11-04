@@ -21,7 +21,15 @@
       await Promise.all([...element.shadowRoot.querySelectorAll('link[rel=stylesheet]')].map(link=>link.sheet?Promise.resolve():new Promise((resolve,reject)=>{link.onload=resolve;link.onerror=reject;})));
       await document.fonts.load('26px ChicagoKare');
     }catch(error){observer.disconnect();element.remove();throw error;}
+    let previousSong='',wasPlaying=false;const milestones=new Set();
     const unsubscribe=element.localPlaybackStore.subscribe(state=>{
+      const track=state.queue[state.currentTrackIndex],id=track?.id||'';
+      if(id!==previousSong){previousSong=id;milestones.clear();wasPlaying=false;}
+      const emit=name=>window.dispatchEvent(new CustomEvent('portfolio-recording',{detail:{name,media_id:id,filename:track?.previewUrl?.split('/').at(-1)?.split('?')[0]||''}}));
+      if(state.isPlaying!==wasPlaying){emit(state.isPlaying?'play':'pause');wasPlaying=state.isPlaying;}
+      const percent=state.currentPlaybackDuration?state.currentPlaybackTime/state.currentPlaybackDuration*100:0;
+      for(const n of [25,50,75,98])if(percent>=n&&!milestones.has(n)){milestones.add(n);emit(n===98?'complete':String(n));}
+
       if(!('mediaSession'in navigator))return;const song=state.queue[state.currentTrackIndex];
       try{if(song&&window.MediaMetadata)navigator.mediaSession.metadata=new MediaMetadata({title:song.name,artist:song.artistName,album:song.albumName});navigator.mediaSession.playbackState=state.isPlaying?'playing':'paused';}catch{/* optional platform metadata */}
     });

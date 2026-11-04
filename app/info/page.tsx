@@ -5,7 +5,7 @@ import SiteShell from "../site-shell";
 import ResponsiveImage from "../responsive-image";
 import { Button } from "../compass";
 
-export const metadata: Metadata = socialMetadata("Info", "About Alex Infield.", "/info", {
+export const metadata: Metadata = socialMetadata("Info", "Info", "/info", {
   url: "/assets/info/media/67aca18a869f9276f4c0ef01_IMG_0019-w960.webp",
   width: 960, height: 960, alt: "White paper folded into a repeating grid of triangular shapes.",
 });

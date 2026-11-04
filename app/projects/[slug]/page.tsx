@@ -228,7 +228,7 @@ export async function generateMetadata({
   const project = getProject(slug);
   return project ? socialMetadata(
     project.title,
-    `${project.title} — a project by Alex Infield.`,
+    project.title,
     `/projects/${project.slug}`,
     projectShareImage(project),
   ) : { title: "Alex Infield" };

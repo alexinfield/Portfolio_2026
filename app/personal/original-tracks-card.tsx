@@ -34,8 +34,8 @@ export default function OriginalTracksCard({style}:{style?:CSSProperties}){
         {<picture className="tracks-poster"><source media="(prefers-color-scheme: dark)" srcSet={withBasePath('/assets/original-tracks/poster-dark.png')}/><img src={withBasePath('/assets/original-tracks/poster-light.png')} width="415" height="1042" alt="Original Tracks: white music player with a blue screen and circular wheel" loading="lazy"/></picture>}
       </div>
     </Card>
-    {error&&<div className="tracks-error"><p>Player unavailable.</p><Button type="button" variant="secondary" onClick={()=>{setError(false);setAttempt(n=>n+1);}}>Retry player</Button>{files}</div>}
     <div className="tracks-caption"><h2 className="portfolio-project-title portfolio-card-label">Original Tracks</h2></div>
-    <noscript>{files}<a href={withBasePath("/assets/original-tracks/NOTICE.txt")}>Licences</a></noscript>
+    {error&&<div className="tracks-error"><p>Player unavailable.</p><Button type="button" variant="secondary" onClick={()=>{setError(false);setAttempt(n=>n+1);}}>Retry player</Button>{files}</div>}
+    <noscript>{files}<a className="tracks-noscript-licence" href={withBasePath("/assets/original-tracks/NOTICE.txt")}>Licences</a></noscript>
   </article>;
 }

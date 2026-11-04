@@ -10,13 +10,10 @@
   const scripts = new Set(), idleJobs = new Set(), timers = new Set();
   let channel=null;try{if(typeof BroadcastChannel==='function')channel=new BroadcastChannel('portfolio-analytics-consent');}catch{/* storage events remain available */}
   const stored = () => {try {return localStorage.getItem(key);} catch {return null;}};
-  const revokedCookiePresent=()=>{try{return document.cookie.split(';').some(c=>c.trim().startsWith(revokedCookie+'=1'));}catch{return true;}};
+  const revokedCookiePresent=()=>{try{return document.cookie.split(';').some(c=>c.trim().startsWith(revokedCookie+'=1'));}catch{return false;}};
   const readConsent = () => {
-    try {
-      return stored()!=='denied' && sessionStorage.getItem(revokedKey)!=='1' &&
-        !revokedCookiePresent() &&
-        new URL(location.href).searchParams.get('analytics')!=='off';
-    } catch {return false;}
+    let revoked=false;try{revoked=sessionStorage.getItem(revokedKey)==='1';}catch{/* default startup needs no persistence */}
+    return stored()!=='denied'&&!revoked&&!revokedCookiePresent()&&new URL(location.href).searchParams.get('analytics')!=='off';
   };
   allowed=readConsent();
   const googleDenied = args => args[0]==='consent' && args[2] && args[2].analytics_storage==='denied' && !Object.values(args[2]).includes('granted');
@@ -176,6 +173,10 @@
     sendEvent("portfolio_entry_attributed", parameters);
   };
 
+  window.addEventListener('portfolio-recording',event=>{
+    const d=event.detail;if(!d||!['play','pause','25','50','75','complete'].includes(d.name))return;
+    sendEvent('portfolio_recording_'+d.name,{current_route:currentRoute,media_id:safeValue(d.media_id,80),filename:String(d.filename||'').slice(0,160)});
+  });
   const mediaId = (video) => {
     const source = video.currentSrc || video.querySelector("source")?.src || "video";
     const filename = source.split("/").pop()?.split("?")[0] || "video";
@@ -186,6 +187,7 @@
     current_route: currentRoute,
     ...(projectSlug ? { project_slug: projectSlug } : {}),
     media_id: mediaId(video),
+    filename:(video.currentSrc||video.querySelector("source")?.src||"").split("/").at(-1)?.split("?")[0]?.slice(0,160)||"",
   });
 
   const stateFor = (video) => {

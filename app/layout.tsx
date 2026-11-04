@@ -17,7 +17,7 @@ const clarityProjectId = process.env.PORTFOLIO_CLARITY_ID?.trim() || "xz6mz3a8cb
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://alexinfield.com"),
-  ...socialMetadata("Alex Infield", "Selected work by industrial designer Alex Infield.", "/"),
+  ...socialMetadata("Alex Infield", "Alex Infield", "/"),
 };
 
 export default function RootLayout({

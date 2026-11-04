@@ -1,3 +1,15 @@
+Alex's final November 4 answers 32–61 also govern this candidate. GA and
+Clarity start by default after load/idle; there is no consent UI or footer
+disclosure. A plain-text notice with both provider policy links appears only
+on Info. Invisible withdrawal paths remain available. Case navigation uses
+project names, failures keep their posters, the 404 is centered, and licences
+live in the player's About view with a no-JS fallback. Metadata descriptions
+are titles only. Work shares Molekule Go, Personal shares Folio, and each case
+has a 1.91:1 preview crop. Only the detailed text boards listed in
+`lib/detailed-boards.json` receive 3840px derivatives. Info artwork loses only
+its fully transparent outer padding. These decisions supersede any historical
+consent and metadata notes below.
+
 Alex's November 4 answers govern this candidate: 10px phone and 20px
 desktop margins, 20px project gutters, 24px above and below the Personal
 link, and “Professional work available upon request” in its status message.

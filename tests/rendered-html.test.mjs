@@ -89,7 +89,7 @@ test("every real page has the same Compass nav, disabled Professional and landma
 test("Info contains the exact approved text, artwork and one secondary Contact mailto button",async()=>{
   const html=documentOnly(await exported("info/index.html"));
   assert.match(html,/I&#x27;m Alex Infield, an industrial designer based in Brooklyn, New York\. My work spans product visualization, CAD, prototyping and fabrication for consumer goods, furniture and lighting\./);
-  assert.match(html,/IMG_0019-w(?:768|960|1600)\.webp/);
+  assert.match(html,/info-artwork-w(?:768|960|1600)\.webp/);
   assert.doesNotMatch(html,/\ssrc="[^"]*IMG_0019\.png/);
   assert.match(html,/mailto:alex@infield.net/);
   assert.equal((html.match(/href="mailto:alex@infield.net"/g)||[]).length,1);

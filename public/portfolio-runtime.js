@@ -155,7 +155,7 @@
     const frame = video.closest("[data-video-frame]");
     frame.querySelector("[data-video-message]").textContent = text;
     frame.querySelector("[data-video-status]").hidden = false;
-    if(video.poster){video.pause();video.load();}
+    if(video.poster&&!video.dataset.failed){video.dataset.failed='true';video.pause();video.removeAttribute('src');for(const source of video.querySelectorAll('source'))source.removeAttribute('src');video.load();}
     frame.querySelector('[data-video-message]').textContent='Try video again';
     updateButton(video);
   }
@@ -303,6 +303,7 @@
       if (focus) focus.focus({ preventScroll: true });
       else { frame.tabIndex = -1; frame.focus({ preventScroll: true }); }
       state.loaded = false;
+      delete video.dataset.failed;
       state.userPaused = false;
       state.userStarted = true;
       play(video);
