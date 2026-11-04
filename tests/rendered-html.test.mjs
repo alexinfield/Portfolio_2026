@@ -241,14 +241,14 @@ test("all video players use Compass icons; long films add timeline, mute and ful
   }
 });
 
-test("404 retains a same-document skip target, one robots tag and no inherited URL or analytics",async()=>{
+test("404 retains a same-document skip target, one robots tag and no inherited URL, with default analytics",async()=>{
   assert.equal((await render("/missing/deep/route")).status,404);
   const html=await exported("404.html");
-  assert.doesNotMatch(html,/<base\b|rel="canonical"|property="og:url"|<script[^>]*(?:googletagmanager|clarity|portfolio-analytics)/);
+  assert.doesNotMatch(html,/<base\b|rel="canonical"|property="og:url"/);
   assert.match(html,/href="#main-content"/);
   assert.equal((html.match(/name="robots"/g)||[]).length,1);
-  assert.match(html,/<title>Page not found — Alex Infield<\/title>/);
-  assert.match(html,/property="og:title" content="Page not found — Alex Infield"/);
+  assert.match(html,/<title>Page not found<\/title>/);assert.match(html,/portfolio-analytics/);
+  assert.match(html,/property="og:title" content="Page not found"/);
   assert.doesNotMatch(html,/portfolio-theme/);
   assert.match(html,/href="\/"[^>]*>Work<\/a>/);
 });

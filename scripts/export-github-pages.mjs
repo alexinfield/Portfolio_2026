@@ -256,11 +256,10 @@ const missingHtml = staticHtml(await missing.text(), "/404")
   .replace(/srcset=(["'])(.*?)\1/gi, (_match, quote, value) => `srcset=${quote}${value.replace(/(^|,\s*)\.\//g, `$1${(basePath || new URL(siteOrigin).pathname.replace(/\/?$/, "")) + "/"}`)}${quote}`)
   .replace(/<link\b(?=[^>]*\brel=["']canonical["'])[^>]*>/gi, "")
   .replace(/<meta\b(?=[^>]*\bproperty=["']og:url["'])[^>]*>/gi, "")
-  .replace(/(<meta[^>]*(?:property="og:title"|name="twitter:title") content=")[^"]*/g, "$1Page not found — Alex Infield")
-  // Preserve main's untracked-404 behavior: metadata repair adds no analytics scope.
-  .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, script => /dataLayer|clarity|googletagmanager|portfolio-analytics/.test(script) ? "" : script)
+  .replace(/(<meta[^>]*(?:property="og:title"|name="twitter:title") content=")[^"]*/g, "$1Page not found")
   .replace(/<footer\b[^>]*class="[^"]*portfolio-privacy[^"]*"[^>]*>[\s\S]*?<\/footer>/gi, "")
-  .replace(/<title>[^<]*<\/title>/, "<title>Page not found — Alex Infield</title>")
+  .replace(/<title>[^<]*<\/title>/, "<title>Page not found</title>")
+  .replace(/(<meta[^>]*(?:name="description"|property="og:description"|name="twitter:description") content=")[^"]*/g, "$1Page not found")
   .replace(/<meta\b(?=[^>]*\bname=["']robots["'])[^>]*>/gi, "")
   .replace("</head>", '<meta name="robots" content="noindex,nofollow"/></head>');
 await writeFile(join(output, "404.html"), missingHtml);

@@ -35,6 +35,7 @@ test('every export has a leading CSP, valid inline hashes, and no release-only d
       if(!entry.name.endsWith('.html'))continue;
       const html=await readFile(child,'utf8');
       assert.match(html,/<head>\s*<meta\b[^>]*charset[^>]*><meta http-equiv="Content-Security-Policy"/i);
+      assert.doesNotMatch((html.match(/<meta[^>]*>/g)||[]).join(''),/—/,'all exported meta including aliases and 404 use no em dashes');
       const charset=/<meta\s+charset=[^>]*>/i.exec(html);assert.ok(charset);assert.ok(Buffer.byteLength(html.slice(0,charset.index+charset[0].length))<=1024);
       const policy=html.match(/http-equiv="Content-Security-Policy" content="([^"]+)"/)[1];
       assert.doesNotMatch(policy,/script-src[^;]*'unsafe-inline'|frame-ancestors|report-uri/);
