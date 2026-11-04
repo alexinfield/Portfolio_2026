@@ -14,7 +14,7 @@ function withoutInertNavLabel(text, sourcePath="") {
   if(sourcePath==="app/live-header.tsx")text=text.replace(/<Button\b(?=[^>]*data-unavailable-toggle)(?=[^>]*aria-disabled="true")[^>]*>Professional<\/Button>/g,tag=>tag.replace(">Professional<",">Unavailable<"));
   text=text.replace(/<button\b(?=[^>]*\sdisabled="")(?=[^>]*aria-disabled="true")[^>]*>Professional<\/button>/g,tag=>tag.replace(">Professional<",">Unavailable<"));
   text=text.replace(/<button\b(?=[^>]*data-unavailable-toggle="true")(?=[^>]*aria-disabled="true")[^>]*>Professional<\/button>/g,tag=>tag.replace(">Professional<",">Unavailable<"));
-  const message=Buffer.from('Professional — unavailable for now').toString('latin1');
+  const message=Buffer.from('Professional work available upon request').toString('latin1');
   text=text.replaceAll(message,message.replace('Professional','Unavailable'));
   for(const value of [
     {type:"button",size:"sm",variant:"secondary","data-plain":"",disabled:true,"aria-disabled":"true",children:"Professional"},
