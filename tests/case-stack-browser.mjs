@@ -13,7 +13,7 @@ const measure = () => {
   const vw = document.documentElement.clientWidth, header = document.querySelector(".portfolio-header").getBoundingClientRect().bottom;
   const boxes = [...document.querySelectorAll(".portfolio-case-stack img:not(.ss img), .portfolio-case-stack .case-video, .portfolio-case-stack .case-sequence")]
     .filter(element => element.getClientRects().length && !element.closest("[hidden],noscript"))
-    .map(element => { const host=element.matches('img')?(element.closest('.case-composite')||element.closest('.case-panel')):null;
+    .map(element => { const host=element.matches('img')?((vw >= 768 ? element.closest('.case-composite') : null)||element.closest('.case-panel')):null;
       const logical=host?.getBoundingClientRect().width?host:element;
       const r = logical.getBoundingClientRect(); const style = getComputedStyle(logical);
       const paintBleed = logical.matches('img.case-media');
