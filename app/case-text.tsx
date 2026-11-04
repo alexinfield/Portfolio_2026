@@ -27,7 +27,7 @@ export default function CaseText({ source }: { source: string }) {
   if (!panel || !(panel.title || panel.heading || panel.blocks?.length)) return null;
 
   return (
-    <section className="case-text" aria-label="Panel text" style={{ position: "absolute", width: 1, height: 1, padding: 0, margin: -1, overflow: "hidden", clipPath: "inset(50%)", whiteSpace: "nowrap", border: 0 }}>
+    <section className="case-text" style={{ position: "absolute", width: 1, height: 1, padding: 0, margin: -1, overflow: "hidden", clipPath: "inset(50%)", whiteSpace: "nowrap", border: 0 }}>
       {panel.title ? <h2>{panel.displayTitle ?? panel.title}</h2> : null}
       {panel.displayTitle ? <p>{panel.title}</p> : null}
       {panel.heading ? <h2>{panel.heading}</h2> : null}
