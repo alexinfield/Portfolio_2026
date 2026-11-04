@@ -81,7 +81,7 @@ export async function runBrowserRegressions(browser,baseURL,{artifacts,include}=
         assert.equal(await page.getByRole("combobox").count(),0);assert.equal(await page.locator("main details,.portfolio-about-label").count(),0);
         const boxes=await page.locator('[data-personal-id]').evaluateAll(items=>items.map(item=>{const r=(item.querySelector('.ac-carousel-viewport')||item.querySelector('.portfolio-image')).getBoundingClientRect();return{w:r.width,h:r.height,aspect:Number(item.dataset.frameAspect)};}));
         assert.ok(boxes.every(box=>Math.abs(box.w/box.h-box.aspect)<.01),JSON.stringify(boxes));
-        assert.equal(await page.locator('.personal-masonry > .masonry-card').count(),15);
+        assert.equal(await page.locator('#original-tracks').count(),1);
       });
       await check("descriptions stay below media through hover, focus and Escape without covering controls",async()=>{
         await goto('/personal/');const card=page.locator('#desk-pen'),gallery=card.locator('.portfolio-gallery'),description=card.locator('.personal-description');await gallery.scrollIntoViewIfNeeded();await gallery.locator('.ac-carousel-viewport[data-enhanced]').waitFor();

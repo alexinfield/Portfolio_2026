@@ -1,6 +1,6 @@
 /* Column geometry is rendered before images or hydration; DOM reading order stays intact. */
 .personal-masonry-shell {container-type:inline-size}
-.portfolio-personal-front.personal-masonry {display:block;position:relative;margin:0}
+.portfolio-personal-front.personal-masonry {display:block;position:relative;margin:0;--tracks-extra:0px}
 .personal-masonry > .masonry-card {position:relative;width:100%;min-width:0;margin:0 0 20px}
 .personal-masonry > .masonry-card:last-child {margin-bottom:0}
 .personal-masonry .portfolio-card-label {height:44px;min-height:44px;margin:0;font-size:14px;line-height:20px}
@@ -22,21 +22,37 @@
 .compass-personal-gallery .personal-carousel-controls > button {opacity:0;pointer-events:none;transition:opacity .12s}
 .compass-personal-gallery:is(:hover,:focus-within) .personal-carousel-controls > button {opacity:1;pointer-events:auto}
 .compass-personal-gallery:has(.ac-carousel-viewport:not([data-enhanced])) .personal-carousel-controls {visibility:hidden}
+.tracks-stage {position:relative;aspect-ratio:415/1042;width:100%;overflow:hidden}
+.tracks-mount,.tracks-poster {position:absolute;inset:0;display:block}
+.tracks-mount {opacity:0}
+.tracks-stage[data-ready="true"] .tracks-mount {opacity:1}
+.tracks-stage[data-ready="true"] .tracks-poster {visibility:hidden}
+.tracks-poster img {display:block;width:100%;height:100%;object-fit:contain}
+.tracks-caption {display:flex;align-items:center;justify-content:space-between;height:44px;gap:8px}
+.tracks-caption a {display:inline-flex;align-items:center;min-height:44px;font-size:14px;text-decoration:underline}
+.tracks-file-links a {display:flex;align-items:center;min-height:44px;text-decoration:underline;font-size:14px}
+.tracks-error {position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:20px;gap:12px}
 @media (min-width:768px) {
- .personal-masonry {height:max(calc(var(--m2-h0-media) * ((100cqw - 20px) / 2) + var(--m2-h0-pixels) * 1px),calc(var(--m2-h1-media) * ((100cqw - 20px) / 2) + var(--m2-h1-pixels) * 1px))}
- .personal-masonry > .masonry-card {position:absolute;width:calc((100% - 20px) / 2);left:calc(var(--m2-column) * ((100% + 20px) / 2));top:calc(var(--m2-media) * ((100cqw - 20px) / 2) + var(--m2-pixels) * 1px);margin:0}
+ .personal-masonry {height:max(calc(var(--m2-h0-media) * ((100cqw - 20px) / 2) + var(--m2-h0-pixels) * 1px + var(--m2-h0-extra) * var(--tracks-extra)),calc(var(--m2-h1-media) * ((100cqw - 20px) / 2) + var(--m2-h1-pixels) * 1px + var(--m2-h1-extra) * var(--tracks-extra)))}
+ .personal-masonry > .masonry-card {position:absolute;width:calc((100% - 20px) / 2);left:calc(var(--m2-column) * ((100% + 20px) / 2));top:calc(var(--m2-media) * ((100cqw - 20px) / 2) + var(--m2-pixels) * 1px + var(--m2-extra) * var(--tracks-extra));margin:0}
 }
 @media (min-width:1200px) {
- .personal-masonry {height:max(calc(var(--m3-h0-media) * ((100cqw - 40px) / 3) + var(--m3-h0-pixels) * 1px),calc(var(--m3-h1-media) * ((100cqw - 40px) / 3) + var(--m3-h1-pixels) * 1px),calc(var(--m3-h2-media) * ((100cqw - 40px) / 3) + var(--m3-h2-pixels) * 1px))}
- .personal-masonry > .masonry-card {position:absolute;width:calc((100% - 40px) / 3);left:calc(var(--m3-column) * ((100% + 20px) / 3));top:calc(var(--m3-media) * ((100cqw - 40px) / 3) + var(--m3-pixels) * 1px);margin:0}
+ .personal-masonry {height:max(calc(var(--m3-h0-media) * ((100cqw - 40px) / 3) + var(--m3-h0-pixels) * 1px + var(--m3-h0-extra) * var(--tracks-extra)),calc(var(--m3-h1-media) * ((100cqw - 40px) / 3) + var(--m3-h1-pixels) * 1px + var(--m3-h1-extra) * var(--tracks-extra)),calc(var(--m3-h2-media) * ((100cqw - 40px) / 3) + var(--m3-h2-pixels) * 1px + var(--m3-h2-extra) * var(--tracks-extra)))}
+ .personal-masonry > .masonry-card {position:absolute;width:calc((100% - 40px) / 3);left:calc(var(--m3-column) * ((100% + 20px) / 3));top:calc(var(--m3-media) * ((100cqw - 40px) / 3) + var(--m3-pixels) * 1px + var(--m3-extra) * var(--tracks-extra));margin:0}
 }
 @media (hover:none) {.compass-personal-gallery .personal-carousel-controls > button {opacity:1;pointer-events:auto}}
 @media (scripting:none) {
+ .personal-masonry {--tracks-extra:132px}
  .compass-personal-gallery .personal-carousel-controls {display:none!important}
  .compass-personal-gallery .personal-video .media-controls,.compass-personal-gallery .native-film-start {display:none!important}
 }
 @media (prefers-reduced-motion:reduce) {.compass-personal-gallery .personal-carousel-controls {transition:none}}
 
+/* Parsed noscript children identify scripting-disabled documents even when a
+   browser does not expose the scripting media feature. Reserve the file links. */
+.personal-masonry:has(#original-tracks > noscript > nav) {--tracks-extra:132px}
+#original-tracks > noscript:has(> nav) {display:block;height:132px}
+#original-tracks > noscript .tracks-file-links a {height:44px;box-sizing:border-box}
 .personal-masonry > .masonry-card {container-type:inline-size}
 .personal-masonry .portfolio-gallery-boundary {height:calc(100cqw / var(--personal-aspect));flex:none;overflow:clip}
 .personal-masonry .portfolio-gallery-boundary > .compass-personal-gallery {height:100%}

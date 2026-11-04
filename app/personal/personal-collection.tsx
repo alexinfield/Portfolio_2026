@@ -5,7 +5,8 @@ import { type PersonalProject } from "@/lib/personal-media";
 import ProjectCard from "../project-card";
 import PersonalGallery, { PersonalImage } from "./personal-gallery";
 
-import {captionLines,personalAspect,masonry} from "@/lib/personal-layout";
+import OriginalTracksCard from "./original-tracks-card";
+import {captionLines,personalAspect,masonry,TRACKS_ASPECT} from "@/lib/personal-layout";
 
 const subscribe = () => () => {};
 // The approved filter data and AND logic stay available behind one UI flag.
@@ -21,7 +22,7 @@ export default function PersonalCollection({ projects }: {projects: PersonalProj
   const reset = () => {setYear("all"); setCategory("all");};
   const shown=projects.filter(matches);
   const entries=shown.map(item=>({id:item.id,aspect:personalAspect(item),lines:captionLines(item.short_text)}));
-  const layout=masonry(entries.map(e=>({id:e.id,aspect:e.aspect,caption:44+(e.lines.length?e.lines.length*20+8:0)})));
+  const layout=masonry([...entries.map(e=>({id:e.id,aspect:e.aspect,caption:44+(e.lines.length?e.lines.length*20+8:0)})),{id:"original-tracks",aspect:TRACKS_ASPECT,caption:44,player:true}]);
   const renderProject = (item: PersonalProject, index: number) => {
     const entry=entries[index],aspect=entry.aspect;
     return <article className="portfolio-project masonry-card" id={item.id} data-personal-id={item.id} data-frame-aspect={aspect}
@@ -40,6 +41,6 @@ export default function PersonalCollection({ projects }: {projects: PersonalProj
     </div>}
     <noscript><p className="text-sm text-muted">The complete collection is shown below. Swipe or scroll each gallery to browse its images.</p></noscript>
     {count===0 && <div className="portfolio-filter-empty" role="status"><p>No projects match these filters.</p><Button type="button" variant="secondary" onClick={reset}>Show all projects</Button></div>}
-    <div className="personal-masonry-shell"><div className="portfolio-personal-front personal-masonry" data-personal-ready={ready} style={layout.shell}>{shown.map(renderProject)}</div></div>
+    <div className="personal-masonry-shell"><div className="portfolio-personal-front personal-masonry" data-personal-ready={ready} style={layout.shell}>{shown.map(renderProject)}<OriginalTracksCard style={layout.cells.get("original-tracks")}/></div></div>
   </>;
 }
