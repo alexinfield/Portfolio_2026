@@ -19,8 +19,8 @@ export function casePanel(source: string): Panel | undefined {
   return (panels as Record<string, Panel>)[source];
 }
 
-// The original desktop boards remain intact. Their text equivalents are readable
-// on small screens and stay in the accessibility tree at every viewport size.
+// Keep the approved boards intact while exposing their authored text and
+// heading structure to assistive technology at every viewport size.
 export default function CaseText({ source }: { source: string }) {
   if (!CASE_TEXT_ENABLED) return null;
   const panel = casePanel(source);

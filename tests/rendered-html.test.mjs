@@ -193,7 +193,7 @@ test("all cases expose authored summaries, dates and research captions",{skip:CA
     luma:["Luma","2024","I visited 2 smart homes to see the problems for myself."],
     niche:["Niche","2024","Quotes from interviews with 2 employers, 3 employees, and a 10-person survey."],
     hyphae:["Hyphae","2023","Extracting form from nature"],
-    mode:["Mode","2023","Folio is a bedside table designed for the routines of modern life."],
+    mode:["Folio","2023","Folio is a bedside table designed for the routines of modern life."],
   };
   for(const slug of slugs){const html=await (await render(`/projects/${slug}`)).text();assert.match(html,new RegExp(`<section class="case-text"[^>]*><h2>${expected[slug][0]}</h2>`));for(const copy of expected[slug].slice(1))assert.ok(html.includes(copy),`${slug}: ${copy}`);}
 });

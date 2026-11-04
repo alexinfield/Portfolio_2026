@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { applyExtendBlur } from "./extend-blur.mjs";
 import { copyDraftTree } from "./draft-media-copy.mjs";
 import { secureHtml } from "./meta-security.mjs";
+import { pruneSourceImages } from "./prune-source-images.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const output = join(root, process.env.PORTFOLIO_EXPORT_DIR || "gh-pages");
@@ -308,6 +309,7 @@ async function secureTree(directory) {
   }
 }
 await secureTree(output);
+await writeFile(join(root, "dist/withheld-source-images.json"), JSON.stringify(await pruneSourceImages(output), null, 2));
 if (generatedHome.includes("I want to see")) throw new Error("Legacy portfolio markup remains in export");
 
 console.log(`Exported ${routes.length} live routes and ${redirects.length} legacy redirects to ${output}`);
