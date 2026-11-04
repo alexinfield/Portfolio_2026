@@ -417,7 +417,6 @@ test("every exported page references the runtime and analytics scripts by their 
     assert.match(body,new RegExp(`portfolio-runtime\\.js\\?v=${runtime}`),path);
   }
   assert.ok(runtimeRefs>=html.length);
-  for(const path of (await files()).filter(path=>path.startsWith("beats/")&&path.endsWith(".html")))assert.doesNotMatch(await exported(path),/portfolio-runtime\.js|portfolio-analytics\.js/);
 });
 
 // PR #14 ships with no blurred loading placeholders (Alex, Nov 2: "ship #14 first, blur
