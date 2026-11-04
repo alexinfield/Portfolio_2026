@@ -26,11 +26,11 @@ test("draft media reuse preserves independent code and player assets",async()=>{
   const dir=await mkdtemp(join(tmpdir(),"personal-draft-copy-"));
   try {
     const source=join(dir,"source"),out=join(dir,"output");
-    await mkdir(join(source,"assets"),{recursive:true});await mkdir(join(source,"beats"));
-    for(const [file,value] of [["assets/image.webp","immutable image"],["app.js","original code"],["beats/song.m4a","owned recording"]])await writeFile(join(source,file),value);
+    await mkdir(join(source,"assets"),{recursive:true});await mkdir(join(source,"fixture-audio"));
+    for(const [file,value] of [["assets/image.webp","immutable image"],["app.js","original code"],["fixture-audio/song.m4a","owned recording"]])await writeFile(join(source,file),value);
     await copyDraftTree(source,out);
     assert.equal((await stat(join(source,"assets/image.webp"))).ino,(await stat(join(out,"assets/image.webp"))).ino);
-    for(const file of ["app.js","beats/song.m4a"])assert.notEqual((await stat(join(source,file))).ino,(await stat(join(out,file))).ino);
+    for(const file of ["app.js","fixture-audio/song.m4a"])assert.notEqual((await stat(join(source,file))).ino,(await stat(join(out,file))).ino);
     await writeFile(join(out,"app.js"),"patched export code");
     assert.equal(await readFile(join(source,"app.js"),"utf8"),"original code");
   } finally {await rm(dir,{recursive:true,force:true});}
@@ -104,7 +104,7 @@ test("Personal exports exactly the package order, owner titles and existing case
   assert.deepEqual(ids,visibleItems.map(item=>item.id));
   assert.equal(ids.indexOf("p025-warp-paper-light-and-shadow-relief")+1,ids.indexOf("mycelium"));
   const headings=[...html.matchAll(/<h2\b[^>]*>([\s\S]*?)<\/h2>/g)].map(match=>text(match[1]));
-  assert.deepEqual(headings,[...visibleItems.map(item=>overrides[item.id]??item.title),"Original Tracks"]);
+  assert.deepEqual(headings,visibleItems.map(item=>overrides[item.id]??item.title));
   assert.ok(headings.includes("Video 2018"));
   assert.match(html,/href="\.\.\/projects\/mode\/\?from=personal"/);
   assert.match(html,/href="\.\.\/projects\/niche\/\?from=personal"/);
@@ -135,20 +135,14 @@ test("every package media path is local and its exact variants exist",async()=>{
   for(const source of sources)await access(new URL(`../public/assets/personal/${source}`,import.meta.url));
 });
 
-test("Personal carousel SSR and Original Tracks retain a usable deferred fallback",async()=>{
+test("Personal carousel SSR retains its usable deferred fallback",async()=>{
   const html=documentOnly(await exported("personal/index.html"));
   assert.match(html,/data-slot="carousel-content"/);
   assert.match(html,/data-seamless="true"/);
   assert.doesNotMatch(html,/aria-label="\d+ of 0"/);
-  assert.doesNotMatch(html,/<iframe\b/);
-  assert.match(html,/>Original Tracks<\/h2>/);
-  const catalog=JSON.parse(await read("public/assets/original-tracks/tracks.json"));
-  const audios=[...html.matchAll(/<audio\b[^>]*>/g)].map(match=>match[0]);
-  assert.equal(audios.length,0,'no audio source exists until an explicit Play action');
-  for(const track of catalog.tracks)assert.ok(html.includes('/assets/original-tracks/'+track.url.replace(/^\.\//,'')),'no-JS recording link');
-  assert.match(html,/id="original-tracks"/);
-  assert.match(html,/class="tracks-stage"/);
-  assert.doesNotMatch(html,/Close player|Open Original Tracks|\.\.\/beats\//);
+  assert.doesNotMatch(html,/<iframe\b|<audio\b/);
+  assert.equal((await files()).filter(path=>/original-tracks|^beats\//.test(path)).length,0);
+  assert.doesNotMatch(html,/Original Tracks|original-tracks|tracks-stage/);
 });
 
 test("Molekule phone cover embeds exact cleared pixels and retains its field and larger candidates",async()=>{
@@ -411,7 +405,7 @@ test("Video 2018 ships with its sound track and starts muted with mute and full-
 test("every exported page references the runtime and analytics scripts by their current content hash",async()=>{
   const version=async name=>createHash("sha256").update(await readFile(new URL(`../gh-pages/${name}`,import.meta.url))).digest("hex").slice(0,8);
   const runtime=await version("portfolio-runtime.js"),analytics=await version("portfolio-analytics.js");
-  const html=(await files()).filter(path=>path.endsWith(".html")&&!path.startsWith("beats/"));
+  const html=(await files()).filter(path=>path.endsWith(".html"));
   assert.ok(html.length>=12);
   let runtimeRefs=0;
   for(const path of html){

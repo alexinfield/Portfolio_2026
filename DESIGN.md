@@ -85,64 +85,14 @@ image fills, Retry focus and explicit Telefoni playback. Phone film checks
 actually advance currentTime after one Play tap, twice on fresh loads under
 both motion preferences, then exercise native Play after a paused state.
 
-## Personal, November 3 owner revision
+## Personal, November 4 release split
 
-Experience surface. Alex explicitly reversed the charcoal restyle and equal-height
-cards. His supplied lab is the visual authority: white enclosure, metallic rim,
-blue LCD, ChicagoKare, original wheel and menu styling. No new visual direction
-or interview is needed; the supplied brief settles the product and UI choices.
+Alex chose to keep the music player on a separate branch. This candidate keeps
+the existing Personal collection and source media/framing, case links, font,
+fixed light palette, captions and reviewed Compass 1.2.1 carousel behavior.
 
-References:
-- `/home/infield/Scratch/personal/claude/261102-beats/lab-beats/`: exact device CSS,
-  SVG artwork, font and interaction. Exclude its surrounding page/import UI.
-- `261102-personal-carousel/screenshots/before-lab-phone-light.png`: supplied
-  original appearance witness; retain device surfaces, not its page header.
-- Existing Personal collection and source media/framing: retain content, case
-  links, font, fixed light palette and gallery behavior; change the equal heights.
-- Reviewed Compass 1.2.1 public carousel API: retain native fallback and gestures.
-Anti-reference: the discarded charcoal enclosure, neutral LCD, system screen
-font, opener/Close sheet and uniform 4:3 grid. Do not blend those treatments in.
-
-Implementation direction: one-column natural flow on phones; two/three columns
-with deterministic shortest-column placement from public media aspect and
-fixed caption line metrics. CSS reserves media ratios and server-derived column
-positions before first paint. DOM order remains the collection order. The same
-CSS works without JavaScript; no experimental masonry grid or hydration-time
-reparenting. Even 20px gutters, top alignment, no layout change on swipes.
-
-Original Tracks is one inline, tall card. The original 415×692 device and its
-reflection footprint are reserved in CSS. Only near-view code/font/catalog load;
-no audio source until Play. Public asset paths and component identifiers use
-Original Tracks names. Hosted-only recordings and full MIT notices remain.
-
-Review plan: save the incumbent before captures at 393/1024/1440, render Draft 1
-in both engines and preferences, inspect against the original device and natural
-layout, write numbered findings here, fix them together for Draft 2, then repeat
-only the affected checks. Verify wheel touch/mouse/keyboard, native fallback,
-fixed swipe geometry, no overlaps/holes, CLS 0 and mobile LCP ≤2.5 s. Real-phone
-and Alex acceptance remain separate. PR #14 sticky/rebase work is not included.
-
-Draft 1 review (393, 1024, 1440; Chromium and WebKit; both appearances):
-
-1. The first functional build could not mount a dynamically created player:
-   its eager subscription rendered host attributes during construction. Fixed
-   in 9ac80fe by rendering only after connection. All 192 subsequent render
-   assertions passed, including fixed geometry, original materials/font, script
-   deferral, no audio before Play and CLS 0 where the API is available.
-2. The original Songs menu demanded audio on selection. 9ac80fe now prepares
-   a paused queue without a URL; only Play demands a recording. The full input
-   and network matrix must verify this after the render review.
-3. A ready card retained a redundant parent tab stop, and host keyboard focus
-   had no visible indicator. Draft 2 removes that parent stop after mounting
-   and uses a keyboard-only outline inside the original enclosure. Resting
-   materials, dimensions, font, wheel and menus stay unchanged.
-4. Full-page capture initially skipped offscreen galleries; those before images
-   were rejected and recaptured from the retained 569edc7 export. Capture code
-   forces paint only for evidence and waits for media. The player viewport also
-   needs explicit top alignment below the fixed header. Final full-page shots
-   must settle carousel controls after viewport expansion in WebKit.
-
-The inspected natural-height layout has even 20px gutters, no internal holes,
-top-aligned columns, below-media text and a balanced final group. No cosmetic
-restyle is warranted. The original supplied grain/material gradients and pixel
-font are intentional owner-pinned source assets, not a proposed decorative system.
+Phones use one-column natural flow; wider views use two/three columns with
+deterministic shortest-column placement from public media aspect and fixed
+caption metrics. CSS reserves ratios and column positions before first paint.
+DOM order remains collection order, including without JavaScript. Keep even
+20px gutters, top alignment, no holes or overlaps and stable geometry on swipes.

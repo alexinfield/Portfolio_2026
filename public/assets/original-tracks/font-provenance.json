@@ -1,8 +1,0 @@
-{
-  "font": "ChicagoKare",
-  "file": "appearance/ChicagoKare.woff2",
-  "sha256": "3213740318940270dc4e099b15d49b5781bdf6208660aa970daa5c62d24bcdc4",
-  "license": "appearance/LICENSE-ChicagoKare-MIT.txt",
-  "modifications": "none",
-  "loading": "near-view FontFace load; scoped to the device"
-}

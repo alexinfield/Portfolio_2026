@@ -30,13 +30,13 @@ function page(href,persisted){
 }
 test('pre-idle withdrawal with all writes failing survives a fresh load through its URL marker',()=>{
  const persisted=new Map([[consentKey,'granted']]);
- const first=page('https://portfolio.example/personal/?ref=synthetic#original-tracks',persisted);
+ const first=page('https://portfolio.example/personal/?ref=synthetic#stool',persisted);
  assert.equal(first.setting.checked,true);assert.equal(first.idle.size,1);assert.equal(first.loaders.length,0);
  const pending=[...first.idle.values()];first.fail();first.withdraw();
  assert.equal(first.reloads(),0,'pre-start withdrawal must not force reload');
  assert.equal(persisted.get(consentKey),'granted','fixture must retain the old grant');
  assert.equal(first.location.searchParams.get('analytics'),'off');
- assert.equal(first.location.searchParams.get('ref'),'synthetic');assert.equal(first.location.hash,'#original-tracks');
+ assert.equal(first.location.searchParams.get('ref'),'synthetic');assert.equal(first.location.hash,'#stool');
  for(const callback of pending)callback();assert.equal(first.loaders.length,0,'stale idle callback stays invalidated');
  const fresh=page(first.location.href,persisted);fresh.runIdle();
  assert.equal(fresh.setting.checked,false);assert.equal(fresh.loaders.length,0,'fresh document must insert no provider loaders');

@@ -12,7 +12,6 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
-    "public/beats/**", // Vendored player; exercised by the integration browser suite.
   ]),
 ]);
 

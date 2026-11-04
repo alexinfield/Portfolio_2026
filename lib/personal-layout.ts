@@ -3,7 +3,6 @@ import type {CSSProperties} from "react";
 import type {PersonalProject} from "./personal-media";
 
 export const PERSONAL_GUTTER=20;
-export const TRACKS_ASPECT=415/1042;
 // Stable caption lines keep the server's column geometry independent of image,
 // font and hydration timing. Conservative advances are refined by render review.
 function advance(c:string){return (widths as Record<string,number>)[c]??14;}
@@ -25,25 +24,23 @@ export function personalAspect(project:PersonalProject){
   const loss=(aspect:number)=>media.reduce((sum,m)=>{const framing=m.framing??project.framing;if(framing.fit==="pad")return sum;const r=m.width/m.height;return sum+1-Math.min(r/aspect,aspect/r);},0);
   return loss(first)<=loss(tallest)?first:tallest;
 }
-type Item={id:string;aspect:number;caption:number;player?:boolean};
-type Cell={column:number;media:number;pixels:number;player?:boolean};
+type Item={id:string;aspect:number;caption:number};
+type Cell={column:number;media:number;pixels:number};
 export function masonry(items:Item[]){
   const cells=new Map<string,CSSProperties>();const shell:Record<string,string|number>={};
   for(const count of [2,3]){
     const columns:Cell[]=Array.from({length:count},(_,column)=>({column,media:0,pixels:0}));
-    // Pack only the final partial row by height: the tall player starts beside
-    // its final neighbours rather than leaving a long empty column at the end.
+    // Pack only the final partial row by height to balance the final columns.
     // Earlier source order stays untouched; the phone always uses DOM order.
     const tail=count+1;
     const ordered=[...items.slice(0,-tail),...items.slice(-tail).sort((a,b)=>(400/b.aspect+b.caption)-(400/a.aspect+a.caption))];
     for(const item of ordered){
       const column=columns.reduce((best,c)=>c.media*400+c.pixels<best.media*400+best.pixels?c:best,columns[0]);
       const style=cells.get(item.id)??{};
-      Object.assign(style,{[`--m${count}-column`]:column.column,[`--m${count}-media`]:column.media,[`--m${count}-pixels`]:column.pixels,[`--m${count}-extra`]:column.player?1:0});cells.set(item.id,style);
+      Object.assign(style,{[`--m${count}-column`]:column.column,[`--m${count}-media`]:column.media,[`--m${count}-pixels`]:column.pixels});cells.set(item.id,style);
       column.media+=1/item.aspect;column.pixels+=item.caption+PERSONAL_GUTTER;
-      if(item.player){shell[`--m${count}-player`]=column.column;column.player=true;}
     }
-    for(const c of columns){shell[`--m${count}-h${c.column}-media`]=c.media;shell[`--m${count}-h${c.column}-pixels`]=c.pixels-PERSONAL_GUTTER;shell[`--m${count}-h${c.column}-extra`]=shell[`--m${count}-player`]===c.column?1:0;}
+    for(const c of columns){shell[`--m${count}-h${c.column}-media`]=c.media;shell[`--m${count}-h${c.column}-pixels`]=c.pixels-PERSONAL_GUTTER;}
   }
   return{cells,shell:shell as CSSProperties};
 }
