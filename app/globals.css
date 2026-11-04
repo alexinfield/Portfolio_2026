@@ -22,6 +22,9 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
 .portfolio-header-content {display: flex; align-items: center; gap: var(--inline); min-width: max-content; padding-block: var(--inline); font: 500 .875rem/1.3125rem var(--font);}
 .portfolio-nav {display: flex; align-items: center; gap: var(--inline); margin-left: auto;}
 .portfolio-header [data-slot="button"] {font: inherit; flex-shrink: 0;}
+/* Keyboard focus must paint immediately, including WebKit's native auto ring.
+   Keep the existing button motion without interpolating the outline. */
+.portfolio-header [data-slot="button"] {transition-property: background-color, color, border-color, transform;}
 .portfolio-header [disabled] {color: var(--disabled); opacity: 1; cursor: default;}
 .portfolio-header [data-unavailable-toggle] {color: var(--secondary); cursor: default;}
 .portfolio-unavailable-message {position: fixed; z-index: 101; top: calc(var(--portfolio-header-height) + 8px); right: 18px; max-width: calc(100vw - 20px); display: flex; align-items: center; gap: var(--inline); padding: 10px 12px; border-radius: var(--radius); background: var(--surface); color: var(--text); font-size: .875rem; box-shadow: 0 4px 16px #0003;}
