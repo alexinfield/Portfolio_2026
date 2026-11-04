@@ -104,7 +104,7 @@ test("Personal exports exactly the package order, owner titles and existing case
   assert.deepEqual(ids,visibleItems.map(item=>item.id));
   assert.equal(ids.indexOf("p025-warp-paper-light-and-shadow-relief")+1,ids.indexOf("mycelium"));
   const headings=[...html.matchAll(/<h2\b[^>]*>([\s\S]*?)<\/h2>/g)].map(match=>text(match[1]));
-  assert.deepEqual(headings,[...visibleItems.map(item=>overrides[item.id]??item.title),"Original Tracks"]);
+  assert.deepEqual(headings,visibleItems.flatMap(item=>item.id==="p021-gravity-synth-bouncing-ball-musical-interface"?[overrides[item.id]??item.title,"Original Tracks"]:[overrides[item.id]??item.title]));
   assert.ok(headings.includes("Video 2018"));
   assert.match(html,/href="\.\.\/projects\/mode\/\?from=personal"/);
   assert.match(html,/href="\.\.\/projects\/niche\/\?from=personal"/);
