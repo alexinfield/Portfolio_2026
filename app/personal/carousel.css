@@ -54,3 +54,6 @@
 .personal-masonry > .masonry-card {container-type:inline-size}
 .personal-masonry .portfolio-gallery-boundary {height:calc(100cqw / var(--personal-aspect));flex:none;overflow:clip}
 .personal-masonry .portfolio-gallery-boundary > .compass-personal-gallery {height:100%}
+
+.personal-carousel-pagination {display:flex;align-items:center;gap:8px;padding:4px 8px}
+.personal-carousel-position {font-size:12px;line-height:20px;font-variant-numeric:tabular-nums;white-space:nowrap}

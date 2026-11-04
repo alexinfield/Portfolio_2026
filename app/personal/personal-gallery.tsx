@@ -3,7 +3,7 @@ import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { createRoot, hydrateRoot, type Root } from "react-dom/client";
 import { flushSync } from "react-dom";
 
-import { Button, Carousel, CarouselContent, CarouselSlide, CarouselControls, CarouselPrevious, CarouselNext, CarouselDots } from "../compass";
+import { Button, Carousel, CarouselContent, CarouselSlide, CarouselControls, CarouselPrevious, CarouselNext, CarouselDots, useCarousel } from "../compass";
 import DeferredVideo from "../deferred-video";
 import { personalAsset, personalMediaStyle, type PersonalMedia, type PersonalFraming } from "@/lib/personal-media";
 
@@ -75,6 +75,10 @@ function DeferredGallery(props:GalleryProps) {
 }
 export default memo(DeferredGallery,(a,b)=>a.id===b.id&&a.title===b.title&&a.visible===b.visible&&a.framing===b.framing&&a.aspect===b.aspect&&a.media.length===b.media.length&&a.media.every((item,index)=>item===b.media[index]));
 
+function GalleryPosition(){
+  const {index,count}=useCarousel();
+  return <span className="personal-carousel-position" aria-hidden="true">{index+1} / {count}</span>;
+}
 // Compass owns gestures, focus, pagination and the native scroll fallback.
 function Gallery({media,title,visible,framing,aspect,id}:GalleryProps) {
   const [onscreen,setOnscreen]=useState(false);const host=useRef<HTMLDivElement>(null);
@@ -94,7 +98,7 @@ function Gallery({media,title,visible,framing,aspect,id}:GalleryProps) {
             label={item.alt} width={item.width} height={item.height} active={visible&&onscreen&&inView&&active} controls={!mounted} nativeFallback loop longFilm={(item.duration_seconds??0)>=60} durationSeconds={item.duration_seconds} mediaStyle={personalMediaStyle(item,item.framing??framing,aspect)} frameBackground={(item.framing??framing).background} edgeFill={(item.framing??framing).fill==="edge-extend"} startMuted={item.has_audio===true}/>:<PersonalImage media={item} framing={item.framing??framing} aspect={aspect} eager={(index===0&&["stool","desk-pen"].includes(id))||(near&&onscreen&&mounted)} />}
         </CarouselSlide>)}
       </CarouselContent>
-      {media.length>1&&<CarouselControls className="personal-carousel-controls"><CarouselPrevious aria-label={`Previous image for ${title}`}/>{onscreen&&<CarouselDots inert aria-hidden="true"/>}<CarouselNext aria-label={`Next image for ${title}`}/></CarouselControls>}
+      {media.length>1&&<CarouselControls className="personal-carousel-controls"><CarouselPrevious aria-label={`Previous image for ${title}`}/><div className="personal-carousel-pagination">{onscreen&&<CarouselDots inert aria-hidden="true"/>}<GalleryPosition/></div><CarouselNext aria-label={`Next image for ${title}`}/></CarouselControls>}
     </Carousel>
   </div>;
 }

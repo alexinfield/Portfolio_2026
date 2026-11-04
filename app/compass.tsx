@@ -5,5 +5,5 @@
 export {
   Button, Card, DesignSystemBoundary, Select, SelectTrigger, SelectValue,
   SelectContent, SelectItem, Slider, Carousel, CarouselContent, CarouselSlide,
-  CarouselControls, CarouselPrevious, CarouselNext, CarouselDots,
+  CarouselControls, CarouselPrevious, CarouselNext, CarouselDots, useCarousel,
 } from "@alex-infield/compass-augmentation";

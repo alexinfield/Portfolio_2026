@@ -27,7 +27,7 @@
       this.audio = new AudioClass();
       this.audio.preload = 'none';
       this.audio.setAttribute('playsinline', '');
-      this.queue = []; this.index = -1; this.volume = .8; this.shuffle = false; this.repeat = 'off';
+      this.queue = []; this.index = -1; this.volume = .5; this.shuffle = false; this.repeat = 'off';
       this.contextFactory = contextFactory || (() => new (scope.AudioContext || scope.webkitAudioContext)());
       this.onError = onError; this.listeners = new Set(); this.generation = 0;
       for (const event of ['timeupdate', 'loadedmetadata', 'durationchange', 'play', 'pause']) this.audio.addEventListener(event, () => this.emit());
