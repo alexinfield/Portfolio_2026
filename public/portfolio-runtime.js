@@ -155,6 +155,8 @@
     const frame = video.closest("[data-video-frame]");
     frame.querySelector("[data-video-message]").textContent = text;
     frame.querySelector("[data-video-status]").hidden = false;
+    if(video.poster){video.pause();video.load();}
+    frame.querySelector('[data-video-message]').textContent='Try video again';
     updateButton(video);
   }
 

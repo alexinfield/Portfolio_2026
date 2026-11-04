@@ -45,7 +45,7 @@
         const songs=group?group.songIds.map(id=>d.songs.find(song=>song.id===id)).filter(Boolean):d.songs;
         return songs.map((song,index)=>entry(song.name,()=>{p.select(songs,index);this.navigate('now');}));
       }
-      if(this.view.type==='settings')return [entry(t.shuffle,()=>{p.shuffle=!p.shuffle;this.render();},p.shuffle?t.on:t.off),entry(t.repeat,()=>{p.repeat=['off','all','one'][(['off','all','one'].indexOf(p.repeat)+1)%3];this.render();},t[p.repeat]),entry(t.click,()=>{this.clicker=!this.clicker;this.render();},this.clicker?t.on:t.off),entry(t.light,()=>{this.backlight=!this.backlight;this.render();},this.backlight?t.on:t.off),entry(t.about,()=>this.navigate('about')),entry(t.reset,()=>{p.shuffle=false;p.repeat='off';p.setVolume(.8);this.backlight=true;this.clicker=true;this.render();})];
+      if(this.view.type==='settings')return [entry(t.shuffle,()=>{p.shuffle=!p.shuffle;this.render();},p.shuffle?t.on:t.off),entry(t.repeat,()=>{p.repeat=['off','all','one'][(['off','all','one'].indexOf(p.repeat)+1)%3];this.render();},t[p.repeat]),entry(t.click,()=>{this.clicker=!this.clicker;this.render();},this.clicker?t.on:t.off),entry(t.light,()=>{this.backlight=!this.backlight;this.render();},this.backlight?t.on:t.off),entry(t.about,()=>this.navigate('about')),entry(t.reset,()=>{p.shuffle=false;p.repeat='off';p.setVolume(.5);this.backlight=true;this.clicker=true;this.render();})];
       return [];
     }
     action(action){
@@ -81,7 +81,7 @@
       const title=this.shadowRoot.querySelector('.title');title.textContent=this.view.title||({root:'Original Tracks',songs:t.songs,artists:t.artists,playlists:t.playlists,settings:t.settings,now:t.now,about:t.about}[this.view.type]||'Original Tracks');title.toggleAttribute('data-cjk-text',/[\u2e80-\u9fff\uf900-\ufaff]/.test(title.textContent));
       if(this.view.type==='now'){this.renderNow();return;}
       this.body.replaceChildren();
-      if(this.view.type==='about'){const box=document.createElement('div');box.className='about';for(const line of ['Original Tracks','Alex Infield',this._data.songs.length+' '+t.songs,'Independent player']){const p=document.createElement('p');p.textContent=line;box.append(p);}this.body.append(box);this.syncReflection();return;}
+      if(this.view.type==='about'){const box=document.createElement('div');box.className='about';for(const line of ['Original Tracks','Alex Infield',this._data.songs.length+' '+t.songs,'Independent player']){const p=document.createElement('p');p.textContent=line;box.append(p);}const licence=document.createElement('a');licence.href=new URL('NOTICE.txt',assetRoot).href;licence.textContent='Licences';licence.addEventListener('keydown',event=>event.stopPropagation());box.append(licence);this.body.append(box);this.syncReflection();return;}
       const items=this.list();this.view.index=PlayerCore.clamp(this.view.index,0,Math.max(0,items.length-1));
       if(!items.length){const empty=document.createElement('p');empty.className='empty';empty.textContent=t.empty;this.body.append(empty);this.syncReflection();return;}
       const list=document.createElement('div');list.className='list menu-items';this.body.append(list);

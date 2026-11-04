@@ -62,7 +62,8 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
 .portfolio-artwork {overflow: hidden; border-radius: var(--radius);}
 .portfolio-artwork img {width: 100%;}
 .text-muted {color: var(--secondary);}
-.portfolio-not-found {display: grid; justify-items: start; gap: var(--group); padding-block: var(--section);}
+.portfolio-main:has(.portfolio-not-found) {min-height:100svh;padding-block:var(--portfolio-header-height) 0;display:grid;place-items:center}
+.portfolio-not-found {display:grid;justify-items:center;gap:var(--group);padding-block:var(--section);text-align:center}
 /* Cases retain image content and source order. The authored panels run edge to
    edge and stack with no gap, border, radius or gutter on any side: the case
    page has no side padding and every media box is a block with no margin. */

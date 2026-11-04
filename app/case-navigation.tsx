@@ -2,6 +2,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { withBasePath } from "@/lib/base-path";
 import { Button } from "./compass";
 
+const names:Record<string,string>={"molekule-go":"Molekule Go",ping:"Ping",hyphae:"Hyphae Light",luma:"Luma",mode:"Folio",niche:"Niche"};
 const work = ["molekule-go", "ping", "hyphae", "luma"];
 const personal = ["mode", "niche"];
 
@@ -13,8 +14,8 @@ export default function CaseNavigation({slug}: {slug: string}) {
   const index = sequence.indexOf(slug);
   const target = (name: string) => withBasePath(`/projects/${name}/?from=${collection}`);
   return <nav className="portfolio-case-navigation" aria-label="Case navigation" data-natural-collection={collection}>
-    {index > 0 && <Button asChild variant="secondary" data-plain=""><a href={target(sequence[index - 1])} rel="prev"><ArrowLeft aria-hidden="true" />Previous</a></Button>}
+    {index > 0 && <Button asChild variant="secondary" data-plain=""><a href={target(sequence[index - 1])} rel="prev"><ArrowLeft aria-hidden="true" />{names[sequence[index-1]]}</a></Button>}
     <Button asChild variant="secondary"><a href={withBasePath(collection === "personal" ? "/personal/" : "/")} data-case-back>Back</a></Button>
-    {index < sequence.length - 1 && <Button asChild variant="secondary" data-plain=""><a href={target(sequence[index + 1])} rel="next">Next<ArrowRight aria-hidden="true" /></a></Button>}
+    {index < sequence.length - 1 && <Button asChild variant="secondary" data-plain=""><a href={target(sequence[index + 1])} rel="next">{names[sequence[index+1]]}<ArrowRight aria-hidden="true" /></a></Button>}
   </nav>;
 }

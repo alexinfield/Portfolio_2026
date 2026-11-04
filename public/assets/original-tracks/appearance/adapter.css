@@ -30,3 +30,5 @@
 .reflection-fallback{position:absolute;top:calc(100% + 4px);left:0;width:415px;height:346px;overflow:hidden;pointer-events:none;display:var(--reflection-display,block);mask-image:linear-gradient(to bottom,rgba(0,0,0,.15),transparent);-webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,.15),transparent)}
 .reflection-fallback .player-enclosure{transform:scaleY(-1);-webkit-box-reflect:none;pointer-events:none}
 @media(prefers-reduced-motion:reduce){.select-button,.scroll-wheel{transition:none}}
+
+.about a{display:block;min-height:44px;color:inherit;text-decoration:underline}

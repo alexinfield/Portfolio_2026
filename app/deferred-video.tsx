@@ -85,9 +85,9 @@ export default function DeferredVideo({
         <MediaToggle label={label} />
       </div>}
         <p className="media-status" data-video-status hidden role="status">
-          <span data-video-message>Video unavailable in this browser.</span>{" "}
+          <span data-video-message>Try video again</span>{" "}
           <Button asChild variant="link" size="sm"><a href={file}>Open video file</a></Button>
-          <Button type="button" variant="secondary" size="icon-sm" data-video-retry aria-label={`Retry ${label}`}><RotateCw aria-hidden="true" /></Button>
+          <Button type="button" variant="secondary" size="sm" data-video-retry aria-label={`Try video again: ${label}`}><RotateCw aria-hidden="true" />Try video again</Button>
         </p>
       <noscript><p className="media-noscript">Enable JavaScript to play here. <Button asChild variant="link" size="sm"><a href={file}>Open video file</a></Button></p></noscript>
     </div>
