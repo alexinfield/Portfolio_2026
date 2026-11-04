@@ -176,7 +176,7 @@ test("all six cases preserve the complete ordered image content and descriptions
     for(const tag of tags)assert.ok(/\salt="([^"]+)"/.exec(tag)?.[1].length>10);
     assert.match(html,/portfolio-case-stack/);
     assert.match(html,/aria-label="Case navigation"/);
-    assert.equal((html.match(/<footer/g)||[]).length,1); assert.match(html,/portfolio-privacy/);
+    assert.equal((html.match(/<footer/g)||[]).length,0); assert.doesNotMatch(html,/portfolio-privacy-notice/);
     if(!CASE_TEXT_ENABLED)assert.doesNotMatch(html,/class="case-text"/);
     for(const item of registry[slug].filter(item=>item.kind!=="sequence")){await access(new URL(`../public${item.source}`,import.meta.url));if(item.poster)await access(new URL(`../public${item.poster}`,import.meta.url));}
   }

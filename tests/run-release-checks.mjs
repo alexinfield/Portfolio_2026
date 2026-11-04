@@ -22,15 +22,16 @@ const save=()=>writeFile(join(out,'release-checks.json'),JSON.stringify(report,n
 try{for(const engine of engines){
  const launch=async()=>{const executablePath=process.env[engine==='chromium'?'PORTFOLIO_CHROMIUM_PATH':'PORTFOLIO_WEBKIT_PATH'];const browser=await pw[engine].launch({headless:true,...(executablePath?{executablePath}:{}),...(engine==='chromium'&&process.platform==='linux'?{args:['--no-sandbox','--disk-cache-size=1048576']}: {})});openBrowsers.add(browser);browser.on('disconnected',()=>openBrowsers.delete(browser));const context=browser.newContext.bind(browser);browser.newContext=async options=>{const c=await context({...options,ignoreHTTPSErrors:true});await c.route('https://**/*',route=>new URL(route.request().url()).origin===new URL(server.origin).origin?route.continue():route.fulfill({status:200,contentType:'application/javascript',body:'/* QA provider fixture */'}));return c;};return browser;};
  const results=report.engines[engine]={};
+ if(suite==='all'){results.decisions=await runDecisionRegressions(launch,server.origin,{artifacts:join(out,engine,'decisions')});await save();if(!results.decisions.every(r=>r.pass))throw Error('Decision browser checks failed');}
+ if(suite==='all'||suite==='consent'){
+  results.consent=await runAnalyticsWithdrawalRegressions(launch,server.origin,{artifacts:join(out,engine,'consent'),only:options.case});await save();if(!results.consent.every(r=>r.pass))throw Error('Analytics browser checks failed');
+ }
+
  if(suite==='all'||suite==='preserved'){
   const browser=await launch();try{results.browserVersion=browser.version();results.preserved=await runBrowserRegressions(browser,server.origin,{artifacts:join(out,engine,'preserved')});}finally{await browser.close();}await save();
  }
  if(suite==='all'||suite==='personal'){
   results.personal=await runPersonalReleaseRegressions(launch,server.origin,{engine,artifacts:join(out,engine,'personal'),captureOnly:options['capture-only']==='true'});await save();
- }
- if(suite==='all'){results.decisions=await runDecisionRegressions(launch,server.origin,{artifacts:join(out,engine,'decisions')});await save();}
- if(suite==='all'||suite==='consent'){
-  results.consent=await runAnalyticsWithdrawalRegressions(launch,server.origin,{artifacts:join(out,engine,'consent'),only:options.case});await save();
  }
  if(suite==='all'||suite==='gaps'){results.gaps=await runSequenceGapRegressions(launch,server.origin,{engine,artifacts:join(out,engine,'gaps')});await save();}
  if(suite==='all'||suite==='extend'){results.extend=await runExtendRegressions(launch,server.origin,{engine,artifacts:join(out,engine,'extend')});await save();}
