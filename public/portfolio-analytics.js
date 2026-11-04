@@ -3,8 +3,8 @@
   const key = 'portfolio:analytics-consent:v1';
   const revokedKey = 'portfolio:analytics-revoked:v1';
   const revokedCookie = 'portfolio-analytics-revoked';
-  const setting = document.querySelector('[data-analytics-consent]');
-  const status = document.querySelector('[data-analytics-status]');
+  const setting = null;
+  const status = null;
   const owned = /^(?:_ga(?:_|$)|_gid$|_gat(?:_|$)|_gcl(?:_|$)|_gac(?:_|$)|_cl(?:ck|sk|tk)$|clarity(?:[:._-]|$)|google[_:-]?(?:analytics|tag)|gtm(?:[:._-]|$)|__utm[abczvt]$|AMP_TOKEN$|FP(?:LC|ID)$|CLID$|MUID$|ANONCHK$|MR$|SM$)/i;
   let allowed = false, started = false, locked = false, generation = 0;
   const scripts = new Set(), idleJobs = new Set(), timers = new Set();
@@ -13,7 +13,7 @@
   const revokedCookiePresent=()=>{try{return document.cookie.split(';').some(c=>c.trim().startsWith(revokedCookie+'=1'));}catch{return true;}};
   const readConsent = () => {
     try {
-      return stored()==='granted' && sessionStorage.getItem(revokedKey)!=='1' &&
+      return stored()!=='denied' && sessionStorage.getItem(revokedKey)!=='1' &&
         !revokedCookiePresent() &&
         new URL(location.href).searchParams.get('analytics')!=='off';
     } catch {return false;}
@@ -105,7 +105,8 @@
     const url=new URL(location.href);if(url.searchParams.get('analytics')==='off'){url.searchParams.delete('analytics');history.replaceState(history.state,'',url.href);}
     allowed=readConsent();reflect();if(locked&&allowed)location.reload();else if(allowed)schedule();
   };
-  setting?.addEventListener('change',()=>choose(setting.checked));
+  // Invisible controls preserve explicit withdrawal without adding consent UI.
+  window.portfolioAnalytics={withdraw:()=>withdraw(),enable:()=>choose(true)};
   addEventListener('storage',event=>{
     if(event.key!==key&&event.key!==null)return;
     if(stored()==='granted'&&!revokedCookiePresent()){try{sessionStorage.removeItem(revokedKey);}catch{/* fail closed */}allowed=readConsent();reflect();if(allowed&&locked)location.reload();else if(allowed)schedule();}
@@ -217,6 +218,7 @@
       state.played = true;
       sendEvent("portfolio_media_play", videoParameters(video));
     });
+    for(const event of ['pause','seeked','volumechange','error'])video.addEventListener(event,()=>sendEvent('portfolio_media_'+event,{...videoParameters(video),position_seconds:Math.round(video.currentTime||0),muted:video.muted}));
     video.addEventListener("timeupdate", () => recordVideoProgress(video));
     video.addEventListener("ended", () => {
       if (state.milestones.has(100)) return;
@@ -225,7 +227,11 @@
     });
   }
 
+  document.addEventListener('fullscreenchange',()=>sendEvent('portfolio_fullscreen',{current_route:currentRoute,active:!!document.fullscreenElement}));
   document.addEventListener("click", (event) => {
+    const control=event.target.closest?.('button');
+    if(control){const gallery=control.closest('[data-personal-id]');if(gallery)sendEvent('portfolio_gallery_control',{current_route:currentRoute,project_slug:gallery.dataset.personalId,action:(control.getAttribute('aria-label')||'').slice(0,100)});}
+
     const link = event.target.closest?.("a[href]");
     if (!link) return;
 

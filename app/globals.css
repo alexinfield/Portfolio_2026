@@ -278,3 +278,5 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
 
 /* Snap Mode stills to whole CSS pixels to avoid WebKit overlap raster seams. */
 .portfolio-case-stack:has(img[src*="/mode/media/"]) img.case-media {height:round(nearest, calc((100cqw + 4px) * var(--media-ratio, .5625) - 6px), 1px)}
+
+.portfolio-privacy-notice {grid-column:1/-1;max-width:75ch;color:var(--secondary);font-size:.8125rem;line-height:1.5;margin-block:24px 0}
