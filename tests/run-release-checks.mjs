@@ -6,6 +6,7 @@ import {runAnalyticsWithdrawalRegressions} from './analytics-withdrawal-browser.
 import {runPersonalReleaseRegressions} from './personal-release-browser.mjs';
 import {runBrowserRegressions} from './browser-regressions.mjs';
 import {runSequenceGapRegressions} from './sequence-gap-browser.mjs';
+import {runDecisionRegressions} from './decisions-browser.mjs';
 import {runExtendRegressions} from './extend-browser.mjs';
 
 const options={};for(let i=2;i<process.argv.length;i++){const arg=process.argv[i];if(!arg.startsWith('--'))throw Error('Expected --option value');const [key,inline]=arg.slice(2).split('=',2);options[key]=inline??(process.argv[i+1]?.startsWith('--')?'true':process.argv[++i])??'true';}
@@ -27,6 +28,7 @@ try{for(const engine of engines){
  if(suite==='all'||suite==='personal'){
   results.personal=await runPersonalReleaseRegressions(launch,server.origin,{engine,artifacts:join(out,engine,'personal'),captureOnly:options['capture-only']==='true'});await save();
  }
+ if(suite==='all'){results.decisions=await runDecisionRegressions(launch,server.origin,{artifacts:join(out,engine,'decisions')});await save();}
  if(suite==='all'||suite==='consent'){
   results.consent=await runAnalyticsWithdrawalRegressions(launch,server.origin,{artifacts:join(out,engine,'consent'),only:options.case});await save();
  }
@@ -34,5 +36,5 @@ try{for(const engine of engines){
  if(suite==='all'||suite==='extend'){results.extend=await runExtendRegressions(launch,server.origin,{engine,artifacts:join(out,engine,'extend')});await save();}
 }completed=true;}
 catch(error){report.error=error.stack;}
-finally{await Promise.allSettled([...openBrowsers].map(b=>b.close()));report.finished=new Date().toISOString();report.pass=completed&&Object.values(report.engines).every(e=>['preserved','personal','consent','gaps','extend'].every(key=>!e[key]||e[key].every(r=>r.pass)));await save();await server.close();}
+finally{await Promise.allSettled([...openBrowsers].map(b=>b.close()));report.finished=new Date().toISOString();report.pass=completed&&Object.values(report.engines).every(e=>['preserved','personal','decisions','consent','gaps','extend'].every(key=>!e[key]||e[key].every(r=>r.pass)));await save();await server.close();}
 console.log(JSON.stringify(report,null,2));if(!report.pass)process.exitCode=1;

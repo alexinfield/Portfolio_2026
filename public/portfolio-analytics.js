@@ -3,8 +3,6 @@
   const key = 'portfolio:analytics-consent:v1';
   const revokedKey = 'portfolio:analytics-revoked:v1';
   const revokedCookie = 'portfolio-analytics-revoked';
-  const setting = null;
-  const status = null;
   const owned = /^(?:_ga(?:_|$)|_gid$|_gat(?:_|$)|_gcl(?:_|$)|_gac(?:_|$)|_cl(?:ck|sk|tk)$|clarity(?:[:._-]|$)|google[_:-]?(?:analytics|tag)|gtm(?:[:._-]|$)|__utm[abczvt]$|AMP_TOKEN$|FP(?:LC|ID)$|CLID$|MUID$|ANONCHK$|MR$|SM$)/i;
   let allowed = false, started = false, locked = false, generation = 0;
   const scripts = new Set(), idleJobs = new Set(), timers = new Set();
@@ -22,7 +20,7 @@
   window.gtag=function(){if((allowed&&readConsent())||googleDenied(arguments))window.dataLayer.push(arguments);};
   const denied={analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'};
   window.gtag('consent','default',denied);
-  const reflect=()=>{if(setting)setting.checked=allowed;if(status)status.textContent=allowed?'Analytics is on.':'Analytics is off.';};
+  const reflect=()=>{};
   const domains=()=>{const out=[''];const parts=location.hostname.split('.');while(parts.length>1){out.push(parts.join('.'),'.'+parts.join('.'));parts.shift();}return out;};
   const paths=()=>{const out=new Set(['/']);const parts=location.pathname.split('/').filter(Boolean);for(let i=1;i<=parts.length;i++){out.add('/'+parts.slice(0,i).join('/'));out.add('/'+parts.slice(0,i).join('/')+'/');}return out;};
   const purge=()=>{
