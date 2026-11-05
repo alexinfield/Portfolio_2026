@@ -8,7 +8,7 @@ export async function runDecisionRegressions(launch,baseURL,{artifacts}={}){
  for(const route of ['/','/personal/','/info/','/projects/ping/'])await check('Info-only disclosure and no consent controls: '+route,async()=>{
   await p.goto(baseURL+route);assert.equal(await p.locator('footer,.portfolio-privacy,[data-analytics-consent],[data-analytics-status]').count(),0);
   assert.equal(await p.locator('.portfolio-privacy-notice').count(),route==='/info/'?1:0);
-  if(route==='/info/'){assert.match(await p.locator('.portfolio-privacy-notice').innerText(),/Google Analytics.*Microsoft Clarity.*session recording/);assert.equal(await p.locator('.portfolio-privacy-notice a').count(),2);}
+  if(route==='/info/'){assert.equal(await p.locator('.portfolio-privacy-notice').innerText(),'Google privacy policy · Microsoft privacy policy.');assert.equal(await p.locator('.portfolio-privacy-notice a').count(),2);}
  });
  for(const width of [393,1440])await check('404 centered: '+width,async()=>{
   await p.setViewportSize({width,height:900});await p.goto(baseURL+'/missing/');const r=await p.locator('.portfolio-not-found').boundingBox(),h=await p.locator('header').boundingBox();assert.ok(Math.abs(r.x+r.width/2-width/2)<2);assert.ok(Math.abs(r.y+r.height/2-(900+h.height)/2)<2);

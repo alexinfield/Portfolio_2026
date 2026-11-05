@@ -19,7 +19,7 @@ export default function InfoPage() {
         <Button asChild variant="secondary"><a href="mailto:alex@infield.net">Contact</a></Button>
       </div>
       <CardArtwork />
-      <p className="portfolio-privacy-notice">This site uses Google Analytics and Microsoft Clarity, including session recording, to understand visits and improve the site. <a href="https://policies.google.com/privacy">Google privacy policy</a> · <a href="https://privacy.microsoft.com/privacystatement">Microsoft privacy policy</a>.</p>
+      <p className="portfolio-privacy-notice"><a href="https://policies.google.com/privacy">Google privacy policy</a> · <a href="https://privacy.microsoft.com/privacystatement">Microsoft privacy policy</a>.</p>
     </div>
   </SiteShell>;
 }
