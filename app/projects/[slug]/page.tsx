@@ -58,6 +58,9 @@ function ProjectMedia({
   }
   if (item.kind === "sequence") return <CaseSequence name={item.sequence!} />;
 
+  // The third panel is the measured mobile LCP on these three case routes.
+  const mobileLcp = index === 2 && ["ping", "luma", "mode"].includes(slug);
+
   return (
     <ResponsiveImage
       src={item.source}
@@ -67,8 +70,8 @@ function ProjectMedia({
       sizes="100vw"
       className="case-media"
       style={mediaRatio(item.width, item.height)}
-      loading={index === 0 ? "eager" : "lazy"}
-      fetchPriority={index === 0 ? "high" : "auto"}
+      loading={index < 2 || mobileLcp ? "eager" : "lazy"}
+      fetchPriority={index === 0 || mobileLcp ? "high" : "auto"}
       decoding={index === 0 ? "sync" : "async"}
     />
   );
@@ -138,7 +141,7 @@ function HyphaePresentation({ media }: { media: MediaItem[] }) {
         className="case-media"
         style={mediaRatio(media[1].width, media[1].height)}
         sizes="100vw"
-        loading="lazy"
+        loading="eager"
         decoding="async"
       />
       <CaseText source={media[1].source} />
@@ -225,7 +228,7 @@ export async function generateMetadata({
   const project = getProject(slug);
   return project ? socialMetadata(
     project.title,
-    `${project.title} — a project by Alex Infield.`,
+    project.title,
     `/projects/${project.slug}`,
     projectShareImage(project),
   ) : { title: "Alex Infield" };

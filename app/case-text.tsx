@@ -1,8 +1,8 @@
 import panels from "@/lib/case-panels.json";
 
-// Alex deferred semantic case copy to the later rebuild. Image alternatives
-// remain active through casePanel(); re-enable the guarded tests with this flag.
-export const CASE_TEXT_ENABLED = false;
+// The audit follow-up enables the existing panel transcripts without changing
+// the approved image-led presentation.
+export const CASE_TEXT_ENABLED = true;
 
 type Panel = {
   alt: string;
@@ -19,15 +19,15 @@ export function casePanel(source: string): Panel | undefined {
   return (panels as Record<string, Panel>)[source];
 }
 
-// The original desktop boards remain intact. Their text equivalents are readable
-// on small screens and stay in the accessibility tree at every viewport size.
+// Keep the approved boards intact while exposing their authored text and
+// heading structure to assistive technology at every viewport size.
 export default function CaseText({ source }: { source: string }) {
   if (!CASE_TEXT_ENABLED) return null;
   const panel = casePanel(source);
   if (!panel || !(panel.title || panel.heading || panel.blocks?.length)) return null;
 
   return (
-    <section className="case-text" aria-label="Panel text">
+    <section className="case-text" style={{ position: "absolute", width: 1, height: 1, padding: 0, margin: -1, overflow: "hidden", clipPath: "inset(50%)", whiteSpace: "nowrap", border: 0 }}>
       {panel.title ? <h2>{panel.displayTitle ?? panel.title}</h2> : null}
       {panel.displayTitle ? <p>{panel.title}</p> : null}
       {panel.heading ? <h2>{panel.heading}</h2> : null}

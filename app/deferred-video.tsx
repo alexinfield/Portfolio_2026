@@ -16,6 +16,8 @@ type DeferredVideoProps = {
   loop?: boolean;
   autoplay?: boolean;
   controls?: boolean;
+  /** Keep native source URLs stable across carousel enhancement. */
+  nativeFallback?: boolean;
   active?: boolean;
   paused?: boolean;
   userStarted?: boolean;
@@ -32,7 +34,7 @@ type DeferredVideoProps = {
 
 export default function DeferredVideo({
   source, poster, label, className, width, height,
-  loop = true, autoplay = true, controls = false, active = true, paused = false,
+  loop = true, autoplay = true, controls = false, nativeFallback = false, active = true, paused = false,
   userStarted = false, showToggle = true, longFilm = false, durationSeconds, mediaStyle, frameBackground, previewTime, edgeFill=false, startMuted=false,
 }: DeferredVideoProps) {
   const sources = videoSources(source).map(item=>({...item,src:withBasePath(item.src)}));
@@ -49,6 +51,7 @@ export default function DeferredVideo({
       <video
         style={{...mediaStyle,...(edgeFill?{maskImage:`linear-gradient(${portrait?90:180}deg, transparent, #000 12px, #000 calc(100% - 12px), transparent)`}:{})}}
         data-lazy-video
+        data-native-fallback={nativeFallback || undefined}
         data-preview-time={previewTime}
         data-autoplay-video={autoplay && !longFilm ? "true" : undefined}
         data-demand-only={longFilm ? "true" : undefined}
@@ -69,7 +72,7 @@ export default function DeferredVideo({
         width={width}
         height={height}
       >
-        {sources.map((item) => <source src={longFilm ? item.src : undefined} data-src={item.src} type={item.type} key={item.src} />)}
+        {sources.map((item) => <source src={longFilm || nativeFallback ? item.src : undefined} data-src={item.src} type={item.type} key={item.src} />)}
         <p>Video unavailable in this browser. <Button asChild variant="link" size="sm"><a href={file}>Open video file</a></Button></p>
       </video>
       {longFilm ? <>
@@ -82,9 +85,9 @@ export default function DeferredVideo({
         <MediaToggle label={label} />
       </div>}
         <p className="media-status" data-video-status hidden role="status">
-          <span data-video-message>Video unavailable in this browser.</span>{" "}
+          <span data-video-message>Try video again</span>{" "}
           <Button asChild variant="link" size="sm"><a href={file}>Open video file</a></Button>
-          <Button type="button" variant="secondary" size="icon-sm" data-video-retry aria-label={`Retry ${label}`}><RotateCw aria-hidden="true" /></Button>
+          <Button type="button" variant="secondary" size="sm" data-video-retry aria-label={`Try video again: ${label}`}><RotateCw aria-hidden="true" />Try video again</Button>
         </p>
       <noscript><p className="media-noscript">Enable JavaScript to play here. <Button asChild variant="link" size="sm"><a href={file}>Open video file</a></Button></p></noscript>
     </div>

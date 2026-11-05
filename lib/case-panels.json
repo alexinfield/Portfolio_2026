@@ -3,7 +3,7 @@
     "alt": "A hand holding a black Ping device against a blue sky."
   },
   "/assets/ping/media/6954e47a9ac533d993ab9fd2_2.png": {
-    "alt": "Ping project title, summary, role and date panel.",
+    "alt": "Ping project title, summary, role and date panel. Panel text: Ping Role: Industrial Design, Concept Development, User Research, User Testing Date: 2025 Ping is a voice messaging device that keeps families connected without smartphone distractions. No browsing capabilities, no buzzing alerts. Just simple communication that lets kids stay focused on being kids. Developed in Spring 2025 at MIT on a seven-person team of MBAs, engineers, and a UI/UX designer.",
     "title": "Ping",
     "roles": [
       "Industrial Design",
@@ -22,7 +22,7 @@
     ]
   },
   "/assets/ping/media/6954e5cc05ce517d28b32744_3.png": {
-    "alt": "Children running outdoors beside a statement about connected devices.",
+    "alt": "Children running outdoors beside a statement about connected devices. Panel text: Technology lets families stay connected when it matters, but the devices kids use are often loaded with features that distract from growing up.",
     "blocks": [
       {
         "text": "Technology lets families stay connected when it matters, but the devices kids use are often loaded with features that distract from growing up."
@@ -30,7 +30,7 @@
     ]
   },
   "/assets/ping/media/6954e5dcd0ebbca07d234468_4.webp": {
-    "alt": "Three research columns with photographs of families and children using devices.",
+    "alt": "Three research columns with photographs of families and children using devices. Panel text: Why do families give their kids mobile devices? Families want to stay connected Parents need reliable ways to reach their children and ensure their safety during emergencies. Mobile devices provide this essential connection. Smart devices solve parents worries Modern devices include safety tools, location sharing, and communication features that address parents' core concerns about their children's wellbeing. Parent anxiety outweighs device misuse concerns Parents know smart devices expose kids to apps, distractions, and online risks. But the fear of being unable to reach their child is more tangible, justifying a trade-off.",
     "heading": "Why do families give their kids mobile devices?",
     "blocks": [
       {
@@ -48,7 +48,7 @@
     ]
   },
   "/assets/ping/media/6954e5fe529845a0d1d14b5c_5.png": {
-    "alt": "Comparison chart for phones, smartwatches and trackers with green and red markers.",
+    "alt": "Comparison chart for phones, smartwatches and trackers with green and red markers. Panel text: Current options trade capability for distraction and control. Phones Device that does everything: calls, texts, apps, camera, GPS, tracking Distraction of full internet and attention traps in a Childs pocket Safety controls are bolted on adult settings, easy to misconfigure or bypass Smartwatches Communication and tracking with fewer distractions than a phone Phone behavior on wrist, calls, texts, notifications urgently grab attention Short battery life of one day relies on frequent charging habits Kid branded watches can feel babyish or like a ‘my parents do not trust me’ badge, so kids hide them or do not want to wear them Trackers Dependable location data Months long battery life Surveillance first tool that treat kids like objects and only assure parents No way to communicate through the tag, so families still need another device for communication",
     "heading": "Current options trade capability for distraction and control.",
     "blocks": [
       {
@@ -80,7 +80,7 @@
     ]
   },
   "/assets/ping/media/6954e60420f0839d3a9c0738_6.webp": {
-    "alt": "A blurred photograph of a child running outdoors behind the design question.",
+    "alt": "A blurred photograph of a child running outdoors behind the design question. Panel text: How might we create a device that keeps families connected when it matters, while keeping the internet's distractions out?",
     "blocks": [
       {
         "text": "How might we create a device that keeps families connected when it matters, while keeping the internet's distractions out?"
@@ -88,7 +88,7 @@
     ]
   },
   "/assets/ping/media/69571cc2cda1499b34d965b6_7.webp": {
-    "alt": "A black Ping device worn on a wrist with a heart on its screen.",
+    "alt": "A black Ping device worn on a wrist with a heart on its screen. Panel text: Families stay connected with Ping",
     "blocks": [
       {
         "text": "Families stay connected with Ping"
@@ -96,7 +96,7 @@
     ]
   },
   "/assets/ping/media/6954e60bd993fd9b12f6680f_8.webp": {
-    "alt": "A Ping pendant clipped to a patterned jacket zipper.",
+    "alt": "A Ping pendant clipped to a patterned jacket zipper. Panel text: Ping is a communication device for kids that lets them exchange voice messages and location with their families.",
     "blocks": [
       {
         "text": "Ping is a communication device for kids that lets them exchange voice messages and location with their families."
@@ -104,7 +104,7 @@
     ]
   },
   "/assets/ping/media/6954e6105c2847a6ec297fbb_9.png": {
-    "alt": "Diagram connecting a Ping device to a parent's phone, with other communications outside the loop.",
+    "alt": "Diagram connecting a Ping device to a parent's phone, with other communications outside the loop. Panel text: Ping operates within a closed loop system, keeping the distractions of the internet out Ping Voice Location Emergency Parent's phone Open internet Unknown calls Distracting messages",
     "blocks": [
       {
         "text": "Ping operates within a closed loop system, keeping the distractions of the internet out"
@@ -124,7 +124,7 @@
     ]
   },
   "/assets/ping/media/6954e6134a140b3b2417ee88_10.webp": {
-    "alt": "Red, black and green Ping devices showing buttons and screens.",
+    "alt": "Red, black and green Ping devices showing buttons and screens. Panel text: Ping interface focuses on the essentials: front buttons for voice messaging, side navigation buttons for selecting contacts, and an emergency button",
     "blocks": [
       {
         "text": "Ping interface focuses on the essentials: front buttons for voice messaging, side navigation buttons for selecting contacts, and an emergency button"
@@ -135,7 +135,7 @@
     "alt": "Animation demonstrating the Ping device's buttons and screen."
   },
   "/assets/ping/media/12.mp4": {
-    "alt": "Animation showing a Ping device beside the parent's phone interface.",
+    "alt": "Animation showing a Ping device beside the parent's phone interface. Panel text: The parents companion app shows information only when parents actively request it, making every check-in a deliberate choice rather than passive surveillance.",
     "blocks": [
       {
         "text": "The parents companion app shows information only when parents actively request it, making every check-in a deliberate choice rather than passive surveillance."
@@ -143,7 +143,7 @@
     ]
   },
   "/assets/ping/media/app-functions.mp4": {
-    "alt": "Three phone screens demonstrating messaging, location and emergency actions.",
+    "alt": "Three phone screens demonstrating messaging, location and emergency actions. Panel text: App functionality Messaging Easily send and receive pings from your kid, or review past messages. Location Location is revealed progressively, encouraging parents to monitor responsibly rather than habitually track. Emergencies In an emergency, parents get specific actions to defuse or escalate as needed.",
     "heading": "App functionality",
     "blocks": [
       {
@@ -161,7 +161,7 @@
     ]
   },
   "/assets/ping/media/695ed81af0021571e85519a6_14.webp": {
-    "alt": "Blue and red Ping pendants and a green wrist strap with different screen designs.",
+    "alt": "Blue and red Ping pendants and a green wrist strap with different screen designs. Panel text: Accessories come in varied colors, forms, and collabs, so younger kids can show off a Bluey necklace or Minecraft watch, while older kids can opt for simpler mature styles.",
     "blocks": [
       {
         "text": "Accessories come in varied colors, forms, and collabs, so younger kids can show off a Bluey necklace or Minecraft watch, while older kids can opt for simpler mature styles."
@@ -169,7 +169,7 @@
     ]
   },
   "/assets/ping/media/6954e6331c6dfbcf4f706bee_15.webp": {
-    "alt": "Exploded Ping assembly beside a wireless charging pad and assembled device.",
+    "alt": "Exploded Ping assembly beside a wireless charging pad and assembled device. Panel text: Display Battery Emergency button Wireless charger Talk and listen buttons Nav buttons PCB speaker mic esp-32 bluetooth GPS cellular gyro",
     "blocks": [
       {
         "list": [
@@ -192,7 +192,7 @@
     ]
   },
   "/assets/ping/media/6965569371cb40fc554eb46b_slide-16-9-8.webp": {
-    "alt": "Collage of Ping sketches, CAD models, physical prototypes and refined renders.",
+    "alt": "Collage of Ping sketches, CAD models, physical prototypes and refined renders. Panel text: Sketch → CAD prototypes → Refined sketches → Final CAD",
     "blocks": [
       {
         "text": "Sketch → CAD prototypes → Refined sketches → Final CAD"
@@ -200,7 +200,7 @@
     ]
   },
   "/assets/ping/media/6954e810fe5a48b43139cca2_tmp.png": {
-    "alt": "Closing panel offering the design process upon request.",
+    "alt": "Closing panel offering the design process upon request. Panel text: design process available upon request",
     "blocks": [
       {
         "text": "design process available upon request"
@@ -211,7 +211,7 @@
     "alt": "A hand holding a tall silver Molekule Go purifier against a black background."
   },
   "/assets/molekule-go/media/67b7c85067f9148b23da6a5a_2.png": {
-    "alt": "Molekule Go title, summary, student-project disclaimer and date panel.",
+    "alt": "Molekule Go title, summary, student-project disclaimer and date panel. Panel text: Molekule Go Date: 2025 A portable air purifier designed for the Molekule brand. Molekule Go provides the peace of mind of clean air wherever the user goes. This is a student project and is not affiliated with Molekule.",
     "title": "Molekule Go",
     "date": "2025",
     "blocks": [
@@ -224,7 +224,7 @@
     ]
   },
   "/assets/molekule-go/media/67b7c865ccb047690e7fe47f_3.webp": {
-    "alt": "A bright living room beside a statement about clean air.",
+    "alt": "A bright living room beside a statement about clean air. Panel text: Clean air is an essential factor for both physical health and mental well-being.",
     "blocks": [
       {
         "text": "Clean air is an essential factor for both physical health and mental well-being."
@@ -232,7 +232,7 @@
     ]
   },
   "/assets/molekule-go/media/67b7c87763f52b56f9889ffe_4.webp": {
-    "alt": "Research captions beside photographs of a masked pedestrian, a person at home and a portable purifier.",
+    "alt": "Research captions beside photographs of a masked pedestrian, a person at home and a portable purifier. Panel text: Users want to feel confident in the air they breathe. On average, 70% of people feel that the threat of airborne illness was underestimated before the pandemic. Air purifiers give users peace of mind. Research shows that during COVID, air purifier sales increased by nearly 60% and have since stabilized at a steady 25% increase. Portable air purifiers offer users an extra layer of security, which they find invaluable. Users of existing portable purifiers report that their lightweight, easy-to-carry design makes them a valuable addition to a multi-layered approach to air quality.",
     "blocks": [
       {
         "text": "On average, 70% of people feel that the threat of airborne illness was underestimated before the pandemic.",
@@ -249,7 +249,7 @@
     ]
   },
   "/assets/molekule-go/media/67b7c882cc51ab8479795dba_5.png": {
-    "alt": "Two Molekule purifiers on a wooden table in a living room.",
+    "alt": "Two Molekule purifiers on a wooden table in a living room. Panel text: Meet Molekule—a product pioneer in air purification technology and research.",
     "blocks": [
       {
         "text": "Meet Molekule—a product pioneer in air purification technology and research."
@@ -257,7 +257,7 @@
     ]
   },
   "/assets/molekule-go/media/67b7c88437a55c4b598d305e_6.png": {
-    "alt": "Molekule brand research with four icons and explanatory captions.",
+    "alt": "Molekule brand research with four icons and explanatory captions. Panel text: Who is Molekule? Innovative research, polished design. Advanced technology that eliminates pollutants, instead of only capturing. App connectivity, so users can engage with and understand their air quality Elegant design, making clean air a stylistic decision. Scientifically rigorous research and testing behind products.",
     "heading": "Who is Molekule?",
     "blocks": [
       {
@@ -278,7 +278,7 @@
     ]
   },
   "/assets/molekule-go/media/67b7c890457186c9fc7a05c1_7.png": {
-    "alt": "Product comparison showing the Pro, Mini and a question mark for a portable product.",
+    "alt": "Product comparison showing the Pro, Mini and a question mark for a portable product. Panel text: What do they currently produce and where is a gap? Pro High volume air purification for homes or buisnesses. Mini Compact purification for bedrooms or personal offices. ??? Market opportunity for market leading purification in a portable factor.",
     "heading": "What do they currently produce and where is a gap?",
     "blocks": [
       {
@@ -296,7 +296,7 @@
     ]
   },
   "/assets/molekule-go/media/67b7c89483bd471df90f626d_8.webp": {
-    "alt": "A blurred living room photograph behind the Molekule Go design question.",
+    "alt": "A blurred living room photograph behind the Molekule Go design question. Panel text: How might Molekule empower users to carry the peace of mind of clean air wherever they go?",
     "blocks": [
       {
         "text": "How might Molekule empower users to carry the peace of mind of clean air wherever they go?"
@@ -307,7 +307,7 @@
     "alt": "A sheet of hand-drawn cylindrical purifier concepts, handles and vents."
   },
   "/assets/molekule-go/media/67b7c8b5533b2b704338e5c2_12.png": {
-    "alt": "Molekule Go held upright in a hand beside its introductory caption.",
+    "alt": "Molekule Go held upright in a hand beside its introductory caption. Panel text: Meet the Molekule Go",
     "blocks": [
       {
         "text": "Meet the Molekule Go"
@@ -315,7 +315,7 @@
     ]
   },
   "/assets/molekule-go/media/67ed9067435598210e230469_13.png": {
-    "alt": "Molekule Go render with arrows showing air entering below and leaving above.",
+    "alt": "Molekule Go render with arrows showing air entering below and leaving above. Panel text: an air quality monitor and purifier, for peace of mind you can feel and see",
     "blocks": [
       {
         "text": "an air quality monitor and purifier, for peace of mind you can feel and see"
@@ -323,7 +323,7 @@
     ]
   },
   "/assets/molekule-go/media/UV-animation-transcode.mp4": {
-    "alt": "Animation of the Molekule Go purifier with a caption about ultraviolet light and filtering.",
+    "alt": "Animation of the Molekule Go purifier with a caption about ultraviolet light and filtering. Panel text: Combined ultraviolet light and filtering sanitizes air",
     "blocks": [
       {
         "text": "Combined ultraviolet light and filtering sanitizes air"
@@ -331,7 +331,7 @@
     ]
   },
   "/assets/molekule-go/media/aq-indicator-transcode.mp4": {
-    "alt": "Close-up animation of the purifier indicator with good, moderate and unhealthy states.",
+    "alt": "Close-up animation of the purifier indicator with good, moderate and unhealthy states. Panel text: Sensors monitor the air quality, providing visual peace of mind Good Moderate Unhealthy",
     "blocks": [
       {
         "text": "Sensors monitor the air quality, providing visual peace of mind"
@@ -346,7 +346,7 @@
     ]
   },
   "/assets/molekule-go/media/67b8c2fc707badb11073ae8a_16.png": {
-    "alt": "Molekule Go beside a phone displaying an air quality graph.",
+    "alt": "Molekule Go beside a phone displaying an air quality graph. Panel text: Open the companion app to more advanced air quality information",
     "blocks": [
       {
         "text": "Open the companion app to more advanced air quality information"
@@ -357,7 +357,7 @@
     "alt": "A black bottle beside a silver Molekule Go purifier on a white background."
   },
   "/assets/molekule-go/media/67b7c8cb7571d49d5ac98813_18.webp": {
-    "alt": "Molekule Go with its upper section tilted, showing a carrying loop.",
+    "alt": "Molekule Go with its upper section tilted, showing a carrying loop. Panel text: The top swivels, allowing you to direct airflow",
     "blocks": [
       {
         "text": "The top swivels, allowing you to direct airflow"
@@ -371,7 +371,7 @@
     "alt": "Animation of a round Luma control mounted on a rectangular wall plate."
   },
   "/assets/luma/media/67c857217cdd3cfa62c4ad76_2.png": {
-    "alt": "Luma title, summary, project type and date panel.",
+    "alt": "Luma title, summary, project type and date panel. Panel text: Luma Type: Research, Prototyping, Visualization Date: 2024 Luma is a dial designed to bring smart home controls into physical space, rather than depending on voice or phones.",
     "title": "Luma",
     "type": [
       "Research",
@@ -386,7 +386,7 @@
     ]
   },
   "/assets/luma/media/68cc880a4d81294abb801f14_3.webp": {
-    "alt": "Two white Luma wall controls, one blank and one displaying a light icon.",
+    "alt": "Two white Luma wall controls, one blank and one displaying a light icon. Panel text: Luma is a light switch upgrade. It adds smart home features to your light control panels, serving as a tactile controller for lights and other smart home devices in the same space.",
     "blocks": [
       {
         "text": "Luma is a light switch upgrade. It adds smart home features to your light control panels, serving as a tactile controller for lights and other smart home devices in the same space."
@@ -397,7 +397,7 @@
     "alt": "A hand touching the face of a Luma dial on a sunlit wall."
   },
   "/assets/luma/media/67c8579d328947d05c6da44d_5.png": {
-    "alt": "A living room photograph beside a statement about confusing smart homes.",
+    "alt": "A living room photograph beside a statement about confusing smart homes. Panel text: Smart homes are confusing—not just for visitors, but even for those who live there.",
     "blocks": [
       {
         "text": "Smart homes are confusing—not just for visitors, but even for those who live there."
@@ -405,7 +405,7 @@
     ]
   },
   "/assets/luma/media/67c857a2ca82b28f458c9412_6.png": {
-    "alt": "A wall outlet and phone-controlled lighting beside a caption about physical interfaces.",
+    "alt": "A wall outlet and phone-controlled lighting beside a caption about physical interfaces. Panel text: Smart home devices are designed without consideration of physical interfaces, so they rely on voice control and phones—which only work if you know how to use them.",
     "blocks": [
       {
         "text": "Smart home devices are designed without consideration of physical interfaces, so they rely on voice control and phones—which only work if you know how to use them."
@@ -413,7 +413,7 @@
     ]
   },
   "/assets/luma/media/67c857a86be65293daad8d44_7.png": {
-    "alt": "A hand adjusting a round thermostat displaying 72 beside a research caption.",
+    "alt": "A hand adjusting a round thermostat displaying 72 beside a research caption. Panel text: A phone controlled light is ok in a private bedroom, but a living room light controlled by app or voice? That confuses newcomers, friends, and family. People expect physical controls for their spaces.",
     "blocks": [
       {
         "text": "A phone controlled light is ok in a private bedroom, but a living room light controlled by app or voice? That confuses newcomers, friends, and family."
@@ -424,7 +424,7 @@
     ]
   },
   "/assets/luma/media/67c857ad0f8265842d998cf3_8.png": {
-    "alt": "Annotated floor plan of Home one, showing lights, voice assistants and a WiFi switch.",
+    "alt": "Annotated floor plan of Home one, showing lights, voice assistants and a WiFi switch. Panel text: Do actual homes reflect this? I visited 2 smart homes to see the problems for myself. Home one Voice Assistant: Main control for lamp in different room Lamp: Cannot turn on unless you know voice command Lamp: No physical switch, only controlled by voice or smartphone Light: Bulb is set to custom color Light: Wall switch turns off bulb, disabling internet controls Wifi Switch: Set to automated routine",
     "heading": "Do actual homes reflect this?",
     "blocks": [
       {
@@ -444,7 +444,7 @@
     ]
   },
   "/assets/luma/media/672923c26c86b924de396a80_Section-1.avif": {
-    "alt": "Annotated floor plan of Home two, showing cameras, lights, switches, thermostat and voice assistant.",
+    "alt": "Annotated floor plan of Home two, showing cameras, lights, switches, thermostat and voice assistant. Panel text: Home two Wifi Switch: Set to automated routine Thermostat: Temperature controls away from home Camera: Cameras provide sense of security Wifi Switch: Set to automated routine Wifi Switch: People often unplugged device to power off, disabling internet controls Voice Assistant Light: Turning off the light also turned the camera off Camera: Controls only accessible through app",
     "blocks": [
       {
         "heading": "Home two",
@@ -462,7 +462,7 @@
     ]
   },
   "/assets/luma/media/67c857b97c7a46b4429989ce_10.png": {
-    "alt": "Field findings panel with four icons for phone and voice controls.",
+    "alt": "Field findings panel with four icons for phone and voice controls. Panel text: Field findings Only the home owner knows how to interact with devices Most smart devices only work with phone or voice Smart speaker commands are too specific to be intuitive Visitors need to ask owner how to control lights Smartphones required for access to granular controls",
     "heading": "Field findings",
     "blocks": [
       {
@@ -479,7 +479,7 @@
     ]
   },
   "/assets/luma/media/67c857c2ca82b28f458cb817_11.jpg": {
-    "alt": "A blurred home interior behind the Luma design question.",
+    "alt": "A blurred home interior behind the Luma design question. Panel text: How might we improve tactile controls in smart homes, so that interaction is not reliant on invisible interfaces like voice and apps?",
     "blocks": [
       {
         "text": "How might we improve tactile controls in smart homes, so that interaction is not reliant on invisible interfaces like voice and apps?"
@@ -487,7 +487,7 @@
     ]
   },
   "/assets/luma/media/67c857c88511ec5ecbf220cf_12.png": {
-    "alt": "Design criteria with photographs of a door handle, dial controller and connected-home objects.",
+    "alt": "Design criteria with photographs of a door handle, dial controller and connected-home objects. Panel text: Criteria Familiar Approachable forms that users understand without explanation. Intuitive Simple interaction that visually indicates functionality. Scalable Implement next generation protocols, for use in this generation and the next.",
     "heading": "Criteria",
     "blocks": [
       {
@@ -514,7 +514,7 @@
     "alt": "A mounted dial prototype and a hand holding its removable face."
   },
   "/assets/luma/media/68cc882837876bc16ee3a42c_16.webp": {
-    "alt": "A Luma wall dial in sunlight beside the project name and caption.",
+    "alt": "A Luma wall dial in sunlight beside the project name and caption. Panel text: Luma Smart home controls in your space",
     "blocks": [
       {
         "text": "Luma"
@@ -525,7 +525,7 @@
     ]
   },
   "/assets/luma/media/68cc8832340c3dad64cbf0ff_17.webp": {
-    "alt": "A finger touching a wall-mounted Luma dial.",
+    "alt": "A finger touching a wall-mounted Luma dial. Panel text: Control your lights from a familiar dial interface",
     "blocks": [
       {
         "text": "Control your lights from a familiar dial interface"
@@ -533,7 +533,7 @@
     ]
   },
   "/assets/luma/media/68cc883f9740f79ae41446b3_18.webp": {
-    "alt": "A wall-mounted Luma dial showing a blue fan icon.",
+    "alt": "A wall-mounted Luma dial showing a blue fan icon. Panel text: Have a ceiling fan and lights in the same room? A swipe on the face switches functionality.",
     "blocks": [
       {
         "text": "Have a ceiling fan and lights in the same room? A swipe on the face switches functionality."
@@ -544,7 +544,7 @@
     "alt": "Animation of changing control faces on a Luma wall dial."
   },
   "/assets/luma/media/68cc884f4aac42e702f29e53_20.webp": {
-    "alt": "Three Luma face examples for light colour, locks and temperature.",
+    "alt": "Three Luma face examples for light colour, locks and temperature. Panel text: A variety of custom faces for all your different devices Light color Locks Temperature control",
     "heading": "A variety of custom faces for all your different devices",
     "blocks": [
       {
@@ -557,7 +557,7 @@
     ]
   },
   "/assets/luma/media/68cc8860d6b03b3ea70f3901_21.webp": {
-    "alt": "Phone lighting controls beside a Luma wall dial with a Matter mark below.",
+    "alt": "Phone lighting controls beside a Luma wall dial with a Matter mark below. Panel text: Configure Luma's different faces on your phone, and now anyone can access controls within your space",
     "blocks": [
       {
         "text": "Configure Luma's different faces on your phone, and now anyone can access controls within your space"
@@ -571,7 +571,7 @@
     "alt": "Animation showing a curved translucent Niche booth and its door."
   },
   "/assets/niche/media/689b2414b2a4e819a67caa89_2-p-2600.webp": {
-    "alt": "Niche title, summary, school-project note, project type and date panel.",
+    "alt": "Niche title, summary, school-project note, project type and date panel. Panel text: Niche Type: Research, Prototyping, Visualization Date: 2024 Niche is a furniture system for the workplace. It can scale from a video call booth down to a desk. It's designed to help modern offices adapt as hybrid work changes the workplace. This is a school project.",
     "title": "Niche",
     "type": [
       "Research",
@@ -589,7 +589,7 @@
     ]
   },
   "/assets/niche/media/689b243727ef1fe97436283b_3-p-2600.webp": {
-    "alt": "Three office photographs with desk research captions about meetings and workplace space.",
+    "alt": "Three office photographs with desk research captions about meetings and workplace space. Panel text: Desk Research Video conferences surged nearly 30x during the peak of COVID Since then, virtual meetings have stabilized at 250% above pre-COVID levels, making virtual meetings a normal part of the workday. Many companies are enforcing return-to-office mandates, hoping to boost productivity Half of Fortune 100 companies now require employees to work onsite, a sharp increase from just 5% in 2023. Office layouts were not designed for this change in meeting culture, creating more demand than space allows Over half of workers describe their workplace as noisy, and even more say there aren't enough spaces for private, solo calls. Sources: https://www.microsoft.com/en-us/worklab/work-trend-index/great-expectations-making-hybrid-work-work, https://kpmg.com/xx/en/our-insights/value-creation/kpmg-global-ceo-outlook-survey-2024.html",
     "heading": "Desk Research",
     "blocks": [
       {
@@ -610,7 +610,7 @@
     ]
   },
   "/assets/niche/media/689b24366ea3b02014b20418_4-p-2600.webp": {
-    "alt": "Interview findings with separate columns for workers and employers.",
+    "alt": "Interview findings with separate columns for workers and employers. Panel text: interview quotes Workers say offices don't support solo calls, while employers see phone booths, the market's current solution, as a waste of money and space. Workers say “I make the choice of doing meetings from home so I can guarantee I have a desk.” “People started doing calls from their desk at the office, which is really distracting” Employers say “When we moved out, the booth was just thrown away, which is really sad. It was too much to move and didn't have another use.” “A booth was the only compromise that worked for us, but was so expensive.” Quotes from interviews with 2 employers, 3 employees, and a 10-person survey.",
     "heading": "interview quotes",
     "blocks": [
       {
@@ -636,7 +636,7 @@
     ]
   },
   "/assets/niche/media/689b2437eacc376d583f3017_5-p-2600.webp": {
-    "alt": "A meeting room photograph beside two observations about solo calls.",
+    "alt": "A meeting room photograph beside two observations about solo calls. Panel text: Why the solo call struggles Solo calls are the lowest priority for meeting rooms, forcing attendees to hold them in spaces not designed for meetings. This leads to noise and distraction, most often at desks or in areas where coworkers expect quiet.",
     "heading": "Why the solo call struggles",
     "blocks": [
       {
@@ -648,7 +648,7 @@
     ]
   },
   "/assets/niche/media/689b2437e74613d30786b52e_6-p-2600.webp": {
-    "alt": "Office booth photograph beside the problem statement.",
+    "alt": "Office booth photograph beside the problem statement. Panel text: What is the problem? Hybrid work has increased the number of solo video-conferences, but office spaces aren't designed for them. Traditional booths fill the gap, but are big and expensive.",
     "heading": "What is the problem?",
     "blocks": [
       {
@@ -657,7 +657,7 @@
     ]
   },
   "/assets/niche/media/689b2437baeaa4f3ba58e130_7-p-2600.webp": {
-    "alt": "A blurred office interior behind the Niche design question.",
+    "alt": "A blurred office interior behind the Niche design question. Panel text: How might we design a space for solo calls that can adapt to organizational needs, so workers feel supported and employers get sustained value from their purchase?",
     "blocks": [
       {
         "text": "How might we design a space for solo calls that can adapt to organizational needs, so workers feel supported and employers get sustained value from their purchase?"
@@ -665,7 +665,7 @@
     ]
   },
   "/assets/niche/media/689b2437a4ec5401c814758e_8-p-2600.webp": {
-    "alt": "Three design criteria with reference photographs of modular seating, a work chair and a door handle.",
+    "alt": "Three design criteria with reference photographs of modular seating, a work chair and a door handle. Panel text: Design Critera Adaptable It should provide opportunities for reconfiguration based on user needs. Comfortable Workers should feel equipped for whatever work needs doing, both physically and mentally. Intuitive Workers should be able to step in and get right to work. No misrepresentation of functions or troubleshooting.",
     "heading": "Design Critera",
     "blocks": [
       {
@@ -686,7 +686,7 @@
     "alt": "Five small booth form models in white, pink, teal, purple and grey."
   },
   "/assets/niche/media/689b2438cbbca0694d561d74_10-p-2600.webp": {
-    "alt": "Collage of a booth prototype under construction and a person testing it.",
+    "alt": "Collage of a booth prototype under construction and a person testing it. Panel text: an early stage scale prototype allowed in-depth testing, leading to form refinements",
     "blocks": [
       {
         "text": "an early stage scale prototype allowed in-depth testing, leading to form refinements"
@@ -697,7 +697,7 @@
     "alt": "Hand-drawn sketches exploring booth forms, panels and construction."
   },
   "/assets/niche/media/689b2437e3fa2bb986cb498c_12-p-2600.webp": {
-    "alt": "A Niche booth render with a curved translucent enclosure.",
+    "alt": "A Niche booth render with a curved translucent enclosure. Panel text: Introducing Niche, a booth designed to fit the shape of your organization",
     "blocks": [
       {
         "text": "Introducing Niche, a booth designed to fit the shape of your organization"
@@ -705,7 +705,7 @@
     ]
   },
   "/assets/niche/media/689b243856eb7b002dc5bdca_13-p-2600.webp": {
-    "alt": "A translucent Niche booth rendered in a corner of a room.",
+    "alt": "A translucent Niche booth rendered in a corner of a room. Panel text: a space to take calls, get some focused work done, or have some privacy.",
     "blocks": [
       {
         "text": "a space to take calls, get some focused work done, or have some privacy."
@@ -713,7 +713,7 @@
     ]
   },
   "/assets/niche/media/689b243872f2dd0f56ca7f07_14-p-2600.webp": {
-    "alt": "Four Niche detail views showing enclosure, screen and lighting, fabric layers and ventilation.",
+    "alt": "Four Niche detail views showing enclosure, screen and lighting, fabric layers and ventilation. Panel text: A more open booth Translucent walls let natural light in, obscuring your private conversations without caging you in. Lights, camera, action Built-in lighting and a monitor, with a camera, guarantees you look good on your calls. Insulated for privacy Enclosed glass and layered fabric ensure conversations stay private, both visually and audibly. Do not disturb, as long as needed When in use, red ambient red lighting lets people know the booth is occupied and fans keep fresh air flowing.",
     "blocks": [
       {
         "text": "Translucent walls let natural light in, obscuring your private conversations without caging you in.",
@@ -737,7 +737,7 @@
     "alt": "Animation of the Niche booth enclosure."
   },
   "/assets/niche/media/689b2438b09cbac685c7fb66_16-p-2600.webp": {
-    "alt": "A Niche configuration showing its chair, desk and monitor through an open side.",
+    "alt": "A Niche configuration showing its chair, desk and monitor through an open side. Panel text: Modular assembly allows Niche to reconfigure to your needs.",
     "blocks": [
       {
         "text": "Modular assembly allows Niche to reconfigure to your needs."
@@ -745,7 +745,7 @@
     ]
   },
   "/assets/niche/media/689b243739ac75e4ba95f5f8_17-p-2600.webp": {
-    "alt": "A lower Niche enclosure surrounding a chair, desk and monitor.",
+    "alt": "A lower Niche enclosure surrounding a chair, desk and monitor. Panel text: Niche can scale to a private workspace",
     "blocks": [
       {
         "text": "Niche can scale to a private workspace"
@@ -753,7 +753,7 @@
     ]
   },
   "/assets/niche/media/689b2436fcbee3865f6422c1_18-p-2600.webp": {
-    "alt": "A Niche desk, chair and monitor without the tall enclosure.",
+    "alt": "A Niche desk, chair and monitor without the tall enclosure. Panel text: Or even just a desk.",
     "blocks": [
       {
         "text": "Or even just a desk."
@@ -761,7 +761,7 @@
     ]
   },
   "/assets/niche/media/19-transcode.mp4": {
-    "alt": "Animation showing Niche with coloured and patterned exterior panels.",
+    "alt": "Animation showing Niche with coloured and patterned exterior panels. Panel text: Comes in all your favorite materials and colors",
     "blocks": [
       {
         "text": "Comes in all your favorite materials and colors"
@@ -775,7 +775,7 @@
     "alt": "A branching Hyphae sculpture with small lights at its tips in blue light."
   },
   "/assets/hyphae/media/673e4f850b570f838bba7897_2-title-p-2600.jpg": {
-    "alt": "Hyphae title, summary, project type and date panel.",
+    "alt": "Hyphae title, summary, project type and date panel. Panel text: Hyphae Type: Material research, Digital modeling, Prototyping Date: 2023 The Hyphae light is a fixture concept modeled on the microscopic growth patterns of mycelium, introducing the future material to users through form.",
     "title": "Hyphae",
     "type": [
       "Material research",
@@ -790,7 +790,7 @@
     ]
   },
   "/assets/hyphae/media/673e4f93ee762c2a8500493e_4-definiion-p-2600.jpg": {
-    "alt": "A branching light concept render above the material-driven form description.",
+    "alt": "A branching light concept render above the material-driven form description. Panel text: Material-driven form Concept render As sustainable materials grow in demand, the mycelium name is frequently thrown around. However, when first introduced to people, it unfamiliar and confusing. The Hyphae light seeks to change that by telling the story through form. Deriving its form from the microscopic growth patterns of mycelium, the shape and material of the Hyphae light introduce viewers to the material through sculptural expression of its growth.",
     "heading": "Material-driven form",
     "blocks": [
       {
@@ -805,14 +805,14 @@
     ]
   },
   "/assets/hyphae/media/673e4f9654bb8a139f91357e_5-background-p-2600.jpg": {
-    "alt": "Black section divider labelled Background.",
+    "alt": "Black section divider labelled Background. Panel text: Background",
     "heading": "Background"
   },
   "/assets/hyphae/media/673e512c86494b2b0d5699d7_6-what-p-2600.jpg": {
     "alt": "Two photographs showing white fungal strands and mushrooms growing from a substrate."
   },
   "/assets/hyphae/media/673e513347aa5fac6f38bffb_6.5-what-p-2600.jpg": {
-    "alt": "Text panel explaining mycelium and its use as a composite.",
+    "alt": "Text panel explaining mycelium and its use as a composite. Panel text: What is mycelium? Mycelium is the white root system found living in the ground beneath mushrooms. When grown in wood chips, mycelium becomes a material somewhere between styrofoam and MDF, but 100% compostable. The composites sustainability and structure is what has made the design community excited about it.",
     "heading": "What is mycelium?",
     "blocks": [
       {
@@ -824,7 +824,7 @@
     "alt": "Microscope photograph of branching fungal strands."
   },
   "/assets/hyphae/media/673e515a8fcf893cc96aa730_7.5-hyphae-p-2600.jpg": {
-    "alt": "Text panel describing hyphae and the project goal.",
+    "alt": "Text panel describing hyphae and the project goal. Panel text: Hyphae, the building blocks of mycelium Mycelium is made up of of hyphae, exploring limbs in search of nutrients. Invisibly small, they become apparent to the eye as a mass of white veins after thousands of searching strands overlap. Mycelium is alien on first encounter. It's a spongy membrane of velvety white material, spotted with stains of what look like mold growth. Introducing its to a consumer landscape made of plastics and metals is confusing. By telling the story of hyphae growth through sculpture, I hope to familiarize consumers with this future material. This projects goal is to introduce mycelium material to consumers.",
     "heading": "Hyphae, the building blocks of mycelium",
     "blocks": [
       {
@@ -839,11 +839,11 @@
     ]
   },
   "/assets/hyphae/media/673e500be3c5a74e0039b328_8-process-p-2600.jpg": {
-    "alt": "Black section divider labelled Process.",
+    "alt": "Black section divider labelled Process. Panel text: Process",
     "heading": "Process"
   },
   "/assets/hyphae/media/673e5168c069cb0e98aa237e_9-form-p-2600.jpg": {
-    "alt": "Two digital models of branching growth, one dense and one sparse.",
+    "alt": "Two digital models of branching growth, one dense and one sparse. Panel text: Digitally simulated growth of mycelium Extracted lines",
     "blocks": [
       {
         "text": "Digitally simulated growth of mycelium"
@@ -857,7 +857,7 @@
     "alt": "Animation of a digital branching growth simulation."
   },
   "/assets/hyphae/media/673e516f3a016af805e51aca_9.5-form-p-2600.jpg": {
-    "alt": "Text panel describing the transition from growth simulation to sculptural form.",
+    "alt": "Text panel describing the transition from growth simulation to sculptural form. Panel text: Extracting form from nature To tell the story of mycelium, I wanted to reveal the microscopic growth patterns to consumers. There is beauty in the growth that I felt viewer would resonate with, if it could be shown at a larger scale. My plan was to extract the shape from early growth stages, turn that into a 3d model, and make that into a sculptural lighting fixture. By using Mycologist David Moore's cyberfungi algorithm, which simulates accurate mycelium growth, I was able to create a true to nature digital model. From that digital growth model, I extracted a set of lines which I translated into a 3D model.",
     "heading": "Extracting form from nature",
     "blocks": [
       {
@@ -869,7 +869,7 @@
     ]
   },
   "/assets/hyphae/media/673e5029c3c827bc01c9da8d_10-prototype-p-2600.jpg": {
-    "alt": "Black section divider labelled Prototype.",
+    "alt": "Black section divider labelled Prototype. Panel text: Prototype",
     "heading": "Prototype"
   },
   "/assets/hyphae/media/673e517ae81166914e850b65_11-making-p-2600.jpg": {
@@ -879,7 +879,7 @@
     "alt": "Video of a CNC machine cutting the wooden skeleton parts."
   },
   "/assets/hyphae/media/673e51809aa0efa0f07455e7_11.5-making-p-2600.jpg": {
-    "alt": "Text panel describing construction of the skeleton.",
+    "alt": "Text panel describing construction of the skeleton. Panel text: Making the skeleton To make my digital model into a real mycelium-coated prototype, I split the shape up into parts which I could CNC, then glue together. Wood would allow the mycelium root-structure to grow into the skeleton material, creating strength.",
     "heading": "Making the skeleton",
     "blocks": [
       {
@@ -891,7 +891,7 @@
     "alt": "Photographs of the branching skeleton wrapped with substrate and the exposed growth."
   },
   "/assets/hyphae/media/673e5191244aba7f345aff9a_12.5-growing-p-2600.jpg": {
-    "alt": "Text panel describing the mycelium growing process.",
+    "alt": "Text panel describing the mycelium growing process. Panel text: Growing mycelium I surrounded the skeleton with living mycelium composite, and used saran wrap to secure the loose chips. Then, I covered the model in clay, poked holes, and hydrated it. That convinces the living material that it is underground and gets it to grow. After five days, I unwrapped the prototype to reveal healthy mycelium growth. Hyphae can be seen growing within the wooden skeleton.",
     "heading": "Growing mycelium",
     "blocks": [
       {
@@ -906,7 +906,7 @@
     "alt": "Two photographs of the branching prototype with small lights attached."
   },
   "/assets/hyphae/media/673e51e8e92987487fc8e375_13.5-finish-p-2600.jpg": {
-    "alt": "Text panel describing the finishing steps.",
+    "alt": "Text panel describing the finishing steps. Panel text: Finishing Lights were attached to the ends of the hyphae, indicating that the organism grows from these points. Finally, the mycelium was left out to dry, stopping growth from advancing but not killing it.",
     "heading": "Finishing",
     "blocks": [
       {
@@ -918,7 +918,7 @@
     ]
   },
   "/assets/hyphae/media/673e50438fcf893cc9697a11_14-title-p-2600.jpg": {
-    "alt": "Hyphae title on a dark blue background.",
+    "alt": "Hyphae title on a dark blue background. Panel text: Hyphae",
     "blocks": [
       {
         "text": "Hyphae"
@@ -932,7 +932,7 @@
     "alt": "The Hyphae light suspended against a dark background."
   },
   "/assets/hyphae/media/673e51f3611038a168b5be5b_16.5-img-p-2600.jpg": {
-    "alt": "Text panel relating the sculpture to microscopic growth.",
+    "alt": "Text panel relating the sculpture to microscopic growth. Panel text: The sculpture accurately represents the microscopic growth happening within mycelium. Each limb splits when actual mycelium would split, with lights indicating where the tendrils look to continue growth.",
     "blocks": [
       {
         "text": "The sculpture accurately represents the microscopic growth happening within mycelium. Each limb splits when actual mycelium would split, with lights indicating where the tendrils look to continue growth."
@@ -943,7 +943,7 @@
     "alt": "The branching Hyphae light standing against a pale background."
   },
   "/assets/hyphae/media/673e51f924ce4848d128ef17_19-next-p-2600.jpg": {
-    "alt": "Closing text panel describing possible further iterations.",
+    "alt": "Closing text panel describing possible further iterations. Panel text: Next steps Though the model was executed effectively, considering its 2 week production period, it leaves a lot to be desired. In further iterations, I would primarily focus on production methods and also implement a more realistic lighting system. I would explore using a latex mold to grow the mycelium. That would allow me to better define limits of the growth and a less intense skeleton. I also plan on exploring an internal lighting harness, allowing power from one source to route to lights on each end.",
     "heading": "Next steps",
     "blocks": [
       {
@@ -958,9 +958,8 @@
     "alt": "Close-up photograph of the wooden table leg and open box shelf."
   },
   "/assets/mode/media/67ab87e2cb8a883f8953d763_2.png": {
-    "alt": "Folio artwork title, summary, project type and date panel.",
+    "alt": "Folio artwork title, summary, project type and date panel. Panel text: Folio Type: Research, Making Date: 2023 Folio is a bedside table designed for the routines of modern life. Three distinct layers allow for users to segment needs based on frequency of use and visibility.",
     "title": "Folio",
-    "displayTitle": "Mode",
     "type": [
       "Research",
       "Making"
@@ -973,7 +972,7 @@
     ]
   },
   "/assets/mode/media/67a81174c77885a7ff22d94f_3.jpg": {
-    "alt": "Bedside photographs and research captions about routines, devices and clutter.",
+    "alt": "Bedside photographs and research captions about routines, devices and clutter. Panel text: Modern beds have evolved into multifunctional hubs where users spend extended hours engaging in activities beyond sleep. 63% of American adults follow a bedtime routine, involving reading, medication, or getting a glass of water for the night. 90% of Amercians report using a device within an hour of sleeping. People accumulate clutter—some items are used often, while many don't need to be kept nearby.",
     "blocks": [
       {
         "text": "Modern beds have evolved into multifunctional hubs where users spend extended hours engaging in activities beyond sleep."
@@ -990,7 +989,7 @@
     ]
   },
   "/assets/mode/media/67a811927cb123b274e008e3_4.jpg": {
-    "alt": "A blurred bedside table photograph behind the design question.",
+    "alt": "A blurred bedside table photograph behind the design question. Panel text: How might we create bedside tables that focus on functional versatility to meet the varied needs of modern users?",
     "blocks": [
       {
         "text": "How might we create bedside tables that focus on functional versatility to meet the varied needs of modern users?"
@@ -998,11 +997,11 @@
     ]
   },
   "/assets/mode/media/67a81196c10a1362492b3a09_5.jpg": {
-    "alt": "Black section divider labelled Design Process.",
+    "alt": "Black section divider labelled Design Process. Panel text: Design Process",
     "heading": "Design Process"
   },
   "/assets/mode/media/67a8119c6f5cfc91a5a03a82_6.jpg": {
-    "alt": "Reference photographs illustrating the three table design criteria.",
+    "alt": "Reference photographs illustrating the three table design criteria. Panel text: Design Critera Functional Provide practical and efficient methods to meet user needs. Tasteful Balance form and function to look good in any space. Intuitive Design choices should guide the user to interact with functionality effortlessly.",
     "heading": "Design Critera",
     "blocks": [
       {
@@ -1020,11 +1019,11 @@
     ]
   },
   "/assets/mode/media/67a811a3ed7c682ff5a9b429_8.jpg": {
-    "alt": "Black section divider labelled Making.",
+    "alt": "Black section divider labelled Making. Panel text: Making",
     "heading": "Making"
   },
   "/assets/mode/media/67a811a6cb99ecafb35c483f_9.jpg": {
-    "alt": "The rectangular wooden shelf box clamped during construction.",
+    "alt": "The rectangular wooden shelf box clamped during construction. Panel text: The rectangular box was built first, as the backbone of the piece",
     "blocks": [
       {
         "text": "The rectangular box was built first, as the backbone of the piece"
@@ -1032,7 +1031,7 @@
     ]
   },
   "/assets/mode/media/67a811aa95a8c3687e827ffa_10.jpg": {
-    "alt": "Wooden leg frames and router templates on a workshop bench.",
+    "alt": "Wooden leg frames and router templates on a workshop bench. Panel text: Laser cut templates were used as guide for a router to repeatedly and accurately cut the legs out",
     "blocks": [
       {
         "text": "Laser cut templates were used as guide for a router to repeatedly and accurately cut the legs out"
@@ -1043,14 +1042,14 @@
     "alt": "The unfinished bedside table standing on a workshop bench."
   },
   "/assets/mode/media/67a811b109b34f5402912864_12.jpg": {
-    "alt": "Black section divider labelled Design.",
+    "alt": "Black section divider labelled Design. Panel text: Design",
     "heading": "Design"
   },
   "/assets/mode/media/67a811b5e13cab3fb512139e_13.jpg": {
     "alt": "Front view of the finished wooden table with its lower box shelf."
   },
   "/assets/mode/media/67ab87f9ddb8b343f26dd095_14.jpg": {
-    "alt": "The wooden bedside table holding books and a charging phone.",
+    "alt": "The wooden bedside table holding books and a charging phone. Panel text: Folio's midcentury look fits into nearly any home.",
     "blocks": [
       {
         "text": "Folio's midcentury look fits into nearly any home."
@@ -1058,7 +1057,7 @@
     ]
   },
   "/assets/mode/media/67a811bfb8d99a7caff72b30_15.jpg": {
-    "alt": "Overhead view of the tabletop with a book, keys, tray and phone.",
+    "alt": "Overhead view of the tabletop with a book, keys, tray and phone. Panel text: A large surface lets you keep whatever you need ready to go.",
     "blocks": [
       {
         "text": "A large surface lets you keep whatever you need ready to go."
@@ -1066,7 +1065,7 @@
     ]
   },
   "/assets/mode/media/67a811c2c2547283e02eb121_16.jpg": {
-    "alt": "Close-up of the open shelf holding a charging phone and the lower shelf holding books.",
+    "alt": "Close-up of the open shelf holding a charging phone and the lower shelf holding books. Panel text: An open shelf organizes frequently used yet visually distracting items, like cables, keeping them accessible while minimizing clutter. An enclosed shelf stores long-term, infrequently used items out of sight, yet still within easy reach.",
     "blocks": [
       {
         "text": "An open shelf organizes frequently used yet visually distracting items, like cables, keeping them accessible while minimizing clutter."
@@ -1077,7 +1076,7 @@
     ]
   },
   "/assets/mode/media/67a811c63ca2444ea9863dc8_17.jpg": {
-    "alt": "Side view of the wooden table and its shelves.",
+    "alt": "Side view of the wooden table and its shelves. Panel text: Always-open shelves reveal every item from afar, reminding users of clutter and inviting them to think of where clutter might permanently live.",
     "blocks": [
       {
         "text": "Always-open shelves reveal every item from afar, reminding users of clutter and inviting them to think of where clutter might permanently live."

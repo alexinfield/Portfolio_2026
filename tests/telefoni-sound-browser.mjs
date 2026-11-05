@@ -45,14 +45,14 @@ export async function runTelefoniSoundRegressions(browser, baseURL) {
         assert.equal(await isMuted(page), true);
         const mute = frame.locator("[data-film-controls] [data-film-mute]");
         await mute.click(); assert.equal(await isMuted(page), false);
-        assert.match(await mute.getAttribute("aria-label"), /^Mute /);
+        await page.waitForFunction(s=>document.querySelector(s+" [data-film-controls] [data-film-mute]").getAttribute("aria-label").startsWith("Mute "),frameSel);
         await mute.click(); assert.equal(await isMuted(page), true);
       });
       await check("desktop: full screen turns the sound on", async () => {
         await page.locator("#p041-telefoni .portfolio-gallery").hover(); await frame.locator("[data-film-controls] [data-film-fullscreen]").click();
         await page.waitForFunction(s => document.fullscreenElement === document.querySelector(s), frameSel);
         assert.equal(await isMuted(page), false);
-        await page.evaluate(() => document.exitFullscreen()); await page.waitForFunction(() => !document.fullscreenElement);
+        await page.evaluate(s => {const v=document.querySelector(s+" video");if(document.fullscreenElement)return document.exitFullscreen();v.webkitExitFullscreen?.();},frameSel); await page.waitForFunction(s => !document.fullscreenElement&&!document.querySelector(s+" video").webkitDisplayingFullscreen,frameSel);
       });
     } finally { await context.close(); }
   }
@@ -73,9 +73,9 @@ export async function runTelefoniSoundRegressions(browser, baseURL) {
         const box = await quick.boundingBox(), video = await frame.locator("video").boundingBox();
         assert.ok(box.y < video.y + video.height / 2 && box.x + box.width > video.x + video.width / 2, "compact controls sit top-right");
         await quick.locator("[data-film-fullscreen]").tap();
-        await page.waitForFunction(() => Boolean(document.fullscreenElement));
+        await page.waitForFunction(s => Boolean(document.fullscreenElement||document.querySelector(s+" video").webkitDisplayingFullscreen),frameSel);
         assert.equal(await isMuted(page), false);
-        await page.evaluate(() => document.exitFullscreen()); await page.waitForFunction(() => !document.fullscreenElement);
+        await page.evaluate(s => {const v=document.querySelector(s+" video");if(document.fullscreenElement)return document.exitFullscreen();v.webkitExitFullscreen?.();},frameSel); await page.waitForFunction(s => !document.fullscreenElement&&!document.querySelector(s+" video").webkitDisplayingFullscreen,frameSel);
       });
     } finally { await context.close(); }
   }
@@ -83,7 +83,9 @@ export async function runTelefoniSoundRegressions(browser, baseURL) {
     const iphone = () => {
       Object.defineProperty(Element.prototype, "requestFullscreen", {value: undefined, configurable: true});
       Object.defineProperty(Document.prototype, "fullscreenEnabled", {get: () => false, configurable: true});
+      Object.defineProperty(HTMLVideoElement.prototype, "webkitDisplayingFullscreen", {get() {return this.dataset.webkitFullscreen === "true";}, configurable: true});
       HTMLVideoElement.prototype.webkitEnterFullscreen = function () { this.dataset.webkitFullscreen = "true"; this.dispatchEvent(new Event("webkitbeginfullscreen")); };
+      HTMLVideoElement.prototype.webkitExitFullscreen = function () { this.dataset.webkitFullscreen = "false"; this.dispatchEvent(new Event("webkitendfullscreen")); };
     };
     const {context, page, frame} = await open({viewport: {width: 393, height: 852}, isMobile: true, hasTouch: true, deviceScaleFactor: 3}, iphone);
     try {
@@ -97,7 +99,10 @@ export async function runTelefoniSoundRegressions(browser, baseURL) {
         await frame.tap({position: {x: 60, y: 60}}).catch(() => {});
         await full.tap();
         assert.equal(await frame.locator("video").getAttribute("data-webkit-fullscreen"), "true");
+        assert.equal(await frame.locator("video").evaluate(v => v.webkitDisplayingFullscreen), true);
         assert.equal(await isMuted(page), false);
+        await frame.locator("video").evaluate(v => v.webkitExitFullscreen());
+        assert.equal(await frame.locator("video").evaluate(v => v.webkitDisplayingFullscreen), false);
       });
     } finally { await context.close(); }
   }

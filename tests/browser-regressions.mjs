@@ -9,7 +9,7 @@ import {runTelefoniSoundRegressions} from "./telefoni-sound-browser.mjs";
 // Keep the ce35959 regression coverage alongside the critique-specific checks.
 // Filters are deliberately hidden by the approved design; their retained flag
 // and AND logic are checked by rendered-html.test.mjs instead of clicking UI.
-export async function runPreservedRegressions(browser,baseURL,{artifacts}={}) {
+export async function runPreservedRegressions(browser,baseURL,{artifacts,include}={}) {
   const results=[],origin=new URL(baseURL).origin;
   if(artifacts)await mkdir(artifacts,{recursive:true});
   const context=await browser.newContext({viewport:{width:393,height:852},reducedMotion:"reduce",colorScheme:"light"});
@@ -20,6 +20,7 @@ export async function runPreservedRegressions(browser,baseURL,{artifacts}={}) {
   page.on("pageerror",error=>errors.push(error.message));
   const goto=async route=>{await page.goto(baseURL+route);await page.evaluate(()=>document.fonts.ready);if(route.startsWith('/personal'))await page.waitForFunction(()=>document.querySelector('[data-personal-ready]')?.dataset.personalReady==='true');};
   const check=async(name,action)=>{
+    if(include&&!include.test(name))return;
     try{const detail=await action();results.push({suite:'preserved',name,pass:true,...(detail?{detail}:{})});console.log(`preserved PASS: ${name}`);}
     catch(error){results.push({suite:'preserved',name,pass:false,error:error.message.slice(0,1800)});console.log(`preserved FAIL: ${name}: ${error.message.slice(0,200)}`);if(artifacts)await page.screenshot({path:join(artifacts,`preserved-failure-${results.length}.png`)}).catch(()=>{});}
   };
@@ -45,9 +46,9 @@ export async function runPreservedRegressions(browser,baseURL,{artifacts}={}) {
       await page.setViewportSize({width,height:900});await goto('/personal/');
       for(const id of ['desk-pen','p019-neighborhood-cnc-relief-map-study']){
         const image=page.locator(`#${id} img`).first();await image.scrollIntoViewIfNeeded();
-        await page.waitForFunction(id=>{const image=document.querySelector(`#${id} img`);return image?.complete&&image.naturalWidth>0&&[...document.querySelectorAll(`#${id} .portfolio-gallery-slide:first-child .portfolio-edge-fill`)].every(fill=>getComputedStyle(fill).backgroundImage!=='none');},id);
-        const ratio=await image.evaluate(element=>{const r=element.getBoundingClientRect();return{rendered:r.width/r.height,source:Number(element.getAttribute('width'))/Number(element.getAttribute('height'))};});
-        assert.ok(Math.abs(ratio.rendered-ratio.source)<.01);assert.equal(await page.locator(`#${id} .portfolio-gallery-slide`).first().locator('.portfolio-edge-fill').count(),2);
+        await page.waitForFunction(id=>{const image=document.querySelector(`#${id} img`);return image?.complete&&image.naturalWidth>0&&[...document.querySelectorAll(`#${id} [data-slot=carousel-slide]:first-child .portfolio-edge-fill`)].every(fill=>getComputedStyle(fill).backgroundImage!=='none');},id);
+        const ratio=await image.evaluate(element=>{const r=element.getBoundingClientRect();return{rendered:r.width/r.height,source:Number(element.getAttribute('width'))/Number(element.getAttribute('height')),frame:Number(element.closest('[data-frame-aspect]').dataset.frameAspect)};});
+        assert.ok(Math.abs(ratio.rendered-ratio.source)<.01);assert.equal(await page.locator(`#${id} [data-slot=carousel-slide]`).first().locator('.portfolio-edge-fill').count(),Math.abs(ratio.source-ratio.frame)>.001?2:0);
       }
       const link=page.locator('#folio a');await link.hover();assert.equal(await link.evaluate(element=>getComputedStyle(element).textDecorationLine),'none');
     });
@@ -55,7 +56,7 @@ export async function runPreservedRegressions(browser,baseURL,{artifacts}={}) {
       await goto('/personal/');const gallery=page.locator('#server-rack .portfolio-gallery');await gallery.scrollIntoViewIfNeeded();
       const before=await gallery.boundingBox();await gallery.locator('img').first().evaluate(image=>image.dispatchEvent(new Event('error')));
       await gallery.getByRole('button',{name:/Retry image/}).click();
-      assert.ok(await gallery.evaluate(element=>element===document.activeElement));assert.equal((await gallery.boundingBox()).height,before.height);
+      assert.ok(await gallery.evaluate(element=>element.querySelector('[data-slot=carousel]')===document.activeElement));assert.equal((await gallery.boundingBox()).height,before.height);
     });
     await check('Telefoni desktop explicit Play advances playback with Compass controls',async()=>{
       await page.setViewportSize({width:1440,height:900});await goto('/personal/');const frame=page.locator('#p041-telefoni [data-video-frame]'),video=frame.locator('video');await video.scrollIntoViewIfNeeded();

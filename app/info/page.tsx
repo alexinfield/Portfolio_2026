@@ -1,10 +1,11 @@
+import artwork from "@/lib/info-artwork.json";
 import type { Metadata } from "next";
 import { socialMetadata } from "@/lib/social-metadata";
 import SiteShell from "../site-shell";
 import ResponsiveImage from "../responsive-image";
 import { Button } from "../compass";
 
-export const metadata: Metadata = socialMetadata("Info", "About Alex Infield.", "/info", {
+export const metadata: Metadata = socialMetadata("Info", "Info", "/info", {
   url: "/assets/info/media/67aca18a869f9276f4c0ef01_IMG_0019-w960.webp",
   width: 960, height: 960, alt: "White paper folded into a repeating grid of triangular shapes.",
 });
@@ -18,11 +19,12 @@ export default function InfoPage() {
         <Button asChild variant="secondary"><a href="mailto:alex@infield.net">Contact</a></Button>
       </div>
       <CardArtwork />
+      <p className="portfolio-privacy-notice"><a href="https://policies.google.com/privacy">Google privacy policy</a> · <a href="https://privacy.microsoft.com/privacystatement">Microsoft privacy policy</a>.</p>
     </div>
   </SiteShell>;
 }
 function CardArtwork() {
-  return <div className="portfolio-artwork"><ResponsiveImage src="/assets/info/media/67aca18a869f9276f4c0ef01_IMG_0019.png"
-    alt="White paper folded into a repeating grid of triangular shapes." width={2000} height={2000}
+  return <div className="portfolio-artwork"><ResponsiveImage src={artwork.src}
+    alt="White paper folded into a repeating grid of triangular shapes." width={artwork.width} height={artwork.height}
     sizes="(max-width: 767px) 100vw, 50vw" fetchPriority="high" decoding="sync" /></div>;
 }

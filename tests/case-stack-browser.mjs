@@ -13,8 +13,11 @@ const measure = () => {
   const vw = document.documentElement.clientWidth, header = document.querySelector(".portfolio-header").getBoundingClientRect().bottom;
   const boxes = [...document.querySelectorAll(".portfolio-case-stack img:not(.ss img), .portfolio-case-stack .case-video, .portfolio-case-stack .case-sequence")]
     .filter(element => element.getClientRects().length && !element.closest("[hidden],noscript"))
-    .map(element => { const r = element.getBoundingClientRect(); const style = getComputedStyle(element);
-      return {top: r.top + scrollY, bottom: r.bottom + scrollY, left: r.left, right: r.right, border: style.borderTopWidth + style.borderBottomWidth, radius: style.borderTopLeftRadius, margin: style.marginTop + style.marginBottom}; });
+    .map(element => { const host=element.matches('img')?((vw >= 768 ? element.closest('.case-composite') : null)||element.closest('.case-panel')):null;
+      const logical=host?.getBoundingClientRect().width?host:element;
+      const r = logical.getBoundingClientRect(); const style = getComputedStyle(logical);
+      const paintBleed = logical.matches('img.case-media');
+      return {top: r.top + scrollY, bottom: r.bottom + scrollY + (paintBleed ? -1 : 0), left: r.left, right: r.right, border: style.borderTopWidth + style.borderBottomWidth, radius: style.borderTopLeftRadius, margin: style.marginTop + style.marginBottom, paintBleed}; });
   const first = document.querySelector(".portfolio-case-stack .case-sequence, .portfolio-case-stack img:not(.ss img), .portfolio-case-stack video:not(.ss video)").getBoundingClientRect().top + scrollY;
   return {vw, scrollWidth: document.documentElement.scrollWidth, header, scrollY, boxes, first};
 };
@@ -65,12 +68,15 @@ export async function runCaseStackRegressions(browser, baseURL) {
     for (const width of geometryWidths) for (const slug of caseSlugs) {
       await check(`case media edge to edge with zero gaps: ${slug} @ ${width}`, async () => {
         await page.setViewportSize({width, height: 900}); await page.goto(`${baseURL}/projects/${slug}/`);
+        await page.evaluate(async () => { await document.fonts.ready; await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))); });
         const m = await page.evaluate(measure), rows = rowsOf(m.boxes);
         assert.ok(rows.length > 1, "case has stacked media");
         assert.equal(m.scrollWidth, m.vw, "no horizontal scroll");
         assert.ok(Math.abs(m.boxes[0].top - (m.header + m.scrollY)) < 0.01, `first media meets the header (${m.boxes[0].top} vs ${m.header})`);
         assert.ok(Math.abs(m.first - (m.header + m.scrollY)) < 0.01, `first media element starts at the header (${m.first} vs ${m.header})`);
-        for (const box of m.boxes) { assert.equal(box.border, "0px0px"); assert.equal(box.radius, "0px"); assert.equal(box.margin, "0px0px"); }
+        // Bare images paint 1 px beyond their layout footprint. Wrapped media
+        // are measured through the wrapper and still have zero layout margins.
+        for (const box of m.boxes) { assert.equal(box.border, "0px0px"); assert.equal(box.radius, "0px"); assert.equal(box.margin, box.paintBleed ? "0px-1px" : "0px0px"); }
         rows.forEach((row, index) => {
           // Media boxes overscan 2 px each side (the stack clips them) so no edge column shows.
           assert.ok(row.left <= 0.01 && row.right >= m.vw - 0.01, `row ${index} spans the full width (${row.left}..${row.right} of ${m.vw})`);

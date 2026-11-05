@@ -1,3 +1,27 @@
+Alex's final November 4 answers 32–61 also govern this candidate. GA and
+Clarity start by default after load/idle; there is no consent UI or footer
+disclosure. A plain-text notice with both provider policy links appears only
+on Info. Invisible withdrawal paths remain available. Case navigation uses
+project names, failures keep their posters, the 404 is centered, and licences
+live in the player's About view with a no-JS fallback. Metadata descriptions
+are titles only. Work shares Molekule Go, Personal shares Folio, and each case
+has a 1.91:1 preview crop. Only the detailed text boards listed in
+`lib/detailed-boards.json` receive 3840px derivatives. Info artwork loses only
+its fully transparent outer padding. These decisions supersede any historical
+consent and metadata notes below.
+
+Alex's November 4 answers govern this candidate: 10px phone and 20px
+desktop margins, 20px project gutters, 24px above and below the Personal
+link, and “Professional work available upon request” in its status message.
+Personal has 16px titles and no descriptions (answer 25 overrides 17–24;
+description sizing and wrapping are moot). Every gallery has an authored,
+fixed ratio in `lib/personal-layout.ts`; padded media keeps its full image.
+The final partial row follows source order without sorting by height.
+Original Tracks follows Gravity Synth, starts at 50% volume, and keeps the
+approved names, clicker, queue behavior and accessible help. Gallery position
+uses dots plus a visible “1 / n” count. These answers supersede conflicting
+historical layout notes below. Palettes remain Personal light, others dark.
+
 # Portfolio design
 
 Alex's November 3 review of draft v28 requires the Luma and Molekule Go
@@ -26,10 +50,10 @@ The supplied case-study image panels retain their content.
   record and media kept but never exported; Telefoni shown as "Video 2018";
   Warp sits immediately before Mycelium), existing Folio/Niche case links,
   manual galleries and retained AND filter logic behind one hidden-UI flag.
-  Uniform 4:3 frames; per-slide positions and source-derived edge extension
-  preserve whole objects. Genuine descriptions reveal only in bottom image
-  strips on hover/focus, with tap toggle and separate swipe navigation on touch.
-  Dots/count persist below the strip; arrows reveal on hover/focus/touch.
+  Natural media heights and fixed column widths. Titles and descriptions sit
+  below media. Each carousel chooses its first or tallest slide aspect by the
+  least-crop score and reserves that frame through every swipe. Compass keeps
+  swipe, keyboard, dots and arrows; there is no equal-height or overlay-text rule.
 - Info: the approved Brooklyn introduction, one secondary Contact mailto Button
   beneath it and the existing artwork. The desktop text group is centered.
   No footer email, appearance control or résumé link.
@@ -84,3 +108,65 @@ style parity/44 px targets/focus at 320/390/1440 and 200 percent text, cached
 image fills, Retry focus and explicit Telefoni playback. Phone film checks
 actually advance currentTime after one Play tap, twice on fresh loads under
 both motion preferences, then exercise native Play after a paused state.
+
+## Personal, November 3 owner revision
+
+Experience surface. Alex explicitly reversed the charcoal restyle and equal-height
+cards. His supplied lab is the visual authority: white enclosure, metallic rim,
+blue LCD, ChicagoKare, original wheel and menu styling. No new visual direction
+or interview is needed; the supplied brief settles the product and UI choices.
+
+References:
+- `/home/infield/Scratch/personal/claude/261102-beats/lab-beats/`: exact device CSS,
+  SVG artwork, font and interaction. Exclude its surrounding page/import UI.
+- `261102-personal-carousel/screenshots/before-lab-phone-light.png`: supplied
+  original appearance witness; retain device surfaces, not its page header.
+- Existing Personal collection and source media/framing: retain content, case
+  links, font, fixed light palette and gallery behavior; change the equal heights.
+- Reviewed Compass 1.2.1 public carousel API: retain native fallback and gestures.
+Anti-reference: the discarded charcoal enclosure, neutral LCD, system screen
+font, opener/Close sheet and uniform 4:3 grid. Do not blend those treatments in.
+
+Implementation direction: one-column natural flow on phones; two/three columns
+with deterministic shortest-column placement from public media aspect and
+fixed caption line metrics. CSS reserves media ratios and server-derived column
+positions before first paint. DOM order remains the collection order. The same
+CSS works without JavaScript; no experimental masonry grid or hydration-time
+reparenting. Even 20px gutters, top alignment, no layout change on swipes.
+
+Original Tracks is one inline, tall card. The original 415×692 device and its
+reflection footprint are reserved in CSS. Only near-view code/font/catalog load;
+no audio source until Play. Public asset paths and component identifiers use
+Original Tracks names. Hosted-only recordings and full MIT notices remain.
+
+Review plan: save the incumbent before captures at 393/1024/1440, render Draft 1
+in both engines and preferences, inspect against the original device and natural
+layout, write numbered findings here, fix them together for Draft 2, then repeat
+only the affected checks. Verify wheel touch/mouse/keyboard, native fallback,
+fixed swipe geometry, no overlaps/holes, CLS 0 and mobile LCP ≤2.5 s. Real-phone
+and Alex acceptance remain separate. PR #14 sticky/rebase work is not included.
+
+Draft 1 review (393, 1024, 1440; Chromium and WebKit; both appearances):
+
+1. The first functional build could not mount a dynamically created player:
+   its eager subscription rendered host attributes during construction. Fixed
+   in 9ac80fe by rendering only after connection. All 192 subsequent render
+   assertions passed, including fixed geometry, original materials/font, script
+   deferral, no audio before Play and CLS 0 where the API is available.
+2. The original Songs menu demanded audio on selection. 9ac80fe now prepares
+   a paused queue without a URL; only Play demands a recording. The full input
+   and network matrix must verify this after the render review.
+3. A ready card retained a redundant parent tab stop, and host keyboard focus
+   had no visible indicator. Draft 2 removes that parent stop after mounting
+   and uses a keyboard-only outline inside the original enclosure. Resting
+   materials, dimensions, font, wheel and menus stay unchanged.
+4. Full-page capture initially skipped offscreen galleries; those before images
+   were rejected and recaptured from the retained 569edc7 export. Capture code
+   forces paint only for evidence and waits for media. The player viewport also
+   needs explicit top alignment below the fixed header. Final full-page shots
+   must settle carousel controls after viewport expansion in WebKit.
+
+The inspected natural-height layout has even 20px gutters, no internal holes,
+top-aligned columns, below-media text and a balanced final group. No cosmetic
+restyle is warranted. The original supplied grain/material gradients and pixel
+font are intentional owner-pinned source assets, not a proposed decorative system.

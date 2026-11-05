@@ -3,11 +3,20 @@ import { dirname, join } from "node:path";
 import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { applyExtendBlur } from "./extend-blur.mjs";
+import { copyDraftTree } from "./draft-media-copy.mjs";
+import { secureHtml } from "./meta-security.mjs";
+import { pruneSourceImages } from "./prune-source-images.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const output = join(root, process.env.PORTFOLIO_EXPORT_DIR || "gh-pages");
 const siteOrigin = (process.env.PORTFOLIO_SITE_ORIGIN ?? "https://alexinfield.com").replace(/\/+$/, "");
 const allowIndexing = process.env.PORTFOLIO_ALLOW_INDEXING === "true";
+// Embed the exact cleared phone derivative in the document. This removes a
+// separate critical image request without changing a pixel or the desktop set.
+const moleculeCover = JSON.parse(await readFile(join(root,"lib/project-media.json"),"utf8"))["molekule-go"][0].source.replace(/\.[^.]+$/, "-w768.webp");
+const moleculeCoverBytes = await readFile(join(root,"public",moleculeCover));
+if (moleculeCoverBytes.length > 60000) throw Error("Critical phone cover exceeds inline budget");
+const moleculeCoverInline = `data:image/webp;base64,${moleculeCoverBytes.toString("base64")}`;
 const basePath = process.env.PORTFOLIO_BASE_PATH ?? "";
 if (!["", "/next"].includes(basePath) || (basePath && allowIndexing)) throw new Error("Invalid private export configuration");
 const mount = value => !basePath || value === basePath || value.startsWith(basePath+"/") ? value : basePath+value;
@@ -29,7 +38,10 @@ const workerUrl = new URL(`../dist/server/index.js?export=${Date.now()}`, import
 const { default: worker } = await import(workerUrl.href);
 
 await rm(output, { recursive: true, force: true });
-await cp(join(root, "dist/client"), output, { recursive: true });
+if (process.env.PORTFOLIO_DRAFT_LINK_MEDIA === "true") {
+  await copyDraftTree(join(root, "public"), join(root, "dist/client"));
+  await copyDraftTree(join(root, "dist/client"), output);
+} else await cp(join(root, "dist/client"), output, { recursive: true });
 for(const name of ["_headers",".assetsignore",".vite"])await rm(join(output,name),{recursive:true,force:true});
 
 // Hidden Personal entries keep their record and media in the repository, but
@@ -97,7 +109,8 @@ function withExtendBlur(html, route) {
   const at = basePath ? `${basePath}/assets/eb/` : `${relativeRoot(route)}assets/eb/`;
   return out
     .replace("</head>", `<link rel="stylesheet" href="${at}extend.css?v=${scriptVersions["extend.css"]}"/></head>`)
-    .replace("</body>", `<script src="${at}extend.js?v=${scriptVersions["extend.js"]}" defer=""></script></body>`);
+    // Discover the reveal controller before the body and its hydration work.
+    .replace(/(<head>\s*<meta[^>]*charset[^>]*>)/i, `$1<script src="${at}extend.js?v=${scriptVersions["extend.js"]}" defer=""></script>`);
 }
 
 function relativeRoot(route) {
@@ -108,7 +121,7 @@ function relativeRoot(route) {
 
 function staticHtml(html, route) {
   const base = relativeRoot(route);
-  const canonicalPath = route === "/" ? "/" : route;
+  const canonicalPath = route === "/" ? "/" : route + "/";
   // Only the interactive shell pages hydrate. Cases/404 use the small static
   // appearance/media controller and retain native links without shipping React.
   const hydratedRoutes = new Set(["/personal", "/projects/hyphae"]);
@@ -160,7 +173,27 @@ function staticHtml(html, route) {
     `<link rel="canonical" href="${siteOrigin}${canonicalPath}"/>${robots}</head>`,
   );
 
+  if (route === "/projects/molekule-go") {
+    // Panel 19 is many screens below the opening photograph. Its poster
+    // must not compete with the actual first-screen LCP image.
+    result = result.replace(/(<picture class="ss-poster">[\s\S]*?<img\b[^>]*?)fetchpriority="high"/,
+      '$1loading="lazy" fetchpriority="low"');
+    result = result.replace(/(<img\b[^>]*?)decoding="sync"/, '$1decoding="async"');
+    // Keep the approved font preloads so the header is ready at first paint.
+    const hero = /<link\b(?=[^>]*rel="preload")(?=[^>]*as="image")(?=[^>]*fetchPriority="high")[^>]*>/i.exec(result);
+    if (hero) {
+      const larger = hero[0].replace(relativeRoot(route)+moleculeCover.slice(1)+' 768w, ', '').replace('<link ', '<link media="(min-width: 960px)" ');
+      result = result.replace(hero[0], '').replace(/(<head>\s*<meta[^>]*charset[^>]*>)/i, '$1'+larger);
+    }
+  }
   result = versionScripts(result);
+  if (route === "/personal") {
+    // Native server-rendered cards paint before React starts enhancing them.
+    // Keep the bootstrap and all film/player handlers; focus/pointer input can
+    // request enhancement immediately while a slow image is still loading.
+    result = result.replace(/(<script\s+id="_R_">)([\s\S]*?)(<\/script>)/, (_m, open, boot, close) =>
+      `${open}(()=>{let started=false;const start=()=>{if(started)return;started=true;${boot}};addEventListener("pointerdown",start,{once:true,capture:true});addEventListener("focusin",start,{once:true,capture:true});addEventListener("load",()=>requestAnimationFrame(()=>requestAnimationFrame(start)),{once:true});})();${close}`);
+  }
   const palette = route === "/personal" ? "light" : "dark";
   result = result.replace(/(<html\b[^>]*class=")[^"]*(")/, `$1${palette === "dark" ? "dark" : ""}$2`)
     .replace(/(<html\b[^>]*data-theme=")[^"]*(")/, `$1${palette}$2`)
@@ -180,7 +213,25 @@ async function renderRoute(route) {
   );
 
   if (!response.ok) throw new Error(`Failed to render ${route}: ${response.status}`);
-  const html = withExtendBlur(staticHtml(await response.text(), route), route);
+  let html = withExtendBlur(staticHtml(await response.text(), route), route);
+  // Derive the approved Extend field from the original cleared path first.
+  if (route === "/projects/molekule-go") {
+    html = html.replaceAll(relativeRoot(route)+moleculeCover.slice(1), moleculeCoverInline)
+      .replace(/<div\b(?=[^>]*class="case-panel")[^>]*>/, tag=>tag.replace('<div ', '<div data-eb="done" '))
+      .replace(/<img\b/, '<img data-eb-native=""');
+    // Start lower panel requests only after the opening cover has had a paint
+    // opportunity. Native lazy loading otherwise fetches large panels well
+    // beyond the viewport while the critical cover is still being presented.
+    let cover = true;
+    html = html.replace(/<img\b(?=[^>]*class="[^"]*case-media)[^>]*>/g, tag => {
+      if (cover) { cover = false; return tag; }
+      const deferred = tag.replace(/\ssrcset="([^"]*)"/, ' data-critical-srcset="$1"').replace(/\ssrc="([^"]*)"/, ' data-critical-src="$1"');
+      const fallback = tag.replace(/\sdata-eb-media=""/, '').replace(/style="([^"]*)"/, 'style="$1;position:relative;z-index:1;opacity:1"');
+      return deferred + `<noscript>${fallback}</noscript>`;
+    }).replace(/<div\b(?=[^>]*class="case-panel")[^>]*>/g, tag => tag.includes('data-eb="done"') ? tag : tag.replace('<div ', '<div data-eb="wait" '));
+    html = html.replace(/<body\b[^>]*>/, '$&<noscript><style>img[data-critical-src]{display:none!important}noscript{display:contents}</style></noscript>');
+    html = html.replace('</body>', `<script>(()=>{const restore=()=>{for(const image of document.querySelectorAll('img[data-critical-src]')){const set=image.getAttribute('data-critical-srcset');if(set)image.setAttribute('srcset',set);image.setAttribute('src',image.getAttribute('data-critical-src'));image.removeAttribute('data-critical-src');image.removeAttribute('data-critical-srcset');}};const start=()=>{const cover=document.querySelector('img[data-eb-native]');Promise.resolve(cover?.decode?.()).catch(()=>{}).then(()=>requestAnimationFrame(()=>requestAnimationFrame(restore)));};if(document.readyState!=='loading')start();else addEventListener('DOMContentLoaded',start,{once:true});})();</script></body>`);
+  }
   const path = route === "/" ? join(output, "index.html") : join(output, route.slice(1), "index.html");
   await mkdir(dirname(path), { recursive: true });
   await writeFile(path, html);
@@ -205,10 +256,10 @@ const missingHtml = staticHtml(await missing.text(), "/404")
   .replace(/srcset=(["'])(.*?)\1/gi, (_match, quote, value) => `srcset=${quote}${value.replace(/(^|,\s*)\.\//g, `$1${(basePath || new URL(siteOrigin).pathname.replace(/\/?$/, "")) + "/"}`)}${quote}`)
   .replace(/<link\b(?=[^>]*\brel=["']canonical["'])[^>]*>/gi, "")
   .replace(/<meta\b(?=[^>]*\bproperty=["']og:url["'])[^>]*>/gi, "")
-  .replace(/(<meta[^>]*(?:property="og:title"|name="twitter:title") content=")[^"]*/g, "$1Page not found — Alex Infield")
-  // Preserve main's untracked-404 behavior: metadata repair adds no analytics scope.
-  .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, script => /dataLayer|clarity|googletagmanager|portfolio-analytics/.test(script) ? "" : script)
-  .replace(/<title>[^<]*<\/title>/, "<title>Page not found — Alex Infield</title>")
+  .replace(/(<meta[^>]*(?:property="og:title"|name="twitter:title") content=")[^"]*/g, "$1Page not found")
+  .replace(/<footer\b[^>]*class="[^"]*portfolio-privacy[^"]*"[^>]*>[\s\S]*?<\/footer>/gi, "")
+  .replace(/<title>[^<]*<\/title>/, "<title>Page not found</title>")
+  .replace(/(<meta[^>]*(?:name="description"|property="og:description"|name="twitter:description") content=")[^"]*/g, "$1Page not found")
   .replace(/<meta\b(?=[^>]*\bname=["']robots["'])[^>]*>/gi, "")
   .replace("</head>", '<meta name="robots" content="noindex,nofollow"/></head>');
 await writeFile(join(output, "404.html"), missingHtml);
@@ -222,7 +273,7 @@ for (const { route, target, relativeTarget } of redirects) {
     .replaceAll("Page not found", "Page moved")
     .replace(">404</p>", `>Continue to ${label}.</p>`)
     .replace(/(<div class="portfolio-actions">)([\s\S]*?)(<\/div>)/, (_match, open, actions, close) => open + actions.replace(/(<a\b[^>]*href=")[^"]*("[^>]*>)Work(<\/a>)/, `$1${relativeTarget}$2Continue to ${label}$3`) + close)
-    .replace("</head>", `<link rel="canonical" href="${siteOrigin}${target}"/><meta http-equiv="refresh" content="0;url=${relativeTarget}"></head>`)
+    .replace("</head>", `<link rel="canonical" href="${siteOrigin}${target}/"/><meta http-equiv="refresh" content="0;url=${relativeTarget}"></head>`)
     .replace("</body>", `<script>location.replace(new URL(${JSON.stringify(relativeTarget)},location.href).href)</script></body>`);
   await mkdir(dirname(path), { recursive: true });
   await writeFile(path, html);
@@ -234,7 +285,7 @@ await writeFile(join(root, "dist/extend-blur.json"), JSON.stringify(extendReport
 if (!basePath) await writeFile(
   join(output, "sitemap.xml"),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${routes
-    .map((route) => `  <url><loc>${siteOrigin}${route === "/" ? "/" : route}</loc></url>`)
+    .map((route) => `  <url><loc>${siteOrigin}${route === "/" ? "/" : route + "/"}</loc></url>`)
     .join("\n")}\n</urlset>\n`,
 );
 await writeFile(
@@ -245,6 +296,19 @@ await writeFile(
 );
 
 const generatedHome = await readFile(join(output, "index.html"), "utf8");
+async function secureTree(directory) {
+  for (const entry of await readdir(directory, {withFileTypes:true})) {
+    const path = join(directory, entry.name);
+    if (entry.isDirectory()) await secureTree(path);
+    else if (entry.name.endsWith('.html')) {
+      const html = await readFile(path, 'utf8');
+      if (/data-draft-review-panel|In review \(draft only\)|Slow loading/.test(html)) throw Error('Draft controls in export');
+      await writeFile(path, secureHtml(html));
+    }
+  }
+}
+await secureTree(output);
+await writeFile(join(root, "dist/withheld-source-images.json"), JSON.stringify(await pruneSourceImages(output), null, 2));
 if (generatedHome.includes("I want to see")) throw new Error("Legacy portfolio markup remains in export");
 
 console.log(`Exported ${routes.length} live routes and ${redirects.length} legacy redirects to ${output}`);

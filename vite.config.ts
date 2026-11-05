@@ -16,6 +16,7 @@ export default defineConfig(async () => {
 
   return {
     cacheDir: ".vite-cache",
+    build: { copyPublicDir: process.env.PORTFOLIO_DRAFT_LINK_MEDIA !== "true" },
     plugins: [
       vinext(),
       cloudflare({

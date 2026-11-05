@@ -1,0 +1,67 @@
+/* Column geometry is rendered before images or hydration; DOM reading order stays intact. */
+.personal-masonry-shell {container-type:inline-size}
+.portfolio-personal-front.personal-masonry {display:block;position:relative;margin:0;--tracks-extra:0px}
+.personal-masonry > .masonry-card {position:relative;width:100%;min-width:0;margin:0 0 20px}
+.personal-masonry > .masonry-card:last-child {margin-bottom:0}
+.personal-masonry .portfolio-card-label {height:44px;min-height:44px;margin:0;font-size:16px;line-height:20px}
+.personal-masonry .portfolio-image {aspect-ratio:var(--personal-aspect);height:auto}
+.personal-masonry .portfolio-work-card img {aspect-ratio:auto}
+.personal-masonry .portfolio-gallery-boundary,.personal-masonry .compass-personal-gallery {aspect-ratio:var(--personal-aspect)}
+.compass-personal-gallery .ac-carousel {position:relative}
+.compass-personal-gallery .ac-carousel-viewport {border-radius:var(--radius)}
+.personal-masonry .compass-personal-gallery [data-slot="carousel-slide"] > .portfolio-image,
+.compass-personal-gallery [data-slot="carousel-slide"] > .personal-video {width:100%;height:100%;aspect-ratio:auto}
+.compass-personal-gallery .portfolio-image img,.compass-personal-gallery .personal-video video {width:100%;height:100%}
+.compass-personal-gallery .personal-carousel-controls {position:absolute;left:var(--inline);right:var(--inline);bottom:var(--inline);z-index:5;justify-content:space-between;pointer-events:none}
+.compass-personal-gallery .personal-carousel-controls > :not(button) {pointer-events:auto;background:var(--canvas);border-radius:var(--radius)}
+.compass-personal-gallery .ac-carousel-dots {margin:0 auto}
+/* Compass's original 12 px dot pitch and 44 px extended hit area. */
+.compass-personal-gallery .ac-carousel-dots [data-slot="button"] {width:12px;height:12px;min-width:12px;min-height:12px;padding:0;border-radius:50%}
+.compass-personal-gallery .personal-carousel-controls > button {opacity:0;pointer-events:none;transition:opacity .12s}
+.compass-personal-gallery:is(:hover,:focus-within) .personal-carousel-controls > button {opacity:1;pointer-events:auto}
+.compass-personal-gallery:has(.ac-carousel-viewport:not([data-enhanced])) .personal-carousel-controls {visibility:hidden}
+.tracks-stage {position:relative;aspect-ratio:415/1042;width:100%;overflow:hidden}
+.tracks-mount,.tracks-poster {position:absolute;inset:0;display:block}
+.tracks-mount {opacity:0}
+.tracks-stage[data-ready="true"] .tracks-mount {opacity:1}
+.tracks-stage[data-ready="true"] .tracks-poster {visibility:hidden}
+.tracks-poster img {display:block;width:100%;height:100%;object-fit:contain}
+.tracks-caption {display:flex;align-items:center;justify-content:space-between;height:44px;gap:8px}
+.tracks-caption a {display:inline-flex;align-items:center;min-height:44px;font-size:14px;text-decoration:underline}
+.tracks-file-links a {display:flex;align-items:center;min-height:44px;text-decoration:underline;font-size:14px}
+.tracks-error {position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:20px;gap:12px}
+@media (min-width:768px) {
+ .personal-masonry {height:max(calc(var(--m2-h0-media) * ((100cqw - 20px) / 2) + var(--m2-h0-pixels) * 1px + var(--m2-h0-extra) * var(--tracks-extra)),calc(var(--m2-h1-media) * ((100cqw - 20px) / 2) + var(--m2-h1-pixels) * 1px + var(--m2-h1-extra) * var(--tracks-extra)))}
+ .personal-masonry > .masonry-card {position:absolute;width:calc((100% - 20px) / 2);left:calc(var(--m2-column) * ((100% + 20px) / 2));top:calc(var(--m2-media) * ((100cqw - 20px) / 2) + var(--m2-pixels) * 1px + var(--m2-extra) * var(--tracks-extra));margin:0}
+}
+@media (min-width:1200px) {
+ .personal-masonry {height:max(calc(var(--m3-h0-media) * ((100cqw - 40px) / 3) + var(--m3-h0-pixels) * 1px + var(--m3-h0-extra) * var(--tracks-extra)),calc(var(--m3-h1-media) * ((100cqw - 40px) / 3) + var(--m3-h1-pixels) * 1px + var(--m3-h1-extra) * var(--tracks-extra)),calc(var(--m3-h2-media) * ((100cqw - 40px) / 3) + var(--m3-h2-pixels) * 1px + var(--m3-h2-extra) * var(--tracks-extra)))}
+ .personal-masonry > .masonry-card {position:absolute;width:calc((100% - 40px) / 3);left:calc(var(--m3-column) * ((100% + 20px) / 3));top:calc(var(--m3-media) * ((100cqw - 40px) / 3) + var(--m3-pixels) * 1px + var(--m3-extra) * var(--tracks-extra));margin:0}
+}
+@media (hover:none) {.compass-personal-gallery .personal-carousel-controls > button {opacity:1;pointer-events:auto}}
+@media (scripting:none) {
+ .personal-masonry {--tracks-extra:176px}
+ .compass-personal-gallery .personal-carousel-controls {display:none!important}
+ .compass-personal-gallery .personal-video .media-controls,.compass-personal-gallery .native-film-start {display:none!important}
+}
+@media (prefers-reduced-motion:reduce) {.compass-personal-gallery .personal-carousel-controls {transition:none}}
+
+/* Parsed noscript children identify scripting-disabled documents even when a
+   browser does not expose the scripting media feature. Reserve the file links. */
+.personal-masonry:has(#original-tracks > noscript > nav) {--tracks-extra:176px}
+#original-tracks > noscript:has(> nav) {display:block;height:176px}
+#original-tracks > noscript .tracks-file-links a {height:44px;box-sizing:border-box}
+.personal-masonry > .masonry-card {container-type:inline-size}
+.personal-masonry .portfolio-gallery-boundary {height:calc(100cqw / var(--personal-aspect));flex:none;overflow:clip}
+.personal-masonry .portfolio-gallery-boundary > .compass-personal-gallery {height:100%}
+
+.compass-personal-gallery .personal-carousel-controls {height:44px;align-items:center}
+.personal-carousel-pagination {display:flex;align-items:center;justify-content:center;gap:8px;padding:4px 8px;width:160px;flex-shrink:0;height:44px;min-height:44px}
+.personal-carousel-position {font-size:12px;line-height:20px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.personal-carousel-dot-space {display:flex;align-items:center;justify-content:center;flex:0 0 96px;width:96px;height:44px;overflow:clip}
+.personal-carousel-position {flex:0 0 32px;width:32px;text-align:center}
+
+.tracks-error {position:static;height:280px;min-height:280px;overflow:auto;padding:12px 0}
+.personal-masonry:has(.tracks-error) {--tracks-extra:280px}
+
+.tracks-noscript-licence {display:flex;align-items:center;height:44px;min-height:44px;font-size:14px}

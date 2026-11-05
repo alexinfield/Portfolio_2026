@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import {mkdir} from "node:fs/promises";
 import {join} from "node:path";
 
-export async function runBrowserRegressions(browser,baseURL,{artifacts}={}) {
+export async function runBrowserRegressions(browser,baseURL,{artifacts,include}={}) {
   const results=[];
   const origin=new URL(baseURL).origin;
   if(artifacts)await mkdir(artifacts,{recursive:true});
@@ -15,6 +15,7 @@ export async function runBrowserRegressions(browser,baseURL,{artifacts}={}) {
     page.on("console",message=>{if(message.type()==="error"&&!/Failed to load resource|net::ERR_FAILED/.test(message.text()))errors.push(message.text());});
     const goto=async route=>{await page.goto(baseURL+route,{waitUntil:"load"});await page.evaluate(()=>document.fonts.ready);if(route.startsWith("/personal"))await page.waitForFunction(()=>document.querySelector("[data-personal-ready]")?.dataset.personalReady==="true");};
     const check=async(name,action)=>{
+      if(include&&!include.test(name))return;
       try{const detail=await action();results.push({device,name,pass:true,...(detail?{detail}:{})});console.log(`${device} PASS: ${name}`);}
       catch(error){results.push({device,name,pass:false,error:error.message.slice(0,1800)});console.log(`${device} FAIL: ${name}: ${error.message.slice(0,240)}`);if(artifacts)await page.screenshot({path:join(artifacts,`${device}-failure-${results.length}.png`)}).catch(()=>{});}
     };
@@ -45,7 +46,7 @@ export async function runBrowserRegressions(browser,baseURL,{artifacts}={}) {
       });
       await check("Professional discloses a lock through hover, keyboard focus and tap, without navigation",async()=>{
         await goto("/");
-        const button=page.getByRole("button",{name:"Professional",exact:true}),tip=page.locator("#unavailable-status");let url=page.url();
+        const button=page.getByRole("button",{name:"Professional",exact:true}),tip=page.locator("#unavailable-status");let url=page.url();assert.equal(await tip.textContent(),"Professional work available upon request");
         assert.equal(await button.getAttribute("aria-disabled"),"true");assert.equal(await button.evaluate(element=>element.disabled),false);
         if(device==="desktop"){
           await button.hover();await tip.waitFor({state:"visible"});assert.equal(await tip.locator("svg").count(),1);
@@ -75,47 +76,35 @@ export async function runBrowserRegressions(browser,baseURL,{artifacts}={}) {
         }
         await page.keyboard.press("Escape");
       });
-      await check("Personal has fifteen uniform frames, hidden filters and no permanent About labels",async()=>{
+      await check("Personal has fifteen reserved natural frames, hidden filters and no permanent About labels",async()=>{
         await goto("/personal/");assert.equal(await page.locator("[data-personal-id]").count(),15);
-        assert.equal(await page.getByRole("combobox").count(),0);assert.equal(await page.locator("details,.portfolio-about-label").count(),0);
-        const boxes=await page.locator(".portfolio-personal-front .portfolio-image,.portfolio-gallery-stage").evaluateAll(items=>items.map(item=>{const r=item.getBoundingClientRect();return{w:r.width,h:r.height};}));
-        assert.ok(boxes.every(box=>Math.abs(box.w/box.h-4/3)<.01));
+        assert.equal(await page.getByRole("combobox").count(),0);assert.equal(await page.locator("main details,.portfolio-about-label").count(),0);
+        const boxes=await page.locator('[data-personal-id]').evaluateAll(items=>items.map(item=>{const r=(item.querySelector('.ac-carousel-viewport')||item.querySelector('.portfolio-image')).getBoundingClientRect();return{w:r.width,h:r.height,aspect:Number(item.dataset.frameAspect)};}));
+        assert.ok(boxes.every(box=>Math.abs(box.w/box.h-box.aspect)<.01),JSON.stringify(boxes));
+        assert.equal(await page.locator('#original-tracks').count(),1);
       });
-      await check("description strips respond to hover, focus, activation and Escape without covering pagination",async()=>{
-        await goto("/personal/");const gallery=page.locator("#desk-pen .portfolio-gallery"),button=gallery.locator("[data-gallery-description-toggle]"),strip=gallery.locator(".portfolio-description-strip");
-        await gallery.scrollIntoViewIfNeeded();await page.mouse.move(0,0);await page.evaluate(()=>document.activeElement?.blur());
-        assert.equal(await strip.evaluate(element=>getComputedStyle(element).visibility),"hidden");
-        if(device==="desktop"){await gallery.hover();assert.equal(await button.getAttribute("aria-expanded"),"true");await page.mouse.move(0,0);await button.focus();}
-        else await button.tap();
-        await page.waitForFunction(()=>document.querySelector('#desk-pen [data-gallery-description-toggle]').getAttribute('aria-expanded')==='true');
-        await page.waitForTimeout(400);
-        const bounds=await gallery.evaluate(element=>{const frame=element.querySelector('.portfolio-gallery-stage').getBoundingClientRect(),panel=element.querySelector('.portfolio-description-strip'),strip=panel.getBoundingClientRect(),range=document.createRange();range.selectNodeContents(panel);const text=range.getBoundingClientRect(),dots=element.querySelector('.gallery-pagination').getBoundingClientRect();
-          const controls=[...element.querySelectorAll('.portfolio-gallery-slide:not([hidden]) .media-controls button')].filter(button=>button.getClientRects().length).map(button=>button.getBoundingClientRect().bottom);
-          return{frame:{top:frame.top,bottom:frame.bottom},strip:{top:strip.top,bottom:strip.bottom},text:{bottom:text.bottom},dots:{top:dots.top,bottom:dots.bottom},controls};});
-        // The panel runs to the card's foot with the dots inside it, below its text; controls sit above it.
-        assert.ok(bounds.strip.top>=bounds.frame.top&&bounds.text.bottom<=bounds.dots.top+.5&&bounds.dots.top>=bounds.strip.top&&bounds.dots.bottom<=bounds.frame.bottom+.5,JSON.stringify(bounds));
-        assert.ok(bounds.controls.every(bottom=>bottom<=bounds.strip.top-7.5),JSON.stringify(bounds));
-        assert.equal(await gallery.locator('.gallery-navigation').evaluate(element=>getComputedStyle(element).opacity),'1');
-        if(device==='phone'){await button.tap();assert.equal(await button.getAttribute('aria-expanded'),'false');await button.tap();}
-        await page.keyboard.press("Escape");assert.equal(await button.getAttribute("aria-expanded"),"false");
-        if(artifacts){if(device==='desktop')await gallery.hover();else await button.tap();await gallery.screenshot({path:join(artifacts,`description-${device}.png`)});}
+      await check("titles stay below media through hover, focus and Escape without covering controls",async()=>{
+        await goto('/personal/');const card=page.locator('#desk-pen'),gallery=card.locator('.portfolio-gallery'),description=card.locator('.portfolio-card-label');await gallery.scrollIntoViewIfNeeded();await gallery.locator('.ac-carousel-viewport[data-enhanced]').waitFor();
+        assert.equal(await gallery.locator('[data-gallery-description-toggle],.portfolio-description-strip').count(),0);assert.equal(await description.isVisible(),true);
+        const position=()=>card.evaluate(e=>{const frame=e.querySelector('.ac-carousel-viewport').getBoundingClientRect(),text=e.querySelector('.portfolio-card-label').getBoundingClientRect();return{frameBottom:frame.bottom+scrollY,textTop:text.top+scrollY,height:e.getBoundingClientRect().height};});const before=await position();assert.ok(before.textTop>=before.frameBottom);
+        if(device==='desktop')await gallery.hover();await gallery.locator('[data-slot=carousel]').focus();await page.keyboard.press('Escape');const after=await position();assert.equal(after.height,before.height);assert.equal(after.textTop,before.textTop);assert.equal(await description.isVisible(),true);
+        if(artifacts)await card.screenshot({path:join(artifacts,`description-${device}.png`)});
       });
-      await check("gallery keyboard, persistent dots/count and single-image navigation",async()=>{
-        await goto("/personal/");const gallery=page.locator("#desk-pen .portfolio-gallery"),button=gallery.locator("[data-gallery-description-toggle]");await button.focus();
-        await page.keyboard.press("ArrowRight");await gallery.getByRole("group",{name:"2 of 6",exact:true}).waitFor({state:"visible"});assert.equal(await gallery.locator(".gallery-count").textContent(),"2 / 6");
-        await page.keyboard.press("Home");assert.equal(await gallery.locator(".gallery-count").textContent(),"1 / 6");
-        assert.equal(await page.locator("#book .gallery-pagination,#book .gallery-navigation").count(),0);
-        await page.evaluate(()=>document.activeElement?.blur());await page.mouse.move(0,0);assert.equal(await gallery.locator(".gallery-pagination").isVisible(),true);
+      await check("gallery keyboard, persistent pagination/live count and single-image navigation",async()=>{
+        await goto("/personal/");const gallery=page.locator("#desk-pen .portfolio-gallery");await gallery.scrollIntoViewIfNeeded();await gallery.locator('.ac-carousel-viewport[data-enhanced]').waitFor();await gallery.locator('[data-slot=carousel]').focus();
+        await page.keyboard.press("ArrowRight");await gallery.getByRole("group",{name:"2 of 6",exact:true}).waitFor({state:"visible"});assert.equal(await gallery.locator(".ac-carousel-sr").textContent(),"2 of 6");
+        await page.keyboard.press("Home");assert.equal(await gallery.locator(".ac-carousel-sr").textContent(),"1 of 6");
+        assert.equal(await page.locator("#book [data-slot=carousel-controls],#book [data-slot=carousel-controls]").count(),0);
+        await page.evaluate(()=>document.activeElement?.blur());await page.mouse.move(0,0);assert.equal(await gallery.locator("[data-slot=carousel-controls]").isVisible(),true);
       });
-      if(device==="phone")await check("real touch swipe changes a slide without toggling description; tap does not change slide; scroll does neither",async()=>{
-        await goto("/personal/");const gallery=page.locator("#desk-pen .portfolio-gallery"),button=gallery.locator("[data-gallery-description-toggle]");await gallery.scrollIntoViewIfNeeded();
-        const box=await button.boundingBox(),x=box.x+box.width*.7,y=box.y+box.height*.4;
-        const session=await context.newCDPSession(page);
-        async function gesture(dx,dy){await session.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y}]});await page.waitForTimeout(30);await session.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+dx/2,y:y+dy/2}]});await page.waitForTimeout(30);await session.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+dx,y:y+dy}]});await session.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await page.waitForTimeout(100);}
-        await gesture(-100,0);await gallery.getByRole("group",{name:"2 of 6",exact:true}).waitFor({state:"visible"});assert.equal(await button.getAttribute('aria-expanded'),'false');
-        await button.tap();await page.waitForFunction(()=>document.querySelector('#desk-pen [data-gallery-description-toggle]').getAttribute('aria-expanded')==='true');assert.equal(await gallery.locator('.gallery-count').textContent(),'2 / 6');
-        await button.tap();await page.waitForFunction(()=>document.querySelector('#desk-pen [data-gallery-description-toggle]').getAttribute('aria-expanded')==='false');await gesture(0,-70);assert.equal(await button.getAttribute('aria-expanded'),'false');assert.equal(await gallery.locator('.gallery-count').textContent(),'2 / 6');
-        assert.equal(await gallery.locator('[data-pressed="true"]').count(),0);await session.detach();
+      if(device==="phone")await check("phone pointer swipe changes a slide; tap and vertical movement retain the slide and below-media text",async()=>{
+        await goto("/personal/");const gallery=page.locator("#desk-pen .portfolio-gallery");await gallery.scrollIntoViewIfNeeded();
+        await gallery.locator('.ac-carousel-viewport[data-enhanced]').waitFor();
+        const box=await gallery.locator('.ac-carousel-viewport').boundingBox(),x=box.x+box.width*.8,y=box.y+box.height*.4;
+        const session=browser.browserType().name()==='chromium'?await context.newCDPSession(page):null;
+        async function gesture(dx,dy){if(session){await session.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y}]});for(let i=1;i<=12;i++){await session.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+dx*i/12,y:y+dy*i/12}]});await page.waitForTimeout(25);}await session.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});}else{await page.mouse.move(x,y);await page.mouse.down();await page.mouse.move(x+dx,y+dy,{steps:12});await page.mouse.up();}await page.waitForTimeout(450);}
+        await gesture(-box.width*.6,0);await gallery.getByRole('group',{name:'2 of 6',exact:true}).waitFor({state:'visible'});await page.touchscreen.tap(x,y);assert.equal(await gallery.locator('.ac-carousel-sr').textContent(),'2 of 6');await gesture(0,-70);assert.equal(await gallery.locator('.ac-carousel-sr').textContent(),'2 of 6');assert.equal(await page.locator('#desk-pen .portfolio-card-label').isVisible(),true);
+        assert.equal(await gallery.locator('[data-pressed="true"]').count(),0);await session?.detach();
       });
       await check("Folio and Niche picture/caption links open their actual cases; Back restores Personal",async()=>{
         for(const [id,slug]of [['folio','mode'],['niche','niche']]){
@@ -140,13 +129,20 @@ export async function runBrowserRegressions(browser,baseURL,{artifacts}={}) {
       });
       await check("press compression is restrained, release restores it, reduced motion prevents it",async()=>{
         await goto('/');const card=page.getByRole('link',{name:'Ping',exact:true});await card.scrollIntoViewIfNeeded();const box=await card.boundingBox();
-        if(device==='phone'){
+        if(device==='phone' && browser.browserType().name()==='chromium'){
           const session=await context.newCDPSession(page);await session.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:box.x+box.width/2,y:box.y+30}]});await page.waitForTimeout(170);
           const matrix=await card.evaluate(element=>getComputedStyle(element).transform);assert.notEqual(matrix,'none');assert.ok(Number(matrix.match(/matrix\(([^,]+)/)?.[1])>.97,matrix);
           await session.send('Input.dispatchTouchEvent',{type:'touchCancel',touchPoints:[]});await session.detach();
+        }else if(device==='phone'){
+          // WebKit has no CDP touch driver. Exercise the real DOM pointer listener;
+          // Chromium above retains native touch input, and real-phone acceptance stays separate.
+          await card.dispatchEvent('pointerdown',{pointerType:'touch',pointerId:1,button:0,clientX:box.x+box.width/2,clientY:box.y+30,isPrimary:true});await page.waitForTimeout(170);
+          const matrix=await card.evaluate(element=>getComputedStyle(element).transform);assert.notEqual(matrix,'none');assert.ok(Number(matrix.match(/matrix\(([^,]+)/)?.[1])>.97,matrix);
+          await card.dispatchEvent('pointercancel',{pointerType:'touch',pointerId:1});
         }else{await page.mouse.move(box.x+box.width/2,box.y+30);await page.mouse.down();await page.waitForTimeout(170);const matrix=await card.evaluate(element=>getComputedStyle(element).transform);assert.notEqual(matrix,'none');assert.ok(Number(matrix.match(/matrix\(([^,]+)/)?.[1])>.97,matrix);await page.mouse.move(0,0);await page.mouse.up();}
         await page.waitForTimeout(250);assert.ok(await card.evaluate(element=>{const value=getComputedStyle(element).transform;return value==='none'||new DOMMatrix(value).isIdentity;}));
         await page.emulateMedia({reducedMotion:'reduce'});await card.focus();await page.mouse.move(box.x+box.width/2,box.y+30);await page.mouse.down();await page.waitForTimeout(150);assert.ok(await card.evaluate(element=>{const value=getComputedStyle(element).transform;return value==='none'||new DOMMatrix(value).isIdentity;}));await page.mouse.move(0,0);await page.mouse.up();await page.emulateMedia({reducedMotion:'no-preference'});
+        return {touchDriver:device!=='phone'?'mouse':browser.browserType().name()==='chromium'?'native CDP touch':'DOM pointer events'};
       });
       await check("Hyphae uses native long-film controls on phone and Compass controls on desktop, with original MP4/WebM order",async()=>{
         await goto('/projects/hyphae/');const frame=page.locator('.case-film [data-video-frame]'),video=frame.locator('video');await frame.scrollIntoViewIfNeeded();
@@ -178,7 +174,7 @@ export async function runBrowserRegressions(browser,baseURL,{artifacts}={}) {
         assert.equal(state.paused,true);assert.ok(state.sources.every(source=>source!==null));
         assert.equal(await video.getAttribute('preload'),'none');assert.equal(await video.evaluate(video=>video.controls),false);
         if(device==='phone'){
-          const bounds=await page.evaluate(()=>{const video=document.querySelector('#p041-telefoni video'),v=video.getBoundingClientRect(),toggle=document.querySelector('#p041-telefoni [data-gallery-description-toggle]').getBoundingClientRect();return{toggleBottom:toggle.bottom,controlsTop:v.bottom-44,targetIsVideo:document.elementFromPoint(v.left+24,v.bottom-20)===video};});
+          const bounds=await page.evaluate(()=>{const video=document.querySelector('#p041-telefoni video'),v=video.getBoundingClientRect(),toggle=document.querySelector('#p041-telefoni [data-native-film-play]').getBoundingClientRect();return{toggleBottom:toggle.bottom,controlsTop:v.bottom-44,targetIsVideo:document.elementFromPoint(v.left+24,v.bottom-20)===video};});
           assert.ok(bounds.toggleBottom<=bounds.controlsTop+.5,JSON.stringify(bounds));assert.ok(bounds.targetIsVideo);
         }
       });

@@ -4,7 +4,6 @@ import { LockKeyhole } from "lucide-react";
 
 export default function LiveHeader({ current, base = "/" }: { current?: "work" | "personal" | "info"; base?: string }) {
   return <>
-    <Button asChild variant="secondary" size="sm" className="portfolio-skip-link"><a href="#main-content">Skip to content</a></Button>
     <header className="portfolio-header">
       <div className="portfolio-header-content portfolio-shell">
         <Button asChild size="sm" variant="secondary" data-plain="" className="portfolio-wordmark"><a href={withBasePath(base)}>Alex Infield</a></Button>
@@ -18,7 +17,7 @@ export default function LiveHeader({ current, base = "/" }: { current?: "work" |
       </div>
     </header>
     <span id="unavailable-status" className="portfolio-unavailable-message" role="tooltip" hidden>
-      <LockKeyhole aria-hidden="true" />Professional — unavailable for now
+      <LockKeyhole aria-hidden="true" />Professional work available upon request
     </span>
   </>;
 }

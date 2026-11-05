@@ -1,0 +1,34 @@
+/* SPDX-License-Identifier: MIT. Original DOM/interaction layout adapter. */
+:host{display:block;width:415px;height:692px;outline:none;font-family:ChicagoKare,Krungthep,system-ui,"PlayerCJK",sans-serif;color-scheme:light dark}
+.surface{position:relative;width:415px;height:692px;margin:0 auto}
+.surface::before{opacity:var(--floor-shadow-opacity,.3);display:var(--floor-shadow-display,block)}
+.player-enclosure{-webkit-box-reflect:var(--device-reflection,below 4px linear-gradient(180deg,transparent 50%,rgba(0,0,0,.15) 100%))}
+.click-wheel{--select-button-pct:28.5714285714%;--scroll-wheel-pct:78.8571428571%}
+.key{color:inherit;outline-offset:3px}
+.key:focus-visible{outline:2px solid #646464}
+:host(:focus-visible)>.surface>.shell{outline:2px solid #646464;outline-offset:-12px}
+.titlebar .playing:empty{display:none}
+.playing svg{display:block;width:17px;height:20px}
+.menu-items .row{box-sizing:border-box;width:100%;height:30px;gap:0;text-align:start;line-height:26px;font-size:26px;pointer-events:auto}
+.row .name{min-width:0;flex:0 1 auto}
+.row .value{font-size:inherit}
+.row[data-cjk-row]{padding-block:0;line-height:30px}
+.row[data-cjk-row]>.name,.row[data-cjk-row]>.value,.row[data-cjk-row]>.chevron{position:relative;top:1px}
+.screen-title[data-cjk-text]{top:50%;line-height:32px}
+.empty{margin-top:6px;text-align:center;line-height:32px;opacity:var(--player-screen-opacity,1)}
+.now{display:flex;flex-direction:column;box-sizing:border-box;height:180px;margin-top:1.7px;padding:4px 15px 7px;overflow:hidden;opacity:var(--player-screen-opacity,1)}
+.position{font-size:20px;line-height:24px;margin-bottom:3px}
+.song,.artist,.album{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;font-size:26px;line-height:30px}
+.meter{height:10px;min-height:10px;margin-top:auto;border:2px solid #484647;overflow:hidden}
+.fill{height:100%;width:0;background:#484647}
+.times{display:flex;justify-content:space-between;font-size:26px;line-height:28px;font-variant-numeric:tabular-nums;margin-top:5px}
+/* ChicagoKare has proportional digits despite tabular-nums. Reserve the
+   countdown's full label width so its start does not move every second. */
+.times>span:last-child{min-width:5ch}
+.mode{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.about{padding:9px 12px;font-size:23px;line-height:32px;opacity:var(--player-screen-opacity,1)}
+.reflection-fallback{position:absolute;top:calc(100% + 4px);left:0;width:415px;height:346px;overflow:hidden;pointer-events:none;display:var(--reflection-display,block);mask-image:linear-gradient(to bottom,rgba(0,0,0,.15),transparent);-webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,.15),transparent)}
+.reflection-fallback .player-enclosure{transform:scaleY(-1);-webkit-box-reflect:none;pointer-events:none}
+@media(prefers-reduced-motion:reduce){.select-button,.scroll-wheel{transition:none}}
+
+.about a{display:block;min-height:44px;color:inherit;text-decoration:underline}

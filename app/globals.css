@@ -12,7 +12,7 @@ h1 {font-size: 2.125rem; line-height: 2.5625rem; font-weight: 500; letter-spacin
 h2 {font-weight: 500;}
 img, video {display: block; max-width: 100%; height: auto;}
 .portfolio-root {min-width: 0; min-height: 100dvh; background: var(--canvas); color: var(--text); overflow-wrap: anywhere;}
-.portfolio-shell {width: 100%; padding-inline: 18px; margin-inline: auto;}
+.portfolio-shell {width: 100%; padding-inline: 20px; margin-inline: auto;}
 .portfolio-header {position: fixed; inset: 0 0 auto; z-index: 100; background: #000000f5; overflow-x: auto; overscroll-behavior-x: contain; scroll-padding-inline: 6px;}
 html[data-theme="light"] .portfolio-header {background: #fffffff5;}
 @supports ((backdrop-filter: blur(24px)) or (-webkit-backdrop-filter: blur(24px))) {
@@ -22,6 +22,9 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
 .portfolio-header-content {display: flex; align-items: center; gap: var(--inline); min-width: max-content; padding-block: var(--inline); font: 500 .875rem/1.3125rem var(--font);}
 .portfolio-nav {display: flex; align-items: center; gap: var(--inline); margin-left: auto;}
 .portfolio-header [data-slot="button"] {font: inherit; flex-shrink: 0;}
+/* Keyboard focus must paint immediately, including WebKit's native auto ring.
+   Keep the existing button motion without interpolating the outline. */
+.portfolio-header [data-slot="button"] {transition-property: background-color, color, border-color, transform;}
 .portfolio-header [disabled] {color: var(--disabled); opacity: 1; cursor: default;}
 .portfolio-header [data-unavailable-toggle] {color: var(--secondary); cursor: default;}
 .portfolio-unavailable-message {position: fixed; z-index: 101; top: calc(var(--portfolio-header-height) + 8px); right: 18px; max-width: calc(100vw - 20px); display: flex; align-items: center; gap: var(--inline); padding: 10px 12px; border-radius: var(--radius); background: var(--surface); color: var(--text); font-size: .875rem; box-shadow: 0 4px 16px #0003;}
@@ -39,9 +42,10 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
 .portfolio-skip-link:focus {transform: none;}
 #main-content {scroll-margin-top: calc(var(--portfolio-header-height) + 8px);}
 .portfolio-main {min-height: 60vh; padding-block: calc(var(--portfolio-header-height) + var(--group)) var(--section);}
+.portfolio-main:has(.portfolio-personal-link) {padding-bottom: 0;}
 .portfolio-main:has(.portfolio-personal-front), .portfolio-case-page {padding-top: var(--portfolio-header-height);}
 .portfolio-actions {display: flex; flex-wrap: wrap; align-items: center; gap: var(--inline);}
-.portfolio-work-grid, .portfolio-personal-front {display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); column-gap: 10px; row-gap: var(--group);}
+.portfolio-work-grid, .portfolio-personal-front {display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); column-gap: 20px; row-gap: var(--group);}
 .portfolio-work-link {position: relative; min-width: 0;}
 .portfolio-work-card, .portfolio-personal-card {padding: 0; gap: 0; background: var(--canvas)!important; border: 0; box-shadow: none; overflow: hidden;}
 .portfolio-work-card img {width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: var(--radius);}
@@ -51,14 +55,15 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
 .portfolio-root .portfolio-card-link[data-slot="button"] {display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; width: 100%; max-width: none; height: auto; padding: 0; border: 0; gap: 0; text-align: left; white-space: normal;}
 .portfolio-root .portfolio-card-link:is(:link,:visited,:hover,:active,:focus), .portfolio-root .portfolio-card-link h2 {text-decoration: none!important;}
 .portfolio-root .portfolio-card-link > [data-slot="card"] {width: 100%; max-width: none;}
-.portfolio-personal-link {display: flex; justify-content: center; margin-top: var(--section);}
+.portfolio-personal-link {display: flex; justify-content: center; margin-block: 24px;}
 .portfolio-info-page {display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--group); align-items: center;}
 .portfolio-info-copy {display: flex; flex-direction: column; align-items: flex-start; gap: var(--group); padding-block: var(--group);}
 .portfolio-intro {font-size: 1.75rem; line-height: 2.125rem; max-width: 35ch;}
 .portfolio-artwork {overflow: hidden; border-radius: var(--radius);}
 .portfolio-artwork img {width: 100%;}
 .text-muted {color: var(--secondary);}
-.portfolio-not-found {display: grid; justify-items: start; gap: var(--group); padding-block: var(--section);}
+.portfolio-main:has(.portfolio-not-found) {min-height:100svh;padding-block:var(--portfolio-header-height) 0;display:grid;place-items:center}
+.portfolio-not-found {display:grid;justify-items:center;gap:var(--group);padding-block:var(--section);text-align:center}
 /* Cases retain image content and source order. The authored panels run edge to
    edge and stack with no gap, border, radius or gutter on any side: the case
    page has no side padding and every media box is a block with no margin. */
@@ -94,7 +99,7 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
  .portfolio-case-stack .case-composite :is(.case-media, .case-video, .case-video video) {width: 100%; margin-inline: 0; height: 100%; object-fit: cover;}
  .portfolio-case-stack .case-composite .case-video video {height: calc(100% + 2px); margin-block: -1px;}
 }
-.portfolio-case-navigation, .case-text {padding-inline: 18px;}
+.portfolio-case-navigation, .case-text {padding-inline: 20px;}
 .portfolio-case-navigation {display: flex; justify-content: center; align-items: center; gap: var(--inline); margin-top: var(--section);}
 .case-text {font: 400 1rem/1.5 var(--font); color: var(--secondary);}
 .case-text :is(p,ul,dl) {margin-block: var(--group);}
@@ -114,7 +119,7 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
 .portfolio-personal-front {margin-bottom: var(--group);}
 .portfolio-personal-front .portfolio-image {aspect-ratio: 4/3; height: auto; overflow: hidden;}
 .portfolio-personal-front .portfolio-image img {width: 100%; height: 100%; object-fit: cover;}
-.portfolio-personal-grid {display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); column-gap: 10px; row-gap: var(--group); align-items: start;}
+.portfolio-personal-grid {display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); column-gap: 20px; row-gap: var(--group); align-items: start;}
 .portfolio-project {min-width: 0; scroll-margin-top: 6rem;}
 .portfolio-project-title {font-size: .875rem; line-height: 1.25rem;}
 .portfolio-gallery {position: relative;}
@@ -253,3 +258,23 @@ html[data-theme="light"] .portfolio-header {background: #fffffff5;}
  .is-sequence-pinned > .case-pin-strip {position: sticky; top: var(--case-pin-top, var(--portfolio-header-height));}
 }
 .case-pin-strip {display: grid; grid-template-columns: minmax(0,1fr); gap: 0;}
+
+
+/* A native body-first skip anchor stays in Safari's sequential focus order,
+   including before client boundaries hydrate. Header materials are unchanged. */
+.portfolio-skip-link {display:inline-flex;align-items:center;min-height:44px;padding:8px 12px;background:var(--surface);color:var(--text);border-radius:var(--radius);text-decoration:none}
+.portfolio-skip-link:focus-visible {outline:2px solid var(--focus);outline-offset:2px}
+/* Still-image raster layers bleed one CSS pixel into the following panel while
+   their layout footprint stays constant. No upward bleed on the opening image. */
+.portfolio-case-stack .case-media {height:calc((100cqw + 4px) * var(--media-ratio, .5625) - 5px);margin-bottom:-1px}
+.portfolio-case-stack .case-composite .case-media {height:calc(100% + 1px);margin-bottom:-1px}
+.portfolio-case-stack > .case-panel:first-child {display:flow-root}
+.portfolio-case-stack > .case-panel:first-child > .case-media {margin-top:0}
+.portfolio-case-stack .case-panel {display:flow-root}
+
+/* Snap Mode stills to whole CSS pixels to avoid WebKit overlap raster seams. */
+.portfolio-case-stack:has(img[src*="/mode/media/"]) img.case-media {height:round(nearest, calc((100cqw + 4px) * var(--media-ratio, .5625) - 6px), 1px)}
+
+.portfolio-privacy-notice {grid-column:1/-1;max-width:75ch;color:var(--secondary);font-size:.8125rem;line-height:1.5;margin-block:24px 0}
+
+.portfolio-case-navigation {flex-wrap:wrap}

@@ -23,12 +23,9 @@
 [data-eb-host] > [data-eb-media] {z-index: 1;}
 [data-eb-host][data-eb="wait"], [data-eb-host][data-eb="in"], [data-eb-host][data-eb-fit] {overflow: clip;}
 
-/* Loading states (set by extend.js). Before the runtime runs, media waits hidden over its field;
-   if the runtime never arrives it shows after 4 s. Without scripting nothing is hidden. */
-@keyframes eb-show {to {opacity: 1;}}
-@media (scripting: enabled) {
- [data-eb-host]:not([data-eb]) > [data-eb-media] {opacity: 0; animation: eb-show 0s 4s forwards;}
-}
+/* Decoded media can paint before the controller arrives. Unloaded images
+   naturally expose their field; the controller adds wait/fade only while
+   loading, so the first screen never depends on JavaScript to become visible. */
 [data-eb-host][data-eb="wait"] > [data-eb-media] {opacity: 0;}
 [data-eb-host][data-eb="in"] > [data-eb-media] {opacity: 1; transition: opacity .5s cubic-bezier(.2,.7,.2,1);}
 [data-eb-host][data-eb="done"]:not([data-eb-fit])::before {content: none;}
