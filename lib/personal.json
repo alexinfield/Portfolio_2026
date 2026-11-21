@@ -503,6 +503,40 @@
           }
         },
         {
+          "kind": "image",
+          "id": "desk-pen-07",
+          "src": "media/desk-pen-07-w1280.webp",
+          "width": 1280,
+          "height": 1600,
+          "alt": "A close rendered view of a slim sage-green pen standing in its rounded green base against a soft gray background.",
+          "variants": [
+            {
+              "src": "media/desk-pen-07-w640.webp",
+              "width": 640,
+              "height": 800,
+              "bytes": 9086
+            },
+            {
+              "src": "media/desk-pen-07-w1280.webp",
+              "width": 1280,
+              "height": 1600,
+              "bytes": 21840
+            },
+            {
+              "src": "media/desk-pen-07-w1600.webp",
+              "width": 1600,
+              "height": 2000,
+              "bytes": 29916
+            }
+          ],
+          "framing": {
+            "fit": "pad",
+            "object_position": "50% 50%",
+            "background": "#A8AAA4",
+            "fill": "edge-extend"
+          }
+        },
+        {
           "kind": "video",
           "id": "desk-pen-02",
           "src": "media/desk-pen-02.mp4",
